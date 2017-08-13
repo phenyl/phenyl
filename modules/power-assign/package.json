@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "flow-bin": "^0.52.0",
     "kocha": "^1.8.0",
     "power-assert": "^1.4.4",
     "remove-flow-types-loader": "^1.0.0",
