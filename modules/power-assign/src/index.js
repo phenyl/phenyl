@@ -1,53 +1,27 @@
 // @flow
 
 import equal from 'deep-equal'
+import type {
+  AddToSetOperator,
+  BitOperator,
+  CurrentDateOperator,
+  DotNotationString,
+  IncOperator,
+  MaxOperator,
+  MinOperator,
+  MulOperator,
+  PopOperator,
+  PullOperator,
+  PushModifier,
+  PushOperator,
+  QueryCondition,
+  Restorable,
+  SetOperator,
+  UpdateOperators,
+  WhereConditions,
+} from 'phenyl-interfaces'
+
 import QueryOperation from './query-operation'
-
-import type { QueryCondition } from './query-operation'
-
-type Restorable = Object
-type DotNotationString = string
-type SetOperator = { [field: DotNotationString]: any }
-type IncOperator = { [field: DotNotationString]: number }
-type MinOperator = { [field: DotNotationString]: any }
-type MaxOperator = { [field: DotNotationString]: any }
-type MulOperator = { [field: DotNotationString]: number }
-type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
-type PopOperator = { [field: DotNotationString]: 1 | - 1 }
-
-type PullOperator = { [field: DotNotationString]: any | QueryCondition }
-
-type PushModifier = {
-  $each: Array<any>,
-  $slice?: number,
-  $sort?: { [field: DotNotationString]: 1 | -1 },
-  $position?: number,
-}
-type PushOperator = { [field: DotNotationString]: any | PushModifier }
-
-type TypeSpecification = true | { $type: 'timestamp' | 'date' }
-type CurrentDateOperator = { [field: DotNotationString]: TypeSpecification }
-type BitOperator = {
-  [field: DotNotationString]: {
-    and?: number,
-    or?: number,
-    xor?: number,
-  }
-}
-
-type Operators = $Shape<{
-    $set: SetOperator,
-    $inc: IncOperator,
-    $min: MinOperator,
-    $max: MaxOperator,
-    $mul: MulOperator,
-    $addToSet: AddToSetOperator,
-    $pop: PopOperator,
-    $pull: PullOperator,
-    $push: PushOperator,
-    $currentDate: CurrentDateOperator,
-    $bit: BitOperator,
-}>
 
 /**
  *
@@ -57,7 +31,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign<T: Restorable>(obj: T, ops: Operators): T {
+  static assign<T: Restorable>(obj: T, ops: UpdateOperators): T {
     let updatedObj: T = obj
     const operatorNames = Object.keys(ops)
 
@@ -408,6 +382,6 @@ export default class PowerAssign {
 /**
  *
  */
-export function assign<T: Restorable>(obj: T, ops: Operators): T {
+export function assign<T: Restorable>(obj: T, ops: UpdateOperators): T {
   return PowerAssign.assign(obj, ops)
 }

@@ -3,7 +3,7 @@ import type { Query } from './query.js.flow'
 import type { Restorable } from './restorable.js.flow' // Object
 import type { CommandResult } from './command-result.js.flow'
 import type { Id } from './id.js.flow' // string | number
-import type { Command, InsertCommand, UpdateCommand, DeleteCommand } from './command.js.flow'
+import type { InsertCommand, UpdateCommand, DeleteCommand } from './command.js.flow'
 
 export interface PhenylClient {
   find(query: Query): Promise<Array<Restorable>>,

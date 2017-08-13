@@ -4,12 +4,12 @@ export type CommandResult = OKCommandResult | NGCommandResult
 
 type ErrorInterface = { message: string }
 
-type OKCommandResult = {
+export type OKCommandResult = {
   ok: true | 1,
   n: number,
 }
 
-type NGCommandResult = {
+export type NGCommandResult = {
   ok: false | 0,
   errors: Array<ErrorInterface>,
 }

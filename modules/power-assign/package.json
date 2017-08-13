@@ -11,11 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "kocha": "^1.8.0",
-    "power-assert": "^1.4.4",
-    "remove-flow-types-loader": "^1.0.0",
+    "phenyl-interfaces": ">0",
+    "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "deep-equal": "^1.0.1",
-    "kocha": "^1.8.0"
+    "deep-equal": "^1.0.1"
   }
 }

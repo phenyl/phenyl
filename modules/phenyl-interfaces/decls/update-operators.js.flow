@@ -4,27 +4,27 @@ import type { QueryCondition } from './query-condition.js.flow'
 import type { SortNotation } from './sort-notation.js.flow'
 type DotNotationString = string
 
-type SetOperator = { [field: DotNotationString]: any }
-type IncOperator = { [field: DotNotationString]: number }
-type MinOperator = { [field: DotNotationString]: any }
-type MaxOperator = { [field: DotNotationString]: any }
-type MulOperator = { [field: DotNotationString]: number }
-type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
-type PopOperator = { [field: DotNotationString]: 1 | - 1 }
+export type SetOperator = { [field: DotNotationString]: any }
+export type IncOperator = { [field: DotNotationString]: number }
+export type MinOperator = { [field: DotNotationString]: any }
+export type MaxOperator = { [field: DotNotationString]: any }
+export type MulOperator = { [field: DotNotationString]: number }
+export type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
+export type PopOperator = { [field: DotNotationString]: 1 | - 1 }
 
-type PullOperator = { [field: DotNotationString]: any | QueryCondition }
+export type PullOperator = { [field: DotNotationString]: any | QueryCondition }
 
-type PushModifier = {
+export type PushModifier = {
   $each: Array<any>,
   $slice?: number,
   $sort?: SortNotation,
   $position?: number,
 }
-type PushOperator = { [field: DotNotationString]: any | PushModifier }
+export type PushOperator = { [field: DotNotationString]: any | PushModifier }
 
 type TypeSpecification = true | { $type: 'timestamp' | 'date' }
-type CurrentDateOperator = { [field: DotNotationString]: TypeSpecification }
-type BitOperator = {
+export type CurrentDateOperator = { [field: DotNotationString]: TypeSpecification }
+export type BitOperator = {
   [field: DotNotationString]: {
     and?: number,
     or?: number,
