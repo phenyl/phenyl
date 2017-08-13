@@ -6,7 +6,11 @@ import type { Id } from './id.js.flow' // string | number
 
 type ModelName = string
 
-export type Command = { insert: InsertCommand } | { update: UpdateCommand } | { delete: DeleteCommand }
+export type Command =
+  { insert: InsertCommand } |
+  { update: UpdateCommand } |
+  { delete: DeleteCommand } |
+  { custom: CustomCommand }
 
 // see https://docs.mongodb.com/manual/reference/command/insert/
 export type InsertCommand = SingleInsertCommand | MultiInsertCommand
@@ -52,4 +56,9 @@ export interface MultiDeleteCommand {
   where: WhereConditions, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,
+}
+
+export interface CustomCommand {
+  name: string, // custom insert command name
+  params?: Object
 }

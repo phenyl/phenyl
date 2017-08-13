@@ -1,6 +1,11 @@
 // @flow
 
+import type { Restorable } from './restorable.js.flow'
+
 export type CommandResult = OKCommandResult | NGCommandResult
+export type FetchCommandResult = OKFetchCommandResult | NGCommandResult
+export type GetCommandResult = OKGetCommandResult | NGCommandResult
+export type CustomCommandResult = OKCustomCommandResult | NGCommandResult
 
 type ErrorInterface = { message: string }
 
@@ -12,4 +17,21 @@ export type OKCommandResult = {
 export type NGCommandResult = {
   ok: false | 0,
   errors: Array<ErrorInterface>,
+}
+
+export type OKFetchCommandResult = {
+  ok: true | 1,
+  n: number,
+  values: Array<Restorable>
+}
+
+export type OKGetCommandResult = {
+  ok: true | 1,
+  n: number,
+  value: Restorable
+}
+
+export type OKCustomCommandResult = {
+  ok: true | 1,
+  result?: Object
 }

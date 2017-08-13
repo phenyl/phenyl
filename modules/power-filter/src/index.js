@@ -2,7 +2,6 @@
 
 import type {
   Restorable,
-  Query,
   WhereQuery,
 } from 'phenyl-interfaces'
 
@@ -10,19 +9,12 @@ import type {
  *
  */
 class PowerFilter {
-  static find(values: Array<Restorable>, q: Query): Array<Restorable> {
-    let whereQuery: WhereQuery
-    if (q.id) {
-      whereQuery = Object.assign({}, q)
-      query.where = { $eq: { id: query.id }}
-      delete query.id
-    }
-
+  static find(values: Array<Restorable>, q: WhereQuery): Array<Restorable> {
     // TODO
     return values
   }
 
-  static findOne(values: Array<Restorable>, q: Query): Restorable {
+  static findOne(values: Array<Restorable>, q: WhereQuery): Restorable {
     // TODO
     return values[0]
   }
