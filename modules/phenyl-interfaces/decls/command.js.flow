@@ -24,7 +24,7 @@ export interface MultiInsertCommand {
 }
 
 // see https://docs.mongodb.com/manual/reference/command/update/
-export type UpdateCommand = IdUpdateCommand | MultiInsertCommand
+export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 
 export interface IdUpdateCommand {
   from: ModelName, // "update" key in MongoDB reference

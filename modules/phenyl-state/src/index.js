@@ -3,6 +3,8 @@ import type {
   UpdateCommand
 } from 'phenyl-interfaces'
 
+import { assign } from 'power-assign/jsnext'
+
 type PlainPhenylState = {
 
 }
@@ -19,7 +21,7 @@ class PhenylState {
    *
    */
   $update(command: UpdateCommand): PhenylState {
-    return new PhenylState({})
+    return assign(this, command.operators)
   }
 
 

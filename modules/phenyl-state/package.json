@@ -6,11 +6,13 @@
   "scripts": {
     "test": "kocha --require babel-register test/*.js"
   },
+  "dependencies": {
+    "power-assign": ">0"
+  },
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": ">0",
-    "power-assign": ">0"
+    "phenyl-interfaces": ">0"
   },
   "author": "",
   "license": "ISC"
