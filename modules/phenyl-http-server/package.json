@@ -1,5 +1,5 @@
 {
-  "name": "phenyl-server",
+  "name": "phenyl-http-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,8 +11,5 @@
     "babel-register": "^6.24.1"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "kocha": "^1.8.0",
-  }
+  "license": "ISC"
 }
