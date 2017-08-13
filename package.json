@@ -26,6 +26,6 @@
     "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.24.1",
     "flow-bin": "^0.52.0",
-    "kocha": "^1.8.0"
+    "shelljs": "^0.7.8"
   }
 }
