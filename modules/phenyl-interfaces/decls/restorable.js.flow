@@ -1,2 +1,6 @@
 // @flow
+import type { Id } from './id'
 export type Restorable = Object
+export interface RestorableEntity {
+  id: Id
+}

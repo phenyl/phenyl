@@ -25,7 +25,10 @@ import type {
   QueryExpression,
 } from './decls/query-condition.js.flow'
 import type { Query } from './decls/query.js.flow'
-import type { Restorable } from './decls/restorable.js.flow'
+import type {
+  Restorable,
+  RestorableEntity,
+} from './decls/restorable.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
   AddToSetOperator,
@@ -74,6 +77,7 @@ export type {
   QueryCondition,
   QueryExpression,
   Restorable,
+  RestorableEntity,
   SetOperator,
   SingleInsertCommand,
   SortNotation,

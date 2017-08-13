@@ -12,7 +12,6 @@ type PlainPhenylState = {
 /**
  *
  */
-
 class PhenylState {
   constructor(plain: PlainPhenylState) {
   }
