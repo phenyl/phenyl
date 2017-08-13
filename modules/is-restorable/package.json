@@ -1,0 +1,15 @@
+{
+  "name": "is-restorable",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js"
+  },
+  "devDependencies": {
+    "kocha": "^1.8.0",
+    "babel-register": "^6.24.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
