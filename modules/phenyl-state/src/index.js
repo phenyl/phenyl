@@ -19,6 +19,7 @@ class PhenylState {
    *
    */
   $update(command: UpdateCommand): PhenylState {
+    return new PhenylState({})
   }
 
 
