@@ -4,7 +4,8 @@ import type { Id } from './id.js.flow' // string | number
 import type { SortNotation } from './sort-notation.js.flow' // string | number
 type ModelName = string
 
-export type Query = WhereQuery | IdQuery | IdsQuery | CustomQuery
+export type RegularQuery = WhereQuery | IdQuery | IdsQuery
+export type Query = RegularQuery | CustomQuery
 
 export interface WhereQuery {
   from: ModelName,

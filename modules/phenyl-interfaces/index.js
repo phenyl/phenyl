@@ -19,6 +19,7 @@ import type {
   MultiDeleteCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
+  RegularCommand,
   SingleInsertCommand,
   UpdateCommand,
 } from './decls/command.js.flow'
@@ -38,6 +39,7 @@ import type {
   IdQuery,
   IdsQuery,
   Query,
+  RegularQuery,
   WhereQuery,
 } from './decls/query.js.flow'
 import type {
@@ -102,6 +104,8 @@ export type {
   Query,
   QueryCondition,
   QueryExpression,
+  RegularCommand,
+  RegularQuery,
   Restorable,
   RestorableEntity,
   SetOperator,
