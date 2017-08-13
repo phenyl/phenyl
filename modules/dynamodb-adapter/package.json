@@ -3,9 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "kocha --require babel-register test/*.js"
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "kocha": "^1.8.0",
+    "babel-register": "^6.24.1"
+  },
+  "dependencies": {}
 }

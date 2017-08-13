@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "test": "webpack test/index.js --target node --output-filename test.js > /dev/null && kocha dist/test.js"
+    "test": "kocha --require babel-register test/*.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,10 +13,9 @@
     "kocha": "^1.8.0",
     "power-assert": "^1.4.4",
     "remove-flow-types-loader": "^1.0.0",
-    "webpack": "^3.5.3",
-    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
-    "deep-equal": "^1.0.1"
+    "deep-equal": "^1.0.1",
+    "kocha": "^1.8.0"
   }
 }

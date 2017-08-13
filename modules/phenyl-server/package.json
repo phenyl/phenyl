@@ -4,8 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "kocha --require babel-register test/*.js"
+  },
+  "devDependencies": {
+    "kocha": "^1.8.0",
+    "babel-register": "^6.24.1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "kocha": "^1.8.0",
+  }
 }
