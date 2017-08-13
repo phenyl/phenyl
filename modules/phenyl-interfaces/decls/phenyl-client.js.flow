@@ -1,0 +1,22 @@
+// @flow
+import type { Query } from './query.js.flow'
+import type { Restorable } from './restorable.js.flow' // Object
+import type { CommandResult } from './command-result.js.flow'
+import type { Id } from './id.js.flow' // string | number
+import type { Command, InsertCommand, UpdateCommand, DeleteCommand } from './command.js.flow'
+
+export interface PhenylClient {
+  find(query: Query): Promise<Array<Restorable>>,
+  findOne(query: Query): Promise<Restorable>,
+  get(from: string, id: Id): Promise<Restorable>,
+
+  insert(command: InsertCommand): Promise<CommandResult>,
+  insertAndGet(command: InsertCommand): Promise<Restorable>,
+  insertAndFetch(command: InsertCommand): Promise<Array<Restorable>>,
+
+  update(command: UpdateCommand): Promise<CommandResult>,
+  updateAndGet(command: UpdateCommand): Promise<Restorable>,
+  updateAndFetch(command: UpdateCommand): Promise<Array<Restorable>>,
+
+  delete(command: DeleteCommand): Promise<CommandResult>,
+}

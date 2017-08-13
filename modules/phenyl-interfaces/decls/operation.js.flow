@@ -1,0 +1,5 @@
+// @flow
+import type { Query } from './query.js.flow'
+import type { Command } from './command.js.flow'
+
+export type Operation = { query: Query } | { command: Command }

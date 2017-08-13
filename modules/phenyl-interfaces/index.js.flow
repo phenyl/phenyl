@@ -1,0 +1,13 @@
+// @flow
+import type { Operation } from './decls/operation.js.flow'
+import type { Query } from './decls/query.js.flow'
+import type { Command, InsertCommand, UpdateCommand, DeleteCommand } from './decls/command.js.flow'
+
+export type {
+  Operation,
+  Query,
+  Command,
+  InsertCommand,
+  UpdateCommand,
+  DeleteCommand,
+}

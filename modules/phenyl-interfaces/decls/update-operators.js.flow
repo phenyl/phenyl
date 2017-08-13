@@ -1,0 +1,47 @@
+// @flow
+import type { Restorable } from './restorable.js.flow' // Object
+import type { QueryCondition } from './query-condition.js.flow'
+import type { SortNotation } from './sort-notation.js.flow'
+type DotNotationString = string
+
+type SetOperator = { [field: DotNotationString]: any }
+type IncOperator = { [field: DotNotationString]: number }
+type MinOperator = { [field: DotNotationString]: any }
+type MaxOperator = { [field: DotNotationString]: any }
+type MulOperator = { [field: DotNotationString]: number }
+type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
+type PopOperator = { [field: DotNotationString]: 1 | - 1 }
+
+type PullOperator = { [field: DotNotationString]: any | QueryCondition }
+
+type PushModifier = {
+  $each: Array<any>,
+  $slice?: number,
+  $sort?: SortNotation,
+  $position?: number,
+}
+type PushOperator = { [field: DotNotationString]: any | PushModifier }
+
+type TypeSpecification = true | { $type: 'timestamp' | 'date' }
+type CurrentDateOperator = { [field: DotNotationString]: TypeSpecification }
+type BitOperator = {
+  [field: DotNotationString]: {
+    and?: number,
+    or?: number,
+    xor?: number,
+  }
+}
+
+export type UpdateOperators = $Shape<{
+    $set: SetOperator,
+    $inc: IncOperator,
+    $min: MinOperator,
+    $max: MaxOperator,
+    $mul: MulOperator,
+    $addToSet: AddToSetOperator,
+    $pop: PopOperator,
+    $pull: PullOperator,
+    $push: PushOperator,
+    $currentDate: CurrentDateOperator,
+    $bit: BitOperator,
+}>

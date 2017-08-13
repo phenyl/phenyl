@@ -1,0 +1,55 @@
+// @flow
+import type { WhereConditions } from './where-conditions.js.flow'
+import type { UpdateOperators } from './update-operators.js.flow'
+import type { Restorable } from './restorable.js.flow' // Object
+import type { Id } from './id.js.flow' // string | number
+
+type ModelName = string
+
+export type Command = { insert: InsertCommand } | { update: UpdateCommand } | { delete: DeleteCommand }
+
+// see https://docs.mongodb.com/manual/reference/command/insert/
+export type InsertCommand = SingleInsertCommand | MultiInsertCommand
+
+export interface SingleInsertCommand {
+  from: ModelName, // "insert" key in MongoDB reference
+  value: Restorable, // "documents" key in MongoDB reference
+  ordered?: boolean,
+}
+
+export interface MultiInsertCommand {
+  from: ModelName, // "insert" key in MongoDB reference
+  values: Array<Restorable>, // "documents" key in MongoDB reference
+  ordered?: boolean,
+}
+
+// see https://docs.mongodb.com/manual/reference/command/update/
+export type UpdateCommand = IdUpdateCommand | MultiInsertCommand
+
+export interface IdUpdateCommand {
+  from: ModelName, // "update" key in MongoDB reference
+  id: Id,
+  operators: UpdateOperators, // "u" key in MongoDB reference
+}
+
+export interface MultiUpdateCommand {
+  from: ModelName, // "update" key in MongoDB reference
+  where: WhereConditions, // "q" key in MongoDB reference
+  operators: UpdateOperators, // "u" key in MongoDB reference
+  ordered?: boolean,
+}
+
+// see https://docs.mongodb.com/manual/reference/command/delete/
+export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
+
+export interface IdDeleteCommand {
+  from: ModelName, // "delete" key in MongoDB reference
+  id: Id,
+}
+
+export interface MultiDeleteCommand {
+  from: ModelName, // "delete" key in MongoDB reference
+  where: WhereConditions, // "q" key in MongoDB reference
+  limit?: number,
+  ordered?: boolean,
+}

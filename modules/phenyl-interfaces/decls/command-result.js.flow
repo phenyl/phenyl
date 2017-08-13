@@ -1,0 +1,15 @@
+// @flow
+
+export type CommandResult = OKCommandResult | NGCommandResult
+
+type ErrorInterface = { message: string }
+
+type OKCommandResult = {
+  ok: true | 1,
+  n: number,
+}
+
+type NGCommandResult = {
+  ok: false | 0,
+  errors: Array<ErrorInterface>,
+}

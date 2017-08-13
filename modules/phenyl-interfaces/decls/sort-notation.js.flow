@@ -1,0 +1,3 @@
+// @flow
+type DotNotationString = string
+export type SortNotation = { [field: DotNotationString]: 1 | -1 }
