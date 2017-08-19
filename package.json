@@ -2,11 +2,11 @@
   "name": "phenyl",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel modules/power-assign/src -d modules/power-assign/dist",
+    "build": "npm run build:power-assign",
+    "build:power-assign": "babel modules/power-assign/src -d modules/power-assign/dist",
     "flow": "flow"
   },
   "repository": {
