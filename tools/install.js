@@ -1,7 +1,10 @@
 const shell = require('shelljs')
 const path = require('path')
 
-const phenylModules = shell.ls('./modules')
+const phenylModules = shell.exec(
+  'ls -F ./modules | grep / | tr -d "/"',
+  { silent: true }
+).trim().split('\n')
 
 const linkPhenylModules = (moduleNames) => {
   moduleNames.forEach(module => {
