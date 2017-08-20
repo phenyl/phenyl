@@ -42,21 +42,6 @@ export interface PhenylClient {
 }
 
 export interface PhenylCustomClient {
-  find(query: WhereQuery): Promise<Array<Restorable>>,
-  findOne(query: WhereQuery): Promise<Restorable>,
-  get(query: IdQuery): Promise<Restorable>,
-  getByIds(query: IdsQuery): Promise<Array<Restorable>>,
-
-  insert(command: InsertCommand): Promise<CommandResult>,
-  insertAndGet(command: InsertCommand): Promise<GetCommandResult>,
-  insertAndFetch(command: InsertCommand): Promise<FetchCommandResult>,
-
-  update(command: UpdateCommand): Promise<CommandResult>,
-  updateAndGet(command: UpdateCommand): Promise<GetCommandResult>,
-  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult>,
-
-  delete(command: DeleteCommand): Promise<CommandResult>,
-
   runCustomQuery(query: CustomQuery): Promise<CustomQueryResult>,
   runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
 }
