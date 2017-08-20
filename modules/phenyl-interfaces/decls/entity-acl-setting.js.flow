@@ -17,7 +17,7 @@ export interface EntityAclSetting {
   find(query: WhereQuery, session: Session, client: PhenylClient): Promise<boolean>,
   findOne(query: WhereQuery, session: Session, client: PhenylClient): Promise<boolean>,
   get(query: IdQuery, session: Session, client: PhenylClient): Promise<boolean>,
-  getByIds(query: IdQuery, session: Session, client: PhenylClient): Promise<boolean>,
+  getByIds(query: IdsQuery, session: Session, client: PhenylClient): Promise<boolean>,
 
   insert(command: InsertCommand, session: Session, client: PhenylClient): Promise<boolean>,
   insertAndGet(command: InsertCommand, session: Session, client: PhenylClient): Promise<boolean>,
