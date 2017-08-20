@@ -7,7 +7,8 @@ import {
   normalizeCustomHandlers,
 } from './create-custom-execution-handlers'
 
-import type { Id,
+import type {
+  Id,
   Operation,
   OperationResult,
   PhenylClient,
