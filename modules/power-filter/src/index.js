@@ -2,25 +2,24 @@
 
 import type {
   Restorable,
-  WhereQuery,
+  WhereConditions,
 } from 'phenyl-interfaces'
 
 /**
  *
  */
 export default class PowerFilter {
-  static find(values: Array<Restorable>, q: WhereQuery): Array<Restorable> {
+  static find(values: Array<Restorable>, where: WhereConditions): Array<Restorable> {
     // TODO
     return values
   }
 
-  static findOne(values: Array<Restorable>, q: WhereQuery): Restorable {
+  static findOne(values: Array<Restorable>, where: WhereConditions): Restorable {
     // TODO
     return values[0]
   }
 }
 
-export function filter(values: Array<Restorable>, q: WhereQuery): Array<Restorable> {
-  return PowerFilter.find(values, q)
+export function filter(values: Array<Restorable>, where: WhereConditions): Array<Restorable> {
+  return PowerFilter.find(values, where)
 }
-
