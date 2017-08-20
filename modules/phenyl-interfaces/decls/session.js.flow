@@ -1,0 +1,16 @@
+// @flow
+import type { Id } from './id'
+export interface Session {
+  id: Id,
+  ttl: number,
+  userType: string,
+  userId: Id,
+}
+
+
+export interface PreSession {
+  id: Id,
+  ttl: number,
+  userType: string,
+  userId: Id,
+}

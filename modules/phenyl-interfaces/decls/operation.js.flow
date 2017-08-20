@@ -1,7 +1,29 @@
 // @flow
-import type { Query } from './query.js.flow'
-import type { Command } from './command.js.flow'
+import type {
+  IdsQuery,
+  IdQuery,
+  WhereQuery,
+  CustomQuery,
+} from './query.js.flow'
+import type {
+  DeleteCommand,
+  InsertCommand,
+  UpdateCommand,
+  CustomCommand,
+} from './command.js.flow'
 
-export type Operation =
-  { query: Query } |
-  { command: Command }
+export type Operation = {
+  find?: WhereQuery,
+  findOne?: WhereQuery,
+  get?: IdQuery,
+  getByIds?: IdsQuery,
+  runCustomQuery?: CustomQuery,
+  insert?: InsertCommand,
+  insertAndGet?: InsertCommand,
+  insertAndFetch?: InsertCommand,
+  update?: UpdateCommand,
+  updateAndGet?: UpdateCommand,
+  updateAndFetch?: UpdateCommand,
+  delete?: DeleteCommand,
+  runCustomCommand?: CustomCommand
+}

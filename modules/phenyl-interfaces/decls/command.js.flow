@@ -6,15 +6,6 @@ import type { Id } from './id.js.flow' // string | number
 
 type ModelName = string
 
-export type RegularCommand =
-  { insert: InsertCommand } |
-  { update: UpdateCommand } |
-  { delete: DeleteCommand }
-
-export type Command =
-  RegularCommand |
-  { custom: CustomCommand }
-
 // see https://docs.mongodb.com/manual/reference/command/insert/
 export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 

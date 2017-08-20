@@ -1,0 +1,31 @@
+// @flow
+import type {
+  Restorable,
+} from './restorable.js.flow'
+
+import type {
+  CustomQueryResult,
+} from './phenyl-client.js.flow'
+
+import type {
+  CommandResult,
+  GetCommandResult,
+  FetchCommandResult,
+  CustomCommandResult,
+} from './command-result.js.flow'
+
+export type OperationResult = {
+  find?: Array<Restorable>,
+  findOne?: Restorable,
+  get?: Restorable,
+  getByIds?: Array<Restorable>,
+  runCustomQuery?: CustomQueryResult,
+  insert?: CommandResult,
+  insertAndGet?: GetCommandResult,
+  insertAndFetch?: FetchCommandResult,
+  update?: CommandResult,
+  updateAndGet?: GetCommandResult,
+  updateAndFetch?: FetchCommandResult,
+  delete?: CommandResult,
+  runCustomCommand?: CustomCommandResult,
+}

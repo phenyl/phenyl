@@ -1,0 +1,9 @@
+// @flow
+import type { Id } from './id.js.flow' // string | number
+import type { PreSession, Session } from './session.js.flow'
+
+export interface SessionClient {
+  get(sessionId: Id): Promise<Session>,
+  set(preSession: PreSession): Promise<Session>,
+  delete(sessionId: Id): Promise<void>,
+}

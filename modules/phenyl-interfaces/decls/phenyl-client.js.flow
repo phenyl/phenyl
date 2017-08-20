@@ -20,7 +20,7 @@ import type {
 } from './command.js.flow'
 
 export type CustomQueryResult = {
-  result: Object
+  result: any
 }
 
 export interface PhenylClient {
@@ -28,7 +28,23 @@ export interface PhenylClient {
   findOne(query: WhereQuery): Promise<Restorable>,
   get(query: IdQuery): Promise<Restorable>,
   getByIds(query: IdsQuery): Promise<Array<Restorable>>,
-  fetch(query: CustomQuery): Promise<CustomQueryResult>,
+
+  insert(command: InsertCommand): Promise<CommandResult>,
+  insertAndGet(command: InsertCommand): Promise<GetCommandResult>,
+  insertAndFetch(command: InsertCommand): Promise<FetchCommandResult>,
+
+  update(command: UpdateCommand): Promise<CommandResult>,
+  updateAndGet(command: UpdateCommand): Promise<GetCommandResult>,
+  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult>,
+
+  delete(command: DeleteCommand): Promise<CommandResult>,
+}
+
+export interface PhenylCustomClient {
+  find(query: WhereQuery): Promise<Array<Restorable>>,
+  findOne(query: WhereQuery): Promise<Restorable>,
+  get(query: IdQuery): Promise<Restorable>,
+  getByIds(query: IdsQuery): Promise<Array<Restorable>>,
 
   insert(command: InsertCommand): Promise<CommandResult>,
   insertAndGet(command: InsertCommand): Promise<GetCommandResult>,
@@ -40,5 +56,9 @@ export interface PhenylClient {
 
   delete(command: DeleteCommand): Promise<CommandResult>,
 
-  execute(command: CustomCommand): Promise<CustomCommandResult>,
+  runCustomQuery(query: CustomQuery): Promise<CustomQueryResult>,
+  runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
 }
+
+export type CustomQueryHandler = (query: CustomQuery) => Promise<CustomQueryResult>
+export type CustomCommandHandler = (command: CustomCommand) => Promise<CustomCommandResult>

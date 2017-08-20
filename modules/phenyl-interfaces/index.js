@@ -1,4 +1,5 @@
 // @flow
+import type { AclHandler } from './decls/acl-handler.js.flow'
 import type {
   CommandResult,
   CustomCommandResult,
@@ -11,7 +12,6 @@ import type {
   OKGetCommandResult,
 } from './decls/command-result.js.flow'
 import type {
-  Command,
   DeleteCommand,
   IdDeleteCommand,
   IdUpdateCommand,
@@ -19,16 +19,19 @@ import type {
   MultiDeleteCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
-  RegularCommand,
   SingleInsertCommand,
   UpdateCommand,
 } from './decls/command.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { Operation } from './decls/operation.js.flow'
+import type { OperationResult } from './decls/operation-result.js.flow'
 import type {
+  CustomQueryHandler,
   CustomQueryResult,
+  CustomCommandHandler,
   PhenylClient,
+  PhenylCustomClient,
 } from './decls/phenyl-client.js.flow'
 import type {
   QueryCondition,
@@ -38,14 +41,14 @@ import type {
   CustomQuery,
   IdQuery,
   IdsQuery,
-  Query,
-  RegularQuery,
   WhereQuery,
 } from './decls/query.js.flow'
 import type {
   Restorable,
   RestorableEntity,
 } from './decls/restorable.js.flow'
+import type { PreSession, Session } from './decls/session.js.flow'
+import type { SessionClient } from './decls/session-client.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
   AddToSetOperator,
@@ -62,16 +65,19 @@ import type {
   SetOperator,
   UpdateOperators,
 } from './decls/update-operators.js.flow'
+import type { ValidationHandler } from './decls/validation-handler.js.flow'
 import type { WhereConditions } from './decls/where-conditions.js.flow'
 
 export type {
+  AclHandler,
   AddToSetOperator,
   BitOperator,
-  Command,
   CommandResult,
   CurrentDateOperator,
+  CustomCommandHandler,
   CustomCommandResult,
   CustomQuery,
+  CustomQueryHandler,
   CustomQueryResult,
   DeleteCommand,
   DotNotationString,
@@ -96,23 +102,26 @@ export type {
   OKFetchCommandResult,
   OKGetCommandResult,
   Operation,
+  OperationResult,
+  PreSession,
   PhenylClient,
+  PhenylCustomClient,
   PopOperator,
   PullOperator,
   PushModifier,
   PushOperator,
-  Query,
   QueryCondition,
   QueryExpression,
-  RegularCommand,
-  RegularQuery,
   Restorable,
   RestorableEntity,
   SetOperator,
+  Session,
+  SessionClient,
   SingleInsertCommand,
   SortNotation,
   UpdateCommand,
   UpdateOperators,
+  ValidationHandler,
   WhereConditions,
   WhereQuery,
 }

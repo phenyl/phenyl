@@ -1,0 +1,6 @@
+// @flow
+import type { Operation } from './operation'
+import type { Session } from './session'
+import type { PhenylClient } from './phenyl-client'
+
+export type ValidationHandler = (operation: Operation, session: Session, client: PhenylClient) => Promise<boolean>
