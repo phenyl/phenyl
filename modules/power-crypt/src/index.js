@@ -19,7 +19,7 @@ export default function powerCrypt(str: string, options: PowerCryptOptions = {})
   nStretch = Math.max(nStretch || 1000, 1)
 
   let i = 0
-  let buf = str + salt
+  let buf: any = str + salt
   const hashFn = shajs(algorithm)
   while (i < nStretch) {
     buf = hashFn.update(buf).digest()
