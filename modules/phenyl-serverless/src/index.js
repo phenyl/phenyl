@@ -1,8 +1,8 @@
 // @flow
 import PhenylServerless from './phenyl-serverless'
-import createAcl from './create-acl'
-import createValidator from './create-validator'
+import createAclHandler from './create-acl-handler'
+import createValidationHandler from './create-validation-handler'
 import createCustomExecution from './create-custom-execution'
 
 export default PhenylServerless
-export { createAcl, createValidator, createCustomExecution }
+export { createAclHandler, createValidationHandler, createCustomExecution }

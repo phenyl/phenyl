@@ -18,8 +18,8 @@ type LambdaResponse = Object // TODO
 type LambdaHandler = (event: LambdaEvent, context: LambdaContext) => Promise<LambdaResponse>
 
 type ServerlessParams = {
-  acl: AclHandler,
-  validator: ValidationHandler,
+  aclHandler: AclHandler,
+  validationHandler: ValidationHandler,
   client: PhenylClient,
   sessionClient: SessionClient,
   custom?: {
@@ -32,8 +32,8 @@ type ServerlessParams = {
  *
  */
 export default class PhenylServerless {
-  acl: AclHandler
-  validator: ValidationHandler
+  aclHandler: AclHandler
+  validationHandler: ValidationHandler
   client: PhenylClient
   sessionClient: SessionClient
   custom: {
@@ -42,8 +42,8 @@ export default class PhenylServerless {
   }
 
   constructor(params: ServerlessParams) {
-    this.acl = params.acl
-    this.validator = params.validator
+    this.aclHandler = params.aclHandler
+    this.validationHandler = params.validationHandler
     this.client = params.client
     this.sessionClient = params.sessionClient
     this.custom = {}
@@ -73,12 +73,14 @@ export default class PhenylServerless {
   async run(operation: Operation, sessionId: Id): Promise<OperationResult> {
     const session = await this.sessionClient.get(sessionId)
 
-    const isAccessible = await this.acl(operation, session, this.client)
+    this.assertTypeValid(operation)
+
+    const isAccessible = await this.aclHandler(operation, session, this.client)
     if (!isAccessible) {
       throw new Error('Authorization Required.')
     }
 
-    const isValid = await this.validator(operation, session, this.client)
+    const isValid = await this.validationHandler(operation, session, this.client)
     if (!isValid) {
       throw new Error('Params are not valid.')
     }
@@ -139,5 +141,12 @@ export default class PhenylServerless {
     }
 
     throw new Error('Invalid operation.')
+  }
+
+  assertTypeValid(operation: Operation): void {
+    if (operation == null) throw new Error('operation is not an object.')
+    if (operation.find != null) {
+      // assertValidWhereQuery(operation.find)
+    }
   }
 }
