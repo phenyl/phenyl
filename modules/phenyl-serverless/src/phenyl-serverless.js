@@ -1,4 +1,8 @@
 // @flow
+import {
+  assertValidOperation,
+} from 'phenyl-utils'
+
 import type {
   Id,
   Operation,
@@ -72,7 +76,7 @@ export default class PhenylServerless {
   async run(operation: Operation, sessionId: ?Id): Promise<OperationResult> {
     const session = await this.sessionClient.get(sessionId)
 
-    this.assertTypeValid(operation)
+    assertValidOperation(operation)
 
     const isAccessible = await this.aclHandler(operation, session, this.client)
     if (!isAccessible) {
@@ -140,12 +144,5 @@ export default class PhenylServerless {
     }
 
     throw new Error('Invalid operation.')
-  }
-
-  assertTypeValid(operation: Operation): void {
-    if (operation == null) throw new Error('operation is not an object.')
-    if (operation.find != null) {
-      // assertValidWhereQuery(operation.find)
-    }
   }
 }
