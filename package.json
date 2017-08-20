@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build:power-assign && npm run build:power-filter && npm run build:phenyl-serverless && npm run build:phenyl-utils",
+    "load": "node tools/install.js",
+    "clean": "node tools/clean.js",
+    "build": "npm run build:power-assign && npm run build:power-filter && npm run build:phenyl-serverless",
     "build:power-assign": "babel modules/power-assign/src -d modules/power-assign/dist",
     "build:power-filter": "babel modules/power-filter/src -d modules/power-filter/dist",
     "build:phenyl-serverless": "babel modules/phenyl-serverless/src -d modules/phenyl-serverless/dist",
