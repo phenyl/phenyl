@@ -1,0 +1,19 @@
+{
+  "name": "power-crypt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js"
+  },
+  "devDependencies": {
+    "kocha": "^1.8.0",
+    "babel-register": "^6.24.1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sha.js": "^2.4.8"
+  }
+}
