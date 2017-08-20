@@ -22,7 +22,23 @@ import type {
   SingleInsertCommand,
   UpdateCommand,
 } from './decls/command.js.flow'
+import type {
+  CustomCommandSetting,
+  CustomCommandSettings,
+} from './decls/custom-command-setting.js.flow'
+import type {
+  CustomQuerySetting,
+  CustomQuerySettings,
+} from './decls/custom-query-setting.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
+import type {
+  EntityAclSetting,
+  EntityAclSettings,
+} from './decls/entity-acl-setting.js.flow'
+import type {
+  EntityValidationSetting,
+  EntityValidationSettings,
+} from './decls/entity-validation-setting.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { Operation } from './decls/operation.js.flow'
 import type { OperationResult } from './decls/operation-result.js.flow'
@@ -76,11 +92,19 @@ export type {
   CurrentDateOperator,
   CustomCommandHandler,
   CustomCommandResult,
+  CustomCommandSetting,
+  CustomCommandSettings,
   CustomQuery,
   CustomQueryHandler,
   CustomQueryResult,
+  CustomQuerySetting,
+  CustomQuerySettings,
   DeleteCommand,
   DotNotationString,
+  EntityAclSetting,
+  EntityAclSettings,
+  EntityValidationSetting,
+  EntityValidationSettings,
   FetchCommandResult,
   GetCommandResult,
   Id,

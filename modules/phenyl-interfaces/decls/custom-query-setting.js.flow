@@ -11,3 +11,5 @@ export interface CustomQuerySetting {
   validation(query: CustomQuery, session: Session, client: PhenylClient): Promise<boolean>,
   execution(query: CustomQuery, session: Session, client: PhenylClient): Promise<CustomQueryResult>,
 }
+
+export type CustomQuerySettings = { [name: string]: CustomQuerySetting }

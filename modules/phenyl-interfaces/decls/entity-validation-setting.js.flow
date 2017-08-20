@@ -28,3 +28,5 @@ export interface EntityValidationSetting {
   updateAndFetch(command: UpdateCommand, session: Session, client: PhenylClient): Promise<boolean>,
   delete(command: DeleteCommand, session: Session, client: PhenylClient): Promise<boolean>,
 }
+
+export type EntityValidationSettings = { [entityName: string]: EntityValidationSetting }
