@@ -12,6 +12,7 @@ import type {
   OKGetCommandResult,
 } from './decls/command-result.js.flow'
 import type {
+  CustomCommand,
   DeleteCommand,
   IdDeleteCommand,
   IdUpdateCommand,
@@ -90,6 +91,7 @@ export type {
   BitOperator,
   CommandResult,
   CurrentDateOperator,
+  CustomCommand,
   CustomCommandHandler,
   CustomCommandResult,
   CustomCommandSetting,

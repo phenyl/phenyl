@@ -5,4 +5,4 @@ import createValidationHandler from './create-validation-handler'
 import createCustomExecutionHandlers from './create-custom-execution-handlers'
 
 export default PhenylServerless
-export { createAclHandler, createValidationHandler, createCustomExecution, createCustomExecutionHandlers }
+export { createAclHandler, createValidationHandler, createCustomExecutionHandlers }

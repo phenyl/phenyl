@@ -6,6 +6,7 @@ import type {
   CustomQuery,
 } from './query.js.flow'
 import type { Restorable } from './restorable.js.flow' // Object
+import type { Session } from './session.js.flow' // Object
 import type {
   CommandResult,
   CustomCommandResult,
@@ -60,5 +61,5 @@ export interface PhenylCustomClient {
   runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
 }
 
-export type CustomQueryHandler = (query: CustomQuery) => Promise<CustomQueryResult>
-export type CustomCommandHandler = (command: CustomCommand) => Promise<CustomCommandResult>
+export type CustomQueryHandler = (query: CustomQuery, session: ?Session, client: PhenylClient) => Promise<CustomQueryResult>
+export type CustomCommandHandler = (command: CustomCommand, session: ?Session, client: PhenylClient) => Promise<CustomCommandResult>

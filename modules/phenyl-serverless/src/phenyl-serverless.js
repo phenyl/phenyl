@@ -3,8 +3,11 @@ import {
   assertValidOperation,
 } from 'phenyl-utils'
 
-import type {
-  Id,
+import {
+  normalizeCustomHandlers,
+} from './create-custom-execution-handlers'
+
+import type { Id,
   Operation,
   OperationResult,
   PhenylClient,
@@ -15,7 +18,7 @@ import type {
   CustomCommandHandler,
 } from 'phenyl-interfaces'
 
-import {
+import type {
   CustomExecutionHandlers,
 } from './create-custom-execution-handlers'
 
@@ -47,15 +50,8 @@ export default class PhenylServerless {
     this.validationHandler = params.validationHandler
     this.client = params.client
     this.sessionClient = params.sessionClient
-    this.custom = {}
-    if (params.custom != null) {
-      if (params.custom.query != null) {
-        this.custom.query = params.custom.query
-      }
-      if (params.custom.command != null) {
-        this.custom.command = params.custom.command
-      }
-    }
+
+    this.custom = normalizeCustomHandlers(params.custom)
   }
 
   /**
@@ -133,11 +129,11 @@ export default class PhenylServerless {
     }
 
     if (operation.runCustomQuery != null) {
-      const result = await this.custom.query(operation.runCustomQuery)
+      const result = await this.custom.queryHandler(operation.runCustomQuery, session, this.client)
       return { runCustomQuery: result }
     }
     if (operation.runCustomCommand != null) {
-      const result = await this.custom.command(operation.runCustomCommand)
+      const result = await this.custom.commandHandler(operation.runCustomCommand, session, this.client)
       return { runCustomCommand: result }
     }
 

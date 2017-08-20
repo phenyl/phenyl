@@ -1,9 +1,10 @@
 // @flow
 import type {
-  CustomExecutionHandlers,
+  CustomQuery,
   CustomQueryHandler,
   CustomQuerySettings,
   CustomQueryResult,
+  CustomCommand,
   CustomCommandHandler,
   CustomCommandSettings,
   CustomCommandResult,
@@ -17,8 +18,8 @@ export type CustomExecutionSettings = {
 }
 
 export type CustomExecutionHandlers = {
-  queries: CustomQueryHandler,
-  commands: CustomCommandHandler,
+  queryHandler: CustomQueryHandler,
+  commandHandler: CustomCommandHandler,
 }
 
 /**
@@ -26,8 +27,8 @@ export type CustomExecutionHandlers = {
  */
 export default function createCustomExecutionHandlers(settings: CustomExecutionSettings): CustomExecutionHandlers {
   return {
-    queries: createCustomQueryHandler(settings.queries),
-    commands: createCustomCommandHandler(settings.commands),
+    queryHandler: createCustomQueryHandler(settings.queries),
+    commandHandler: createCustomCommandHandler(settings.commands),
   }
 }
 
@@ -35,7 +36,7 @@ export default function createCustomExecutionHandlers(settings: CustomExecutionS
  *
  */
 export function createCustomQueryHandler(querySettings: CustomQuerySettings): CustomQueryHandler {
-  return function executeCustomQuery(query: CustomQuery, session: ?Session, client: PhenylClient): CustomQueryResult {
+  return function executeCustomQuery(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<CustomQueryResult> {
     const { name } = query
     const setting = querySettings[name]
     if (setting == null || typeof setting.execution !== 'function') {
@@ -49,7 +50,7 @@ export function createCustomQueryHandler(querySettings: CustomQuerySettings): Cu
  *
  */
 export function createCustomCommandHandler(commandSettings: CustomCommandSettings): CustomCommandHandler {
-  return function executeCustomCommand(command: CustomCommand, session: ?Session, client: PhenylClient): CustomCommandHandler {
+  return function executeCustomCommand(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<CustomCommandResult> {
     const { name } = command
     const setting = commandSettings[name]
     if (setting == null || typeof setting.execution !== 'function') {
@@ -57,4 +58,18 @@ export function createCustomCommandHandler(commandSettings: CustomCommandSetting
     }
     return setting.execution(command, session, client)
   }
+}
+
+/**
+ *
+ */
+export function normalizeCustomHandlers(settings: ?CustomExecutionSettings): CustomExecutionHandlers {
+  const normalized = Object.assign({}, settings)
+  if (normalized.queryHandler == null) {
+    normalized.queryHandler = createCustomQueryHandler({})
+  }
+  if (normalized.commandHandler == null) {
+    normalized.commandHandler = createCustomCommandHandler({})
+  }
+  return normalized
 }
