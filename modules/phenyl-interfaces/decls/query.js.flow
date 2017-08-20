@@ -1,7 +1,7 @@
 // @flow
 import type { WhereConditions } from './where-conditions.js.flow'
-import type { Id } from './id.js.flow' // string | number
-import type { SortNotation } from './sort-notation.js.flow' // string | number
+import type { Id } from './id.js.flow' // string
+import type { SortNotation } from './sort-notation.js.flow'
 type ModelName = string
 
 export interface WhereQuery {

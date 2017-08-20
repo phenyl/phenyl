@@ -2,7 +2,7 @@
 import type { WhereConditions } from './where-conditions.js.flow'
 import type { UpdateOperators } from './update-operators.js.flow'
 import type { Restorable } from './restorable.js.flow' // Object
-import type { Id } from './id.js.flow' // string | number
+import type { Id } from './id.js.flow' // string
 
 type ModelName = string
 

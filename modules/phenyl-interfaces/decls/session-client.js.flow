@@ -1,5 +1,5 @@
 // @flow
-import type { Id } from './id.js.flow' // string | number
+import type { Id } from './id.js.flow' // string
 import type { PreSession, Session } from './session.js.flow'
 
 export interface SessionClient {
