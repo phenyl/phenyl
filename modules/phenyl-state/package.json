@@ -7,8 +7,9 @@
     "test": "kocha --require babel-register test/*.js"
   },
   "dependencies": {
-    "power-assign": ">0"
-  },
+    "power-assign": "*",
+    "power-filter": "*"
+ },
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
