@@ -63,8 +63,8 @@ export function createCustomCommandHandler(commandSettings: CustomCommandSetting
 /**
  *
  */
-export function normalizeCustomHandlers(settings: ?CustomExecutionSettings): CustomExecutionHandlers {
-  const normalized = Object.assign({}, settings)
+export function normalizeCustomHandlers(handlers: ?CustomExecutionHandlers): CustomExecutionHandlers {
+  const normalized = Object.assign({}, handlers)
   if (normalized.queryHandler == null) {
     normalized.queryHandler = createCustomQueryHandler({})
   }
