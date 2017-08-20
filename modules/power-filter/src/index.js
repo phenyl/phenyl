@@ -19,3 +19,8 @@ class PowerFilter {
     return values[0]
   }
 }
+
+export function filter(values: Array<Restorable>, q: WhereQuery): Array<Restorable> {
+  return PowerFilter.find(values, q)
+}
+
