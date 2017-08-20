@@ -7,9 +7,9 @@ import type {
 } from './query.js.flow'
 
 export interface CustomQuerySetting {
-  acl(query: CustomQuery, session: Session, client: PhenylClient): Promise<boolean>,
-  validation(query: CustomQuery, session: Session, client: PhenylClient): Promise<boolean>,
-  execution(query: CustomQuery, session: Session, client: PhenylClient): Promise<CustomQueryResult>,
+  acl(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<boolean>,
+  validation(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<boolean>,
+  execution(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<CustomQueryResult>,
 }
 
 export type CustomQuerySettings = { [name: string]: CustomQuerySetting }

@@ -23,7 +23,7 @@ function assertValidationFunction(fn: any, name: string, operationName: string) 
  *
  */
 export default function createValidationHandler(settings: ValidationSettings): ValidationHandler {
-  return async function isValid(operation: Operation, session: Session, client: PhenylClient) :Promise<boolean> {
+  return async function isValid(operation: Operation, session: ?Session, client: PhenylClient) :Promise<boolean> {
     if (operation.find != null) {
       const query = operation.find
       const entityName = query.from

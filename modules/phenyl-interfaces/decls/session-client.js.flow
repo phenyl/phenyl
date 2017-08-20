@@ -3,7 +3,7 @@ import type { Id } from './id.js.flow' // string
 import type { PreSession, Session } from './session.js.flow'
 
 export interface SessionClient {
-  get(sessionId: Id): Promise<Session>,
+  get(sessionId: ?Id): Promise<?Session>,
   set(preSession: PreSession): Promise<Session>,
   delete(sessionId: Id): Promise<void>,
 }

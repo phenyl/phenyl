@@ -3,7 +3,6 @@ import type {
   Id,
   Operation,
   OperationResult,
-  Session,
   PhenylClient,
   AclHandler,
   ValidationHandler,
@@ -70,7 +69,7 @@ export default class PhenylServerless {
   /**
    *
    */
-  async run(operation: Operation, sessionId: Id): Promise<OperationResult> {
+  async run(operation: Operation, sessionId: ?Id): Promise<OperationResult> {
     const session = await this.sessionClient.get(sessionId)
 
     this.assertTypeValid(operation)

@@ -23,7 +23,7 @@ function assertAclFunction(fn: any, name: string, operationName: string) {
  *
  */
 export default function createAclHandler(settings: AclSettings): AclHandler {
-  return async function isAccessible(operation: Operation, session: Session, client: PhenylClient) :Promise<boolean> {
+  return async function isAccessible(operation: Operation, session: ?Session, client: PhenylClient) :Promise<boolean> {
     if (operation.find != null) {
       const query = operation.find
       const entityName = query.from

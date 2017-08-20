@@ -10,9 +10,9 @@ import type {
 } from './command-result.js.flow'
 
 export interface CustomCommandSetting {
-  acl(command: CustomCommand, session: Session, client: PhenylClient): Promise<boolean>,
-  validation(command: CustomCommand, session: Session, client: PhenylClient): Promise<boolean>,
-  execution(command: CustomCommand, session: Session, client: PhenylClient): Promise<CustomCommandResult>,
+  acl(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<boolean>,
+  validation(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<boolean>,
+  execution(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<CustomCommandResult>,
 }
 
 export type CustomCommandSettings = { [name: string]: CustomCommandSetting }
