@@ -15,6 +15,10 @@ import type {
   CustomCommandHandler,
 } from 'phenyl-interfaces'
 
+import {
+  CustomExecutionHandlers,
+} from './create-custom-execution-handlers'
+
 type LambdaEvent = Object // TODO
 type LambdaContext = Object // TODO
 type LambdaResponse = Object // TODO
@@ -25,10 +29,7 @@ type ServerlessParams = {
   validationHandler: ValidationHandler,
   client: PhenylClient,
   sessionClient: SessionClient,
-  custom?: {
-    query?: CustomQueryHandler,
-    command?: CustomCommandHandler,
-  }
+  custom?: CustomExecutionHandlers,
 }
 
 /**
@@ -39,10 +40,7 @@ export default class PhenylServerless {
   validationHandler: ValidationHandler
   client: PhenylClient
   sessionClient: SessionClient
-  custom: {
-    query: CustomQueryHandler,
-    command: CustomCommandHandler,
-  }
+  custom: CustomExecutionHandlers
 
   constructor(params: ServerlessParams) {
     this.aclHandler = params.aclHandler
