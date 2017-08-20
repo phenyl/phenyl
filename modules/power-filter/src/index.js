@@ -8,7 +8,7 @@ import type {
 /**
  *
  */
-class PowerFilter {
+export default class PowerFilter {
   static find(values: Array<Restorable>, q: WhereQuery): Array<Restorable> {
     // TODO
     return values
