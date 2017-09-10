@@ -13,7 +13,7 @@ describe('find', () => {
       entities: { user: [user1, user2, user3] }
     })
     const usersFoundByQuery = state.find({
-      from: 'user',
+      entityName: 'user',
       //$FlowIssue(WhereQuery value can be a string)
       where: { name: 'kery' },
     })
@@ -28,7 +28,7 @@ describe('findOne', () => {
       entities: { user }
     })
     const userFromState = state.findOne({
-      from: 'user',
+      entityName: 'user',
       //$FlowIssue(WhereQuery value can be a string)
       where: { name: 'kery' },
       id: '1',
@@ -44,7 +44,7 @@ describe('get', () => {
       entities: { user }
     })
     const userFromState = state.get({
-      from: 'user',
+      entityName: 'user',
       id: '1',
     })
     assert.deepEqual(userFromState, user)
@@ -57,7 +57,7 @@ describe('$update', () => {
       entities: { user: { id: '1', name: 'kery' }}
     })
     const newState = state.$update({
-      from: 'user',
+      entityName: 'user',
       id: '1',
       operators: { $set: { name: 'kory' }}
     })
@@ -74,7 +74,7 @@ describe('$delete', () => {
       entities: { user: { id: '1', name: 'kery' }}
     })
     const newState = state.$delete({
-      from: 'user',
+      entityName: 'user',
       id: '1',
     })
 
@@ -91,7 +91,7 @@ describe('$register', () => {
       entities: { user: { id: '1' } }
     })
     const newState = state.$insert({
-      from: 'user',
+      entityName: 'user',
       value: { id: 'diary1' }
     })
 
@@ -101,4 +101,3 @@ describe('$register', () => {
     assert.deepEqual(newState, expectedState)
   })
 })
-

@@ -26,7 +26,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
   return async function isAccessible(reqData: RequestData, session: ?Session, client: PhenylClient) :Promise<boolean> {
     if (reqData.find != null) {
       const query = reqData.find
-      const entityName = query.from
+      const { entityName } = query
       const aclHandler = settings.entities[entityName].find
       assertAclFunction(aclHandler, entityName, 'find')
       return aclHandler(query, session, client)
@@ -34,7 +34,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.findOne != null) {
       const query = reqData.findOne
-      const entityName = query.from
+      const { entityName } = query
       const aclHandler = settings.entities[entityName].findOne
       assertAclFunction(aclHandler, entityName, 'findOne')
       return aclHandler(query, session, client)
@@ -42,7 +42,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.get != null) {
       const query = reqData.get
-      const entityName = query.from
+      const { entityName } = query
       const aclHandler = settings.entities[entityName].get
       assertAclFunction(aclHandler, entityName, 'get')
       return aclHandler(query, session, client)
@@ -50,7 +50,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.getByIds != null) {
       const query = reqData.getByIds
-      const entityName = query.from
+      const { entityName } = query
       const aclHandler = settings.entities[entityName].getByIds
       assertAclFunction(aclHandler, entityName, 'getByIds')
       return aclHandler(query, session, client)
@@ -58,7 +58,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.insert != null) {
       const command = reqData.insert
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].insert
       assertAclFunction(aclHandler, entityName, 'insert')
       return aclHandler(command, session, client)
@@ -66,7 +66,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.insertAndGet != null) {
       const command = reqData.insertAndGet
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].insertAndGet
       assertAclFunction(aclHandler, entityName, 'insertAndGet')
       return aclHandler(command, session, client)
@@ -74,7 +74,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.insertAndFetch != null) {
       const command = reqData.insertAndFetch
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].insertAndFetch
       assertAclFunction(aclHandler, entityName, 'insertAndFetch')
       return aclHandler(command, session, client)
@@ -82,7 +82,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.update != null) {
       const command = reqData.update
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].update
       assertAclFunction(aclHandler, entityName, 'update')
       return aclHandler(command, session, client)
@@ -90,7 +90,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.updateAndGet != null) {
       const command = reqData.updateAndGet
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].updateAndGet
       assertAclFunction(aclHandler, entityName, 'updateAndGet')
       return aclHandler(command, session, client)
@@ -98,7 +98,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.updateAndFetch != null) {
       const command = reqData.updateAndFetch
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].updateAndFetch
       assertAclFunction(aclHandler, entityName, 'updateAndFetch')
       return aclHandler(command, session, client)
@@ -106,7 +106,7 @@ export default function createAclHandler(settings: AclSettings): AclHandler {
 
     if (reqData.delete != null) {
       const command = reqData.delete
-      const entityName = command.from
+      const { entityName } = command
       const aclHandler = settings.entities[entityName].delete
       assertAclFunction(aclHandler, entityName, 'delete')
       return aclHandler(command, session, client)

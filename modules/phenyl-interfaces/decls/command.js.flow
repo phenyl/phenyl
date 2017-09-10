@@ -10,13 +10,13 @@ type EntityName = string
 export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
 export interface SingleInsertCommand {
-  from: EntityName, // "insert" key in MongoDB reference
+  entityName: EntityName, // "insert" key in MongoDB reference
   value: Restorable, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
 
 export interface MultiInsertCommand {
-  from: EntityName, // "insert" key in MongoDB reference
+  entityName: EntityName, // "insert" key in MongoDB reference
   values: Array<Restorable>, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
@@ -25,13 +25,13 @@ export interface MultiInsertCommand {
 export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 
 export interface IdUpdateCommand {
-  from: EntityName, // "update" key in MongoDB reference
+  entityName: EntityName, // "update" key in MongoDB reference
   id: Id,
   operators: UpdateOperators, // "u" key in MongoDB reference
 }
 
 export interface MultiUpdateCommand {
-  from: EntityName, // "update" key in MongoDB reference
+  entityName: EntityName, // "update" key in MongoDB reference
   where: WhereConditions, // "q" key in MongoDB reference
   operators: UpdateOperators, // "u" key in MongoDB reference
   ordered?: boolean,
@@ -41,12 +41,12 @@ export interface MultiUpdateCommand {
 export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
 
 export interface IdDeleteCommand {
-  from: EntityName, // "delete" key in MongoDB reference
+  entityName: EntityName, // "delete" key in MongoDB reference
   id: Id,
 }
 
 export interface MultiDeleteCommand {
-  from: EntityName, // "delete" key in MongoDB reference
+  entityName: EntityName, // "delete" key in MongoDB reference
   where: WhereConditions, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,

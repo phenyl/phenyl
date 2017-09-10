@@ -30,7 +30,7 @@ export default class PhenylState {
    *
    */
   find(query: WhereQuery): Array<Restorable> {
-    const entities = this.entities[query.from]
+    const entities = this.entities[query.entityName]
     const allEntities = Object.keys(entities).map(key => entities[key])
     return filter(allEntities, query.where)
   }
@@ -46,7 +46,7 @@ export default class PhenylState {
    *
    */
   get(query: IdQuery): Restorable {
-    const entity = this.entities[query.from][query.id]
+    const entity = this.entities[query.entityName][query.id]
     if (entity == null) throw new Error('NoId')
     return entity
   }
@@ -69,7 +69,7 @@ export default class PhenylState {
    * TODO rename insert register
    */
   $insert(command: InsertCommand): PhenylState {
-    const entityName = command.from
+    const { entityName } = command
     //$FlowIssue(union-type)
     const values = command.values ? command.values : [command.value]
     const operators = {}
@@ -87,7 +87,7 @@ export default class PhenylState {
    *
    */
   $unregister(command: InsertCommand): PhenylState {
-    const entityName = command.from
+    const { entityName } = command
     //$FlowIssue(union-type)
     const values = command.values ? command.values : [command.value]
     const operators = {}

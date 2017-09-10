@@ -5,7 +5,7 @@ import type { SortNotation } from './sort-notation.js.flow'
 type EntityName = string
 
 export interface WhereQuery {
-  from: EntityName,
+  entityName: EntityName,
   where: WhereConditions,
   skip?: number,
   limit?: number,
@@ -13,12 +13,12 @@ export interface WhereQuery {
 }
 
 export interface IdQuery {
-  from: string,
+  entityName: string,
   id: Id
 }
 
 export interface IdsQuery {
-  from: string,
+  entityName: string,
   ids: Array<Id>
 }
 
