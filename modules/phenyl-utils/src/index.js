@@ -3,14 +3,14 @@
 /**
  *
  */
-export function assertValidOperation(op: any): void {
+export function assertValidRequest(op: any): void {
   if (typeof op !== 'object' || op === null) {
-    throw new Error(`operation must be an object. ${typeof op} given.`)
+    throw new Error(`request must be an object. ${typeof op} given.`)
   }
   const keys = Object.keys(op)
   if (keys.length !== 1) {
     const keysDescription = keys.length === 0 ? '' : ` keys=[${keys.join(', ')}]`
-    throw new Error(`operation object must have just one key, ${keys.length} given.${keysDescription}`)
+    throw new Error(`request object must have just one key, ${keys.length} given.${keysDescription}`)
   }
   const key = keys[0]
   switch(key) {
@@ -41,7 +41,7 @@ export function assertValidOperation(op: any): void {
     case 'runCustomCommand':
       return assertValidCustomCommand(op.runCustomCommand)
     default:
-      throw new Error(`Invalid operation key: "${key}"`)
+      throw new Error(`Invalid request key: "${key}"`)
   }
 }
 

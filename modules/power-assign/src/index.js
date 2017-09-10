@@ -240,7 +240,7 @@ export default class PowerAssign {
     Object.keys(pullOp).forEach(dnStr => {
       let arr: ?Array<any> = this.getValue(obj, dnStr)
       if (arr == null) {
-        return // If the field is absent, no operations will be executed
+        return // If the field is absent, no requests will be executed
       }
       if (!Array.isArray(arr)) {
         throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${dnStr}".`)

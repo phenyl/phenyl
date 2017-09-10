@@ -12,7 +12,7 @@ import type {
   CustomCommand,
 } from './command.js.flow'
 
-export type Operation = {
+export type Request = {
   find?: WhereQuery,
   findOne?: WhereQuery,
   get?: IdQuery,

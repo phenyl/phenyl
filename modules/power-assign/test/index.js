@@ -118,7 +118,7 @@ describe('assign', () => {
     assert(now.getDate() === updatedAt.getDate())
   })
 
-  it('sets the result of bit operation', () => {
+  it('sets the result of bit request', () => {
     const obj = { flags: parseInt('1010', 10) }
     const newObj = assign(obj, { $bit: { flags: { and: parseInt('0101', 10) }}})
     assert(newObj.flags.toString(2) === '1100000')

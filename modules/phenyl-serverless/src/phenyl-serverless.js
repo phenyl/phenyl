@@ -1,6 +1,6 @@
 // @flow
 import {
-  assertValidOperation,
+  assertValidRequest,
 } from 'phenyl-utils'
 
 import {
@@ -9,8 +9,8 @@ import {
 
 import type {
   Id,
-  Operation,
-  OperationResult,
+  Request,
+  Response,
   PhenylClient,
   AclHandler,
   ValidationHandler,
@@ -60,84 +60,84 @@ export default class PhenylServerless {
    */
   getLambdaHandler(): LambdaHandler {
     return (event: LambdaEvent, context: LambdaContext): Promise<LambdaResponse> => {
-      const { operation, sessionId } = context
-      return this.run(operation, sessionId)
+      const { request, sessionId } = context
+      return this.run(request, sessionId)
     }
   }
 
   /**
    *
    */
-  async run(operation: Operation, sessionId: ?Id): Promise<OperationResult> {
+  async run(request: Request, sessionId: ?Id): Promise<Response> {
     const session = await this.sessionClient.get(sessionId)
 
-    assertValidOperation(operation)
+    assertValidRequest(request)
 
-    const isAccessible = await this.aclHandler(operation, session, this.client)
+    const isAccessible = await this.aclHandler(request, session, this.client)
     if (!isAccessible) {
       throw new Error('Authorization Required.')
     }
 
-    const isValid = await this.validationHandler(operation, session, this.client)
+    const isValid = await this.validationHandler(request, session, this.client)
     if (!isValid) {
       throw new Error('Params are not valid.')
     }
 
-    if (operation.find != null) {
-      const result = await this.client.find(operation.find)
+    if (request.find != null) {
+      const result = await this.client.find(request.find)
       return { find: result }
     }
-    if (operation.findOne != null) {
-      const result = await this.client.findOne(operation.findOne)
+    if (request.findOne != null) {
+      const result = await this.client.findOne(request.findOne)
       return { findOne: result }
     }
-    if (operation.get != null) {
-      const result = await this.client.get(operation.get)
+    if (request.get != null) {
+      const result = await this.client.get(request.get)
       return { get: result }
     }
-    if (operation.getByIds != null) {
-      const result = await this.client.getByIds(operation.getByIds)
+    if (request.getByIds != null) {
+      const result = await this.client.getByIds(request.getByIds)
       return { getByIds: result }
     }
-    if (operation.insert != null) {
-      const result = await this.client.insert(operation.insert)
+    if (request.insert != null) {
+      const result = await this.client.insert(request.insert)
       return { insert: result }
     }
-    if (operation.insertAndGet != null) {
-      const result = await this.client.insertAndGet(operation.insertAndGet)
+    if (request.insertAndGet != null) {
+      const result = await this.client.insertAndGet(request.insertAndGet)
       return { insertAndGet: result }
     }
-    if (operation.insertAndFetch != null) {
-      const result = await this.client.insertAndFetch(operation.insertAndFetch)
+    if (request.insertAndFetch != null) {
+      const result = await this.client.insertAndFetch(request.insertAndFetch)
       return { insertAndFetch: result }
     }
-    if (operation.update != null) {
-      const result = await this.client.update(operation.update)
+    if (request.update != null) {
+      const result = await this.client.update(request.update)
       return { update: result }
     }
-    if (operation.updateAndGet != null) {
-      const result = await this.client.updateAndGet(operation.updateAndGet)
+    if (request.updateAndGet != null) {
+      const result = await this.client.updateAndGet(request.updateAndGet)
       return { updateAndGet: result }
 
     }
-    if (operation.updateAndFetch != null) {
-      const result = await this.client.updateAndFetch(operation.updateAndFetch)
+    if (request.updateAndFetch != null) {
+      const result = await this.client.updateAndFetch(request.updateAndFetch)
       return { updateAndFetch: result }
     }
-    if (operation.delete != null) {
-      const result = await this.client.delete(operation.delete)
+    if (request.delete != null) {
+      const result = await this.client.delete(request.delete)
       return { delete: result }
     }
 
-    if (operation.runCustomQuery != null) {
-      const result = await this.custom.queryHandler(operation.runCustomQuery, session, this.client)
+    if (request.runCustomQuery != null) {
+      const result = await this.custom.queryHandler(request.runCustomQuery, session, this.client)
       return { runCustomQuery: result }
     }
-    if (operation.runCustomCommand != null) {
-      const result = await this.custom.commandHandler(operation.runCustomCommand, session, this.client)
+    if (request.runCustomCommand != null) {
+      const result = await this.custom.commandHandler(request.runCustomCommand, session, this.client)
       return { runCustomCommand: result }
     }
 
-    throw new Error('Invalid operation.')
+    throw new Error('Invalid request.')
   }
 }

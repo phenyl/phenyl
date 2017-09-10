@@ -26,11 +26,11 @@ TBD
 import Phenyl from 'phenyl'
 
 const server = new Phenyl({
-  aclHandler: asnyc (operation, session, client) => {
+  aclHandler: asnyc (request, session, client) => {
     return true
   },
 
-  validationHandler: async (operation, session, client) => {
+  validationHandler: async (request, session, client) => {
     return true
   },
 

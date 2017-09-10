@@ -41,8 +41,8 @@ import type {
   EntityValidationSettings,
 } from './decls/entity-validation-setting.js.flow'
 import type { Id } from './decls/id.js.flow'
-import type { Operation } from './decls/operation.js.flow'
-import type { OperationResult } from './decls/operation-result.js.flow'
+import type { Request } from './decls/request.js.flow'
+import type { Response } from './decls/response.js.flow'
 import type {
   CustomQueryHandler,
   CustomQueryResult,
@@ -127,8 +127,8 @@ export type {
   OKCustomCommandResult,
   OKFetchCommandResult,
   OKGetCommandResult,
-  Operation,
-  OperationResult,
+  Request,
+  Response,
   PreSession,
   PhenylClient,
   PhenylCustomClient,

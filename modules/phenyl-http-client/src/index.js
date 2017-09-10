@@ -15,7 +15,7 @@ import type {
   IdQuery,
   IdsQuery,
   InsertCommand,
-  Operation,
+  Request,
   PhenylClient,
   PhenylCustomClient,
   Restorable,
@@ -40,10 +40,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async find(query: WhereQuery): Promise<Array<Restorable>> {
-    const operation: Operation = { find: query }
+    const request: Request = { find: query }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: Array<Restorable> } = await fetch(`${this.url}?d=${encodeURIComponent(JSON.stringify(params))}`, {
       method: 'GET',
@@ -56,10 +56,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async findOne(query: WhereQuery): Promise<Restorable> {
-    const operation: Operation = { findOne: query }
+    const request: Request = { findOne: query }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: Restorable } = await fetch(`${this.url}?d=${encodeURIComponent(JSON.stringify(params))}`, {
       method: 'GET',
@@ -72,10 +72,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async get(query: IdQuery): Promise<Restorable> {
-    const operation: Operation = { get: query }
+    const request: Request = { get: query }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: Restorable } = await fetch(`${this.url}?d=${encodeURIComponent(JSON.stringify(params))}`, {
       method: 'GET',
@@ -88,10 +88,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async getByIds(query: IdsQuery): Promise<Array<Restorable>> {
-    const operation: Operation = { getByIds: query }
+    const request: Request = { getByIds: query }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: Array<Restorable> } = await fetch(`${this.url}?d=${encodeURIComponent(JSON.stringify(params))}`, {
       method: 'GET',
@@ -104,10 +104,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insert(command: InsertCommand): Promise<CommandResult> {
-    const operation: Operation = { insert: command }
+    const request: Request = { insert: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: CommandResult } = await fetch(this.url, {
       method: 'POST',
@@ -121,10 +121,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insertAndGet(command: InsertCommand): Promise<GetCommandResult> {
-    const operation: Operation = { insertAndGet: command }
+    const request: Request = { insertAndGet: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: GetCommandResult } = await fetch(this.url, {
       method: 'POST',
@@ -138,10 +138,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insertAndFetch(command: InsertCommand): Promise<FetchCommandResult> {
-    const operation: Operation = { insertAndFetch: command }
+    const request: Request = { insertAndFetch: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: FetchCommandResult } = await fetch(this.url, {
       method: 'POST',
@@ -155,10 +155,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async update(command: UpdateCommand): Promise<CommandResult> {
-    const operation: Operation = { update: command }
+    const request: Request = { update: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: CommandResult } = await fetch(this.url, {
       method: 'PUT',
@@ -172,10 +172,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async updateAndGet(command: UpdateCommand): Promise<GetCommandResult> {
-    const operation: Operation = { updateAndGet: command }
+    const request: Request = { updateAndGet: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: GetCommandResult } = await fetch(this.url, {
       method: 'PUT',
@@ -189,10 +189,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult> {
-    const operation: Operation = { updateAndFetch: command }
+    const request: Request = { updateAndFetch: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: FetchCommandResult } = await fetch(this.url, {
       method: 'PUT',
@@ -206,10 +206,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResult> {
-    const operation: Operation = { delete: command }
+    const request: Request = { delete: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: CommandResult } = await fetch(this.url, {
       method: 'DELETE',
@@ -223,10 +223,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async runCustomQuery(query: CustomQuery): Promise<CustomQueryResult> {
-    const operation: Operation = { runCustomQuery: query }
+    const request: Request = { runCustomQuery: query }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: CustomQueryResult } = await fetch(`${this.url}?d=${encodeURIComponent(JSON.stringify(params))}`, {
       method: 'GET',
@@ -239,10 +239,10 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async runCustomCommand(command: CustomCommand): Promise<CustomCommandResult> {
-    const operation: Operation = { runCustomCommand: command }
+    const request: Request = { runCustomCommand: command }
     const params = {
       s: this.sessionId,
-      o: operation,
+      o: request,
     }
     const response: { body: CustomCommandResult } = await fetch(this.url, {
       method: 'POST',

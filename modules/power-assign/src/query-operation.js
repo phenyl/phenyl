@@ -8,7 +8,7 @@ import type {
 /**
  *
  */
-export default class QueryOperation {
+export default class QueryRequest {
   /**
    *
    */

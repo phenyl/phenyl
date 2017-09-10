@@ -14,7 +14,7 @@ import type {
   CustomCommandResult,
 } from './command-result.js.flow'
 
-export type OperationResult = {
+export type Response = {
   find?: Array<Restorable>,
   findOne?: Restorable,
   get?: Restorable,
