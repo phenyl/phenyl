@@ -1,6 +1,6 @@
 // @flow
-import type { Request } from './request'
+import type { RequestData } from './request-data'
 import type { Session } from './session'
 import type { PhenylClient } from './phenyl-client'
 
-export type ValidationHandler = (request: Request, session: ?Session, client: PhenylClient) => Promise<boolean>
+export type ValidationHandler = (reqData: RequestData, session: ?Session, client: PhenylClient) => Promise<boolean>

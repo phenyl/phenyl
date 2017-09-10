@@ -1,6 +1,6 @@
 // @flow
 import {
-  assertValidRequest,
+  assertValidRequestData,
 } from 'phenyl-utils'
 
 import {
@@ -9,7 +9,7 @@ import {
 
 import type {
   Id,
-  Request,
+  RequestData,
   Response,
   PhenylClient,
   AclHandler,
@@ -60,81 +60,81 @@ export default class PhenylServerless {
    */
   getLambdaHandler(): LambdaHandler {
     return (event: LambdaEvent, context: LambdaContext): Promise<LambdaResponse> => {
-      const { request, sessionId } = context
-      return this.run(request, sessionId)
+      const { requestData, sessionId } = context
+      return this.run(requestData, sessionId)
     }
   }
 
   /**
    *
    */
-  async run(request: Request, sessionId: ?Id): Promise<Response> {
+  async run(reqData: RequestData, sessionId: ?Id): Promise<Response> {
     const session = await this.sessionClient.get(sessionId)
 
-    assertValidRequest(request)
+    assertValidRequestData(reqData)
 
-    const isAccessible = await this.aclHandler(request, session, this.client)
+    const isAccessible = await this.aclHandler(reqData, session, this.client)
     if (!isAccessible) {
       throw new Error('Authorization Required.')
     }
 
-    const isValid = await this.validationHandler(request, session, this.client)
+    const isValid = await this.validationHandler(reqData, session, this.client)
     if (!isValid) {
       throw new Error('Params are not valid.')
     }
 
-    if (request.find != null) {
-      const result = await this.client.find(request.find)
+    if (reqData.find != null) {
+      const result = await this.client.find(reqData.find)
       return { find: result }
     }
-    if (request.findOne != null) {
-      const result = await this.client.findOne(request.findOne)
+    if (reqData.findOne != null) {
+      const result = await this.client.findOne(reqData.findOne)
       return { findOne: result }
     }
-    if (request.get != null) {
-      const result = await this.client.get(request.get)
+    if (reqData.get != null) {
+      const result = await this.client.get(reqData.get)
       return { get: result }
     }
-    if (request.getByIds != null) {
-      const result = await this.client.getByIds(request.getByIds)
+    if (reqData.getByIds != null) {
+      const result = await this.client.getByIds(reqData.getByIds)
       return { getByIds: result }
     }
-    if (request.insert != null) {
-      const result = await this.client.insert(request.insert)
+    if (reqData.insert != null) {
+      const result = await this.client.insert(reqData.insert)
       return { insert: result }
     }
-    if (request.insertAndGet != null) {
-      const result = await this.client.insertAndGet(request.insertAndGet)
+    if (reqData.insertAndGet != null) {
+      const result = await this.client.insertAndGet(reqData.insertAndGet)
       return { insertAndGet: result }
     }
-    if (request.insertAndFetch != null) {
-      const result = await this.client.insertAndFetch(request.insertAndFetch)
+    if (reqData.insertAndFetch != null) {
+      const result = await this.client.insertAndFetch(reqData.insertAndFetch)
       return { insertAndFetch: result }
     }
-    if (request.update != null) {
-      const result = await this.client.update(request.update)
+    if (reqData.update != null) {
+      const result = await this.client.update(reqData.update)
       return { update: result }
     }
-    if (request.updateAndGet != null) {
-      const result = await this.client.updateAndGet(request.updateAndGet)
+    if (reqData.updateAndGet != null) {
+      const result = await this.client.updateAndGet(reqData.updateAndGet)
       return { updateAndGet: result }
 
     }
-    if (request.updateAndFetch != null) {
-      const result = await this.client.updateAndFetch(request.updateAndFetch)
+    if (reqData.updateAndFetch != null) {
+      const result = await this.client.updateAndFetch(reqData.updateAndFetch)
       return { updateAndFetch: result }
     }
-    if (request.delete != null) {
-      const result = await this.client.delete(request.delete)
+    if (reqData.delete != null) {
+      const result = await this.client.delete(reqData.delete)
       return { delete: result }
     }
 
-    if (request.runCustomQuery != null) {
-      const result = await this.custom.queryHandler(request.runCustomQuery, session, this.client)
+    if (reqData.runCustomQuery != null) {
+      const result = await this.custom.queryHandler(reqData.runCustomQuery, session, this.client)
       return { runCustomQuery: result }
     }
-    if (request.runCustomCommand != null) {
-      const result = await this.custom.commandHandler(request.runCustomCommand, session, this.client)
+    if (reqData.runCustomCommand != null) {
+      const result = await this.custom.commandHandler(reqData.runCustomCommand, session, this.client)
       return { runCustomCommand: result }
     }
 

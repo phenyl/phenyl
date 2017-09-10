@@ -41,7 +41,7 @@ import type {
   EntityValidationSettings,
 } from './decls/entity-validation-setting.js.flow'
 import type { Id } from './decls/id.js.flow'
-import type { Request } from './decls/request.js.flow'
+import type { RequestData } from './decls/request-data.js.flow'
 import type { Response } from './decls/response.js.flow'
 import type {
   CustomQueryHandler,
@@ -131,7 +131,7 @@ export type {
   OKCustomCommandResult,
   OKFetchCommandResult,
   OKGetCommandResult,
-  Request,
+  RequestData,
   Response,
   PreSession,
   PhenylClient,

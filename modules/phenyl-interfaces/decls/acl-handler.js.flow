@@ -1,6 +1,6 @@
 // @flow
-import type { Request } from './request'
+import type { RequestData } from './request-data'
 import type { Session } from './session'
 import type { PhenylClient } from './phenyl-client'
 
-export type AclHandler = (request: Request, session: ?Session, client: PhenylClient) => Promise<boolean>
+export type AclHandler = (reqData: RequestData, session: ?Session, client: PhenylClient) => Promise<boolean>

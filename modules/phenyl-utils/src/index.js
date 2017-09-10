@@ -3,45 +3,45 @@
 /**
  *
  */
-export function assertValidRequest(op: any): void {
-  if (typeof op !== 'object' || op === null) {
-    throw new Error(`request must be an object. ${typeof op} given.`)
+export function assertValidRequestData(rd: any): void {
+  if (typeof rd !== 'object' || rd === null) {
+    throw new Error(`RequestData must be an object. ${typeof rd} given.`)
   }
-  const keys = Object.keys(op)
+  const keys = Object.keys(rd)
   if (keys.length !== 1) {
     const keysDescription = keys.length === 0 ? '' : ` keys=[${keys.join(', ')}]`
-    throw new Error(`request object must have just one key, ${keys.length} given.${keysDescription}`)
+    throw new Error(`RequestData object must have just one key, ${keys.length} given.${keysDescription}`)
   }
   const key = keys[0]
   switch(key) {
     case 'find':
-      return assertValidWhereQuery(op.find)
+      return assertValidWhereQuery(rd.find)
     case 'findOne':
-      return assertValidWhereQuery(op.findOne)
+      return assertValidWhereQuery(rd.findOne)
     case 'get':
-      return assertValidIdQuery(op.get)
+      return assertValidIdQuery(rd.get)
     case 'getByIds':
-      return assertValidIdsQuery(op.getByIds)
+      return assertValidIdsQuery(rd.getByIds)
     case 'insert':
-      return assertValidInsertCommand(op.insert)
+      return assertValidInsertCommand(rd.insert)
     case 'insertAndGet':
-      return assertValidInsertCommand(op.insertAndGet)
+      return assertValidInsertCommand(rd.insertAndGet)
     case 'insertAndFetch':
-      return assertValidInsertCommand(op.insertAndFetch)
+      return assertValidInsertCommand(rd.insertAndFetch)
     case 'update':
-      return assertValidUpdateCommand(op.update)
+      return assertValidUpdateCommand(rd.update)
     case 'updateAndGet':
-      return assertValidUpdateCommand(op.updateAndGet)
+      return assertValidUpdateCommand(rd.updateAndGet)
     case 'updateAndFetch':
-      return assertValidUpdateCommand(op.updateAndFetch)
+      return assertValidUpdateCommand(rd.updateAndFetch)
     case 'delete':
-      return assertValidDeleteCommand(op.delete)
+      return assertValidDeleteCommand(rd.delete)
     case 'runCustomQuery':
-      return assertValidCustomQuery(op.runCustomQuery)
+      return assertValidCustomQuery(rd.runCustomQuery)
     case 'runCustomCommand':
-      return assertValidCustomCommand(op.runCustomCommand)
+      return assertValidCustomCommand(rd.runCustomCommand)
     default:
-      throw new Error(`Invalid request key: "${key}"`)
+      throw new Error(`Invalid key in RequestData: "${key}"`)
   }
 }
 
@@ -146,13 +146,13 @@ export function assertValidUpdateCommand(com: any): void {
     throw new Error(`updateCommand must be an object. ${typeof com} given.`)
   }
 
-  const { from, operators, id, where } = com
+  const { from, rderators, id, where } = com
 
   if (typeof from !== 'string' || !from) {
     throw new Error(`updateCommand.from must be a non-empty string. "${from}" given.`)
   }
 
-  assertValidUpdateOperators(operators)
+  assertValidUpdateOperators(rderators)
 
   if (id != null) {
     if (typeof id !== 'string' || !id) {
