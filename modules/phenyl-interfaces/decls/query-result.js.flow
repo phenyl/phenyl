@@ -1,0 +1,15 @@
+// @flow
+
+import type { Restorable } from './restorable.js.flow'
+
+export type CustomQueryResult = {
+  result: any
+}
+
+export type QueryResult = {
+  values: Array<Restorable>
+}
+
+export type SingleQueryResult = {
+  value: Restorable
+}

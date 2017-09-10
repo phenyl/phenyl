@@ -5,8 +5,12 @@ import type {
   IdsQuery,
   CustomQuery,
 } from './query.js.flow'
-import type { Restorable } from './restorable.js.flow' // Object
 import type { Session } from './session.js.flow' // Object
+import type {
+  CustomQueryResult,
+  SingleQueryResult,
+  QueryResult,
+} from './query-result.js.flow'
 import type {
   CommandResult,
   CustomCommandResult,
@@ -20,15 +24,11 @@ import type {
   CustomCommand,
 } from './command.js.flow'
 
-export type CustomQueryResult = {
-  result: any
-}
-
 export interface PhenylClient {
-  find(query: WhereQuery): Promise<Array<Restorable>>,
-  findOne(query: WhereQuery): Promise<Restorable>,
-  get(query: IdQuery): Promise<Restorable>,
-  getByIds(query: IdsQuery): Promise<Array<Restorable>>,
+  find(query: WhereQuery): Promise<QueryResult>,
+  findOne(query: WhereQuery): Promise<SingleQueryResult>,
+  get(query: IdQuery): Promise<SingleQueryResult>,
+  getByIds(query: IdsQuery): Promise<QueryResult>,
 
   insert(command: InsertCommand): Promise<CommandResult>,
   insertAndGet(command: InsertCommand): Promise<GetCommandResult>,

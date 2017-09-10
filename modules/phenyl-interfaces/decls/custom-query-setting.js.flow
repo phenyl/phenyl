@@ -1,10 +1,13 @@
 // @flow
 
 import type { Session } from './session.js.flow'
-import type { PhenylClient, CustomQueryResult } from './phenyl-client.js.flow'
+import type { PhenylClient } from './phenyl-client.js.flow'
 import type {
   CustomQuery,
 } from './query.js.flow'
+import type {
+  CustomQueryResult,
+} from './query-result.js.flow'
 
 export interface CustomQuerySetting {
   acl(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<boolean>,

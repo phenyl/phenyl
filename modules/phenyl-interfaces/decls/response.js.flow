@@ -5,7 +5,9 @@ import type {
 
 import type {
   CustomQueryResult,
-} from './phenyl-client.js.flow'
+  QueryResult,
+  SingleQueryResult,
+} from './query-result.js.flow'
 
 import type {
   CommandResult,
@@ -15,10 +17,10 @@ import type {
 } from './command-result.js.flow'
 
 export type Response = {
-  find?: Array<Restorable>,
-  findOne?: Restorable,
-  get?: Restorable,
-  getByIds?: Array<Restorable>,
+  find?: QueryResult,
+  findOne?: SingleQueryResult,
+  get?: SingleQueryResult,
+  getByIds?: QueryResult,
   runCustomQuery?: CustomQueryResult,
   insert?: CommandResult,
   insertAndGet?: GetCommandResult,

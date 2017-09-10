@@ -18,7 +18,9 @@ import type {
   Request,
   PhenylClient,
   PhenylCustomClient,
+  QueryResult,
   Restorable,
+  SingleQueryResult,
   UpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -39,7 +41,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
   /**
    *
    */
-  async find(query: WhereQuery): Promise<Array<Restorable>> {
+  async find(query: WhereQuery): Promise<QueryResult> {
     const request: Request = { find: query }
     const params = {
       s: this.sessionId,
@@ -49,7 +51,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
       method: 'GET',
     }).then(res => res.json())
 
-    return response.body
+    return { values: response.body }
   }
 
   /**
@@ -71,7 +73,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
   /**
    *
    */
-  async get(query: IdQuery): Promise<Restorable> {
+  async get(query: IdQuery): Promise<SingleQueryResult> {
     const request: Request = { get: query }
     const params = {
       s: this.sessionId,
@@ -87,7 +89,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
   /**
    *
    */
-  async getByIds(query: IdsQuery): Promise<Array<Restorable>> {
+  async getByIds(query: IdsQuery): Promise<QueryResult> {
     const request: Request = { getByIds: query }
     const params = {
       s: this.sessionId,
@@ -97,7 +99,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
       method: 'GET',
     }).then(res => res.json())
 
-    return response.body
+    return { values: response.body }
   }
 
   /**

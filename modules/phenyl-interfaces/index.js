@@ -45,7 +45,6 @@ import type { Request } from './decls/request.js.flow'
 import type { Response } from './decls/response.js.flow'
 import type {
   CustomQueryHandler,
-  CustomQueryResult,
   CustomCommandHandler,
   PhenylClient,
   PhenylCustomClient,
@@ -54,6 +53,11 @@ import type {
   QueryCondition,
   QueryExpression,
 } from './decls/query-condition.js.flow'
+import type {
+  CustomQueryResult,
+  QueryResult,
+  SingleQueryResult,
+} from './decls/query-result.js.flow'
 import type {
   CustomQuery,
   IdQuery,
@@ -138,12 +142,14 @@ export type {
   PushOperator,
   QueryCondition,
   QueryExpression,
+  QueryResult,
   Restorable,
   RestorableEntity,
   SetOperator,
   Session,
   SessionClient,
   SingleInsertCommand,
+  SingleQueryResult,
   SortNotation,
   UpdateCommand,
   UpdateOperators,
