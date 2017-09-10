@@ -16,7 +16,7 @@ import type {
   CustomCommandResult,
 } from './command-result.js.flow'
 
-export type Response = {
+export type ResponseData = {
   find?: QueryResult,
   findOne?: SingleQueryResult,
   get?: SingleQueryResult,

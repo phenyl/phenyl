@@ -10,7 +10,7 @@ import {
 import type {
   Id,
   RequestData,
-  Response,
+  ResponseData,
   PhenylClient,
   AclHandler,
   ValidationHandler,
@@ -68,7 +68,7 @@ export default class PhenylServerless {
   /**
    *
    */
-  async run(reqData: RequestData, sessionId: ?Id): Promise<Response> {
+  async run(reqData: RequestData, sessionId: ?Id): Promise<ResponseData> {
     const session = await this.sessionClient.get(sessionId)
 
     assertValidRequestData(reqData)

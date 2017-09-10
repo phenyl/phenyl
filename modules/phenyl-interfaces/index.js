@@ -41,8 +41,6 @@ import type {
   EntityValidationSettings,
 } from './decls/entity-validation-setting.js.flow'
 import type { Id } from './decls/id.js.flow'
-import type { RequestData } from './decls/request-data.js.flow'
-import type { Response } from './decls/response.js.flow'
 import type {
   CustomQueryHandler,
   CustomCommandHandler,
@@ -64,6 +62,8 @@ import type {
   IdsQuery,
   WhereQuery,
 } from './decls/query.js.flow'
+import type { RequestData } from './decls/request-data.js.flow'
+import type { ResponseData } from './decls/response-data.js.flow'
 import type {
   Restorable,
   RestorableEntity,
@@ -131,8 +131,6 @@ export type {
   OKCustomCommandResult,
   OKFetchCommandResult,
   OKGetCommandResult,
-  RequestData,
-  Response,
   PreSession,
   PhenylClient,
   PhenylCustomClient,
@@ -143,6 +141,8 @@ export type {
   QueryCondition,
   QueryExpression,
   QueryResult,
+  RequestData,
+  ResponseData,
   Restorable,
   RestorableEntity,
   SetOperator,
