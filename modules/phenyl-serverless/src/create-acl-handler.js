@@ -1,8 +1,8 @@
 // @flow
 import type {
   AclHandler,
-  CustomCommandSettings,
-  CustomQuerySettings,
+  CustomCommandDefinitions,
+  CustomQueryDefinitions,
   EntityAclSettings,
   RequestData,
   PhenylClient,
@@ -11,8 +11,8 @@ import type {
 
 export type AclSettings = {
   entities: EntityAclSettings,
-  queries: CustomQuerySettings,
-  commands: CustomCommandSettings,
+  queries: CustomQueryDefinitions,
+  commands: CustomCommandDefinitions,
 }
 
 function assertAclFunction(fn: any, name: string, methodName: string) {

@@ -9,10 +9,10 @@ import type {
   CustomCommandResult,
 } from './command-result.js.flow'
 
-export interface CustomCommandSetting {
+export interface CustomCommandDefinition {
   acl(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<boolean>,
   validation(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<boolean>,
   execution(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<CustomCommandResult>,
 }
 
-export type CustomCommandSettings = { [name: string]: CustomCommandSetting }
+export type CustomCommandDefinitions = { [name: string]: CustomCommandDefinition }

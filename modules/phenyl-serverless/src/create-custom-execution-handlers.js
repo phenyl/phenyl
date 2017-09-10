@@ -2,19 +2,19 @@
 import type {
   CustomQuery,
   CustomQueryHandler,
-  CustomQuerySettings,
+  CustomQueryDefinitions,
   CustomQueryResult,
   CustomCommand,
   CustomCommandHandler,
-  CustomCommandSettings,
+  CustomCommandDefinitions,
   CustomCommandResult,
   Session,
   PhenylClient,
 } from 'phenyl-interfaces'
 
 export type CustomExecutionSettings = {
-  queries: CustomQuerySettings,
-  commands: CustomCommandSettings,
+  queries: CustomQueryDefinitions,
+  commands: CustomCommandDefinitions,
 }
 
 export type CustomExecutionHandlers = {
@@ -35,7 +35,7 @@ export default function createCustomExecutionHandlers(settings: CustomExecutionS
 /**
  *
  */
-export function createCustomQueryHandler(querySettings: CustomQuerySettings): CustomQueryHandler {
+export function createCustomQueryHandler(querySettings: CustomQueryDefinitions): CustomQueryHandler {
   return function executeCustomQuery(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<CustomQueryResult> {
     const { name } = query
     const setting = querySettings[name]
@@ -49,7 +49,7 @@ export function createCustomQueryHandler(querySettings: CustomQuerySettings): Cu
 /**
  *
  */
-export function createCustomCommandHandler(commandSettings: CustomCommandSettings): CustomCommandHandler {
+export function createCustomCommandHandler(commandSettings: CustomCommandDefinitions): CustomCommandHandler {
   return function executeCustomCommand(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<CustomCommandResult> {
     const { name } = command
     const setting = commandSettings[name]

@@ -24,13 +24,13 @@ import type {
   UpdateCommand,
 } from './decls/command.js.flow'
 import type {
-  CustomCommandSetting,
-  CustomCommandSettings,
-} from './decls/custom-command-setting.js.flow'
+  CustomCommandDefinition,
+  CustomCommandDefinitions,
+} from './decls/custom-command-definition.js.flow'
 import type {
-  CustomQuerySetting,
-  CustomQuerySettings,
-} from './decls/custom-query-setting.js.flow'
+  CustomQueryDefinition,
+  CustomQueryDefinitions,
+} from './decls/custom-query-definition.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type {
   EntityAclSetting,
@@ -98,13 +98,13 @@ export type {
   CustomCommand,
   CustomCommandHandler,
   CustomCommandResult,
-  CustomCommandSetting,
-  CustomCommandSettings,
+  CustomCommandDefinition,
+  CustomCommandDefinitions,
   CustomQuery,
   CustomQueryHandler,
   CustomQueryResult,
-  CustomQuerySetting,
-  CustomQuerySettings,
+  CustomQueryDefinition,
+  CustomQueryDefinitions,
   DeleteCommand,
   DotNotationString,
   EntityAclSetting,

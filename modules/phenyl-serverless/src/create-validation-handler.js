@@ -1,8 +1,8 @@
 // @flow
 import type {
   ValidationHandler,
-  CustomCommandSettings,
-  CustomQuerySettings,
+  CustomCommandDefinitions,
+  CustomQueryDefinitions,
   EntityValidationSettings,
   RequestData,
   PhenylClient,
@@ -11,8 +11,8 @@ import type {
 
 export type ValidationSettings = {
   entities: EntityValidationSettings,
-  queries: CustomQuerySettings,
-  commands: CustomCommandSettings,
+  queries: CustomQueryDefinitions,
+  commands: CustomCommandDefinitions,
 }
 
 function assertValidationFunction(fn: any, name: string, methodName: string) {

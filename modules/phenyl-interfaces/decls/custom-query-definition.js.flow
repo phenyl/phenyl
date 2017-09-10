@@ -9,10 +9,10 @@ import type {
   CustomQueryResult,
 } from './query-result.js.flow'
 
-export interface CustomQuerySetting {
+export interface CustomQueryDefinition {
   acl(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<boolean>,
   validation(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<boolean>,
   execution(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<CustomQueryResult>,
 }
 
-export type CustomQuerySettings = { [name: string]: CustomQuerySetting }
+export type CustomQueryDefinitions = { [name: string]: CustomQueryDefinition }
