@@ -69,7 +69,7 @@ export default class PhenylState {
    * TODO rename insert register
    */
   $insert(command: InsertCommand): PhenylState {
-    const modelName = command.from
+    const entityName = command.from
     //$FlowIssue(union-type)
     const values = command.values ? command.values : [command.value]
     const operators = {}
@@ -77,7 +77,7 @@ export default class PhenylState {
     //$FlowIssue(values is array)
     values.forEach(value => {
       const key = Object.keys(value)[0]
-      operators[`entities.${modelName}.${key}`] = value[key]
+      operators[`entities.${entityName}.${key}`] = value[key]
     })
 
     return assign(this, { $set: operators })
@@ -87,7 +87,7 @@ export default class PhenylState {
    *
    */
   $unregister(command: InsertCommand): PhenylState {
-    const modelName = command.from
+    const entityName = command.from
     //$FlowIssue(union-type)
     const values = command.values ? command.values : [command.value]
     const operators = {}
@@ -95,7 +95,7 @@ export default class PhenylState {
     //$FlowIssue(values is array)
     values.forEach(value => {
       const key = Object.keys(value)[0]
-      operators[`entities.${modelName}.${key}`] = value[key]
+      operators[`entities.${entityName}.${key}`] = value[key]
     })
 
     return assign(this, { $set: operators })

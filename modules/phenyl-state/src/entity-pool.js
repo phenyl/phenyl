@@ -29,10 +29,10 @@ export default class EntityPool<T: RestorableEntity> {
   /**
    * Return a new instance which is newly set given entities.
    */
-  $set(...models: Array<T>): EntityPool<T> {
+  $set(...entities: Array<T>): EntityPool<T> {
     const values = Object.assign({}, this.values)
-    for (const model of models) {
-      values[model.id] = model
+    for (const entity of entities) {
+      values[entity.id] = entity
     }
     return new EntityPool({ values })
   }
@@ -71,4 +71,3 @@ export default class EntityPool<T: RestorableEntity> {
     return entity != null
   }
 }
-

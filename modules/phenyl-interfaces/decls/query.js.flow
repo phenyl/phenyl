@@ -2,10 +2,10 @@
 import type { WhereConditions } from './where-conditions.js.flow'
 import type { Id } from './id.js.flow' // string
 import type { SortNotation } from './sort-notation.js.flow'
-type ModelName = string
+type EntityName = string
 
 export interface WhereQuery {
-  from: ModelName,
+  from: EntityName,
   where: WhereConditions,
   skip?: number,
   limit?: number,

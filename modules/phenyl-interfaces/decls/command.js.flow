@@ -4,19 +4,19 @@ import type { UpdateOperators } from './update-operators.js.flow'
 import type { Restorable } from './restorable.js.flow' // Object
 import type { Id } from './id.js.flow' // string
 
-type ModelName = string
+type EntityName = string
 
 // see https://docs.mongodb.com/manual/reference/command/insert/
 export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
 export interface SingleInsertCommand {
-  from: ModelName, // "insert" key in MongoDB reference
+  from: EntityName, // "insert" key in MongoDB reference
   value: Restorable, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
 
 export interface MultiInsertCommand {
-  from: ModelName, // "insert" key in MongoDB reference
+  from: EntityName, // "insert" key in MongoDB reference
   values: Array<Restorable>, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
@@ -25,13 +25,13 @@ export interface MultiInsertCommand {
 export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 
 export interface IdUpdateCommand {
-  from: ModelName, // "update" key in MongoDB reference
+  from: EntityName, // "update" key in MongoDB reference
   id: Id,
   operators: UpdateOperators, // "u" key in MongoDB reference
 }
 
 export interface MultiUpdateCommand {
-  from: ModelName, // "update" key in MongoDB reference
+  from: EntityName, // "update" key in MongoDB reference
   where: WhereConditions, // "q" key in MongoDB reference
   operators: UpdateOperators, // "u" key in MongoDB reference
   ordered?: boolean,
@@ -41,12 +41,12 @@ export interface MultiUpdateCommand {
 export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
 
 export interface IdDeleteCommand {
-  from: ModelName, // "delete" key in MongoDB reference
+  from: EntityName, // "delete" key in MongoDB reference
   id: Id,
 }
 
 export interface MultiDeleteCommand {
-  from: ModelName, // "delete" key in MongoDB reference
+  from: EntityName, // "delete" key in MongoDB reference
   where: WhereConditions, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,
