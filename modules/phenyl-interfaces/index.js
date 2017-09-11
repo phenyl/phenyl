@@ -32,14 +32,8 @@ import type {
   CustomQueryDefinitions,
 } from './decls/custom-query-definition.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
-import type {
-  EntityAclSetting,
-  EntityAclSettings,
-} from './decls/entity-acl-setting.js.flow'
-import type {
-  EntityValidationSetting,
-  EntityValidationSettings,
-} from './decls/entity-validation-setting.js.flow'
+import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
+import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type {
   CustomQueryHandler,
@@ -107,11 +101,10 @@ export type {
   CustomQueryDefinitions,
   DeleteCommand,
   DotNotationString,
-  EntityAclSetting,
-  EntityAclSettings,
-  EntityValidationSetting,
-  EntityValidationSettings,
+  EntityDefinition,
+  EntityDefinitions
   FetchCommandResult,
+  FunctionalGroup,
   GetCommandResult,
   Id,
   IdQuery,
