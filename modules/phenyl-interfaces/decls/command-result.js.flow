@@ -1,11 +1,15 @@
 // @flow
 
 import type { Restorable } from './restorable.js.flow'
+import type { Session } from './session.js.flow'
+import type { RestorableEntity } from './restorable.js.flow'
 
 export type CommandResult = OKCommandResult | NGCommandResult
 export type FetchCommandResult = OKFetchCommandResult | NGCommandResult
 export type GetCommandResult = OKGetCommandResult | NGCommandResult
 export type CustomCommandResult = OKCustomCommandResult | NGCommandResult
+export type LoginCommandResult = OKLoginCommandResult | NGCommandResult
+export type LogoutCommandResult = OKLogoutCommandResult | NGCommandResult
 
 type ErrorInterface = { message: string }
 
@@ -16,7 +20,7 @@ export type OKCommandResult = {
 
 export type NGCommandResult = {
   ok: false | 0,
-  errors: Array<ErrorInterface>,
+  error: ErrorInterface,
 }
 
 export type OKFetchCommandResult = {
@@ -34,4 +38,14 @@ export type OKGetCommandResult = {
 export type OKCustomCommandResult = {
   ok: true | 1,
   result?: Object
+}
+
+export type OKLoginCommandResult = {
+  ok: true | 1,
+  session: Session,
+  user: RestorableEntity,
+}
+
+export type OKLogoutCommandResult = {
+  ok: true | 1,
 }

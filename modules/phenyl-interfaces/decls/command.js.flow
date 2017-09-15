@@ -56,3 +56,15 @@ export interface CustomCommand {
   name: string, // custom insert command name
   params?: Object
 }
+
+
+export interface LoginCommand {
+  credentials: { [key: string]: string },
+  entityName: EntityName,
+  options?: Object,
+}
+
+export interface LogoutCommand {
+  sessionId: Id,
+  options?: Object,
+}

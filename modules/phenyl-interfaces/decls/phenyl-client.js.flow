@@ -16,12 +16,16 @@ import type {
   CustomCommandResult,
   GetCommandResult,
   FetchCommandResult,
+  LoginCommandResult,
+  LogoutCommandResult,
 } from './command-result.js.flow'
 import type {
   InsertCommand,
   UpdateCommand,
   DeleteCommand,
   CustomCommand,
+  LoginCommand,
+  LogoutCommand,
 } from './command.js.flow'
 
 export interface PhenylClient {
@@ -45,6 +49,13 @@ export interface PhenylCustomClient {
   runCustomQuery(query: CustomQuery): Promise<CustomQueryResult>,
   runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
 }
+
+export interface PhenylAuthClient {
+  login(command: LoginCommand): Promise<LoginCommandResult>,
+  logout(command: LogoutCommand): Promise<LogoutCommandResult>,
+}
+
+
 
 export type CustomQueryHandler = (query: CustomQuery, session: ?Session, client: PhenylClient) => Promise<CustomQueryResult>
 export type CustomCommandHandler = (command: CustomCommand, session: ?Session, client: PhenylClient) => Promise<CustomCommandResult>
