@@ -8,6 +8,8 @@ import type {
 import type {
   DeleteCommand,
   InsertCommand,
+  LoginCommand,
+  LogoutCommand,
   UpdateCommand,
   CustomCommand,
 } from './command.js.flow'
@@ -25,5 +27,7 @@ export type RequestData = {
   updateAndFetch?: UpdateCommand,
   delete?: DeleteCommand,
   runCustomQuery?: CustomQuery,
-  runCustomCommand?: CustomCommand
+  runCustomCommand?: CustomCommand,
+  login?: LoginCommand,
+  logout?: LogoutCommand,
 }

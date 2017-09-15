@@ -14,6 +14,8 @@ import type {
   GetCommandResult,
   FetchCommandResult,
   CustomCommandResult,
+  LoginCommandResult,
+  LogoutCommandResult,
 } from './command-result.js.flow'
 
 export type ResponseData = {
@@ -21,7 +23,6 @@ export type ResponseData = {
   findOne?: SingleQueryResult,
   get?: SingleQueryResult,
   getByIds?: QueryResult,
-  runCustomQuery?: CustomQueryResult,
   insert?: CommandResult,
   insertAndGet?: GetCommandResult,
   insertAndFetch?: FetchCommandResult,
@@ -29,5 +30,8 @@ export type ResponseData = {
   updateAndGet?: GetCommandResult,
   updateAndFetch?: FetchCommandResult,
   delete?: CommandResult,
+  runCustomQuery?: CustomQueryResult,
   runCustomCommand?: CustomCommandResult,
+  login?: LoginCommandResult,
+  logout?: LogoutCommandResult,
 }
