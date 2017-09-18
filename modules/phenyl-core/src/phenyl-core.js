@@ -24,11 +24,6 @@ import type {
   CustomExecutionHandlers,
 } from './create-custom-execution-handlers'
 
-type LambdaEvent = Object // TODO
-type LambdaContext = Object // TODO
-type LambdaResponse = Object // TODO
-type LambdaHandler = (event: LambdaEvent, context: LambdaContext) => Promise<LambdaResponse>
-
 type PhenylCoreParams = {
   aclHandler: AclHandler,
   validationHandler: ValidationHandler,
@@ -54,16 +49,6 @@ export default class PhenylCore {
     this.sessionClient = params.sessionClient
 
     this.custom = normalizeCustomHandlers(params.custom)
-  }
-
-  /**
-   * @public
-   */
-  getLambdaHandler(): LambdaHandler {
-    return (event: LambdaEvent, context: LambdaContext): Promise<LambdaResponse> => {
-      const { requestData, sessionId } = context
-      return this.run(requestData, sessionId)
-    }
   }
 
   /**

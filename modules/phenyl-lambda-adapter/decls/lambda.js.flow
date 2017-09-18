@@ -1,0 +1,26 @@
+// @flow
+export type LambdaCallback = (err: ?Error, result: any) => void
+export type LambdaHandler = (event: LambdaEvent, context: LambdaContext) => any
+
+export type LambdaEvent = {
+  resource: string,
+  path: string,
+  httpMethod: HttpMethod,
+  headers: {[key: string]: string | boolean | number },
+  queryStringParameters: ?{[key: string]: string },
+  pathParameters: ?Object,
+  requestContext: {
+    accountId: string,
+    resourceId: string,
+    stage: string,
+    requestId: string,
+    identity: Object,
+    resourcePath: string,
+    httpMethod: HttpMethod,
+    apiId: string,
+  },
+  body: string,
+  isBase64Encoded: boolean
+}
+
+export type LambdaContext = Object // TODO
