@@ -12,7 +12,7 @@
     "build:power-crypt": "babel modules/power-crypt/src -d modules/power-crypt/dist",
     "build:power-filter": "babel modules/power-filter/src -d modules/power-filter/dist",
     "build:phenyl-http-client": "babel modules/phenyl-http-client/src -d modules/phenyl-http-client/dist",
-    "build:phenyl-serverless": "babel modules/phenyl-serverless/src -d modules/phenyl-serverless/dist",
+    "build:phenyl-core": "babel modules/phenyl-core/src -d modules/phenyl-core/dist",
     "build:phenyl-utils": "babel modules/phenyl-utils/src -d modules/phenyl-utils/dist",
     "flow": "flow"
   },

@@ -12,6 +12,7 @@ import type {
   RequestData,
   ResponseData,
   PhenylClient,
+  Session,
   AclHandler,
   ValidationHandler,
   SessionClient,
@@ -28,7 +29,7 @@ type LambdaContext = Object // TODO
 type LambdaResponse = Object // TODO
 type LambdaHandler = (event: LambdaEvent, context: LambdaContext) => Promise<LambdaResponse>
 
-type ServerlessParams = {
+type PhenylCoreParams = {
   aclHandler: AclHandler,
   validationHandler: ValidationHandler,
   client: PhenylClient,
@@ -39,14 +40,14 @@ type ServerlessParams = {
 /**
  *
  */
-export default class PhenylServerless {
+export default class PhenylCore {
   aclHandler: AclHandler
   validationHandler: ValidationHandler
   client: PhenylClient
   sessionClient: SessionClient
   custom: CustomExecutionHandlers
 
-  constructor(params: ServerlessParams) {
+  constructor(params: PhenylCoreParams) {
     this.aclHandler = params.aclHandler
     this.validationHandler = params.validationHandler
     this.client = params.client
@@ -82,6 +83,11 @@ export default class PhenylServerless {
     if (!isValid) {
       throw new Error('Params are not valid.')
     }
+
+    return this.execute(reqData, session)
+  }
+
+  async execute(reqData: RequestData, session: ?Session): Promise<ResponseData> {
 
     if (reqData.find != null) {
       const result = await this.client.find(reqData.find)
