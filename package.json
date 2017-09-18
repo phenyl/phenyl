@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:power-assign && npm run build:power-crypt && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-serverless && npm run build:phenyl-utils",
+    "build": "npm run build:power-assign && npm run build:power-crypt && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
     "build:power-assign": "babel modules/power-assign/src -d modules/power-assign/dist",
@@ -14,6 +14,8 @@
     "build:phenyl-http-client": "babel modules/phenyl-http-client/src -d modules/phenyl-http-client/dist",
     "build:phenyl-core": "babel modules/phenyl-core/src -d modules/phenyl-core/dist",
     "build:phenyl-utils": "babel modules/phenyl-utils/src -d modules/phenyl-utils/dist",
+    "build:phenyl-lambda-adapter": "babel modules/phenyl-lambda-adapter/src -d modules/phenyl-lambda-adapter/dist",
+    "build:phenyl-http-rules": "babel modules/phenyl-http-rules/src -d modules/phenyl-http-rules/dist",
     "flow": "flow"
   },
   "repository": {

@@ -1,0 +1,17 @@
+{
+  "name": "phenyl-serverless",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "phenyl-interfaces": "^1.0.0",
+    "phenyl-utils": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"build\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
