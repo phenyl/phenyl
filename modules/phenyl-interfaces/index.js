@@ -44,6 +44,7 @@ import type {
   EncodedHttpRequest,
   EncodedHttpResponse,
   HttpMethod,
+  QueryStringParams,
 } from './decls/http.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
@@ -54,6 +55,7 @@ import type {
   PhenylCustomClient,
   PhenylAuthClient,
 } from './decls/phenyl-client.js.flow'
+import { PhenylRunner } from './decls/phenyl-runner.js.flow'
 import type {
   QueryCondition,
   QueryExpression,
@@ -154,6 +156,7 @@ export type {
   PhenylAuthClient,
   PhenylClient,
   PhenylCustomClient,
+  PhenylRunner,
   PopOperator,
   PullOperator,
   PushModifier,
@@ -161,6 +164,7 @@ export type {
   QueryCondition,
   QueryExpression,
   QueryResult,
+  QueryStringParams,
   RequestData,
   RequestMethodName,
   ResponseData,

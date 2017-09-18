@@ -12,6 +12,7 @@ import type {
   RequestData,
   ResponseData,
   PhenylClient,
+  PhenylRunner,
   Session,
   AclHandler,
   ValidationHandler,
@@ -35,7 +36,7 @@ type PhenylCoreParams = {
 /**
  *
  */
-export default class PhenylCore {
+export default class PhenylCore implements PhenylRunner {
   aclHandler: AclHandler
   validationHandler: ValidationHandler
   client: PhenylClient

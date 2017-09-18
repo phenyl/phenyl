@@ -1,14 +1,18 @@
 // @flow
+import type {
+  HttpMethod,
+  QueryStringParams,
+} from 'phenyl-interfaces'
 export type LambdaCallback = (err: ?Error, result: any) => void
-export type LambdaHandler = (event: LambdaEvent, context: LambdaContext) => any
+export type LambdaHandler = (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback) => any
 
 export type LambdaEvent = {
   resource: string,
   path: string,
   httpMethod: HttpMethod,
-  headers: {[key: string]: string | boolean | number },
-  queryStringParameters: ?{[key: string]: string },
-  pathParameters: ?Object,
+  headers: {[key: string]: string },
+  queryStringParameters: QueryStringParams,
+  pathParameters: {[key: string]: string },
   requestContext: {
     accountId: string,
     resourceId: string,

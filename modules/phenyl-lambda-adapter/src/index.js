@@ -1,9 +1,15 @@
 // @flow
+import {
+  decodeRequest,
+  encodeResponse,
+} from 'phenyl-http-rules/jsnext'
+
 import type {
   Id,
   RequestData,
   ResponseData,
   PhenylClient,
+  PhenylRunner,
   Session,
   AclHandler,
   ValidationHandler,
@@ -19,16 +25,22 @@ import type {
   LambdaHandler,
 } from '../decls/lambda.js.flow'
 
-interface Runnable {
-  async run(reqData: RequestData, sessionId: ?Id): Promise<ResponseData>
-}
-
-export const createLambdaHandler = (phenylCore: Runnable): LambdaHandler => {
+export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => {
   return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
     try {
-      const { requestData, sessionId } = extractRequestData()
+      const [requestData, sessionId] = decodeRequest({
+        method: event.httpMethod,
+        path: event.path,
+        body: event.body,
+        headers: event.headers,
+        queryString: event.queryStringParameters,
+      })
       const responseData = await phenylCore.run(requestData, sessionId)
-      cb(null, responseData)
+      cb(null, {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(encodeResponse(responseData)),
+      })
     }
     catch (e) {
       cb(e)
