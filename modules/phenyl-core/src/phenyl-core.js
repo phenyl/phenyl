@@ -1,6 +1,7 @@
 // @flow
 import {
   assertValidRequestData,
+  createErrorResponse,
 } from 'phenyl-utils'
 
 import {
@@ -58,21 +59,32 @@ export default class PhenylCore implements PhenylRunner {
   async run(reqData: RequestData, sessionId: ?Id): Promise<ResponseData> {
     const session = await this.sessionClient.get(sessionId)
 
-    assertValidRequestData(reqData)
+    try {
+      // 0. Request data validation
+      assertValidRequestData(reqData)
 
-    const isAccessible = await this.aclHandler(reqData, session, this.client)
-    if (!isAccessible) {
-      throw new Error('Authorization Required.')
+      // 1. ACL
+      const isAccessible = await this.aclHandler(reqData, session, this.client)
+      if (!isAccessible) {
+        return createErrorResponse(new Error('Authorization Required.'), 'Unauthorized')
+      }
+
+      // 2. Validation
+      const isValid = await this.validationHandler(reqData, session, this.client)
+      if (!isValid) {
+        return createErrorResponse(new Error('Params are not valid.'), 'BadRequest')
+      }
+      // 3. Execution
+      return this.execute(reqData, session)
     }
-
-    const isValid = await this.validationHandler(reqData, session, this.client)
-    if (!isValid) {
-      throw new Error('Params are not valid.')
+    catch (e) {
+      return createErrorResponse(e)
     }
-
-    return this.execute(reqData, session)
   }
 
+  /**
+   *
+   */
   async execute(reqData: RequestData, session: ?Session): Promise<ResponseData> {
 
     if (reqData.find != null) {
@@ -110,7 +122,6 @@ export default class PhenylCore implements PhenylRunner {
     if (reqData.updateAndGet != null) {
       const result = await this.client.updateAndGet(reqData.updateAndGet)
       return { updateAndGet: result }
-
     }
     if (reqData.updateAndFetch != null) {
       const result = await this.client.updateAndFetch(reqData.updateAndFetch)

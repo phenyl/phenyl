@@ -4,6 +4,10 @@ import type {
 } from './restorable.js.flow'
 
 import type {
+  ErrorResult,
+} from './error-result.js.flow'
+
+import type {
   CustomQueryResult,
   QueryResult,
   SingleQueryResult,
@@ -19,6 +23,7 @@ import type {
 } from './command-result.js.flow'
 
 export type ResponseData = {
+  error?: ErrorResult,
   find?: QueryResult,
   findOne?: SingleQueryResult,
   get?: SingleQueryResult,

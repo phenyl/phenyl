@@ -7,13 +7,6 @@ import type {
   GetCommandResult,
   LoginCommandResult,
   LogoutCommandResult,
-  NGCommandResult,
-  OKCommandResult,
-  OKCustomCommandResult,
-  OKFetchCommandResult,
-  OKGetCommandResult,
-  OKLoginCommandResult,
-  OKLogoutCommandResult,
 } from './decls/command-result.js.flow'
 import type {
   CustomCommand,
@@ -39,6 +32,10 @@ import type {
 } from './decls/custom-query-definition.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
+import type {
+  ErrorResult,
+  ErrorResultType,
+} from './decls/error-result.js.flow'
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
   EncodedHttpRequest,
@@ -123,6 +120,8 @@ export type {
   EncodedHttpResponse,
   EntityDefinition,
   EntityDefinitions
+  ErrorResult,
+  ErrorResultType,
   FetchCommandResult,
   FunctionalGroup,
   GetCommandResult,
@@ -145,13 +144,6 @@ export type {
   MultiDeleteCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
-  NGCommandResult,
-  OKCommandResult,
-  OKCustomCommandResult,
-  OKFetchCommandResult,
-  OKGetCommandResult,
-  OKLoginCommandResult,
-  OKLogoutCommandResult,
   PreSession,
   PhenylAuthClient,
   PhenylClient,

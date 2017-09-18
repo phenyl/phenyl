@@ -10,8 +10,11 @@
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-http-rules": "*",
     "phenyl-interfaces": "*"
+  },
+  "dependencies": {
+    "phenyl-http-rules": "*",
+    "phenyl-utils": "*"
   },
   "author": "",
   "license": "ISC"

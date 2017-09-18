@@ -1,0 +1,9 @@
+// @flow
+
+export type ErrorResultType = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound' | 'InternalServer'
+
+export type ErrorResult = {
+  type: ErrorResultType,
+  message: string,
+  appendix?: string,
+}

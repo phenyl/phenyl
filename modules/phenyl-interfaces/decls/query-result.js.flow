@@ -3,13 +3,16 @@
 import type { Restorable } from './restorable.js.flow'
 
 export type CustomQueryResult = {
+  ok: 1,
   result: any
 }
 
 export type QueryResult = {
+  ok: 1,
   values: Array<Restorable>
 }
 
 export type SingleQueryResult = {
+  ok: 1,
   value: Restorable
 }
