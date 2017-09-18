@@ -3,6 +3,7 @@
 import type {
   EncodedHttpRequest,
   Id,
+  QueryStringParams,
   RequestData,
 } from 'phenyl-interfaces'
 
@@ -37,12 +38,12 @@ export default function decodeRequest(request: EncodedHttpRequest): [RequestData
 function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
-    queryString,
+    qsParams,
   } = request
 
   const paths = path.split('/') // path[0] must be an empty string.
 
-  if (!queryString) {
+  if (qsParams == null || Object.keys(qsParams).length === 0) {
     return {
       method: 'get',
       get: { entityName: path[1], id: path[2] }
@@ -53,28 +54,28 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   if (!methodName) {
     return {
       method: 'runCustomQuery',
-      runCustomQuery: decodeQueryString(queryString)
+      runCustomQuery: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'find') {
     return {
       method: 'find',
-      find: decodeQueryString(queryString)
+      find: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'findOne') {
     return {
       method: 'findOne',
-      findOne: decodeQueryString(queryString)
+      findOne: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'getByIds') {
     return {
       method: 'getByIds',
-      getByIds: decodeQueryString(queryString)
+      getByIds: decodeQsParams(qsParams)
     }
   }
   throw new Error(`Could not decode the given GET request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
@@ -174,16 +175,16 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
 function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
-    queryString,
+    qsParams,
   } = request
 
   const paths = path.split('/')
 
   // multi deletion
-  if (path[2] === 'delete' && queryString) {
+  if (path[2] === 'delete' && qsParams) {
     return {
       method: 'delete',
-      delete: decodeQueryString(queryString),
+      delete: decodeQsParams(qsParams),
     }
   }
 
@@ -205,8 +206,6 @@ function decodeBody(body: string): Object {
 }
 
 
-function decodeQueryString(queryString: string): Object {
-  const qs = (queryString.charAt(0) === '?') ? queryString.slice(1) : queryString
-  // TODO: use library
-  return JSON.parse(qs.split('d=')[1])
+function decodeQsParams(qsParams: QueryStringParams): Object {
+  return JSON.parse(qsParams.d)
 }

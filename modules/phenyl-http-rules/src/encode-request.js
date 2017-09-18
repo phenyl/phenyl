@@ -2,6 +2,7 @@
 import type {
   EncodedHttpRequest,
   Id,
+  QueryStringParams,
   RequestData,
 } from 'phenyl-interfaces'
 
@@ -20,7 +21,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         method: 'GET',
         headers,
         path: `/${data.entityName}/find`,
-        queryString: createQueryString(data)
+        qsParams: createQsParams(data)
       }
 
     case 'findOne':
@@ -30,7 +31,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         method: 'GET',
         headers,
         path: `/${data.entityName}/findOne`,
-        queryString: createQueryString(data)
+        qsParams: createQsParams(data)
       }
 
     case 'get':
@@ -49,7 +50,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         method: 'GET',
         headers,
         path: `/${data.entityName}/getByIds`,
-        queryString: createQueryString(data)
+        qsParams: createQsParams(data)
       }
 
     case 'insert':
@@ -137,7 +138,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         method: 'DELETE',
         headers,
         path: `/${data.entityName}/delete`,
-        queryString: createQueryString(data)
+        qsParams: createQsParams(data)
       }
 
     case 'runCustomQuery':
@@ -148,7 +149,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         method: 'GET',
         headers,
         path: `/${data.name}`,
-        queryString: createQueryString(data)
+        qsParams: createQsParams(data)
       }
 
     case 'runCustomCommand':
@@ -193,9 +194,8 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
   }
 }
 
-function createQueryString(data: Object): string {
-  const d = encodeURIComponent(JSON.stringify(data))
-  return `d=${d}`
+function createQsParams(data: Object): QueryStringParams {
+  return { d: encodeURIComponent(JSON.stringify(data)) }
 }
 
 function createBody(data: Object): string {
