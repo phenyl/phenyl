@@ -42,7 +42,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async find(query: WhereQuery): Promise<QueryResult> {
-    const reqData: RequestData = { find: query }
+    const reqData: RequestData = { method: 'find', find: query }
     const params = {
       s: this.sessionId,
       d: reqData,
@@ -58,7 +58,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async findOne(query: WhereQuery): Promise<Restorable> {
-    const request: RequestData = { findOne: query }
+    const request: RequestData = { method: 'findOne', findOne: query }
     const params = {
       s: this.sessionId,
       o: request,
@@ -74,7 +74,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async get(query: IdQuery): Promise<SingleQueryResult> {
-    const request: RequestData = { get: query }
+    const request: RequestData = { method: 'get', get: query }
     const params = {
       s: this.sessionId,
       o: request,
@@ -90,7 +90,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async getByIds(query: IdsQuery): Promise<QueryResult> {
-    const request: RequestData = { getByIds: query }
+    const request: RequestData = { method: 'getByIds', getByIds: query }
     const params = {
       s: this.sessionId,
       o: request,
@@ -106,7 +106,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insert(command: InsertCommand): Promise<CommandResult> {
-    const request: RequestData = { insert: command }
+    const request: RequestData = { method: 'insert', insert: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -123,7 +123,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insertAndGet(command: InsertCommand): Promise<GetCommandResult> {
-    const request: RequestData = { insertAndGet: command }
+    const request: RequestData = { method: 'insertAndGet', insertAndGet: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -140,7 +140,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async insertAndFetch(command: InsertCommand): Promise<FetchCommandResult> {
-    const request: RequestData = { insertAndFetch: command }
+    const request: RequestData = { method: 'insertAndFetch', insertAndFetch: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -157,7 +157,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async update(command: UpdateCommand): Promise<CommandResult> {
-    const request: RequestData = { update: command }
+    const request: RequestData = { method: 'update', update: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -174,7 +174,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async updateAndGet(command: UpdateCommand): Promise<GetCommandResult> {
-    const request: RequestData = { updateAndGet: command }
+    const request: RequestData = { method: 'updateAndGet', updateAndGet: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -191,7 +191,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult> {
-    const request: RequestData = { updateAndFetch: command }
+    const request: RequestData = { method: 'updateAndFetch', updateAndFetch: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -208,7 +208,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResult> {
-    const request: RequestData = { delete: command }
+    const request: RequestData = { method: 'delete', delete: command }
     const params = {
       s: this.sessionId,
       o: request,
@@ -225,7 +225,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async runCustomQuery(query: CustomQuery): Promise<CustomQueryResult> {
-    const request: RequestData = { runCustomQuery: query }
+    const request: RequestData = { method: 'runCustomQuery', runCustomQuery: query }
     const params = {
       s: this.sessionId,
       o: request,
@@ -241,7 +241,7 @@ export default class PhenylHttpClient implements PhenylClient, PhenylCustomClien
    *
    */
   async runCustomCommand(command: CustomCommand): Promise<CustomCommandResult> {
-    const request: RequestData = { runCustomCommand: command }
+    const request: RequestData = { method: 'runCustomCommand', runCustomCommand: command }
     const params = {
       s: this.sessionId,
       o: request,

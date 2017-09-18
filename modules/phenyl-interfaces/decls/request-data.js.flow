@@ -14,7 +14,25 @@ import type {
   CustomCommand,
 } from './command.js.flow'
 
+export type RequestMethodName =
+  'find' |
+  'findOne' |
+  'get' |
+  'getByIds' |
+  'insert' |
+  'insertAndGet' |
+  'insertAndFetch' |
+  'update' |
+  'updateAndGet' |
+  'updateAndFetch' |
+  'delete' |
+  'runCustomQuery' |
+  'runCustomCommand' |
+  'login' |
+  'logout'
+
 export type RequestData = {
+  method: RequestMethodName,
   find?: WhereQuery,
   findOne?: WhereQuery,
   get?: IdQuery,

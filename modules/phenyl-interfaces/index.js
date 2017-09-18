@@ -41,6 +41,7 @@ import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type { Id } from './decls/id.js.flow'
+import type { KvsClient } from './decls/kvs-client.js.flow'
 import type {
   CustomQueryHandler,
   CustomCommandHandler,
@@ -63,7 +64,10 @@ import type {
   IdsQuery,
   WhereQuery,
 } from './decls/query.js.flow'
-import type { RequestData } from './decls/request-data.js.flow'
+import type {
+  RequestData,
+  RequestMethodName,
+} from './decls/request-data.js.flow'
 import type { ResponseData } from './decls/response-data.js.flow'
 import type {
   Restorable,
@@ -120,6 +124,7 @@ export type {
   IdUpdateCommand,
   IncOperator,
   InsertCommand,
+  KvsClient,
   LoginCommand,
   LoginCommandResult,
   LogoutCommand,
@@ -149,6 +154,7 @@ export type {
   QueryExpression,
   QueryResult,
   RequestData,
+  RequestMethodName,
   ResponseData,
   Restorable,
   RestorableEntity,
