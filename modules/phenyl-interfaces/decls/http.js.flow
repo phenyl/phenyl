@@ -1,0 +1,16 @@
+// @flow
+import type { ResponseData } from './response-data.js.flow'
+
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+
+export type EncodedHttpRequest = {
+  method: HttpMethod,
+  headers: { [name: string]: string },
+  path: string, // must start with "/"
+  queryString?: string,
+  body?: string,
+}
+
+export type EncodedHttpResponse = {
+  d: ResponseData,
+}

@@ -40,6 +40,11 @@ import type {
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
+import type {
+  EncodedHttpRequest,
+  EncodedHttpResponse,
+  HttpMethod,
+} from './decls/http.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
 import type {
@@ -112,11 +117,14 @@ export type {
   CustomQueryDefinitions,
   DeleteCommand,
   DotNotationString,
+  EncodedHttpRequest,
+  EncodedHttpResponse,
   EntityDefinition,
   EntityDefinitions
   FetchCommandResult,
   FunctionalGroup,
   GetCommandResult,
+  HttpMethod,
   Id,
   IdQuery,
   IdsQuery,
