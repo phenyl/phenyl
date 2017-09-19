@@ -291,10 +291,14 @@ export function assertValidLogoutCommand(com: any): void {
     throw new Error(`logoutCommand must be an object. ${typeof com} given.`)
   }
 
-  const { sessionId } = com
+  const { sessionId, entityName } = com
 
   if (typeof sessionId !== 'string' || !sessionId) {
     throw new Error(`logoutCommand.sessionId must be a non-empty string. "${sessionId}" given.`) // ISSUE: sessionId is explicitly shown (but not string...).
+  }
+
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`loginCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 }
 
