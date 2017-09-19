@@ -3,7 +3,7 @@ import type {
   ValidationHandler,
   FunctionalGroup,
   RequestData,
-  PhenylClient,
+  ClientPool,
   Session,
 } from 'phenyl-interfaces'
 
@@ -15,7 +15,7 @@ function assertValidationFunction(fn: any, name: string, methodName: string) {
  *
  */
 export default function createValidationHandler(fg: FunctionalGroup): ValidationHandler {
-  return async function isValid(reqData: RequestData, session: ?Session, client: PhenylClient) :Promise<boolean> {
+  return async function isValid(reqData: RequestData, session: ?Session, clients: ClientPool) :Promise<boolean> {
     return true // TODO
   }
 }

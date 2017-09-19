@@ -1,15 +1,15 @@
 // @flow
 
 import type { Session } from './session.js.flow'
-import type { PhenylClient } from './phenyl-client.js.flow'
+import type { ClientPool } from './client.js.flow'
 import type { RequestData } from './request-data.js.flow'
 import type { ResponseData } from './response-data.js.flow'
 
 export interface EntityDefinition {
-  acl(reqData: RequestData, session: ?Session, client: PhenylClient): Promise<boolean>,
-  validation(reqData: RequestData, session: ?Session, client: PhenylClient): Promise<boolean>,
-  requestFilter(reqData: RequestData, session: ?Session, client: PhenylClient): Promise<RequestData>,
-  responseFilter(resData: ResponseData, session: ?Session, client: PhenylClient): Promise<ResponseData>,
+  acl(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean>,
+  validation(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean>,
+  requestFilter(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<RequestData>,
+  responseFilter(resData: ResponseData, session: ?Session, clients: ClientPool): Promise<ResponseData>,
 }
 
 export type EntityDefinitions = { [entityName: string]: EntityDefinition }

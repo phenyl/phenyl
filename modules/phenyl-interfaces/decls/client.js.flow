@@ -5,7 +5,11 @@ import type {
   IdsQuery,
   CustomQuery,
 } from './query.js.flow'
-import type { Session } from './session.js.flow' // Object
+import type { KvsClient } from './kvs-client.js.flow'
+import type {
+  Session,
+  PreSession,
+} from './session.js.flow'
 import type {
   CustomQueryResult,
   SingleQueryResult,
@@ -28,7 +32,7 @@ import type {
   LogoutCommand,
 } from './command.js.flow'
 
-export interface PhenylClient {
+export interface EntityClient {
   find(query: WhereQuery): Promise<QueryResult>,
   findOne(query: WhereQuery): Promise<SingleQueryResult>,
   get(query: IdQuery): Promise<SingleQueryResult>,
@@ -45,17 +49,19 @@ export interface PhenylClient {
   delete(command: DeleteCommand): Promise<CommandResult>,
 }
 
-export interface PhenylCustomClient {
+export interface CustomClient {
   runCustomQuery(query: CustomQuery): Promise<CustomQueryResult>,
   runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
 }
 
-export interface PhenylAuthClient {
+export interface AuthClient {
   login(command: LoginCommand): Promise<LoginCommandResult>,
   logout(command: LogoutCommand): Promise<LogoutCommandResult>,
 }
 
+export type SessionClient = KvsClient<Session, PreSession>
 
-
-export type CustomQueryHandler = (query: CustomQuery, session: ?Session, client: PhenylClient) => Promise<CustomQueryResult>
-export type CustomCommandHandler = (command: CustomCommand, session: ?Session, client: PhenylClient) => Promise<CustomCommandResult>
+export interface ClientPool {
+  entityClient: EntityClient,
+  sessionClient: SessionClient,
+}

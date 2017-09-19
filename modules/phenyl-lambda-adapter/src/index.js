@@ -13,7 +13,7 @@ import type {
   Id,
   RequestData,
   ResponseData,
-  PhenylClient,
+  EntityClient,
   PhenylRunner,
   Session,
   AclHandler,

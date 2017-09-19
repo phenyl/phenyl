@@ -25,9 +25,9 @@ import type {
   LogoutCommandResult,
   RequestData,
   ResponseData,
-  PhenylAuthClient,
-  PhenylClient,
-  PhenylCustomClient,
+  AuthClient,
+  EntityClient,
+  CustomClient,
   QueryResult,
   SingleQueryResult,
   UpdateCommand,
@@ -39,7 +39,7 @@ type HttpClientParams = {
   sessionId: Id,
 }
 
-export default class PhenylHttpClient implements PhenylClient, PhenylCustomClient, PhenylAuthClient {
+export default class PhenylHttpClient implements EntityClient, CustomClient, AuthClient {
   url: string
   sessionId: Id
 

@@ -1,5 +1,11 @@
 // @flow
-import type { AclHandler } from './decls/acl-handler.js.flow'
+import type {
+  AuthClient,
+  CustomClient,
+  ClientPool,
+  EntityClient,
+  SessionClient,
+} from './decls/client.js.flow'
 import type {
   CommandResult,
   CustomCommandResult,
@@ -38,6 +44,14 @@ import type {
 } from './decls/error-result.js.flow'
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
+  AclHandler,
+  CustomCommandHandler,
+  CustomQueryHandler,
+  ExecutionWrapper,
+  LoginHandler,
+  ValidationHandler,
+} from './decls/handler.js.flow'
+import type {
   EncodedHttpRequest,
   EncodedHttpResponse,
   HttpMethod,
@@ -45,13 +59,6 @@ import type {
 } from './decls/http.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
-import type {
-  CustomQueryHandler,
-  CustomCommandHandler,
-  PhenylClient,
-  PhenylCustomClient,
-  PhenylAuthClient,
-} from './decls/phenyl-client.js.flow'
 import { PhenylRunner } from './decls/phenyl-runner.js.flow'
 import type {
   QueryCondition,
@@ -78,7 +85,6 @@ import type {
   RestorableEntity,
 } from './decls/restorable.js.flow'
 import type { PreSession, Session } from './decls/session.js.flow'
-import type { SessionClient } from './decls/session-client.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
   AddToSetOperator,
@@ -95,15 +101,21 @@ import type {
   SetOperator,
   UpdateOperators,
 } from './decls/update-operators.js.flow'
-import type { ValidationHandler } from './decls/validation-handler.js.flow'
+import type {
+  UserEntityDefinition,
+  UserEntityDefinitions,
+} from './decls/user-entity-definition.js.flow'
 import type { WhereConditions } from './decls/where-conditions.js.flow'
 
 export type {
   AclHandler,
   AddToSetOperator,
+  AuthClient,
   BitOperator,
+  ClientPool,
   CommandResult,
   CurrentDateOperator,
+  CustomClient,
   CustomCommand,
   CustomCommandHandler,
   CustomCommandResult,
@@ -118,10 +130,12 @@ export type {
   DotNotationString,
   EncodedHttpRequest,
   EncodedHttpResponse,
+  EntityClient,
   EntityDefinition,
   EntityDefinitions
   ErrorResult,
   ErrorResultType,
+  ExecutionWrapper,
   FetchCommandResult,
   FunctionalGroup,
   GetCommandResult,
@@ -137,6 +151,7 @@ export type {
   LoginCommand,
   LoginCommandResult,
   LogoutCommand,
+  LoginHandler,
   LogoutCommandResult,
   MaxOperator,
   MinOperator,
@@ -145,9 +160,6 @@ export type {
   MultiInsertCommand,
   MultiUpdateCommand,
   PreSession,
-  PhenylAuthClient,
-  PhenylClient,
-  PhenylCustomClient,
   PhenylRunner,
   PopOperator,
   PullOperator,
@@ -170,6 +182,8 @@ export type {
   SortNotation,
   UpdateCommand,
   UpdateOperators,
+  UserEntityDefinition,
+  UserEntityDefinitions,
   ValidationHandler,
   WhereConditions,
   WhereQuery,

@@ -1,5 +1,6 @@
 // @flow
 import type {
+  ClientPool,
   CustomQuery,
   CustomQueryHandler,
   CustomQueryDefinitions,
@@ -9,7 +10,6 @@ import type {
   CustomCommandDefinitions,
   CustomCommandResult,
   Session,
-  PhenylClient,
 } from 'phenyl-interfaces'
 
 export type CustomExecutionSettings = {
@@ -36,13 +36,13 @@ export default function createCustomExecutionHandlers(settings: CustomExecutionS
  *
  */
 export function createCustomQueryHandler(querySettings: CustomQueryDefinitions): CustomQueryHandler {
-  return function executeCustomQuery(query: CustomQuery, session: ?Session, client: PhenylClient): Promise<CustomQueryResult> {
+  return function executeCustomQuery(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<CustomQueryResult> {
     const { name } = query
     const setting = querySettings[name]
     if (setting == null || typeof setting.execution !== 'function') {
       throw new Error(`No execution function found for custom query named "${name}".`)
     }
-    return setting.execution(query, session, client)
+    return setting.execution(query, session, clients)
   }
 }
 
@@ -50,13 +50,13 @@ export function createCustomQueryHandler(querySettings: CustomQueryDefinitions):
  *
  */
 export function createCustomCommandHandler(commandSettings: CustomCommandDefinitions): CustomCommandHandler {
-  return function executeCustomCommand(command: CustomCommand, session: ?Session, client: PhenylClient): Promise<CustomCommandResult> {
+  return function executeCustomCommand(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<CustomCommandResult> {
     const { name } = command
     const setting = commandSettings[name]
     if (setting == null || typeof setting.execution !== 'function') {
       throw new Error(`No execution function found for custom command named "${name}".`)
     }
-    return setting.execution(command, session, client)
+    return setting.execution(command, session, clients)
   }
 }
 

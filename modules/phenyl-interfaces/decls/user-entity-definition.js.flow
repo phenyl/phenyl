@@ -1,0 +1,19 @@
+// @flow
+
+import type { EntityDefinition } from './entity-definition'
+import type { Session } from './session.js.flow'
+import type { ClientPool } from './client.js.flow'
+import type {
+  LoginCommand,
+  LogoutCommand,
+} from './command.js.flow'
+import type {
+  LoginCommandResult,
+  LogoutCommandResult,
+} from './command-result.js.flow'
+
+export interface UserEntityDefinition {
+  login(loginCommand: LoginCommand, session: ?Session, clients: ClientPool): Promise<LoginCommandResult>,
+}
+
+export type UserEntityDefinitions = { [entityName: string]: EntityDefinition & UserEntityDefinition }
