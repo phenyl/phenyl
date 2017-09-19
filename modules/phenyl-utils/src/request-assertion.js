@@ -7,41 +7,49 @@ export function assertValidRequestData(rd: any): void {
   if (typeof rd !== 'object' || rd === null) {
     throw new Error(`RequestData must be an object. ${typeof rd} given.`)
   }
-  const keys = Object.keys(rd)
-  if (keys.length !== 1) {
-    const keysDescription = keys.length === 0 ? '' : ` keys=[${keys.join(', ')}]`
-    throw new Error(`RequestData object must have just one key, ${keys.length} given.${keysDescription}`)
+  const { method } = rd
+  if (!method) {
+    throw new Error(`RequestData must have "method" property.`)
   }
-  const key = keys[0]
-  switch(key) {
-    case 'find':
-      return assertValidWhereQuery(rd.find)
-    case 'findOne':
-      return assertValidWhereQuery(rd.findOne)
-    case 'get':
-      return assertValidIdQuery(rd.get)
-    case 'getByIds':
-      return assertValidIdsQuery(rd.getByIds)
-    case 'insert':
-      return assertValidInsertCommand(rd.insert)
-    case 'insertAndGet':
-      return assertValidInsertCommand(rd.insertAndGet)
-    case 'insertAndFetch':
-      return assertValidInsertCommand(rd.insertAndFetch)
-    case 'update':
-      return assertValidUpdateCommand(rd.update)
-    case 'updateAndGet':
-      return assertValidUpdateCommand(rd.updateAndGet)
-    case 'updateAndFetch':
-      return assertValidUpdateCommand(rd.updateAndFetch)
-    case 'delete':
-      return assertValidDeleteCommand(rd.delete)
-    case 'runCustomQuery':
-      return assertValidCustomQuery(rd.runCustomQuery)
-    case 'runCustomCommand':
-      return assertValidCustomCommand(rd.runCustomCommand)
-    default:
-      throw new Error(`Invalid key in RequestData: "${key}"`)
+
+  try {
+    switch(method) {
+      case 'find':
+        return assertValidWhereQuery(rd.find)
+      case 'findOne':
+        return assertValidWhereQuery(rd.findOne)
+      case 'get':
+        return assertValidIdQuery(rd.get)
+      case 'getByIds':
+        return assertValidIdsQuery(rd.getByIds)
+      case 'insert':
+        return assertValidInsertCommand(rd.insert)
+      case 'insertAndGet':
+        return assertValidInsertCommand(rd.insertAndGet)
+      case 'insertAndFetch':
+        return assertValidInsertCommand(rd.insertAndFetch)
+      case 'update':
+        return assertValidUpdateCommand(rd.update)
+      case 'updateAndGet':
+        return assertValidUpdateCommand(rd.updateAndGet)
+      case 'updateAndFetch':
+        return assertValidUpdateCommand(rd.updateAndFetch)
+      case 'delete':
+        return assertValidDeleteCommand(rd.delete)
+      case 'runCustomQuery':
+        return assertValidCustomQuery(rd.runCustomQuery)
+      case 'runCustomCommand':
+        return assertValidCustomCommand(rd.runCustomCommand)
+      case 'login':
+        return assertValidLoginCommand(rd.login)
+      case 'logout':
+        return assertValidLogoutCommand(rd.logout)
+      default:
+        throw new Error(`Invalid method name.`)
+    }
+  }
+  catch (e) {
+    throw new Error(`Error in "requestData.${method}": \n\t{$e.message}`)
   }
 }
 
@@ -52,10 +60,10 @@ export function assertValidWhereQuery(q: any): void {
   if (typeof q !== 'object' || q === null) {
     throw new Error(`whereQuery must be an object. ${typeof q} given.`)
   }
-  const { from, where } = q
+  const { entityName, where } = q
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`whereQuery.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`whereQuery.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   if (typeof where !== 'object' || where === null) {
@@ -70,10 +78,10 @@ export function assertValidIdQuery(q: any): void {
   if (typeof q !== 'object' || q === null) {
     throw new Error(`idQuery must be an object. ${typeof q} given.`)
   }
-  const { from, id } = q
+  const { entityName, id } = q
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`idQuery.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`idQuery.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   if (typeof id !== 'string' || !id) {
@@ -88,10 +96,10 @@ export function assertValidIdsQuery(q: any): void {
   if (typeof q !== 'object' || q === null) {
     throw new Error(`idsQuery must be an object. ${typeof q} given.`)
   }
-  const { from, ids } = q
+  const { entityName, ids } = q
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`idsQuery.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`idsQuery.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   if (!Array.isArray(ids)) {
@@ -111,10 +119,10 @@ export function assertValidInsertCommand(com: any): void {
     throw new Error(`insertCommand must be an object. ${typeof com} given.`)
   }
 
-  const { from, value, values } = com
+  const { entityName, value, values } = com
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`insertCommand.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`insertCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   if (value != null) {
@@ -146,10 +154,10 @@ export function assertValidUpdateCommand(com: any): void {
     throw new Error(`updateCommand must be an object. ${typeof com} given.`)
   }
 
-  const { from, rderators, id, where } = com
+  const { entityName, rderators, id, where } = com
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`updateCommand.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`updateCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   assertValidUpdateOperators(rderators)
@@ -178,10 +186,10 @@ export function assertValidDeleteCommand(com: any): void {
     throw new Error(`deleteCommand must be an object. ${typeof com} given.`)
   }
 
-  const { from, id, where } = com
+  const { entityName, id, where } = com
 
-  if (typeof from !== 'string' || !from) {
-    throw new Error(`deleteCommand.from must be a non-empty string. "${from}" given.`)
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`deleteCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
   if (id != null) {
@@ -235,7 +243,7 @@ export function assertValidCustomCommand(com: any): void {
   const { name, params } = com
 
   if (typeof name !== 'string' || !name) {
-    throw new Error(`customCommand.from must be a non-empty string. "${name}" given.`)
+    throw new Error(`customCommand.name must be a non-empty string. "${name}" given.`)
   }
 
   // params can be null
@@ -246,6 +254,47 @@ export function assertValidCustomCommand(com: any): void {
   // if params exists, it must be an object
   if (typeof params !== 'object') {
     throw new Error(`customCommand.params must be an object or null. ${typeof params} given.`)
+  }
+}
+
+/**
+ *
+ */
+export function assertValidLoginCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`loginCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { credentials, entityName } = com
+
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`loginCommand.entityName must be a non-empty string. "${entityName}" given.`)
+  }
+
+  // credentials must be an object
+  if (typeof credentials !== 'object' || com === null) {
+    throw new Error(`loginCommand.credentials must be an object or null. ${typeof credentials} given.`)
+  }
+  // values in credentials must be strings
+  Object.keys(credentials).forEach(credKey => {
+    if (!credentials[credKey] !== 'string' || !credentials[credKey]) {
+      throw new Error(`loginCommand.credentials['${credKey}'] must be a non-empty string.`)
+    }
+  })
+}
+
+/**
+ *
+ */
+export function assertValidLogoutCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`logoutCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { sessionId } = com
+
+  if (typeof sessionId !== 'string' || !sessionId) {
+    throw new Error(`logoutCommand.sessionId must be a non-empty string. "${sessionId}" given.`) // ISSUE: sessionId is explicitly shown (but not string...).
   }
 }
 
