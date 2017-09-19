@@ -46,6 +46,7 @@ import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
   AclHandler,
   CustomCommandHandler,
+  CoreExecution,
   CustomQueryHandler,
   ExecutionWrapper,
   LoginHandler,
@@ -114,6 +115,7 @@ export type {
   BitOperator,
   ClientPool,
   CommandResult,
+  CoreExecution,
   CurrentDateOperator,
   CustomClient,
   CustomCommand,

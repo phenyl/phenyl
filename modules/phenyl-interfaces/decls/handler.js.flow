@@ -11,6 +11,7 @@ import type { LoginCommandResult, CustomCommandResult } from './command-result.j
 export type AclHandler = (reqData: RequestData, session: ?Session, clients: ClientPool) => Promise<boolean>
 export type ValidationHandler = (reqData: RequestData, session: ?Session, clients: ClientPool) => Promise<boolean>
 export type LoginHandler = (loginCommand: LoginCommand, session: ?Session, clients: ClientPool) => Promise<LoginCommandResult>
-export type ExecutionWrapper = (reqData: RequestData, session: ?Session, clients: ClientPool, execution?: ExecutionWrapper) => Promise<ResponseData>
+export type CoreExecution = (reqData: RequestData, session: ?Session) => Promise<ResponseData>
+export type ExecutionWrapper = (reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution) => Promise<ResponseData>
 export type CustomQueryHandler = (query: CustomQuery, session: ?Session, clients: ClientPool) => Promise<CustomQueryResult>
 export type CustomCommandHandler = (command: CustomCommand, session: ?Session, clients: ClientPool) => Promise<CustomCommandResult>
