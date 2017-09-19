@@ -2,10 +2,11 @@
 import type { CustomQueryDefinitions } from './custom-query-definition.js.flow'
 import type { CustomCommandDefinitions } from './custom-command-definition.js.flow'
 import type { EntityDefinitions } from './entity-definition.js.flow'
+import type { UserEntityDefinitions } from './user-entity-definition.js.flow'
 
 export type FunctionalGroup = {
   users: EntityDefinitions,
-  nonUsers: EntityDefinitions,
+  nonUsers: UserEntityDefinitions,
   customQueries: CustomQueryDefinitions,
   customCommands: CustomCommandDefinitions,
 }
