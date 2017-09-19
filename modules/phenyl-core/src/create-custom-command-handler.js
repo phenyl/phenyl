@@ -12,12 +12,12 @@ import type {
  *
  */
 export default function createCustomCommandHandler(commandDefinitions: CustomCommandDefinitions): CustomCommandHandler {
-  return function executeCustomCommand(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<CustomCommandResult> {
+  return function customCommandHandler(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<CustomCommandResult> {
     const { name } = command
-    const setting = commandDefinitions[name]
-    if (setting == null || typeof setting.execution !== 'function') {
+    const definition = commandDefinitions[name]
+    if (definition == null || typeof definition.execution !== 'function') {
       throw new Error(`No execution function found for custom command named "${name}".`)
     }
-    return setting.execution(command, session, clients)
+    return definition.execution(command, session, clients)
   }
 }
