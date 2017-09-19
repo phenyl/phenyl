@@ -23,10 +23,6 @@ import type {
   LogoutCommandResult,
 } from 'phenyl-interfaces'
 
-import type {
-  CustomExecutionHandlers,
-} from './create-custom-execution-handlers'
-
 type PhenylCoreParams = {
   clients: ClientPool,
   aclHandler: AclHandler,
