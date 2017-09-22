@@ -14,6 +14,7 @@ import type {
 
 export interface UserEntityDefinition {
   login(loginCommand: LoginCommand, session: ?Session, clients: ClientPool): Promise<LoginCommandResult>,
+  logout(logoutCommand: LogoutCommand, session: ?Session, clients: ClientPool): Promise<LogoutCommandResult>,
 }
 
 export type UserEntityDefinitions = { [entityName: string]: EntityDefinition & UserEntityDefinition }
