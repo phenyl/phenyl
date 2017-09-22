@@ -6,7 +6,7 @@ import {
 } from 'phenyl-http-rules/jsnext'
 
 import {
-  createErrorResponse,
+  createErrorResult,
 } from 'phenyl-utils'
 
 import type {
@@ -45,7 +45,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => 
       })
     }
     catch (err) {
-      const responseData = createErrorResponse(err)
+      const responseData = { error: createErrorResult(err) }
       return cb(null, {
         statusCode: getStatusCode(responseData),
         headers: { 'Content-Type': 'application/json' },
@@ -58,7 +58,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => 
       responseData = await phenylCore.run(requestData, sessionId)
     }
     catch (err) {
-      responseData = createErrorResponse(err)
+      responseData = { error: createErrorResult(err) }
     }
 
     // 3. Encoding Response

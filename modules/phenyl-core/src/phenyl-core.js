@@ -1,7 +1,7 @@
 // @flow
 import {
   assertValidRequestData,
-  createErrorResponse,
+  createErrorResult,
 } from 'phenyl-utils'
 
 import type {
@@ -68,19 +68,19 @@ export default class PhenylCore implements PhenylRunner {
       // 1. ACL
       const isAccessible = await this.aclHandler(reqData, session, this.clients)
       if (!isAccessible) {
-        return createErrorResponse(new Error('Authorization Required.'), 'Unauthorized')
+        return { error: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
       }
 
       // 2. Validation
       const isValid = await this.validationHandler(reqData, session, this.clients)
       if (!isValid) {
-        return createErrorResponse(new Error('Params are not valid.'), 'BadRequest')
+        return { error: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
       }
       // 3. Execution
       return this.executionWrapper(reqData, session, this.clients, this.execute.bind(this))
     }
     catch (e) {
-      return createErrorResponse(e)
+      return { error: createErrorResult(e) }
     }
   }
 
@@ -153,7 +153,7 @@ export default class PhenylCore implements PhenylRunner {
       return result.ok ? { logout: result } : { error: result }
     }
 
-    return createErrorResponse(new Error('Invalid method name.'), 'NotFound')
+    return { error: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
   }
 
   async logout(logoutCommand: LogoutCommand): Promise<LogoutCommandResult> {

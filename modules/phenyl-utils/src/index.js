@@ -1,3 +1,3 @@
 // @flow
 export * from './request-assertion.js'
-export { createErrorResponse } from './create-error-response.js'
+export { createErrorResult } from './create-error-result.js'

@@ -1,16 +1,15 @@
 // @flow
 import type {
-  ResponseData,
+  ErrorResult,
   ErrorResultType,
 } from 'phenyl-interfaces'
 
-export function createErrorResponse(error: Error, type?: ErrorResultType): ResponseData {
+export function createErrorResult(error: Error, type?: ErrorResultType): ErrorResult {
   return {
-    error: {
-      ok: 0,
-      type: type || guessErrorType(error),
-      message: error.message,
-    }
+    ok: 0,
+    type: type || guessErrorType(error),
+    message: error.message,
+    stack: error.stack
   }
 }
 
