@@ -31,32 +31,33 @@ import type {
   LoginCommand,
   LogoutCommand,
 } from './command.js.flow'
+import type { ErrorResult } from './error-result.js.flow'
 
 export interface EntityClient {
-  find(query: WhereQuery): Promise<QueryResult>,
-  findOne(query: WhereQuery): Promise<SingleQueryResult>,
-  get(query: IdQuery): Promise<SingleQueryResult>,
-  getByIds(query: IdsQuery): Promise<QueryResult>,
+  find(query: WhereQuery): Promise<QueryResult | ErrorResult>,
+  findOne(query: WhereQuery): Promise<SingleQueryResult | ErrorResult>,
+  get(query: IdQuery): Promise<SingleQueryResult | ErrorResult>,
+  getByIds(query: IdsQuery): Promise<QueryResult | ErrorResult>,
 
-  insert(command: InsertCommand): Promise<CommandResult>,
-  insertAndGet(command: InsertCommand): Promise<GetCommandResult>,
-  insertAndFetch(command: InsertCommand): Promise<FetchCommandResult>,
+  insert(command: InsertCommand): Promise<CommandResult | ErrorResult>,
+  insertAndGet(command: InsertCommand): Promise<GetCommandResult | ErrorResult>,
+  insertAndFetch(command: InsertCommand): Promise<FetchCommandResult | ErrorResult>,
 
-  update(command: UpdateCommand): Promise<CommandResult>,
-  updateAndGet(command: UpdateCommand): Promise<GetCommandResult>,
-  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult>,
+  update(command: UpdateCommand): Promise<CommandResult | ErrorResult>,
+  updateAndGet(command: UpdateCommand): Promise<GetCommandResult | ErrorResult>,
+  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult | ErrorResult>,
 
-  delete(command: DeleteCommand): Promise<CommandResult>,
+  delete(command: DeleteCommand): Promise<CommandResult | ErrorResult>,
 }
 
 export interface CustomClient {
-  runCustomQuery(query: CustomQuery): Promise<CustomQueryResult>,
-  runCustomCommand(command: CustomCommand): Promise<CustomCommandResult>,
+  runCustomQuery(query: CustomQuery): Promise<CustomQueryResult | ErrorResult>,
+  runCustomCommand(command: CustomCommand): Promise<CustomCommandResult | ErrorResult>,
 }
 
 export interface AuthClient {
-  login(command: LoginCommand): Promise<LoginCommandResult>,
-  logout(command: LogoutCommand): Promise<LogoutCommandResult>,
+  login(command: LoginCommand): Promise<LoginCommandResult | ErrorResult>,
+  logout(command: LogoutCommand): Promise<LogoutCommandResult | ErrorResult>,
 }
 
 export type SessionClient = KvsClient<Session, PreSession>

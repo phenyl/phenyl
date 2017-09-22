@@ -88,70 +88,69 @@ export default class PhenylCore implements PhenylRunner {
    *
    */
   async execute(reqData: RequestData, session: ?Session): Promise<ResponseData> {
-
     const { entityClient } = this.clients
 
     if (reqData.find != null) {
       const result = await entityClient.find(reqData.find)
-      return { find: result }
+      return result.ok ? { find: result } : { error: result }
     }
     if (reqData.findOne != null) {
       const result = await entityClient.findOne(reqData.findOne)
-      return { findOne: result }
+      return result.ok ? { findOne: result } : { error: result }
     }
     if (reqData.get != null) {
       const result = await entityClient.get(reqData.get)
-      return { get: result }
+      return result.ok ? { get: result } : { error: result }
     }
     if (reqData.getByIds != null) {
       const result = await entityClient.getByIds(reqData.getByIds)
-      return { getByIds: result }
+      return result.ok ? { getByIds: result } : { error: result }
     }
     if (reqData.insert != null) {
       const result = await entityClient.insert(reqData.insert)
-      return { insert: result }
+      return result.ok ? { insert: result } : { error: result }
     }
     if (reqData.insertAndGet != null) {
       const result = await entityClient.insertAndGet(reqData.insertAndGet)
-      return { insertAndGet: result }
+      return result.ok ? { insertAndGet: result } : { error: result }
     }
     if (reqData.insertAndFetch != null) {
       const result = await entityClient.insertAndFetch(reqData.insertAndFetch)
-      return { insertAndFetch: result }
+      return result.ok ? { insertAndFetch: result } : { error: result }
     }
     if (reqData.update != null) {
       const result = await entityClient.update(reqData.update)
-      return { update: result }
+      return result.ok ? { update: result } : { error: result }
     }
     if (reqData.updateAndGet != null) {
       const result = await entityClient.updateAndGet(reqData.updateAndGet)
-      return { updateAndGet: result }
+      return result.ok ? { updateAndGet: result } : { error: result }
     }
     if (reqData.updateAndFetch != null) {
       const result = await entityClient.updateAndFetch(reqData.updateAndFetch)
-      return { updateAndFetch: result }
+      return result.ok ? { updateAndFetch: result } : { error: result }
     }
     if (reqData.delete != null) {
       const result = await entityClient.delete(reqData.delete)
-      return { delete: result }
+      return result.ok ? { delete: result } : { error: result }
     }
 
     if (reqData.runCustomQuery != null) {
       const result = await this.customQueryHandler(reqData.runCustomQuery, session, this.clients)
-      return { runCustomQuery: result }
+      return result.ok ? { runCustomQuery: result } : { error: result }
     }
     if (reqData.runCustomCommand != null) {
       const result = await this.customCommandHandler(reqData.runCustomCommand, session, this.clients)
-      return { runCustomCommand: result }
+      return result.ok ? { runCustomCommand: result } : { error: result }
     }
 
     if (reqData.login != null) {
       const result = await this.loginHandler(reqData.login, session, this.clients)
-      return { login: result }
+      return result.ok ? { login: result } : { error: result }
     }
     if (reqData.logout != null) {
       const result = await this.logout(reqData.logout)
-      return { logout: result }
+      return result.ok ? { logout: result } : { error: result }
     }
 
     return createErrorResponse(new Error('Invalid method name.'), 'NotFound')
