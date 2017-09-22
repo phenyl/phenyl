@@ -16,6 +16,7 @@ import type {
   CustomQueryHandler,
   CustomCommandHandler,
   LoginHandler,
+  LogoutHandler,
   ExecutionWrapper,
   LoginCommand,
   LoginCommandResult,
@@ -30,6 +31,7 @@ type PhenylCoreParams = {
   customQueryHandler: CustomQueryHandler,
   customCommandHandler: CustomCommandHandler,
   loginHandler: LoginHandler,
+  logoutHandler: LogoutHandler,
   executionWrapper: ExecutionWrapper,
 }
 
@@ -43,6 +45,7 @@ export default class PhenylCore implements PhenylRunner {
   customQueryHandler: CustomQueryHandler
   customCommandHandler: CustomCommandHandler
   loginHandler: LoginHandler
+  logoutHandler: LogoutHandler
   executionWrapper: ExecutionWrapper
 
   constructor(params: PhenylCoreParams) {
@@ -52,6 +55,7 @@ export default class PhenylCore implements PhenylRunner {
     this.customQueryHandler = params.customQueryHandler
     this.customCommandHandler = params.customCommandHandler
     this.loginHandler = params.loginHandler
+    this.logoutHandler = params.logoutHandler
     this.executionWrapper = params.executionWrapper
   }
 
@@ -149,15 +153,10 @@ export default class PhenylCore implements PhenylRunner {
       return result.ok ? { login: result } : { error: result }
     }
     if (reqData.logout != null) {
-      const result = await this.logout(reqData.logout)
+      const result = await this.logoutHandler(reqData.logout, session, this.clients)
       return result.ok ? { logout: result } : { error: result }
     }
 
     return { error: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
-  }
-
-  async logout(logoutCommand: LogoutCommand): Promise<LogoutCommandResult> {
-    await this.clients.sessionClient.delete(logoutCommand.sessionId)
-    return { ok: 1 }
   }
 }

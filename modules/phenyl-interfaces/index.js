@@ -50,6 +50,7 @@ import type {
   CustomQueryHandler,
   ExecutionWrapper,
   LoginHandler,
+  LogoutHandler,
   ValidationHandler,
 } from './decls/handler.js.flow'
 import type {
@@ -152,9 +153,10 @@ export type {
   KvsClient,
   LoginCommand,
   LoginCommandResult,
-  LogoutCommand,
   LoginHandler,
+  LogoutCommand,
   LogoutCommandResult,
+  LogoutHandler,
   MaxOperator,
   MinOperator,
   MulOperator,
