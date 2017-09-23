@@ -5,8 +5,8 @@ import type { EntityDefinitions } from './entity-definition.js.flow'
 import type { UserEntityDefinitions } from './user-entity-definition.js.flow'
 
 export type FunctionalGroup = {
-  users: EntityDefinitions,
-  nonUsers: UserEntityDefinitions,
+  users: UserEntityDefinitions,
+  nonUsers: EntityDefinitions,
   customQueries: CustomQueryDefinitions,
   customCommands: CustomCommandDefinitions,
 }
