@@ -37,7 +37,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
 
   constructor(params: StandardUserDefinitionParams) {
     super(params)
-    this.encrypt = params.encrypt || powerCrypt
+    this.encrypt = params.encrypt || powerCrypt // TODO: pass salt string to powerCrypt
     this.accountPropName = params.accountPropName || 'account'
     this.passwordPropName = params.passwordPropName || 'password'
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
