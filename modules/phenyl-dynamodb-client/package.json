@@ -12,5 +12,8 @@
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "aws-sdk": "^2.122.0",
+    "es6-promisify": "^5.0.0"
+  }
 }

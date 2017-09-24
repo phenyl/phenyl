@@ -1,0 +1,11 @@
+// @flow
+
+/**
+  string in #[name] format
+  to avoiding reserved words in dynamoDB
+  reserverd words in dynamoDB: http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ReservedWords.html
+ */
+export opaque type AttributeName = string
+
+export type ExpressionAttributeNames = { [key: AttributeName]: string }
+

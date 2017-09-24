@@ -1,0 +1,46 @@
+// @flow
+
+import type { ExpressionAttributeNames } from  './attribute-names.js.flow'
+import type { ExpressionAttributeValues } from './attribute-values.js.flow'
+
+// reference URL: http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Query.html
+export type RequestParameters = {
+  TableName: string,
+  ConsistentRead?: boolean,
+  ExclusiveStartKey?: string, // String to AttributeValue object map
+  ExpressionAttributeNames?: ExpressionAttributeNames,
+  ExpressionAttributeValues?: ExpressionAttributeValues,
+  FilterExpression?: string,
+  IndexName?: string,
+  KeyConditionExpression?: string,
+  KeyConditions?: string, // String to Condition object map
+  Limit?: number,
+  ProjectionExpression?: string,
+  QueryFilter?: string, // String to Condition object map
+  ReturnConsumedCapacity?: 'INDEXES' | 'TOTAL' | 'NONE'
+  ScanIndexForward?: boolean,
+  Select?: 'ALL_ATTRIBUTES' | 'ALL_PROJECTED_ATTRIBUTES' | 'SPECIFIC_ATTRIBUTES' | 'COUNT'
+}
+
+export type ComparisonOperator =
+  'EQ' |
+  'NE' |
+  'LE' |
+  'LT' |
+  'GE' |
+  'GT' |
+  'NOT_NULL' |
+  'NULL' |
+  'CONTAINS' |
+  'NOT_CONTAINS' |
+  'BEGINS_WITH' |
+  'IN' |
+  'BETWEEN'
+
+// reference URL: http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_Condition.html
+type Condition = {
+  ComparisonOperator: ComparisonOperator,
+  AttributeValueList?: Array<AttributeValue>
+}
+
+

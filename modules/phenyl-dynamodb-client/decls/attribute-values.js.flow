@@ -1,0 +1,24 @@
+// @flow
+
+/**
+ * string in :[key] format
+ */
+export opaque type PlaceHolder = string
+
+export type ExpressionAttributeValues = {
+  [key: PlaceHolder]: AttributeValue
+}
+
+// reference URL: http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html
+export type AttributeValue = {
+  B?: Object,
+  BOOL?: boolean,
+  BS?: string[], // Array of Base64-encoded binary data objects
+  L?: AttributeValue[]
+  M?: Object, // map of AttributeValue
+  N?: string,
+  NS?: string[],
+  NULL?: boolean,
+  S?: string,
+  SS?: string[],
+}

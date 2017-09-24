@@ -1,0 +1,21 @@
+// @flow
+
+export type Response = {
+  ConsumedCapacity: ConsumedCapacity,
+  Count: number,
+  Items: Array<string>, // Array of string to AttributeValue object maps
+  LastEvaluatedKey: string, // String to AttributeValue object map
+  ScannedCount: number,
+}
+
+type ConsumedCapacity = {
+  CapacityUnits?: number,
+  GlobalSecondaryIndexes?: string, // String to Capacity object map
+  LocalSecondaryIndexes?: string, // String to Capacity object map
+  Table?: Capacity,
+  TableName?: string
+}
+
+type Capacity = {
+  CapacityUnit?: number,
+}
