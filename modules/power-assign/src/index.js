@@ -1,6 +1,6 @@
 // @flow
 
-import equal from 'deep-equal'
+import deepEqual from 'fast-deep-equal'
 import type {
   AddToSetOperator,
   BitOperator,
@@ -201,7 +201,7 @@ export default class PowerAssign {
         modifier = { $each: [modifier] }
       }
       // $FlowIssue(arr-is-Array)
-      const newArr = modifier.$each.filter(element => !arr.some(arrEl => equal(arrEl, element)))
+      const newArr = modifier.$each.filter(element => !arr.some(arrEl => deepEqual(arrEl, element)))
       valuesToSet[dnStr] = arr.concat(newArr)
     })
     return this.$set(obj, valuesToSet)

@@ -15,6 +15,6 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "deep-equal": "^1.0.1"
+    "fast-deep-equal": "^1.0.0"
   }
 }
