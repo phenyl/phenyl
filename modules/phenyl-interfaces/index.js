@@ -71,6 +71,7 @@ import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
 import { PhenylRunner } from './decls/phenyl-runner.js.flow'
 import type {
+  EqCondition,
   QueryCondition,
   QueryExpression,
 } from './decls/query-condition.js.flow'
@@ -152,6 +153,7 @@ export type {
   EntityClient,
   EntityDefinition,
   EntityDefinitions
+  EqCondition,
   ErrorResult,
   ErrorResultType,
   ExecutionWrapper,

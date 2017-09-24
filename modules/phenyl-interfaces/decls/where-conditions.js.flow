@@ -1,7 +1,6 @@
 // @flow
-import type { QueryCondition } from './query-condition.js.flow'
+import type { QueryCondition, EqCondition } from './query-condition.js.flow'
 type DotNotationString = string
-type EqCondition = any
 
 export type WhereConditions = {
   [fieldName: DotNotationString]: QueryCondition | EqCondition
