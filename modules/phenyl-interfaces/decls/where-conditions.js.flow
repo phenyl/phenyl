@@ -3,5 +3,8 @@ import type { QueryCondition, EqCondition } from './query-condition.js.flow'
 type DotNotationString = string
 
 export type WhereConditions = {
-  [fieldName: DotNotationString]: QueryCondition | EqCondition
+  [fieldName: DotNotationString]: QueryCondition | EqCondition,
+  $and?: Array<WhereConditions>,
+  $nor?: Array<WhereConditions>,
+  $or?: Array<WhereConditions>,
 }

@@ -2,7 +2,6 @@
 import type {
   QueryCondition,
   DotNotationString,
-  QueryExpression,
 } from 'phenyl-interfaces'
 
 /**

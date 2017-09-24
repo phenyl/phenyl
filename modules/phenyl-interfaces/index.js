@@ -71,9 +71,10 @@ import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
 import { PhenylRunner } from './decls/phenyl-runner.js.flow'
 import type {
+  BSONTypeNumber,
+  BSONTypeString,
   EqCondition,
   QueryCondition,
-  QueryExpression,
 } from './decls/query-condition.js.flow'
 import type {
   CustomQueryResult,
@@ -128,6 +129,8 @@ export type {
   AuthenticationResult,
   AuthClient,
   BitOperator,
+  BSONTypeNumber,
+  BSONTypeString,
   ClientPool,
   CommandResult,
   CommandResultOrError,
@@ -192,7 +195,6 @@ export type {
   PushModifier,
   PushOperator,
   QueryCondition,
-  QueryExpression,
   QueryResult,
   QueryResultOrError,
   QueryStringParams,
