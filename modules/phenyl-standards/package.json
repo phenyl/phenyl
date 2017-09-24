@@ -12,6 +12,9 @@
     "babel-register": "^6.24.1",
     "phenyl-interfaces": "*"
   },
+  "dependencies": {
+    "power-crypt": "*"
+  },
   "author": "",
   "license": "ISC"
 }

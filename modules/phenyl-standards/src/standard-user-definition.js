@@ -1,7 +1,8 @@
 // @flow
 
-import StandardEntityDefinition from './standard-entity-definition.js'
+import powerCrypt from 'power-crypt/jsnext'
 
+import StandardEntityDefinition from './standard-entity-definition.js'
 import encryptPasswordInRequestData from './encrypt-password-in-request-data.js'
 import removePasswordFromResponseData from './remove-password-from-response-data.js'
 
@@ -22,7 +23,7 @@ import type {
 } from '../decls/index.js.flow'
 
 export type StandardUserDefinitionParams = {
-  encrypt: EncryptFunction,
+  encrypt?: EncryptFunction,
   accountPropName?: string,
   passwordPropName?: string,
   ttl?: number,
@@ -36,7 +37,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
 
   constructor(params: StandardUserDefinitionParams) {
     super(params)
-    this.encrypt = params.encrypt
+    this.encrypt = params.encrypt || powerCrypt
     this.accountPropName = params.accountPropName || 'account'
     this.passwordPropName = params.passwordPropName || 'password'
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
