@@ -1,5 +1,5 @@
 {
-  "name": "phenyl-http-server",
+  "name": "phenyl-http2-server",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
