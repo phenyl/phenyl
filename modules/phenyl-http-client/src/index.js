@@ -29,6 +29,7 @@ import type {
   EntityClient,
   CustomClient,
   QueryResultOrError,
+  QueryStringParams,
   SingleQueryResultOrError,
   UpdateCommand,
   WhereQuery,
@@ -56,7 +57,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
       qsParams,
       body,
     } = encodeRequest(reqData, this.sessionId)
-    const qs = ''
+    const qs = stringifyQsParams(qsParams)
     const url = `${this.url}${path}${qs}`
 
     const response = await fetch(url, {
@@ -246,4 +247,15 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     if (ret == null) throw new Error(`Invalid response data: property name "logout" is not found in response.`)
     return ret
   }
+}
+
+function stringifyQsParams(qsParams: ?QueryStringParams): string {
+  if (qsParams == null) {
+    return ''
+  }
+
+  return '?' + Object.keys(qsParams).map(name =>
+    // $FlowIssue(object-keys-iteration)
+    `${name}=${encodeURIComponent(qsParams[name])}`
+  ).join('&')
 }
