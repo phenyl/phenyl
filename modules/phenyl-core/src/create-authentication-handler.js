@@ -6,13 +6,13 @@ import type {
   AuthenticationResult,
   ClientPool,
   Session,
-  UserEntityDefinitions,
+  UserDefinitions,
 } from 'phenyl-interfaces'
 
 /**
  *
  */
-export default function createAuthenticationHandler(userEntityDefinitions: UserEntityDefinitions): AuthenticationHandler {
+export default function createAuthenticationHandler(userEntityDefinitions: UserDefinitions): AuthenticationHandler {
   return async function authenticationHandler(loginCommand: LoginCommand, session: ?Session, clients: ClientPool) :Promise<AuthenticationResult> {
     const { entityName } = loginCommand
     const definition = userEntityDefinitions[entityName]
