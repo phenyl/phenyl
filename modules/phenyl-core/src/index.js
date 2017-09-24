@@ -11,7 +11,7 @@ export default PhenylCore
 export {
   createAclHandler,
   createCustomQueryHandler,
-  createCustomCommandHandler
+  createCustomCommandHandler,
   createExecutionWrapper,
   createAuthenticationHandler,
   createValidationHandler,
