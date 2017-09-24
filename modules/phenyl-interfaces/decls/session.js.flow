@@ -3,7 +3,7 @@ import type { Id } from './id'
 export interface Session {
   id: Id,
   ttl: number,
-  userType: string,
+  entityName: string,
   userId: Id,
 }
 
@@ -11,6 +11,6 @@ export interface Session {
 export interface PreSession {
   id?: Id,
   ttl: number,
-  userType: string,
+  entityName: string,
   userId: Id,
 }
