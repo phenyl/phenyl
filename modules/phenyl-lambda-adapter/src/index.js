@@ -49,7 +49,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => 
       return cb(null, {
         statusCode: getStatusCode(responseData),
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(responseData)
+        body: JSON.stringify(encodeResponse(responseData))
       })
     }
 
