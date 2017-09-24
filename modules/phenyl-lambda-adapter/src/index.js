@@ -34,8 +34,8 @@ export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => 
   return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
     let requestData, sessionId, responseData
 
-    // 1. Decoding Request
     try {
+      // 1. Decoding Request
       [requestData, sessionId] = decodeRequest({
         method: event.httpMethod,
         path: event.path,
@@ -43,18 +43,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner): LambdaHandler => 
         headers: event.headers,
         queryString: event.queryStringParameters,
       })
-    }
-    catch (err) {
-      const responseData = { error: createErrorResult(err) }
-      return cb(null, {
-        statusCode: getStatusCode(responseData),
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(responseData)
-      })
-    }
-
-    // 2. Invoking PhenylCore
-    try {
+      // 2. Invoking PhenylCore
       responseData = await phenylCore.run(requestData, sessionId)
     }
     catch (err) {
