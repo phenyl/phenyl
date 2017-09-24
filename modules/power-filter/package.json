@@ -13,6 +13,7 @@
     "phenyl-interfaces": "*"
   },
   "dependencies": {
+    "fast-deep-equal": "^1.0.0",
     "phenyl-utils": "*"
   },
   "author": "",
