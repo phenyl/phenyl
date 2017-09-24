@@ -115,9 +115,9 @@ import type {
   UpdateOperators,
 } from './decls/update-operators.js.flow'
 import type {
-  UserEntityDefinition,
-  UserEntityDefinitions,
-} from './decls/user-entity-definition.js.flow'
+  UserDefinition,
+  UserDefinitions,
+} from './decls/user-definition.js.flow'
 import type { WhereConditions } from './decls/where-conditions.js.flow'
 
 export type {
@@ -208,8 +208,8 @@ export type {
   SortNotation,
   UpdateCommand,
   UpdateOperators,
-  UserEntityDefinition,
-  UserEntityDefinitions,
+  UserDefinition,
+  UserDefinitions,
   ValidationHandler,
   WhereConditions,
   WhereQuery,

@@ -15,8 +15,8 @@ import type {
   AuthenticationResult
 } from './handler.js.flow'
 
-export interface UserEntityDefinition {
+export interface UserDefinition {
   authentication(loginCommand: LoginCommand, session: ?Session, clients: ClientPool): Promise<AuthenticationResult>,
 }
 
-export type UserEntityDefinitions = { [entityName: string]: EntityDefinition & UserEntityDefinition }
+export type UserDefinitions = { [entityName: string]: EntityDefinition & UserDefinition }
