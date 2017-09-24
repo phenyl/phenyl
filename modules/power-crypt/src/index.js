@@ -11,7 +11,7 @@ type PowerCryptOptions = {
 /**
  *
  */
-export default function powerCrypt(str: string, options: PowerCryptOptions = {}): string {
+export default function powerCrypt(str: string, options?: PowerCryptOptions = {}): string {
   let { nStretch, algorithm, encode, salt } = options
   salt = salt || ''
   encode = encode || 'base64'
