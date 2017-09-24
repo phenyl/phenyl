@@ -11,17 +11,17 @@ import type {
   PreSession,
 } from './session.js.flow'
 import type {
-  CustomQueryResult,
-  SingleQueryResult,
-  QueryResult,
+  CustomQueryResultOrError,
+  SingleQueryResultOrError,
+  QueryResultOrError,
 } from './query-result.js.flow'
 import type {
-  CommandResult,
-  CustomCommandResult,
-  GetCommandResult,
-  FetchCommandResult,
-  LoginCommandResult,
-  LogoutCommandResult,
+  CommandResultOrError,
+  CustomCommandResultOrError,
+  GetCommandResultOrError,
+  FetchCommandResultOrError,
+  LoginCommandResultOrError,
+  LogoutCommandResultOrError,
 } from './command-result.js.flow'
 import type {
   InsertCommand,
@@ -31,33 +31,32 @@ import type {
   LoginCommand,
   LogoutCommand,
 } from './command.js.flow'
-import type { ErrorResult } from './error-result.js.flow'
 
 export interface EntityClient {
-  find(query: WhereQuery): Promise<QueryResult | ErrorResult>,
-  findOne(query: WhereQuery): Promise<SingleQueryResult | ErrorResult>,
-  get(query: IdQuery): Promise<SingleQueryResult | ErrorResult>,
-  getByIds(query: IdsQuery): Promise<QueryResult | ErrorResult>,
+  find(query: WhereQuery): Promise<QueryResultOrError>,
+  findOne(query: WhereQuery): Promise<SingleQueryResultOrError>,
+  get(query: IdQuery): Promise<SingleQueryResultOrError>,
+  getByIds(query: IdsQuery): Promise<QueryResultOrError>,
 
-  insert(command: InsertCommand): Promise<CommandResult | ErrorResult>,
-  insertAndGet(command: InsertCommand): Promise<GetCommandResult | ErrorResult>,
-  insertAndFetch(command: InsertCommand): Promise<FetchCommandResult | ErrorResult>,
+  insert(command: InsertCommand): Promise<CommandResultOrError>,
+  insertAndGet(command: InsertCommand): Promise<GetCommandResultOrError>,
+  insertAndFetch(command: InsertCommand): Promise<FetchCommandResultOrError>,
 
-  update(command: UpdateCommand): Promise<CommandResult | ErrorResult>,
-  updateAndGet(command: UpdateCommand): Promise<GetCommandResult | ErrorResult>,
-  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResult | ErrorResult>,
+  update(command: UpdateCommand): Promise<CommandResultOrError>,
+  updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError>,
+  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError>,
 
-  delete(command: DeleteCommand): Promise<CommandResult | ErrorResult>,
+  delete(command: DeleteCommand): Promise<CommandResultOrError>,
 }
 
 export interface CustomClient {
-  runCustomQuery(query: CustomQuery): Promise<CustomQueryResult | ErrorResult>,
-  runCustomCommand(command: CustomCommand): Promise<CustomCommandResult | ErrorResult>,
+  runCustomQuery(query: CustomQuery): Promise<CustomQueryResultOrError>,
+  runCustomCommand(command: CustomCommand): Promise<CustomCommandResultOrError>,
 }
 
 export interface AuthClient {
-  login(command: LoginCommand): Promise<LoginCommandResult | ErrorResult>,
-  logout(command: LogoutCommand): Promise<LogoutCommandResult | ErrorResult>,
+  login(command: LoginCommand): Promise<LoginCommandResultOrError>,
+  logout(command: LogoutCommand): Promise<LogoutCommandResultOrError>,
 }
 
 export type SessionClient = KvsClient<Session, PreSession>

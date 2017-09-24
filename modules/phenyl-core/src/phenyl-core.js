@@ -18,10 +18,9 @@ import type {
   AuthenticationHandler,
   ExecutionWrapper,
   LoginCommand,
-  LoginCommandResult,
+  LoginCommandResultOrError,
   LogoutCommand,
-  LogoutCommandResult,
-  ErrorResult,
+  LogoutCommandResultOrError,
 } from 'phenyl-interfaces'
 
 type PhenylCoreParams = {
@@ -160,7 +159,7 @@ export default class PhenylCore implements PhenylRunner {
   /**
    * create Session
    */
-  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult | ErrorResult> {
+  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResultOrError> {
     try {
       const result = await this.authenticationHandler(loginCommand, session, this.clients)
 
@@ -184,7 +183,7 @@ export default class PhenylCore implements PhenylRunner {
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult | ErrorResult> {
+  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResultOrError> {
     const { sessionId } = logoutCommand
     try {
       const result = await this.clients.sessionClient.delete(sessionId)
