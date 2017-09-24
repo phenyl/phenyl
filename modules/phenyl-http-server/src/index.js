@@ -87,5 +87,6 @@ export default class PhenylHTTPServer {
     }
     response.writeHead(statusCode, headers)
     response.write(body)
+    res.end()
   }
 }
