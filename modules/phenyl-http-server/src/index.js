@@ -1,16 +1,15 @@
 // @flow
-import http from 'http' // = NODE ONLY
-import https from 'https' // = NODE ONLY
+import type { IncomingRequest, OutgoingResponse } from 'http' // = NODE ONLY
 
-import {
-  decodeRequest,
-  encodeResponse,
-  getStatusCode,
-} from 'phenyl-http-rules/jsnext'
+// import {
+//   decodeRequest,
+//   encodeResponse,
+//   getStatusCode,
+// } from 'phenyl-http-rules/jsnext'
 
-import {
-  createErrorResult,
-} from 'phenyl-utils'
+// import {
+//   createErrorResult,
+// } from 'phenyl-utils'
 
 
 import type {
@@ -18,16 +17,26 @@ import type {
   ResponseData,
 } from 'phenyl-interfaces'
 
-export default class PhenylServer {
-  constructor() {
+export default class PhenylHTTPServer {
+  server: net$Server
+
+  constructor(httpModule, options: Object) {
+    this.server = httpModule.createServer(options, this.onRequest)
   }
 
-  listen() {
+  /**
+   *
+   */
+  listen(port: number, hostname: string, backlog: number, callback: Function) {
+    this.server.listen(port, hostname, backlog, callback)
   }
 
   /**
    * @private
+   * @param {IncomingRequest} request
+   * @param {OutgoingResponse} response
    */
-  async onRequest() {
+  onRequest(request: IncomingRequest, response: OutgoingResponse) {
+    // TODO: Implement
   }
 }
