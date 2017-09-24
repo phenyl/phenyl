@@ -1,6 +1,8 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
+import { getNestedValue } from 'phenyl-utils'
+
 import type {
   AddToSetOperator,
   BitOperator,
@@ -21,7 +23,7 @@ import type {
   WhereConditions,
 } from 'phenyl-interfaces'
 
-import QueryOperation from './query-operation'
+import QueryOperation from './query-operation.js'
 
 /**
  *
@@ -126,7 +128,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(incOp).forEach(dnStr => {
-      const currentVal = this.getValue(obj, dnStr)
+      const currentVal = getNestedValue(obj, dnStr)
       const inc = incOp[dnStr]
       valuesToSet[dnStr] = currentVal + inc
     })
@@ -140,7 +142,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(minOp).forEach(dnStr => {
-      const currentVal = this.getValue(obj, dnStr)
+      const currentVal = getNestedValue(obj, dnStr)
       const newVal = minOp[dnStr]
       if (newVal < currentVal) {
         valuesToSet[dnStr] = newVal
@@ -156,7 +158,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(maxOp).forEach(dnStr => {
-      const currentVal = this.getValue(obj, dnStr)
+      const currentVal = getNestedValue(obj, dnStr)
       const newVal = maxOp[dnStr]
       if (newVal > currentVal) {
         valuesToSet[dnStr] = newVal
@@ -172,7 +174,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(mulOp).forEach(dnStr => {
-      const currentNum = this.getValue(obj, dnStr)
+      const currentNum = getNestedValue(obj, dnStr)
       if (currentNum == null) {
         throw Error('operand must not be null')
       }
@@ -188,7 +190,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(addToSetOp).forEach(dnStr => {
-      let arr: ?Array<any> = this.getValue(obj, dnStr)
+      let arr: ?Array<any> = getNestedValue(obj, dnStr)
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
@@ -214,7 +216,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(popOp).forEach(dnStr => {
-      let arr: ?Array<any> = this.getValue(obj, dnStr).slice()
+      let arr: ?Array<any> = getNestedValue(obj, dnStr).slice()
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
@@ -238,7 +240,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(pullOp).forEach(dnStr => {
-      let arr: ?Array<any> = this.getValue(obj, dnStr)
+      let arr: ?Array<any> = getNestedValue(obj, dnStr)
       if (arr == null) {
         return // If the field is absent, no requests will be executed
       }
@@ -257,7 +259,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(pushOp).forEach(dnStr => {
-      let arr: ?Array<any> = this.getValue(obj, dnStr)
+      let arr: ?Array<any> = getNestedValue(obj, dnStr)
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
@@ -322,7 +324,7 @@ export default class PowerAssign {
     const valuesToSet = {}
 
     Object.keys(bitOp).forEach(dnStr => {
-      const currentNum = this.getValue(obj, dnStr) || 0 // If the field is absent, 0 is set.
+      const currentNum = getNestedValue(obj, dnStr) || 0 // If the field is absent, 0 is set.
       const logicalOperator = Object.keys(bitOp[dnStr])[0]
       // $FlowIssue(return-number)
       const operand: number = bitOp[dnStr][logicalOperator]
@@ -369,13 +371,6 @@ export default class PowerAssign {
       ret.push(currentObj)
     }
     return ret
-  }
-
-  /**
-   *
-   */
-  static getValue(obj: Restorable, dnStr: DotNotationString): any {
-    return dnStr.split('.').reduce((currentObj, key) => currentObj[key], obj)
   }
 }
 

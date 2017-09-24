@@ -15,6 +15,7 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "fast-deep-equal": "^1.0.0"
+    "fast-deep-equal": "^1.0.0",
+    "phenyl-utils": "*"
   }
 }
