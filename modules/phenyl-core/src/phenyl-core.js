@@ -169,7 +169,7 @@ export default class PhenylCore implements PhenylRunner {
         return createErrorResult(result.error, result.resultType)
       }
 
-      const newSession = await this.clients.sessionClient.set(result.preSession)
+      const newSession = await this.clients.sessionClient.create(result.preSession)
       return {
         ok: 1,
         user: result.user,
