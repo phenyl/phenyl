@@ -66,6 +66,6 @@ export interface LoginCommand {
 
 export interface LogoutCommand {
   sessionId: Id,
+  userId: Id,
   entityName: EntityName,
-  options?: Object,
 }

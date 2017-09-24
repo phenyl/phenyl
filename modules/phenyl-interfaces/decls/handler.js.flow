@@ -1,17 +1,32 @@
 // @flow
 import type { RequestData } from './request-data.js.flow'
 import type { ResponseData } from './response-data.js.flow'
-import type { Session } from './session.js.flow'
+import type { PreSession, Session } from './session.js.flow'
 import type { ClientPool } from './client.js.flow'
 import type { CustomQuery } from './query.js.flow'
 import type { CustomQueryResult } from './query-result.js.flow'
-import type { LoginCommand, LogoutCommand, CustomCommand } from './command.js.flow'
-import type { LoginCommandResult, LogoutCommandResult, CustomCommandResult } from './command-result.js.flow'
+import type { LoginCommand, CustomCommand } from './command.js.flow'
+import type { ErrorResultType } from './error-result.js.flow'
+import type { CustomCommandResult } from './command-result.js.flow'
+import type { RestorableEntity } from './restorable.js.flow'
+
+export type OKAuthenticationResult = {|
+  ok: 1,
+  preSession: PreSession,
+  user: ?RestorableEntity,
+|}
+
+export type NGAuthenticationResult = {|
+  ok: 0,
+  error: Error,
+  resultType: ErrorResultType,
+|}
+
+export type AuthenticationResult = OKAuthenticationResult | NGAuthenticationResult
 
 export type AclHandler = (reqData: RequestData, session: ?Session, clients: ClientPool) => Promise<boolean>
 export type ValidationHandler = (reqData: RequestData, session: ?Session, clients: ClientPool) => Promise<boolean>
-export type LoginHandler = (loginCommand: LoginCommand, session: ?Session, clients: ClientPool) => Promise<LoginCommandResult>
-export type LogoutHandler = (logoutCommand: LogoutCommand, session: ?Session, clients: ClientPool) => Promise<LogoutCommandResult>
+export type AuthenticationHandler = (loginCommand: LoginCommand, session: ?Session, clients: ClientPool) => Promise<AuthenticationResult>
 export type CoreExecution = (reqData: RequestData, session: ?Session) => Promise<ResponseData>
 export type ExecutionWrapper = (reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution) => Promise<ResponseData>
 export type CustomQueryHandler = (query: CustomQuery, session: ?Session, clients: ClientPool) => Promise<CustomQueryResult>

@@ -29,7 +29,7 @@ export type CustomCommandResult = {
 export type LoginCommandResult = {
   ok: 1,
   session: Session,
-  user: RestorableEntity,
+  user: ?RestorableEntity,
 }
 
 export type LogoutCommandResult = {

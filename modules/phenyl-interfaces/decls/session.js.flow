@@ -9,7 +9,7 @@ export interface Session {
 
 
 export interface PreSession {
-  id: Id,
+  id?: Id,
   ttl: number,
   userType: string,
   userId: Id,

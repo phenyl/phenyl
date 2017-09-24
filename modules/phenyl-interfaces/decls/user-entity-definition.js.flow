@@ -11,10 +11,12 @@ import type {
   LoginCommandResult,
   LogoutCommandResult,
 } from './command-result.js.flow'
+import type {
+  AuthenticationResult
+} from './handler.js.flow'
 
 export interface UserEntityDefinition {
-  login(loginCommand: LoginCommand, session: ?Session, clients: ClientPool): Promise<LoginCommandResult>,
-  logout(logoutCommand: LogoutCommand, session: ?Session, clients: ClientPool): Promise<LogoutCommandResult>,
+  authentication(loginCommand: LoginCommand, session: ?Session, clients: ClientPool): Promise<AuthenticationResult>,
 }
 
 export type UserEntityDefinitions = { [entityName: string]: EntityDefinition & UserEntityDefinition }

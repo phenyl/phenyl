@@ -5,5 +5,5 @@ import type { Id } from './id.js.flow'
 export interface KvsClient<T, PreT> {
   get(id: ?Id): Promise<?T>,
   set(value: PreT): Promise<T>,
-  delete(id: ?Id): Promise<void>,
+  delete(id: ?Id): Promise<boolean>,
 }

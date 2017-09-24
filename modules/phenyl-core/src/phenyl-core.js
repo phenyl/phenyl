@@ -15,13 +15,13 @@ import type {
   ValidationHandler,
   CustomQueryHandler,
   CustomCommandHandler,
-  LoginHandler,
-  LogoutHandler,
+  AuthenticationHandler,
   ExecutionWrapper,
   LoginCommand,
   LoginCommandResult,
   LogoutCommand,
   LogoutCommandResult,
+  ErrorResult,
 } from 'phenyl-interfaces'
 
 type PhenylCoreParams = {
@@ -30,8 +30,7 @@ type PhenylCoreParams = {
   validationHandler: ValidationHandler,
   customQueryHandler: CustomQueryHandler,
   customCommandHandler: CustomCommandHandler,
-  loginHandler: LoginHandler,
-  logoutHandler: LogoutHandler,
+  authenticationHandler: AuthenticationHandler,
   executionWrapper: ExecutionWrapper,
 }
 
@@ -44,8 +43,7 @@ export default class PhenylCore implements PhenylRunner {
   validationHandler: ValidationHandler
   customQueryHandler: CustomQueryHandler
   customCommandHandler: CustomCommandHandler
-  loginHandler: LoginHandler
-  logoutHandler: LogoutHandler
+  authenticationHandler: AuthenticationHandler
   executionWrapper: ExecutionWrapper
 
   constructor(params: PhenylCoreParams) {
@@ -54,8 +52,7 @@ export default class PhenylCore implements PhenylRunner {
     this.validationHandler = params.validationHandler
     this.customQueryHandler = params.customQueryHandler
     this.customCommandHandler = params.customCommandHandler
-    this.loginHandler = params.loginHandler
-    this.logoutHandler = params.logoutHandler
+    this.authenticationHandler = params.authenticationHandler
     this.executionWrapper = params.executionWrapper
   }
 
@@ -149,14 +146,56 @@ export default class PhenylCore implements PhenylRunner {
     }
 
     if (reqData.login != null) {
-      const result = await this.loginHandler(reqData.login, session, this.clients)
+      const result = await this.login(reqData.login, session)
       return result.ok ? { login: result } : { error: result }
     }
     if (reqData.logout != null) {
-      const result = await this.logoutHandler(reqData.logout, session, this.clients)
+      const result = await this.logout(reqData.logout, session)
       return result.ok ? { logout: result } : { error: result }
     }
 
     return { error: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
+  }
+
+  /**
+   * create Session
+   */
+  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult | ErrorResult> {
+    try {
+      const result = await this.authenticationHandler(loginCommand, session, this.clients)
+
+      // login failed
+      if (!result.ok) {
+        return createErrorResult(result.error, result.resultType)
+      }
+
+      const newSession = await this.clients.sessionClient.set(result.preSession)
+      return {
+        ok: 1,
+        user: result.user,
+        session: newSession
+      }
+    }
+    catch (e) {
+      return createErrorResult(e)
+    }
+  }
+
+  /**
+   * delete Session by sessionId if exists.
+   */
+  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult | ErrorResult> {
+    const { sessionId } = logoutCommand
+    try {
+      const result = await this.clients.sessionClient.delete(sessionId)
+      // sessionId not found
+      if (!result) {
+        return createErrorResult(new Error('sessionId not found'), 'BadRequest')
+      }
+      return { ok: 1 }
+    }
+    catch (e) {
+        return createErrorResult(e)
+    }
   }
 }
