@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:power-assign && npm run build:power-crypt && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards",
+    "build": "npm run build:power-assign && npm run build:power-crypt && npm run power-debugger && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
     "build:power-assign": "babel modules/power-assign/src -d modules/power-assign/dist",
     "build:power-crypt": "babel modules/power-crypt/src -d modules/power-crypt/dist",
+    "build:power-debugger": "babel modules/power-debugger/src -d modules/power-debugger/dist",
     "build:power-filter": "babel modules/power-filter/src -d modules/power-filter/dist",
     "build:phenyl-http-client": "babel modules/phenyl-http-client/src -d modules/phenyl-http-client/dist",
     "build:phenyl-standards": "babel modules/phenyl-standards/src -d modules/phenyl-standards/dist",
