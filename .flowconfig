@@ -4,6 +4,7 @@
 [include]
 
 [libs]
+external-module-types
 
 [options]
 esproposal.class_static_fields=enable
