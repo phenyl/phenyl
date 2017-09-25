@@ -16,8 +16,8 @@ import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
 import { assignToProp, unassignProp } from 'power-assign/jsnext'
 
-type PlainPhenylState = {
-  entities: { [name: string]: { [key: string]: RestorableEntity } }
+export type PhenylStateParams = {
+  entities?: { [name: string]: { [key: string]: RestorableEntity } }
 }
 
 /**
@@ -26,8 +26,8 @@ type PlainPhenylState = {
 export default class PhenylState {
   entities: { [entityName: string]: { [id: string]: RestorableEntity } }
 
-  constructor(plain: PlainPhenylState) {
-    this.entities = plain.entities
+  constructor(plain: PhenylStateParams) {
+    this.entities = plain.entities || {}
   }
 
   getAll(entityName: string): Array<RestorableEntity> {

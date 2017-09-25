@@ -14,14 +14,14 @@ export type CommandResultOrError = CommandResult | ErrorResult
 export type FetchCommandResult = {
   ok: 1,
   n: number,
-  values: Array<Restorable>
+  values: Array<RestorableEntity>
 }
 export type FetchCommandResultOrError = FetchCommandResult | ErrorResult
 
 export type GetCommandResult = {
   ok: 1,
   n: number,
-  value: Restorable
+  value: RestorableEntity
 }
 export type GetCommandResultOrError = GetCommandResult | ErrorResult
 
