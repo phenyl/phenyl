@@ -206,6 +206,6 @@ function decodeBody(body: string): any { // return "any" type for suppressing fl
 }
 
 
-function decodeQsParams(qsParams: QueryStringParams): Object {
+function decodeQsParams(qsParams: QueryStringParams): any { // return "any" type for suppressing flow error
   return JSON.parse(qsParams.d)
 }

@@ -118,7 +118,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         return {
           method: 'DELETE',
           headers,
-          // $FlowIssue(data.id-is-string)
           path: `/${data.entityName}/${data.id}`,
         }
       }
