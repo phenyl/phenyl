@@ -28,6 +28,7 @@ import type {
 } from 'phenyl-interfaces'
 
 import { retargetToProp } from './retarget-to-prop.js'
+import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 /**
  *
@@ -199,7 +200,7 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${dnStr}".`)
+        throw new Error(`"$addToSet" operator must be applied to an array. Dot notation: "${dnStr}".`)
       }
       let modifier = addToSetOp[dnStr]
 
@@ -340,7 +341,7 @@ export default class PowerAssign {
    *
    */
   static setValue<T: Restorable>(obj: T, dnStr: DotNotationString, value: any): T {
-    const revObjsToBeAssigned = this.getObjectsToBeAssigned(obj, dnStr).reverse()
+    const revObjsToBeAssigned = getObjectsToBeAssigned(obj, dnStr).reverse()
     const revKeys = dnStr.split('.').reverse()
     // assert(objsToBeAssigned.length === keys.length)
     // $FlowIssue(return-T)
@@ -348,22 +349,6 @@ export default class PowerAssign {
       // $FlowIssue(reduce-first-argument-type)
       Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue })
     , value)
-  }
-
-
-  /**
-   *
-   */
-  static getObjectsToBeAssigned(obj, dnStr): Array<Restorable> {
-    const ret = [obj]
-    const keys = dnStr.split('.')
-    keys.pop()
-    let currentObj = obj
-    for (const key of keys) {
-      currentObj = currentObj[key]
-      ret.push(currentObj)
-    }
-    return ret
   }
 }
 
