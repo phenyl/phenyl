@@ -28,6 +28,8 @@ import type {
   SingleInsertCommand,
   MultiInsertCommand,
   UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
   DeleteCommand,
   CustomCommand,
   LoginCommand,
@@ -45,8 +47,8 @@ export interface EntityClient {
   insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError>,
 
   update(command: UpdateCommand): Promise<CommandResultOrError>,
-  updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError>,
-  updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError>,
+  updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError>,
+  updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError>,
 
   delete(command: DeleteCommand): Promise<CommandResultOrError>,
 }

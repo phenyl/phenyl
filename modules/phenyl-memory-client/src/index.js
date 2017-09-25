@@ -21,6 +21,8 @@ import type {
   QueryStringParams,
   SingleQueryResultOrError,
   UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
 
@@ -29,7 +31,7 @@ type MemoryClientParams = {
 }
 
 // TODO: implement cooler one externally
-function generateRandomStr() {
+function generateRandomStr(): string {
   return 'p' + Math.random().toString().split('.')[1] + 't' + new Date().getTime().toString()
 }
 
@@ -179,7 +181,7 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError> {
+  async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
     const { entityName, id } = command
     try {
       this.phenylState = this.phenylState.$update(command)
@@ -193,7 +195,7 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError> {
+  async updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError> {
     throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
   }
 

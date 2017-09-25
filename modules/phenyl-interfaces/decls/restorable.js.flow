@@ -4,7 +4,3 @@ export type Restorable = Object
 export interface RestorableEntity {
   id: Id
 }
-
-export interface RestorablePreEntity {
-  id?: Id
-}

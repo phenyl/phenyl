@@ -13,6 +13,8 @@ import type {
   LoginCommand,
   LogoutCommand,
   UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
   CustomCommand,
 } from './command.js.flow'
 
@@ -92,12 +94,12 @@ export type UpdateRequestData = {|
 
 export type UpdateAndGetRequestData = {|
   method: 'updateAndGet',
-  +updateAndGet: UpdateCommand,
+  +updateAndGet: IdUpdateCommand,
 |}
 
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
-  +updateAndFetch: UpdateCommand,
+  +updateAndFetch: MultiUpdateCommand,
 |}
 
 export type DeleteRequestData = {|

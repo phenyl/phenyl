@@ -34,6 +34,8 @@ import type {
   QueryStringParams,
   SingleQueryResultOrError,
   UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
 
@@ -161,7 +163,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError> {
+  async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
     const reqData = { method: 'updateAndGet', updateAndGet: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
@@ -172,7 +174,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError> {
+  async updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError> {
     const reqData = { method: 'updateAndFetch', updateAndFetch: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error

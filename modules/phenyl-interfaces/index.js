@@ -30,9 +30,9 @@ import type {
   LogoutCommand,
   MultiDeleteCommand,
   MultiInsertCommand,
-  MultiUpdateCommand,
   SingleInsertCommand,
   UpdateCommand,
+  MultiUpdateCommand,
 } from './decls/command.js.flow'
 import type {
   CustomCommandDefinition,
