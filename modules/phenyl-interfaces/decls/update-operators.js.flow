@@ -1,6 +1,9 @@
 // @flow
 import type { Restorable } from './restorable.js.flow' // Object
-import type { QueryCondition } from './query-condition.js.flow'
+import type {
+  QueryCondition,
+  EqCondition,
+} from './query-condition.js.flow'
 import type { SortNotation } from './sort-notation.js.flow'
 type DotNotationString = string
 
@@ -12,7 +15,7 @@ export type MulOperator = { [field: DotNotationString]: number }
 export type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
 export type PopOperator = { [field: DotNotationString]: 1 | - 1 }
 
-export type PullOperator = { [field: DotNotationString]: any | QueryCondition }
+export type PullOperator = { [field: DotNotationString]: QueryCondition | EqCondition }
 
 export type PushModifier = {
   $each: Array<any>,
