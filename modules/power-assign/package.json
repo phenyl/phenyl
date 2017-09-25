@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "phenyl-utils": "*"
+    "phenyl-utils": "*",
+    "power-filter": "*"
   }
 }

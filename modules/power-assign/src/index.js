@@ -1,6 +1,7 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
+import { filter } from 'power-filter/jsnext'
 import {
   getNestedValue,
   sortByNotation,
@@ -25,8 +26,6 @@ import type {
   UpdateOperators,
   WhereConditions,
 } from 'phenyl-interfaces'
-
-import QueryOperation from './query-operation.js'
 
 /**
  *
@@ -250,7 +249,7 @@ export default class PowerAssign {
       if (!Array.isArray(arr)) {
         throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${dnStr}".`)
       }
-      valuesToSet[dnStr] = QueryOperation.findInArrayByQuery(arr, pullOp[dnStr])
+      valuesToSet[dnStr] = filter(arr, pullOp[dnStr])
     })
     return this.$set(obj, valuesToSet)
   }
