@@ -201,7 +201,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   throw new Error(`Could not decode the given DELETE request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
 }
 
-function decodeBody(body: string): Object {
+function decodeBody(body: string): any { // return "any" type for suppressing flow error
   return JSON.parse(body)
 }
 
