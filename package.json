@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:power-assign && npm run build:power-crypt && npm run build:power-debugger && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards && npm run build:phenyl-state",
+    "build": "npm run build:is-restorable && npm run build:power-assign && npm run build:power-crypt && npm run build:power-debugger && npm run build:power-filter && npm run build:phenyl-http-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards && npm run build:phenyl-state",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
+    "build:is-restorable": "babel modules/is-restorable/src -d modules/is-restorable/dist",
     "build:power-assign": "babel modules/power-assign/src -d modules/power-assign/dist",
     "build:power-crypt": "babel modules/power-crypt/src -d modules/power-crypt/dist",
     "build:power-debugger": "babel modules/power-debugger/src -d modules/power-debugger/dist",
