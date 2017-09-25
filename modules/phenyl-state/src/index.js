@@ -26,12 +26,15 @@ export type PhenylStateParams = {
 export default class PhenylState {
   entities: { [entityName: string]: { [id: string]: RestorableEntity } }
 
-  constructor(plain: PhenylStateParams) {
+  constructor(plain: PhenylStateParams = {}) {
     this.entities = plain.entities || {}
   }
 
   getAll(entityName: string): Array<RestorableEntity> {
     const entities = this.entities[entityName]
+    if (entities == null) {
+      throw new Error(`entityName: "${entityName}" is not found.`)
+    }
     return Object.keys(entities).map(key => entities[key])
   }
 
@@ -50,7 +53,9 @@ export default class PhenylState {
     if (sort != null) {
       filtered = sortByNotation(filtered, sort)
     }
-    return filtered.slice(skip || 0, limit != null ? limit : filtered.length)
+    const skipVal = skip || 0
+    const limitVal = limit != null ? limit + skipVal : filtered.length
+    return filtered.slice(skipVal, limitVal)
   }
 
   /**
