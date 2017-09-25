@@ -24,18 +24,18 @@ export interface MultiInsertCommand {
 // see https://docs.mongodb.com/manual/reference/command/update/
 export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 
-export interface IdUpdateCommand {
+export type IdUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   id: Id,
   operators: UpdateOperators, // "u" key in MongoDB reference
-}
+|}
 
-export interface MultiUpdateCommand {
+export type MultiUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   where: WhereConditions, // "q" key in MongoDB reference
   operators: UpdateOperators, // "u" key in MongoDB reference
   ordered?: boolean,
-}
+|}
 
 // see https://docs.mongodb.com/manual/reference/command/delete/
 export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
