@@ -3,8 +3,8 @@
 import powerCrypt from 'power-crypt/jsnext'
 
 import StandardEntityDefinition from './standard-entity-definition.js'
-import encryptPasswordInRequestData from './encrypt-password-in-request-data.js'
-import removePasswordFromResponseData from './remove-password-from-response-data.js'
+import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
+import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
 
 import type {
   EntityDefinition,

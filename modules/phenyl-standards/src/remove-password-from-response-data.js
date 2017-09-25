@@ -13,7 +13,7 @@ import type {
 } from '../decls/index.js.flow'
 
 
-export default function removePasswordFromResponseData(resData: ResponseData, passwordPropName: string): ResponseData {
+export function removePasswordFromResponseData(resData: ResponseData, passwordPropName: string): ResponseData {
   // TODO
   return resData
 }

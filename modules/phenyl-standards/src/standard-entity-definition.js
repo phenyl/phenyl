@@ -11,7 +11,7 @@ import type {
 type AclSetting = {
 }
 
-export default class StandardUserDefinition implements EntityDefinition {
+export default class StandardEntityDefinition implements EntityDefinition {
   aclSetting: AclSetting
 
   constructor(aclSetting: AclSetting) {

@@ -13,7 +13,7 @@ import type {
 } from '../decls/index.js.flow'
 
 
-export default function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: string, encrpt: EncryptFunction): RequestData {
+export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: string, encrpt: EncryptFunction): RequestData {
   // TODO
   return reqData
 }
