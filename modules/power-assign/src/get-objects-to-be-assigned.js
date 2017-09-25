@@ -11,7 +11,7 @@ export function getObjectsToBeAssigned(obj: Restorable, propName: DotNotationStr
   keys.pop()
   let currentObj = obj
   for (const key of keys) {
-    currentObj = currentObj[key]
+    currentObj = currentObj[key] || {}
     ret.push(currentObj)
   }
   return ret
