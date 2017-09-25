@@ -4,8 +4,9 @@ import type {
   IdQuery,
   IdsQuery,
   IdUpdateCommand,
-  InsertCommand,
+  IdDeleteCommand,
   MultiUpdateCommand,
+  MultiDeleteCommand,
   RestorableEntity,
   UpdateCommand,
   WhereQuery,
@@ -13,7 +14,7 @@ import type {
 
 import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
-import { assign } from 'power-assign/jsnext'
+import { assignToProp, unassignProp } from 'power-assign/jsnext'
 
 type PlainPhenylState = {
   entities: { [name: string]: { [key: string]: RestorableEntity } }
@@ -23,7 +24,7 @@ type PlainPhenylState = {
  *
  */
 export default class PhenylState {
-  entities: { [name: string]: { [key: string]: RestorableEntity } }
+  entities: { [entityName: string]: { [id: string]: RestorableEntity } }
 
   constructor(plain: PlainPhenylState) {
     this.entities = plain.entities
@@ -71,6 +72,15 @@ export default class PhenylState {
   /**
    *
    */
+  getByIds(query: IdsQuery): Array<RestorableEntity> {
+    const { ids, entityName } = query
+    // TODO: handle error
+    return ids.map(id => this.get({ entityName, id }))
+  }
+
+  /**
+   *
+   */
   $update(command: UpdateCommand): PhenylState {
     if (command.where) {
       return this.$updateByWhereCondition(command)
@@ -78,56 +88,67 @@ export default class PhenylState {
     return this.$updateById(command)
   }
 
+  /**
+   *
+   */
   $updateById(command: IdUpdateCommand): PhenylState {
-    // TODO
-    return this
+    const { id, entityName, operators } = command
+    const thisPropName = ['entities', entityName, id].join('.')
+    return assignToProp(this, thisPropName, operators)
   }
 
+  /**
+   *
+   */
   $updateByWhereCondition(command: MultiUpdateCommand): PhenylState {
-    // TODO
-    return this
+    const { where, entityName, operators } = command
+    const targetEntities = this.find({ entityName, where })
+    return targetEntities.reduce((self, targetEntity) => {
+      const thisPropName = ['entities', entityName, targetEntity.id].join('.')
+      return assignToProp(self, thisPropName, operators)
+    }, this)
+  }
+
+  /**
+   * Register entities.
+   * As RestorablePreEntities in InsertCommand does not have "id",
+   * PhenylState cannot handle InsertCommand.
+   * Instead, it receives in entities created in server.
+   */
+  $register(entityName: string, ...entities: Array<RestorableEntity>): PhenylState {
+    return entities.reduce((self, entity) => {
+      const thisPropName = ['entities', entityName, entity.id].join('.')
+      return assignToProp(self, thisPropName, { $set: entity })
+    }, this)
   }
 
   /**
    *
    */
   $delete(command: DeleteCommand): PhenylState {
-    return assign(this, { $set: {} })
-  }
-
-  /**
-   * TODO rename insert register
-   */
-  $insert(command: InsertCommand): PhenylState {
-    const { entityName } = command
-    //$FlowIssue(union-type)
-    const values = command.values ? command.values : [command.value]
-    const operators = {}
-
-    //$FlowIssue(values is array)
-    values.forEach(value => {
-      const key = Object.keys(value)[0]
-      operators[`entities.${entityName}.${key}`] = value[key]
-    })
-
-    return assign(this, { $set: operators })
+    if (command.where) {
+      return this.$deleteByWhereConditions(command)
+    }
+    return this.$deleteById(command)
   }
 
   /**
    *
    */
-  $unregister(command: InsertCommand): PhenylState {
-    const { entityName } = command
-    //$FlowIssue(union-type)
-    const values = command.values ? command.values : [command.value]
-    const operators = {}
+  $deleteById(command: IdDeleteCommand): PhenylState {
+    const { id, entityName } = command
+    return unassignProp(this, ['entities', entityName, id].join('.'))
+  }
 
-    //$FlowIssue(values is array)
-    values.forEach(value => {
-      const key = Object.keys(value)[0]
-      operators[`entities.${entityName}.${key}`] = value[key]
-    })
-
-    return assign(this, { $set: operators })
+  /**
+   *
+   */
+  $deleteByWhereConditions(command: MultiDeleteCommand): PhenylState {
+    const { where, entityName } = command
+    const targetEntities = this.find({ entityName, where })
+    return targetEntities.reduce((self, targetEntity) => {
+      const thisPropName = ['entities', entityName, targetEntity.id].join('.')
+      return unassignProp(self, thisPropName)
+    }, this)
   }
 }
