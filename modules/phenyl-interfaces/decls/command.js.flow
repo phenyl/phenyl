@@ -9,17 +9,17 @@ type EntityName = string
 // see https://docs.mongodb.com/manual/reference/command/insert/
 export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
-export interface SingleInsertCommand {
+export type SingleInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
   value: RestorablePreEntity, // "documents" key in MongoDB reference
   ordered?: boolean,
-}
+|}
 
-export interface MultiInsertCommand {
+export type MultiInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
   values: Array<RestorablePreEntity>, // "documents" key in MongoDB reference
   ordered?: boolean,
-}
+|}
 
 // see https://docs.mongodb.com/manual/reference/command/update/
 export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand

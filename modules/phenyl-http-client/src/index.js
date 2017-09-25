@@ -19,6 +19,8 @@ import type {
   IdQuery,
   IdsQuery,
   InsertCommand,
+  SingleInsertCommand,
+  MultiInsertCommand,
   LoginCommand,
   LoginCommandResultOrError,
   LogoutCommand,
@@ -126,7 +128,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async insertAndGet(command: InsertCommand): Promise<GetCommandResultOrError> {
+  async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
     const reqData = { method: 'insertAndGet', insertAndGet: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
@@ -137,7 +139,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async insertAndGetMulti(command: InsertCommand): Promise<FetchCommandResultOrError> {
+  async insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError> {
     const reqData = { method: 'insertAndGetMulti', insertAndGetMulti: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error

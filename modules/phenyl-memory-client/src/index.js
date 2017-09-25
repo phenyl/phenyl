@@ -14,6 +14,7 @@ import type {
   IdsQuery,
   InsertCommand,
   SingleInsertCommand,
+  MultiInsertCommand,
   RequestData,
   ResponseData,
   QueryResultOrError,
@@ -121,10 +122,10 @@ export default class PhenylMemoryClient implements EntityClient {
     if (command.values) {
       const result = await this.insertAndGetMulti(command)
       return result.ok
-        ? { ok: 1, n: command.values.length }
+        ? { ok: 1, n: result.n }
         : result
     }
-    const result = await this.insertAndGetOne(command)
+    const result = await this.insertAndGet(command)
     return result.ok
       ? { ok: 1, n: 1 }
       : result
@@ -133,41 +134,21 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async insertAndGetOne(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
-    const newValue = Object.assign({}, command.value, { id: generateRandomStr() })
-    return { ok: 1, n: 1, value: newValue }
-  }
-
-  /**
-   *
-   */
-  async insertAndGet(command: InsertCommand): Promise<GetCommandResultOrError> {
-    const reqData = { method: 'insertAndGet', insertAndGet: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.insertAndGet != null) return resData.insertAndGet
+  async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
     throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
   }
 
   /**
    *
    */
-  async insertAndGetMulti(command: InsertCommand): Promise<FetchCommandResultOrError> {
-    const reqData = { method: 'insertAndGetMulti', insertAndGetMulti: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.insertAndGetMulti != null) return resData.insertAndGetMulti
-    throw new Error(`Invalid response data: property name "insertAndGetMulti" is not found in response.`)
+  async insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError> {
+    throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
   }
 
   /**
    *
    */
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
-    const reqData = { method: 'update', update: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.update != null) return resData.update
     throw new Error(`Invalid response data: property name "update" is not found in response.`)
   }
 
@@ -175,10 +156,6 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError> {
-    const reqData = { method: 'updateAndGet', updateAndGet: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.updateAndGet != null) return resData.updateAndGet
     throw new Error(`Invalid response data: property name "updateAndGet" is not found in response.`)
   }
 
@@ -186,10 +163,6 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError> {
-    const reqData = { method: 'updateAndFetch', updateAndFetch: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.updateAndFetch != null) return resData.updateAndFetch
     throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
   }
 
@@ -197,10 +170,6 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResultOrError> {
-    const reqData = { method: 'delete', delete: command }
-    const resData = await this.request(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.delete != null) return resData.delete
     throw new Error(`Invalid response data: property name "delete" is not found in response.`)
   }
 }

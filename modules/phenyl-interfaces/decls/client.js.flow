@@ -25,6 +25,8 @@ import type {
 } from './command-result.js.flow'
 import type {
   InsertCommand,
+  SingleInsertCommand,
+  MultiInsertCommand,
   UpdateCommand,
   DeleteCommand,
   CustomCommand,
@@ -39,8 +41,8 @@ export interface EntityClient {
   getByIds(query: IdsQuery): Promise<QueryResultOrError>,
 
   insert(command: InsertCommand): Promise<CommandResultOrError>,
-  insertAndGet(command: InsertCommand): Promise<GetCommandResultOrError>,
-  insertAndGetMulti(command: InsertCommand): Promise<FetchCommandResultOrError>,
+  insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError>,
+  insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError>,
 
   update(command: UpdateCommand): Promise<CommandResultOrError>,
   updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError>,
