@@ -36,15 +36,28 @@ export type BitOperator = {
 }
 
 export type UpdateOperators = $Shape<{
-    $set: SetOperator,
-    $inc: IncOperator,
-    $min: MinOperator,
-    $max: MaxOperator,
-    $mul: MulOperator,
-    $addToSet: AddToSetOperator,
-    $pop: PopOperator,
-    $pull: PullOperator,
-    $push: PushOperator,
-    $currentDate: CurrentDateOperator,
-    $bit: BitOperator,
+  $set: SetOperator,
+  $inc: IncOperator,
+  $min: MinOperator,
+  $max: MaxOperator,
+  $mul: MulOperator,
+  $addToSet: AddToSetOperator,
+  $pop: PopOperator,
+  $pull: PullOperator,
+  $push: PushOperator,
+  $currentDate: CurrentDateOperator,
+  $bit: BitOperator,
 }>
+
+export type UpdateOperator =
+  SetOperator |
+  IncOperator |
+  MinOperator |
+  MaxOperator |
+  MulOperator |
+  AddToSetOperator |
+  PopOperator |
+  PullOperator |
+  PushOperator |
+  CurrentDateOperator |
+  BitOperator

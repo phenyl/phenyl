@@ -27,6 +27,8 @@ import type {
   WhereConditions,
 } from 'phenyl-interfaces'
 
+import { retargetToProp } from './retarget-to-prop.js'
+
 /**
  *
  */
@@ -370,4 +372,9 @@ export default class PowerAssign {
  */
 export function assign<T: Restorable>(obj: T, ops: UpdateOperators): T {
   return PowerAssign.assign(obj, ops)
+}
+
+export function assignToProp<T: Restorable>(obj: T, propName: DotNotationString, ops: UpdateOperators): T {
+  const modifiedOps = retargetToProp(ops, propName)
+  return assign(obj, modifiedOps)
 }

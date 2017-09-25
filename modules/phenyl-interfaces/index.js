@@ -149,6 +149,7 @@ import type {
   PushModifier,
   PushOperator,
   SetOperator,
+  UpdateOperator,
   UpdateOperators,
 } from './decls/update-operators.js.flow'
 import type {
@@ -284,6 +285,7 @@ export type {
   UpdateAndGetRequestData,
   UpdateAndGetResponseData,
   UpdateCommand,
+  UpdateOperator,
   UpdateOperators,
   UpdateRequestData,
   UpdateResponseData,
