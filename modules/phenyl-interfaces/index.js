@@ -155,11 +155,18 @@ import type {
   UserDefinition,
   UserDefinitions,
 } from './decls/user-definition.js.flow'
-import type { WhereConditions } from './decls/where-conditions.js.flow'
+import type {
+  AndWhereConditions,
+  NorWhereConditions,
+  OrWhereConditions,
+  SimpleWhereConditions,
+  WhereConditions,
+} from './decls/where-conditions.js.flow'
 
 export type {
   AclHandler,
   AddToSetOperator,
+  AndWhereConditions,
   AuthenticationHandler,
   AuthenticationResult,
   AuthClient,
@@ -242,7 +249,9 @@ export type {
   MultiInsertCommand,
   MultiUpdateCommand,
   NGAuthenticationResult,
+  NorWhereConditions,
   OKAuthenticationResult,
+  OrWhereConditions,
   PreSession,
   PhenylRunner,
   PopOperator,
@@ -265,6 +274,7 @@ export type {
   SetOperator,
   Session,
   SessionClient,
+  SimpleWhereConditions,
   SingleInsertCommand,
   SingleQueryResult,
   SingleQueryResultOrError,
