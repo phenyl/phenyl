@@ -16,7 +16,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
   switch (reqData.method) {
     case 'find':
       data = reqData.find
-      if (data == null) throw new Error('No params set in requestData.find')
       return {
         method: 'GET',
         headers,
@@ -26,7 +25,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'findOne':
       data = reqData.findOne
-      if (data == null) throw new Error('No params set in requestData.findOne')
       return {
         method: 'GET',
         headers,
@@ -36,7 +34,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'get':
       data = reqData.get
-      if (data == null) throw new Error('No params set in requestData.get')
       return {
         method: 'GET',
         headers,
@@ -45,7 +42,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'getByIds':
       data = reqData.getByIds
-      if (data == null) throw new Error('No params set in requestData.getByIds')
       return {
         method: 'GET',
         headers,
@@ -55,7 +51,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'insert':
       data = reqData.insert
-      if (data == null) throw new Error('No params set in requestData.insert')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -66,7 +61,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'insertAndGet':
       data = reqData.insertAndGet
-      if (data == null) throw new Error('No params set in requestData.insertAndGet')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -77,7 +71,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'insertAndFetch':
       data = reqData.insertAndFetch
-      if (data == null) throw new Error('No params set in requestData.insertAndFetch')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -88,7 +81,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'update':
       data = reqData.update
-      if (data == null) throw new Error('No params set in requestData.update')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -99,7 +91,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'updateAndGet':
       data = reqData.updateAndGet
-      if (data == null) throw new Error('No params set in requestData.updateAndGet')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -110,7 +101,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'updateAndFetch':
       data = reqData.updateAndFetch
-      if (data == null) throw new Error('No params set in requestData.updateAndFetch')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -121,7 +111,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'delete':
       data = reqData.delete
-      if (data == null) throw new Error('No params set in requestData.delete')
       headers['Content-Type'] = 'application/json'
 
       // single deletion
@@ -143,7 +132,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'runCustomQuery':
       data = reqData.runCustomQuery
-      if (data == null) throw new Error('No params set in requestData.runCustomQuery')
       headers['X-Phenyl-Custom'] = 'query'
       return {
         method: 'GET',
@@ -154,7 +142,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'runCustomCommand':
       data = reqData.runCustomCommand
-      if (data == null) throw new Error('No params set in requestData.runCustomCommand')
       headers['Content-Type'] = 'application/json'
       headers['X-Phenyl-Custom'] = 'command'
       return {
@@ -166,7 +153,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'login':
       data = reqData.login
-      if (data == null) throw new Error('No params set in requestData.login')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -177,7 +163,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
     case 'logout':
       data = reqData.logout
-      if (data == null) throw new Error('No params set in requestData.logout')
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',

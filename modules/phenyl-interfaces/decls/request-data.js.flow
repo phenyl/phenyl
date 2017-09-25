@@ -31,21 +31,94 @@ export type RequestMethodName =
   'login' |
   'logout'
 
-export type RequestData = {
-  method: RequestMethodName,
-  find?: WhereQuery,
-  findOne?: WhereQuery,
-  get?: IdQuery,
-  getByIds?: IdsQuery,
-  insert?: InsertCommand,
-  insertAndGet?: InsertCommand,
-  insertAndFetch?: InsertCommand,
-  update?: UpdateCommand,
-  updateAndGet?: UpdateCommand,
-  updateAndFetch?: UpdateCommand,
-  delete?: DeleteCommand,
-  runCustomQuery?: CustomQuery,
-  runCustomCommand?: CustomCommand,
-  login?: LoginCommand,
-  logout?: LogoutCommand,
-}
+export type RequestData =
+  FindRequestData |
+  FindOneRequestData |
+  GetRequestData |
+  GetByIdsRequestData |
+  InsertRequestData |
+  InsertAndGetRequestData |
+  InsertAndFetchRequestData |
+  UpdateRequestData |
+  UpdateAndGetRequestData |
+  UpdateAndFetchRequestData |
+  DeleteRequestData |
+  RunCustomQueryRequestData |
+  RunCustomCommandRequestData |
+  LoginRequestData |
+  LogoutRequestData
+
+export type FindRequestData = {|
+  method: 'find',
+  +find: WhereQuery,
+|}
+
+export type FindOneRequestData = {|
+  method: 'findOne',
+  +findOne: WhereQuery,
+|}
+
+export type GetRequestData = {|
+  method: 'get',
+  +get: IdQuery,
+|}
+
+export type GetByIdsRequestData = {|
+  method: 'getByIds',
+  +getByIds: IdsQuery,
+|}
+
+export type InsertRequestData = {|
+  method: 'insert',
+  +insert: InsertCommand,
+|}
+
+export type InsertAndGetRequestData = {|
+  method: 'insertAndGet',
+  +insertAndGet: InsertCommand,
+|}
+
+export type InsertAndFetchRequestData = {|
+  method: 'insertAndFetch',
+  +insertAndFetch: InsertCommand,
+|}
+
+export type UpdateRequestData = {|
+  method: 'update',
+  +update: UpdateCommand,
+|}
+
+export type UpdateAndGetRequestData = {|
+  method: 'updateAndGet',
+  +updateAndGet: UpdateCommand,
+|}
+
+export type UpdateAndFetchRequestData = {|
+  method: 'updateAndFetch',
+  +updateAndFetch: UpdateCommand,
+|}
+
+export type DeleteRequestData = {|
+  method: 'delete',
+  +delete: DeleteCommand,
+|}
+
+export type RunCustomQueryRequestData = {|
+  method: 'runCustomQuery',
+  +runCustomQuery: CustomQuery,
+|}
+
+export type RunCustomCommandRequestData = {|
+  method: 'runCustomCommand',
+  +runCustomCommand: CustomCommand,
+|}
+
+export type LoginRequestData = {|
+  method: 'login',
+  +login: LoginCommand,
+|}
+
+export type LogoutRequestData = {|
+  method: 'logout',
+  +logout: LogoutCommand,
+|}

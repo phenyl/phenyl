@@ -180,7 +180,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async updateAndFetch(command: UpdateCommand): Promise<FetchCommandResultOrError> {
-    const reqData = { method: 'updateAndFetch', updateAndGet: command }
+    const reqData = { method: 'updateAndFetch', updateAndFetch: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     const ret = resData.updateAndFetch

@@ -35,8 +35,8 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
       case 'delete':
       case 'login':
       case 'logout': {
+        // $FlowIssue(request-data-has-the-same-key-as-method)
         const data = reqData[method]
-        if (data == null) throw new Error(`property "${method}" not found in RequestData.`) // for flow
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertExecutionWrapper(entityDefinition.executionWrapper, data.entityName, method)
