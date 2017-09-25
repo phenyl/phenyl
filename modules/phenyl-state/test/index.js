@@ -18,7 +18,6 @@ describe('find', () => {
     })
     const usersFoundByQuery = state.find({
       entityName: 'user',
-      //$FlowIssue(WhereQuery value can be a string)
       where: { name: 'kery' },
     })
     assert.deepEqual(usersFoundByQuery, [user1])
@@ -33,7 +32,6 @@ describe('findOne', () => {
     })
     const userFromState = state.findOne({
       entityName: 'user',
-      //$FlowIssue(WhereQuery value can be a string)
       where: { name: 'kery' },
       id: '1',
     })
