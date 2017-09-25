@@ -26,8 +26,8 @@ export function assertValidRequestData(rd: any): void {
         return assertValidInsertCommand(rd.insert)
       case 'insertAndGet':
         return assertValidInsertCommand(rd.insertAndGet)
-      case 'insertAndFetch':
-        return assertValidInsertCommand(rd.insertAndFetch)
+      case 'insertAndGetMulti':
+        return assertValidInsertCommand(rd.insertAndGetMulti)
       case 'update':
         return assertValidUpdateCommand(rd.update)
       case 'updateAndGet':

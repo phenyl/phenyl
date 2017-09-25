@@ -29,7 +29,7 @@ export type ResponseData =
   GetByIdsResponseData |
   InsertResponseData |
   InsertAndGetResponseData |
-  InsertAndFetchResponseData |
+  InsertAndGetMultiResponseData |
   UpdateResponseData |
   UpdateAndGetResponseData |
   UpdateAndFetchResponseData |
@@ -64,8 +64,8 @@ export type InsertAndGetResponseData = {|
   +insertAndGet: GetCommandResult,
 |}
 
-export type InsertAndFetchResponseData = {|
-  +insertAndFetch: FetchCommandResult,
+export type InsertAndGetMultiResponseData = {|
+  +insertAndGetMulti: FetchCommandResult,
 |}
 
 export type UpdateResponseData = {|

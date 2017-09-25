@@ -27,7 +27,7 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
       case 'getByIds':
       case 'insert':
       case 'insertAndGet':
-      case 'insertAndFetch':
+      case 'insertAndGetMulti':
       case 'update':
       case 'updateAndGet':
       case 'updateAndFetch':

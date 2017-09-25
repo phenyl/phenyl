@@ -128,10 +128,10 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
       insertAndGet: decodeBody(body),
     }
   }
-  if (methodName === 'insertAndFetch') {
+  if (methodName === 'insertAndGetMulti') {
     return {
-      method: 'insertAndFetch',
-      insertAndFetch: decodeBody(body),
+      method: 'insertAndGetMulti',
+      insertAndGetMulti: decodeBody(body),
     }
   }
   throw new Error(`Could not decode the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)

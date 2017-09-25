@@ -40,7 +40,7 @@ export interface EntityClient {
 
   insert(command: InsertCommand): Promise<CommandResultOrError>,
   insertAndGet(command: InsertCommand): Promise<GetCommandResultOrError>,
-  insertAndFetch(command: InsertCommand): Promise<FetchCommandResultOrError>,
+  insertAndGetMulti(command: InsertCommand): Promise<FetchCommandResultOrError>,
 
   update(command: UpdateCommand): Promise<CommandResultOrError>,
   updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError>,

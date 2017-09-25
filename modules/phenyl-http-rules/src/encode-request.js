@@ -69,13 +69,13 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
         body: createBody(data)
       }
 
-    case 'insertAndFetch':
-      data = reqData.insertAndFetch
+    case 'insertAndGetMulti':
+      data = reqData.insertAndGetMulti
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/insertAndFetch`,
+        path: `/${data.entityName}/insertAndGetMulti`,
         body: createBody(data)
       }
 

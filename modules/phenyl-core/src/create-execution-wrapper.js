@@ -28,7 +28,7 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
       case 'getByIds':
       case 'insert':
       case 'insertAndGet':
-      case 'insertAndFetch':
+      case 'insertAndGetMulti':
       case 'update':
       case 'updateAndGet':
       case 'updateAndFetch':

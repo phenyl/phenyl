@@ -21,7 +21,7 @@ export type RequestMethodName =
   'getByIds' |
   'insert' |
   'insertAndGet' |
-  'insertAndFetch' |
+  'insertAndGetMulti' |
   'update' |
   'updateAndGet' |
   'updateAndFetch' |
@@ -38,7 +38,7 @@ export type RequestData =
   GetByIdsRequestData |
   InsertRequestData |
   InsertAndGetRequestData |
-  InsertAndFetchRequestData |
+  InsertAndGetMultiRequestData |
   UpdateRequestData |
   UpdateAndGetRequestData |
   UpdateAndFetchRequestData |
@@ -78,9 +78,9 @@ export type InsertAndGetRequestData = {|
   +insertAndGet: InsertCommand,
 |}
 
-export type InsertAndFetchRequestData = {|
-  method: 'insertAndFetch',
-  +insertAndFetch: InsertCommand,
+export type InsertAndGetMultiRequestData = {|
+  method: 'insertAndGetMulti',
+  +insertAndGetMulti: InsertCommand,
 |}
 
 export type UpdateRequestData = {|

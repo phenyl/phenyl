@@ -116,9 +116,9 @@ export default class PhenylCore implements PhenylRunner, AuthClient {
         const result = await entityClient.insertAndGet(reqData.insertAndGet)
         return result.ok ? { insertAndGet: result } : { error: result }
       }
-      case 'insertAndFetch': {
-        const result = await entityClient.insertAndFetch(reqData.insertAndFetch)
-        return result.ok ? { insertAndFetch: result } : { error: result }
+      case 'insertAndGetMulti': {
+        const result = await entityClient.insertAndGetMulti(reqData.insertAndGetMulti)
+        return result.ok ? { insertAndGetMulti: result } : { error: result }
       }
       case 'update': {
         const result = await entityClient.update(reqData.update)

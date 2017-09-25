@@ -152,12 +152,12 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async insertAndFetch(command: InsertCommand): Promise<FetchCommandResultOrError> {
-    const reqData = { method: 'insertAndFetch', insertAndFetch: command }
+  async insertAndGetMulti(command: InsertCommand): Promise<FetchCommandResultOrError> {
+    const reqData = { method: 'insertAndGetMulti', insertAndGetMulti: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    if (resData.insertAndFetch != null) return resData.insertAndFetch
-    throw new Error(`Invalid response data: property name "insertAndFetch" is not found in response.`)
+    if (resData.insertAndGetMulti != null) return resData.insertAndGetMulti
+    throw new Error(`Invalid response data: property name "insertAndGetMulti" is not found in response.`)
   }
 
   /**

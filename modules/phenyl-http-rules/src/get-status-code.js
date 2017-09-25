@@ -11,7 +11,7 @@ export default function getStatusCode(resData: ResponseData): number {
   }
 
   // insert
-  if (resData.insert || resData.insertAndGet || resData.insertAndFetch) {
+  if (resData.insert || resData.insertAndGet || resData.insertAndGetMulti) {
     return 201
   }
 
