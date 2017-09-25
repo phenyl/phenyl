@@ -38,7 +38,7 @@ function generateRandomStr(): string {
 export default class PhenylMemoryClient implements EntityClient {
   phenylState: PhenylState
 
-  constructor(params: MemoryClientParams) {
+  constructor(params: MemoryClientParams = {}) {
     this.phenylState = new PhenylState(params.phenylState || {})
   }
 
@@ -46,10 +46,15 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async find(query: WhereQuery): Promise<QueryResultOrError> {
-    const entities = this.phenylState.find(query)
-    return {
-      ok: 1,
-      values: entities
+    try {
+      const entities = this.phenylState.find(query)
+      return {
+        ok: 1,
+        values: entities
+      }
+    }
+    catch (e) {
+      return createErrorResult(e)
     }
   }
 
@@ -57,17 +62,22 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async findOne(query: WhereQuery): Promise<SingleQueryResultOrError> {
-    const entity = this.phenylState.findOne(query)
-    if (entity == null) {
+    try {
+      const entity = this.phenylState.findOne(query)
+      if (entity == null) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
+        }
+      }
       return {
-        ok: 0,
-        type: 'NotFound',
-        message: '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
+        ok: 1,
+        value: entity
       }
     }
-    return {
-      ok: 1,
-      value: entity
+    catch (e) {
+      return createErrorResult(e)
     }
   }
 
