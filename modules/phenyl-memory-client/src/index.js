@@ -1,0 +1,7 @@
+// @flow
+import type {
+  EntityClient,
+} from 'phenyl-interfaces'
+
+export default class PhenylMemoryClient /* implements EntityClient */ {
+}
