@@ -9,6 +9,7 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
+import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
 import { assign } from 'power-assign/jsnext'
 
@@ -26,19 +27,33 @@ export default class PhenylState {
     this.entities = plain.entities
   }
 
-  /**
-   *
-   */
-  find(query: WhereQuery): Array<RestorableEntity> {
-    const entities = this.entities[query.entityName]
-    const allEntities = Object.keys(entities).map(key => entities[key])
-    return filter(allEntities, query.where)
+  getAll(entityName: string): Array<RestorableEntity> {
+    const entities = this.entities[entityName]
+    return Object.keys(entities).map(key => entities[key])
   }
 
   /**
    *
    */
-  findOne(query: WhereQuery): RestorableEntity {
+  find(query: WhereQuery): Array<RestorableEntity> {
+    const {
+      entityName,
+      where,
+      sort,
+      skip,
+      limit,
+    } = query
+    let filtered = filter(this.getAll(entityName), where)
+    if (sort != null) {
+      filtered = sortByNotation(filtered, sort)
+    }
+    return filtered.slice(skip || 0, limit != null ? limit : filtered.length)
+  }
+
+  /**
+   *
+   */
+  findOne(query: WhereQuery): ?RestorableEntity {
     return this.find(query)[0]
   }
 
