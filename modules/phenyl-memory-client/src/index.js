@@ -135,28 +135,59 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
-    throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
+    const { entityName, value } = command
+    const newValue = Object.assign({}, value, { id: generateRandomStr() })
+    this.phenylState = this.phenylState.$register(entityName, newValue)
+    return {
+      ok: 1,
+      n: 1,
+      value: newValue,
+    }
   }
 
   /**
    *
    */
   async insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError> {
-    throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
+    const { entityName, values} = command
+    const newValues = []
+    for (const value of values) {
+      const newValue = Object.assign({}, value, { id: generateRandomStr() })
+      this.phenylState = this.phenylState.$register(entityName, newValue)
+      newValues.push(newValue)
+    }
+    return {
+      ok: 1,
+      n: newValues.length,
+      values: newValues,
+    }
   }
 
   /**
    *
    */
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
-    throw new Error(`Invalid response data: property name "update" is not found in response.`)
+    try {
+      this.phenylState = this.phenylState.$update(command)
+      return { ok: 1, n: 1 }
+    }
+    catch (e) {
+      return createErrorResult(e)
+    }
   }
 
   /**
    *
    */
   async updateAndGet(command: UpdateCommand): Promise<GetCommandResultOrError> {
-    throw new Error(`Invalid response data: property name "updateAndGet" is not found in response.`)
+    const { entityName, id } = command
+    try {
+      this.phenylState = this.phenylState.$update(command)
+      return { ok: 1, n: 1, value: this.phenylState.get({ entityName, id }) }
+    }
+    catch (e) {
+      return createErrorResult(e)
+    }
   }
 
   /**
