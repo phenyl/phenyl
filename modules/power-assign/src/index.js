@@ -1,7 +1,10 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
-import { getNestedValue } from 'phenyl-utils'
+import {
+  getNestedValue,
+  sortByNotation,
+} from 'phenyl-utils'
 
 import type {
   AddToSetOperator,
@@ -277,19 +280,7 @@ export default class PowerAssign {
       let newArr = arr.slice()
       newArr.splice(position, 0, ...modifier.$each)
       if (modifier.$sort != null) {
-        const sortDnStrs = Object.keys(modifier.$sort)
-        newArr.sort((a, b) => {
-          for (const sortDnStr of sortDnStrs) {
-            const valA = a[sortDnStr]
-            const valB = b[sortDnStr]
-            if (valA !== valB) {
-              // $FlowIssue($sort-is-not-null)
-              const direction = modifier.$sort[sortDnStr]
-              return valA > valB ? direction : (direction ^ -1) + 1
-            }
-          }
-          return 0
-        })
+        newArr = sortByNotation(newArr, modifier.$sort)
       }
       if (modifier.$slice != null) {
         newArr = newArr.slice(0, modifier.$slice)
