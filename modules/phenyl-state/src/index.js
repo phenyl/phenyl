@@ -3,7 +3,9 @@ import type {
   DeleteCommand,
   IdQuery,
   IdsQuery,
+  IdUpdateCommand,
   InsertCommand,
+  MultiUpdateCommand,
   RestorableEntity,
   UpdateCommand,
   WhereQuery,
@@ -70,7 +72,20 @@ export default class PhenylState {
    *
    */
   $update(command: UpdateCommand): PhenylState {
-    return assign(this, { $set: {} })
+    if (command.where) {
+      return this.$updateByWhereCondition(command)
+    }
+    return this.$updateById(command)
+  }
+
+  $updateById(command: IdUpdateCommand): PhenylState {
+    // TODO
+    return this
+  }
+
+  $updateByWhereCondition(command: MultiUpdateCommand): PhenylState {
+    // TODO
+    return this
   }
 
   /**
