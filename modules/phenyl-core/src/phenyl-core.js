@@ -2,7 +2,7 @@
 import {
   assertValidRequestData,
   createErrorResult,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   Id,

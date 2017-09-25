@@ -7,7 +7,7 @@ import {
 
 import {
   createErrorResult,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   Id,

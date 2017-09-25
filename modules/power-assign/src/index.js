@@ -4,7 +4,7 @@ import deepEqual from 'fast-deep-equal'
 import {
   getNestedValue,
   sortByNotation,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   AddToSetOperator,
