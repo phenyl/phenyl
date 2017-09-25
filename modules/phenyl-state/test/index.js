@@ -2,7 +2,7 @@
 
 import { describe, it } from 'kocha'
 import assert from 'assert'
-import PhenylState from '../src'
+import PhenylState from '../src/index.js'
 
 describe('find', () => {
   it('', () => {

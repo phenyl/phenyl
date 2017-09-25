@@ -2,7 +2,7 @@
 
 import { describe, it, context } from 'kocha'
 import assert from 'power-assert'
-import { assign } from '../src'
+import { assign } from '../src/index.js'
 
 describe('assign', () => {
   it('set a value', () => {
