@@ -13,7 +13,7 @@ import type {
   CustomCommand,
   CustomCommandResultOrError,
   DeleteCommand,
-  FetchCommandResultOrError,
+  MultiValuesCommandResultOrError,
   GetCommandResultOrError,
   Id,
   IdQuery,
@@ -141,7 +141,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError> {
+  async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
     const reqData = { method: 'insertAndGetMulti', insertAndGetMulti: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
@@ -174,7 +174,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError> {
+  async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
     const reqData = { method: 'updateAndFetch', updateAndFetch: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error

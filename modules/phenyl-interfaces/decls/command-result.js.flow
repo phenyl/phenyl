@@ -11,12 +11,12 @@ export type CommandResult = {
 }
 export type CommandResultOrError = CommandResult | ErrorResult
 
-export type FetchCommandResult = {
+export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
   values: Array<RestorableEntity>
 }
-export type FetchCommandResultOrError = FetchCommandResult | ErrorResult
+export type MultiValuesCommandResultOrError = MultiValuesCommandResult | ErrorResult
 
 export type GetCommandResult = {
   ok: 1,

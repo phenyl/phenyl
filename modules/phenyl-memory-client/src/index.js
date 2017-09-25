@@ -7,7 +7,7 @@ import type {
   EntityClient,
   CommandResultOrError,
   DeleteCommand,
-  FetchCommandResultOrError,
+  MultiValuesCommandResultOrError,
   GetCommandResultOrError,
   Id,
   IdQuery,
@@ -150,7 +150,7 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError> {
+  async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
     const { entityName, values} = command
     const newValues = []
     for (const value of values) {
@@ -195,7 +195,7 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError> {
+  async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
     throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
   }
 

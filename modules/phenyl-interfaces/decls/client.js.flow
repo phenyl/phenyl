@@ -19,7 +19,7 @@ import type {
   CommandResultOrError,
   CustomCommandResultOrError,
   GetCommandResultOrError,
-  FetchCommandResultOrError,
+  MultiValuesCommandResultOrError,
   LoginCommandResultOrError,
   LogoutCommandResultOrError,
 } from './command-result.js.flow'
@@ -44,11 +44,11 @@ export interface EntityClient {
 
   insert(command: InsertCommand): Promise<CommandResultOrError>,
   insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError>,
-  insertAndGetMulti(command: MultiInsertCommand): Promise<FetchCommandResultOrError>,
+  insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError>,
 
   update(command: UpdateCommand): Promise<CommandResultOrError>,
   updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError>,
-  updateAndFetch(command: MultiUpdateCommand): Promise<FetchCommandResultOrError>,
+  updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError>,
 
   delete(command: DeleteCommand): Promise<CommandResultOrError>,
 }
