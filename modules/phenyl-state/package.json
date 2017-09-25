@@ -2,7 +2,7 @@
   "name": "phenyl-state",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js"
   },
