@@ -1,7 +1,7 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
-import { filter } from 'power-filter/jsnext'
+import { checkCondition } from 'power-filter/jsnext'
 import {
   getNestedValue,
   sortByNotation,
@@ -249,7 +249,8 @@ export default class PowerAssign {
       if (!Array.isArray(arr)) {
         throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${dnStr}".`)
       }
-      valuesToSet[dnStr] = filter(arr, pullOp[dnStr])
+      const condition = pullOp[dnStr]
+      valuesToSet[dnStr] = arr.filter(val => checkCondition(val, condition) === false)
     })
     return this.$set(obj, valuesToSet)
   }

@@ -6,7 +6,7 @@ type EntityName = string
 
 export interface WhereQuery {
   entityName: EntityName,
-  where: WhereConditions,
+  +where: WhereConditions,
   skip?: number,
   limit?: number,
   sort?: SortNotation, // { [key: string]: 1 | -1 }

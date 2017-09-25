@@ -2,9 +2,26 @@
 import type { QueryCondition, EqCondition } from './query-condition.js.flow'
 type DotNotationString = string
 
-export type WhereConditions = {
+export type SimpleWhereConditions = {
   [fieldName: DotNotationString]: QueryCondition | EqCondition,
-  $and?: Array<WhereConditions>,
-  $nor?: Array<WhereConditions>,
-  $or?: Array<WhereConditions>,
+  // three keys below have no meanings, just for flow
+  $and?: null,
+  $nor?: null,
+  $or?: null,
 }
+
+export type AndWhereConditions = {|
+  $and: Array<WhereConditions>,
+|}
+export type NorWhereConditions = {|
+  $nor: Array<WhereConditions>,
+|}
+export type OrWhereConditions = {|
+  $or: Array<WhereConditions>,
+|}
+
+export type WhereConditions =
+  SimpleWhereConditions |
+  AndWhereConditions |
+  NorWhereConditions |
+  OrWhereConditions

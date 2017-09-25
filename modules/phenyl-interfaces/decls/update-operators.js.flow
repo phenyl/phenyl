@@ -15,7 +15,7 @@ export type MulOperator = { [field: DotNotationString]: number }
 export type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
 export type PopOperator = { [field: DotNotationString]: 1 | - 1 }
 
-export type PullOperator = { [field: DotNotationString]: QueryCondition | EqCondition }
+export type PullOperator = { +[field: DotNotationString]: QueryCondition | EqCondition }
 
 export type PushModifier = {
   $each: Array<any>,

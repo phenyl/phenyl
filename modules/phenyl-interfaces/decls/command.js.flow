@@ -32,7 +32,7 @@ export type IdUpdateCommand = {|
 
 export type MultiUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
-  where: WhereConditions, // "q" key in MongoDB reference
+  +where: WhereConditions, // "q" key in MongoDB reference
   operators: UpdateOperators, // "u" key in MongoDB reference
   ordered?: boolean,
 |}
@@ -47,7 +47,7 @@ export interface IdDeleteCommand {
 
 export interface MultiDeleteCommand {
   entityName: EntityName, // "delete" key in MongoDB reference
-  where: WhereConditions, // "q" key in MongoDB reference
+  +where: WhereConditions, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,
 }

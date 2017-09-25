@@ -1,7 +1,5 @@
 // @flow
 
-type DotNotationString = string
-
 type TextQueryCondition = {
   $search?: string,
   $language?: string,
@@ -9,7 +7,9 @@ type TextQueryCondition = {
   $diacriticSensitive: boolean,
 }
 
-export type EqCondition = Object
+type Basic = Object | Array<Basic> | string | number | boolean
+
+export type EqCondition = Basic
 
 export interface QueryCondition {
   // comparison

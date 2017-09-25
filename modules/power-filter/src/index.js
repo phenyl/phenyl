@@ -60,17 +60,18 @@ export default class PowerFilter {
     // No query condition
     const dotNotations = Object.keys(where)
     return values.reduce((classified, value) => {
-      const isOk = dotNotations.every(dotNotation =>
-
-        this.checkCondition(getNestedValue(value, dotNotation), normalizeQueryCondition(where[dotNotation] || {}))
-      )
+      const isOk = dotNotations.every(dotNotation => {
+        // $FlowIssue(queryCondition-is-QueryCondition-or-EqCondition)
+        const queryCondition = where[dotNotation]
+        const nestedValue = getNestedValue(value, dotNotation)
+        return this.checkCondition(nestedValue, normalizeQueryCondition(queryCondition || {}))
+      })
       classified[isOk ? 'ok': 'ng'].push(value)
       return classified
     }, { ok: [], ng: [] })
   }
 
   /**
-   * @private
    * Check if leftOperand matches the condition
    */
   static checkCondition(leftOperand: any, condition: QueryCondition): boolean {
@@ -167,6 +168,13 @@ export default class PowerFilter {
  */
 export function filter(values: Array<RestorableEntity>, where: WhereConditions): Array<RestorableEntity> {
   return PowerFilter.filter(values, where)
+}
+
+/**
+ * Check if the givne value matches the condition
+ */
+export function checkCondition(value: any, condition: QueryCondition): boolean {
+  return PowerFilter.checkCondition(value, condition)
 }
 
 /**
