@@ -196,13 +196,32 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
-    throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
+    const { entityName, where } = command
+    try {
+      // TODO Performance issue: find() runs twice for just getting N
+      const values = this.phenylState.find({ entityName, where })
+      const ids = values.map(value => value.id)
+      this.phenylState = this.phenylState.$update(command)
+      return { ok: 1, n: values.length, values: this.phenylState.getByIds({ ids, entityName }) }
+    }
+    catch (e) {
+      return createErrorResult(e)
+    }
   }
 
   /**
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResultOrError> {
-    throw new Error(`Invalid response data: property name "delete" is not found in response.`)
+    const { entityName } = command
+    try {
+      // TODO Performance issue: find() runs twice for just getting N
+      const n = command.where ? this.phenylState.find({ where: command.where, entityName }).length : 1
+      this.phenylState = this.phenylState.$delete(command)
+      return { ok: 1, n }
+    }
+    catch (e) {
+      return createErrorResult(e)
+    }
   }
 }
