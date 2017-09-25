@@ -75,9 +75,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'find', find: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.find
-    if (ret == null) throw new Error(`Invalid response data: property name "find" is not found in response.`)
-    return ret
+    if (resData.find != null) return resData.find
+    throw new Error(`Invalid response data: property name "find" is not found in response.`)
   }
 
   /**
@@ -87,9 +86,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'findOne', findOne: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.findOne
-    if (ret == null) throw new Error(`Invalid response data: property name "findOne" is not found in response.`)
-    return ret
+    if (resData.findOne != null) return resData.findOne
+    throw new Error(`Invalid response data: property name "findOne" is not found in response.`)
   }
 
   /**
@@ -99,9 +97,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'get', get: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.get
-    if (ret == null) throw new Error(`Invalid response data: property name "get" is not found in response.`)
-    return ret
+    if (resData.get != null) return resData.get
+    throw new Error(`Invalid response data: property name "get" is not found in response.`)
   }
 
   /**
@@ -111,9 +108,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'getByIds', getByIds: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.getByIds
-    if (ret == null) throw new Error(`Invalid response data: property name "getByIds" is not found in response.`)
-    return ret
+    if (resData.getByIds != null) return resData.getByIds
+    throw new Error(`Invalid response data: property name "getByIds" is not found in response.`)
   }
 
   /**
@@ -123,9 +119,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'insert', insert: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.insert
-    if (ret == null) throw new Error(`Invalid response data: property name "insert" is not found in response.`)
-    return ret
+    if (resData.insert != null) return resData.insert
+    throw new Error(`Invalid response data: property name "insert" is not found in response.`)
   }
 
   /**
@@ -135,9 +130,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'insertAndGet', insertAndGet: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.insertAndGet
-    if (ret == null) throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
-    return ret
+    if (resData.insertAndGet != null) return resData.insertAndGet
+    throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
   }
 
   /**
@@ -147,9 +141,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'insertAndFetch', insertAndFetch: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.insertAndFetch
-    if (ret == null) throw new Error(`Invalid response data: property name "insertAndFetch" is not found in response.`)
-    return ret
+    if (resData.insertAndFetch != null) return resData.insertAndFetch
+    throw new Error(`Invalid response data: property name "insertAndFetch" is not found in response.`)
   }
 
   /**
@@ -159,9 +152,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'update', update: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.update
-    if (ret == null) throw new Error(`Invalid response data: property name "update" is not found in response.`)
-    return ret
+    if (resData.update != null) return resData.update
+    throw new Error(`Invalid response data: property name "update" is not found in response.`)
   }
 
   /**
@@ -171,9 +163,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'updateAndGet', updateAndGet: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.updateAndGet
-    if (ret == null) throw new Error(`Invalid response data: property name "updateAndGet" is not found in response.`)
-    return ret
+    if (resData.updateAndGet != null) return resData.updateAndGet
+    throw new Error(`Invalid response data: property name "updateAndGet" is not found in response.`)
   }
 
   /**
@@ -183,9 +174,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'updateAndFetch', updateAndFetch: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.updateAndFetch
-    if (ret == null) throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
-    return ret
+    if (resData.updateAndFetch != null) return resData.updateAndFetch
+    throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
   }
 
   /**
@@ -195,9 +185,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'delete', delete: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.delete
-    if (ret == null) throw new Error(`Invalid response data: property name "delete" is not found in response.`)
-    return ret
+    if (resData.delete != null) return resData.delete
+    throw new Error(`Invalid response data: property name "delete" is not found in response.`)
   }
 
   /**
@@ -207,9 +196,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'runCustomQuery', runCustomQuery: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.runCustomQuery
-    if (ret == null) throw new Error(`Invalid response data: property name "runCustomQuery" is not found in response.`)
-    return ret
+    if (resData.runCustomQuery != null) return resData.runCustomQuery
+    throw new Error(`Invalid response data: property name "runCustomQuery" is not found in response.`)
   }
 
   /**
@@ -219,9 +207,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'runCustomCommand', runCustomCommand: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.runCustomCommand
-    if (ret == null) throw new Error(`Invalid response data: property name "runCustomCommand" is not found in response.`)
-    return ret
+    if (resData.runCustomCommand != null) return resData.runCustomCommand
+    throw new Error(`Invalid response data: property name "runCustomCommand" is not found in response.`)
   }
 
   /**
@@ -231,9 +218,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'login', login: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.login
-    if (ret == null) throw new Error(`Invalid response data: property name "login" is not found in response.`)
-    return ret
+    if (resData.login != null) return resData.login
+    throw new Error(`Invalid response data: property name "login" is not found in response.`)
   }
 
   /**
@@ -243,9 +229,8 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
     const reqData = { method: 'logout', logout: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
-    const ret = resData.logout
-    if (ret == null) throw new Error(`Invalid response data: property name "logout" is not found in response.`)
-    return ret
+    if (resData.logout != null) return resData.logout
+    throw new Error(`Invalid response data: property name "logout" is not found in response.`)
   }
 }
 

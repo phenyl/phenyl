@@ -86,7 +86,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
 
   async executionWrapper(reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution): Promise<ResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
-    const resData = execution(newReqData, session)
+    const resData = await execution(newReqData, session)
     const newResData = removePasswordFromResponseData(resData, this.passwordPropName)
     return newResData
   }

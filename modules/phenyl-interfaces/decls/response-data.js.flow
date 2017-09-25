@@ -22,21 +22,85 @@ import type {
   LogoutCommandResult,
 } from './command-result.js.flow'
 
-export type ResponseData = {
-  error?: ErrorResult,
-  find?: QueryResult,
-  findOne?: SingleQueryResult,
-  get?: SingleQueryResult,
-  getByIds?: QueryResult,
-  insert?: CommandResult,
-  insertAndGet?: GetCommandResult,
-  insertAndFetch?: FetchCommandResult,
-  update?: CommandResult,
-  updateAndGet?: GetCommandResult,
-  updateAndFetch?: FetchCommandResult,
-  delete?: CommandResult,
-  runCustomQuery?: CustomQueryResult,
-  runCustomCommand?: CustomCommandResult,
-  login?: LoginCommandResult,
-  logout?: LogoutCommandResult,
-}
+export type ResponseData =
+  FindResponseData |
+  FindOneResponseData |
+  GetResponseData |
+  GetByIdsResponseData |
+  InsertResponseData |
+  InsertAndGetResponseData |
+  InsertAndFetchResponseData |
+  UpdateResponseData |
+  UpdateAndGetResponseData |
+  UpdateAndFetchResponseData |
+  DeleteResponseData |
+  RunCustomQueryResponseData |
+  RunCustomCommandResponseData |
+  LoginResponseData |
+  LogoutResponseData |
+  ErrorResponseData
+
+export type FindResponseData = {|
+  +find: QueryResult,
+|}
+
+export type FindOneResponseData = {|
+  +findOne: SingleQueryResult,
+|}
+
+export type GetResponseData = {|
+  +get: SingleQueryResult,
+|}
+
+export type GetByIdsResponseData = {|
+  +getByIds: QueryResult,
+|}
+
+export type InsertResponseData = {|
+  +insert: CommandResult,
+|}
+
+export type InsertAndGetResponseData = {|
+  +insertAndGet: GetCommandResult,
+|}
+
+export type InsertAndFetchResponseData = {|
+  +insertAndFetch: FetchCommandResult,
+|}
+
+export type UpdateResponseData = {|
+  +update: CommandResult,
+|}
+
+export type UpdateAndGetResponseData = {|
+  +updateAndGet: GetCommandResult,
+|}
+
+export type UpdateAndFetchResponseData = {|
+  +updateAndFetch: FetchCommandResult,
+|}
+
+export type DeleteResponseData = {|
+  +delete: CommandResult,
+|}
+
+export type RunCustomQueryResponseData = {|
+  +runCustomQuery: CustomQueryResult,
+|}
+
+export type RunCustomCommandResponseData = {|
+  +runCustomCommand: CustomCommandResult,
+|}
+
+export type LoginResponseData = {|
+  +login: LoginCommandResult,
+|}
+
+export type LogoutResponseData = {|
+  +logout: LogoutCommandResult,
+|}
+
+
+export type ErrorResponseData = {|
+  +error: ErrorResult,
+|}
