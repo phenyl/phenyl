@@ -1,7 +1,7 @@
 // @flow
 import type { WhereConditions } from './where-conditions.js.flow'
 import type { UpdateOperators } from './update-operators.js.flow'
-import type { Restorable } from './restorable.js.flow' // Object
+import type { RestorablePreEntity } from './restorable.js.flow' // Object
 import type { Id } from './id.js.flow' // string
 
 type EntityName = string
@@ -11,13 +11,13 @@ export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
 export interface SingleInsertCommand {
   entityName: EntityName, // "insert" key in MongoDB reference
-  value: Restorable, // "documents" key in MongoDB reference
+  value: RestorablePreEntity, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
 
 export interface MultiInsertCommand {
   entityName: EntityName, // "insert" key in MongoDB reference
-  values: Array<Restorable>, // "documents" key in MongoDB reference
+  values: Array<RestorablePreEntity>, // "documents" key in MongoDB reference
   ordered?: boolean,
 }
 
@@ -40,17 +40,17 @@ export type MultiUpdateCommand = {|
 // see https://docs.mongodb.com/manual/reference/command/delete/
 export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
 
-export interface IdDeleteCommand {
+export type IdDeleteCommand = {|
   entityName: EntityName, // "delete" key in MongoDB reference
   id: Id,
-}
+|}
 
-export interface MultiDeleteCommand {
+export type MultiDeleteCommand = {|
   entityName: EntityName, // "delete" key in MongoDB reference
   +where: WhereConditions, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,
-}
+|}
 
 export interface CustomCommand {
   name: string, // custom insert command name
