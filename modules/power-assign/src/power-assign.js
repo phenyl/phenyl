@@ -358,11 +358,15 @@ export default class PowerAssign {
 export function assign<T: Restorable>(obj: T, ops: Object): T {
   const firstKey = Object.keys(ops)[0]
   if (!firstKey) return obj
-  if (firstKey.charAt !== '$') return PowerAssign.assign(obj, { $set: ops })
+  if (firstKey.charAt(0) !== '$') return PowerAssign.assign(obj, { $set: ops })
   return PowerAssign.assign(obj, ops)
 }
 
-export function assignToProp<T: Restorable>(obj: T, propName: DotNotationString, ops: UpdateOperators): T {
+export function assignToProp<T: Restorable>(obj: T, propName: DotNotationString, _ops: Object): T {
+  const firstKey = Object.keys(_ops)[0]
+  if (!firstKey) return obj
+  const ops = (firstKey.charAt(0) !== '$') ? { $set: _ops } : _ops
+
   const modifiedOps = retargetToProp(ops, propName)
   return assign(obj, modifiedOps)
 }
