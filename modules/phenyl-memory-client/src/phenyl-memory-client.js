@@ -2,6 +2,7 @@
 import PhenylState from 'phenyl-state/jsnext'
 import { createErrorResult } from 'phenyl-utils/jsnext'
 import type { PhenylStateParams } from 'phenyl-state/jsnext'
+import randomString from './random-string.js'
 
 import type {
   EntityClient,
@@ -28,11 +29,6 @@ import type {
 
 type MemoryClientParams = {
   phenylState?: PhenylStateParams,
-}
-
-// TODO: implement cooler one externally
-function generateRandomStr(): string {
-  return 'p' + Math.random().toString().split('.')[1] + 't' + new Date().getTime().toString()
 }
 
 export default class PhenylMemoryClient implements EntityClient {
@@ -148,7 +144,7 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
     const { entityName, value } = command
-    const newValue = Object.assign({}, value, { id: generateRandomStr() })
+    const newValue = Object.assign({}, value, { id: randomString() })
     this.phenylState = this.phenylState.$register(entityName, newValue)
     return {
       ok: 1,
@@ -164,7 +160,7 @@ export default class PhenylMemoryClient implements EntityClient {
     const { entityName, values} = command
     const newValues = []
     for (const value of values) {
-      const newValue = Object.assign({}, value, { id: generateRandomStr() })
+      const newValue = Object.assign({}, value, { id: randomString() })
       this.phenylState = this.phenylState.$register(entityName, newValue)
       newValues.push(newValue)
     }
