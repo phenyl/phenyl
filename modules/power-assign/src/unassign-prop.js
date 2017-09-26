@@ -20,10 +20,14 @@ export function unassignProp<T: Restorable>(obj: T, propName: DotNotationString)
   const lastPropName = propNames.pop()
 
   const lastObjPropName = propNames.join('.')
-  const lastObj = getNestedValue(obj, lastObjPropName)
+  const lastObj = lastObjPropName
+    ? getNestedValue(obj, lastObjPropName)
+    : obj
 
   const copiedLastObj = Object.assign({}, lastObj)
   delete copiedLastObj[lastPropName]
 
-  return assign(obj, { $set: { [lastObjPropName]: copiedLastObj } })
+  return lastObjPropName
+    ? assign(obj, { $set: { [lastObjPropName]: copiedLastObj } })
+    : copiedLastObj
 }
