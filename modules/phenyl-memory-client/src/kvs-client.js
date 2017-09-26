@@ -39,7 +39,7 @@ export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
       return this.set(value)
     }
 
-    const newValue: T = Object.assign({}, value, { id: randomString() })
+    const newValue = assign(value, { id: randomString() })
     return this.set(newValue)
   }
 

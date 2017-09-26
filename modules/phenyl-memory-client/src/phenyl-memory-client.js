@@ -147,7 +147,7 @@ export default class PhenylMemoryClient implements EntityClient {
     const { entityName, value } = command
     const newValue = value.id
       ? value
-      : assign(value, { $set: { id: randomString() } })
+      : assign(value, { id: randomString() })
     this.phenylState = this.phenylState.$register(entityName, newValue)
     return {
       ok: 1,
@@ -165,7 +165,7 @@ export default class PhenylMemoryClient implements EntityClient {
     for (const value of values) {
       const newValue = value.id
         ? value
-        : assign(value, { $set: { id: randomString() } })
+        : assign(value, { id: randomString() })
       this.phenylState = this.phenylState.$register(entityName, newValue)
       newValues.push(newValue)
     }
