@@ -1,6 +1,7 @@
 // @flow
 import PhenylState from 'phenyl-state/jsnext'
 import { createErrorResult } from 'phenyl-utils/jsnext'
+import { assign } from 'power-assign/jsnext'
 import type { PhenylStateParams } from 'phenyl-state/jsnext'
 import randomString from './random-string.js'
 
@@ -144,7 +145,9 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
     const { entityName, value } = command
-    const newValue = Object.assign({}, value, { id: randomString() })
+    const newValue = value.id
+      ? value
+      : assign(value, { $set: { id: randomString() } })
     this.phenylState = this.phenylState.$register(entityName, newValue)
     return {
       ok: 1,
@@ -160,7 +163,9 @@ export default class PhenylMemoryClient implements EntityClient {
     const { entityName, values} = command
     const newValues = []
     for (const value of values) {
-      const newValue = Object.assign({}, value, { id: randomString() })
+      const newValue = value.id
+        ? value
+        : assign(value, { $set: { id: randomString() } })
       this.phenylState = this.phenylState.$register(entityName, newValue)
       newValues.push(newValue)
     }
