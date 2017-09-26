@@ -1,4 +1,14 @@
 {
-  "presets": ["env", "flow"],
-  "plugins": ["transform-strip-jsnext"]
+  "env": {
+    "build": {
+      "presets": ["env", "flow"]
+    },
+
+    "development": {
+      "presets": [
+        ["env", { "targets": {node: "8"} }],
+        "flow"
+      ]
+    }
+  }
 }
