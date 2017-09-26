@@ -11,6 +11,12 @@ describe('assign', () => {
     assert.deepEqual(newObj, { name: 'kerisu' })
   })
 
+  it('set a value with implicit $set operator', () => {
+    const obj = { name: 'korisu' }
+    const newObj = assign(obj, { name: 'kerisu' })
+    assert.deepEqual(newObj, { name: 'kerisu' })
+  })
+
   it('set multiple values', () => {
     const obj = { id: 'user1', name: 'korisu' }
     const newObj = assign(obj, { $set: { id: 'user001', name: 'kerisu' }})

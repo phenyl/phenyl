@@ -355,7 +355,10 @@ export default class PowerAssign {
 /**
  *
  */
-export function assign<T: Restorable>(obj: T, ops: UpdateOperators): T {
+export function assign<T: Restorable>(obj: T, ops: Object): T {
+  const firstKey = Object.keys(ops)[0]
+  if (!firstKey) return obj
+  if (firstKey.charAt !== '$') return PowerAssign.assign(obj, { $set: ops })
   return PowerAssign.assign(obj, ops)
 }
 
