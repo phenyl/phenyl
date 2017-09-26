@@ -13,6 +13,7 @@
     "phenyl-interfaces": "*"
   },
   "dependencies": {
+    "power-assign": "*",
     "phenyl-state": "*",
     "phenyl-utils": "*"
   },
