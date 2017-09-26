@@ -1,8 +1,9 @@
 // @flow
 import type { WhereConditions } from './where-conditions.js.flow'
 import type { UpdateOperators } from './update-operators.js.flow'
-import type { Restorable } from './restorable.js.flow' // Object
+import type { RestorableEntity } from './restorable.js.flow' // Object
 import type { Id } from './id.js.flow' // string
+import type { PreEntity } from './entity.js.flow' // string
 
 type EntityName = string
 
@@ -11,13 +12,13 @@ export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
 export type SingleInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
-  value: Restorable, // "documents" key in MongoDB reference
+  value: PreEntity<RestorableEntity>, // "documents" key in MongoDB reference
   ordered?: boolean,
 |}
 
 export type MultiInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
-  values: Array<Restorable>, // "documents" key in MongoDB reference
+  values: Array<PreEntity<RestorableEntity>>, // "documents" key in MongoDB reference
   ordered?: boolean,
 |}
 
