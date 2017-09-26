@@ -63,7 +63,7 @@ export interface AuthClient {
   logout(command: LogoutCommand): Promise<LogoutCommandResultOrError>,
 }
 
-export type SessionClient = KvsClient<Session, PreSession>
+export type SessionClient = KvsClient<Session>
 
 export interface ClientPool {
   entityClient: EntityClient,

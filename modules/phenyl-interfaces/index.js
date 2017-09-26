@@ -45,6 +45,10 @@ import type {
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
+  Entity,
+  PreEntity,
+} from './decls/entity.js.flow'
+import type {
   ErrorResult,
   ErrorResultType,
 } from './decls/error-result.js.flow'
@@ -202,6 +206,7 @@ export type {
   EntityDefinition,
   EntityDefinitions
   EqCondition,
+  Entity,
   ErrorResult,
   ErrorResultType,
   ExecutionWrapper,
@@ -253,6 +258,7 @@ export type {
   NorWhereConditions,
   OKAuthenticationResult,
   OrWhereConditions,
+  PreEntity,
   PreSession,
   PhenylRunner,
   PopOperator,
