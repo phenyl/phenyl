@@ -40,7 +40,7 @@ export default class PhenylHTTPServer {
   getRequestBody(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       // https://nodejs.org/api/stream.html#stream_readable_read_size
-      request.on('readable', () => {
+      request.once('readable', () => {
         const chunks = []
         let chunk
         let totalLength = 0
