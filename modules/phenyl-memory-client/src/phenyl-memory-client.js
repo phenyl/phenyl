@@ -1,8 +1,8 @@
 // @flow
-import PhenylState from 'phenyl-state/jsnext'
+import PhenylEntityState from 'phenyl-entity-state/jsnext'
 import { createErrorResult } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
-import type { PhenylStateParams } from 'phenyl-state/jsnext'
+import type { PhenylEntityStateParams } from 'phenyl-entity-state/jsnext'
 import randomString from './random-string.js'
 
 import type {
@@ -29,14 +29,14 @@ import type {
 } from 'phenyl-interfaces'
 
 type MemoryClientParams = {
-  phenylState?: PhenylStateParams,
+  phenylState?: PhenylEntityStateParams,
 }
 
 export default class PhenylMemoryClient implements EntityClient {
-  phenylState: PhenylState
+  phenylState: PhenylEntityState
 
   constructor(params: MemoryClientParams = {}) {
-    this.phenylState = new PhenylState(params.phenylState || {})
+    this.phenylState = new PhenylEntityState(params.phenylState || {})
   }
 
   /**
@@ -90,7 +90,7 @@ export default class PhenylMemoryClient implements EntityClient {
       }
     }
     catch (e) {
-      if (e.constructor.name === 'Error') { // Error from PhenylState
+      if (e.constructor.name === 'Error') { // Error from PhenylEntityState
         return {
           ok: 0,
           type: 'NotFound',
@@ -113,7 +113,7 @@ export default class PhenylMemoryClient implements EntityClient {
       }
     }
     catch (e) {
-      if (e.constructor.name === 'Error') { // Error from PhenylState
+      if (e.constructor.name === 'Error') { // Error from PhenylEntityState
         return {
           ok: 0,
           type: 'NotFound',

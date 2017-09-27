@@ -1,5 +1,5 @@
 {
-  "name": "phenyl-state",
+  "name": "phenyl-entity-state",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",

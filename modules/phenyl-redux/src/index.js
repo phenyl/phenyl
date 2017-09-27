@@ -1,5 +1,5 @@
 // @flow
-import PhenylState from 'phenyl-state/jsnext'
+import PhenylEntityState from 'phenyl-entity-state/jsnext'
 import type {
   DeleteAction,
   DeleteCommand,
@@ -17,7 +17,7 @@ import type {
  */
 export default function phenylReducer(state: ?EntityState, action: PhenylAction): EntityState {
   if (state == null) {
-    return new PhenylState()
+    return new PhenylEntityState()
   }
 
   switch (action.type) {

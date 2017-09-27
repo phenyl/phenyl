@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "power-assign": "*",
-    "phenyl-state": "*",
+    "phenyl-entity-state": "*",
     "phenyl-utils": "*"
   },
   "author": "",
