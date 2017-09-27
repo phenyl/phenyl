@@ -1,6 +1,7 @@
 // @flow
 import type {
   DeleteCommand,
+  EntitiesState,
   IdQuery,
   IdsQuery,
   IdUpdateCommand,
@@ -23,7 +24,7 @@ export type PhenylStateParams = {
 /**
  *
  */
-export default class PhenylState {
+export default class PhenylState implements EntitiesState {
   entities: { [entityName: string]: { [id: string]: RestorableEntity } }
 
   constructor(plain: PhenylStateParams = {}) {
