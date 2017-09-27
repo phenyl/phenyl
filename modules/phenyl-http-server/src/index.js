@@ -39,7 +39,7 @@ export default class PhenylHTTPServer {
 
   getRequestBody(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
-      request.once('readable', () => {
+      const read = () => {
         try {
           // https://nodejs.org/api/stream.html#stream_readable_read_size
           const chunks = []
@@ -53,7 +53,14 @@ export default class PhenylHTTPServer {
         } catch (err) {
           reject(err)
         }
+      }
+
+      request.once('error', err => {
+        request.removeListener('readable', read)
+        reject(err)
       })
+
+      request.once('readable', read)
     })
   }
 
