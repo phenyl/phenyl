@@ -39,16 +39,20 @@ export default class PhenylHTTPServer {
 
   getRequestBody(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
-      // https://nodejs.org/api/stream.html#stream_readable_read_size
       request.once('readable', () => {
-        const chunks = []
-        let chunk
-        let totalLength = 0
-        while (null !== (chunk = request.read())) {
-          chunks.push(chunk)
-          totalLength += chunk.length
+        try {
+          // https://nodejs.org/api/stream.html#stream_readable_read_size
+          const chunks = []
+          let chunk
+          let totalLength = 0
+          while (null !== (chunk = request.read())) {
+            chunks.push(chunk)
+            totalLength += chunk.length
+          }
+          resolve(Buffer.concat(chunks, totalLength).toString('utf8'))
+        } catch (err) {
+          reject(err)
         }
-        resolve(Buffer.concat(chunks, totalLength).toString('utf8'))
       })
     })
   }
