@@ -13,5 +13,9 @@
     "phenyl-interfaces": "*"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "es6-promisify": "^5.0.0",
+    "mongodb": "^2.2.31"
+  }
 }
