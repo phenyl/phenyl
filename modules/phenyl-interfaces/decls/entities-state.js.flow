@@ -1,0 +1,25 @@
+// @flow
+import type {
+  RestorableEntity
+} from './restorable.js.flow'
+
+import type {
+  IdQuery,
+  IdsQuery,
+  WhereQuery,
+} from './query.js.flow'
+
+import type {
+  UpdateCommand,
+  DeleteCommand,
+} from './command.js.flow'
+
+export interface EntitiesState {
+  find(query: WhereQuery): Array<RestorableEntity>,
+  findOne(query: WhereQuery): ?RestorableEntity,
+  get(query: IdQuery): RestorableEntity,
+  getByIds(query: IdsQuery): Array<RestorableEntity>,
+  $register(entityName: string, ...entities: Array<RestorableEntity>): EntitiesState,
+  $update(command: UpdateCommand): EntitiesState,
+  $delete(command: DeleteCommand): EntitiesState,
+}

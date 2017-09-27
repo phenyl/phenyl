@@ -1,5 +1,12 @@
 // @flow
 import type {
+  DeleteAction,
+  RegisterAction,
+  PhenylAction,
+  SetAction,
+  UpdateAction,
+} from './decls/action.js.flow'
+import type {
   AuthClient,
   CustomClient,
   ClientPool,
@@ -44,6 +51,9 @@ import type {
 } from './decls/custom-query-definition.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
+import type {
+  EntitiesState,
+} from './decls/entities-state.js.flow'
 import type {
   Entity,
   PreEntity,
@@ -196,12 +206,14 @@ export type {
   CustomQueryResultOrError,
   CustomQueryDefinition,
   CustomQueryDefinitions,
+  DeleteAction,
   DeleteCommand,
   DeleteRequestData,
   DeleteResponseData,
   DotNotationString,
   EncodedHttpRequest,
   EncodedHttpResponse,
+  EntitiesState,
   EntityClient,
   EntityDefinition,
   EntityDefinitions
@@ -258,10 +270,11 @@ export type {
   NorWhereConditions,
   OKAuthenticationResult,
   OrWhereConditions,
-  PreEntity,
-  PreSession,
+  PhenylAction,
   PhenylRunner,
   PopOperator,
+  PreEntity,
+  PreSession,
   PullOperator,
   PushModifier,
   PushOperator,
@@ -271,6 +284,7 @@ export type {
   QueryStringParams,
   RequestData,
   RequestMethodName,
+  RegisterAction,
   ResponseData,
   Restorable,
   RestorableEntity,
@@ -278,6 +292,7 @@ export type {
   RunCustomCommandResponseData,
   RunCustomQueryRequestData,
   RunCustomQueryResponseData,
+  SetAction,
   SetOperator,
   Session,
   SessionClient,
@@ -286,6 +301,7 @@ export type {
   SingleQueryResult,
   SingleQueryResultOrError,
   SortNotation,
+  UpdateAction,
   UpdateAndFetchRequestData,
   UpdateAndFetchResponseData,
   UpdateAndGetRequestData,

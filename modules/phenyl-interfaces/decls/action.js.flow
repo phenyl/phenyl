@@ -1,0 +1,43 @@
+// @flow
+
+import type {
+  EntitiesState,
+} from './entities-state.js.flow'
+
+import type {
+  RestorableEntity,
+} from './restorable.js.flow'
+
+import type {
+  UpdateCommand,
+  DeleteCommand,
+} from './command.js.flow'
+
+export type SetAction = {|
+  type: 'phenyl/$set',
+  payload: EntitiesState,
+|}
+
+export type RegisterAction = {|
+  type: 'phenyl/$register',
+  payload: {|
+    entityName: string,
+    entities: Array<RestorableEntity>
+  |}
+|}
+
+export type UpdateAction = {|
+  type: 'phenyl/$update',
+  payload: UpdateCommand,
+|}
+
+export type DeleteAction = {|
+  type: 'phenyl/$delete',
+  payload: DeleteCommand,
+|}
+
+export type PhenylAction =
+  SetAction |
+  RegisterAction |
+  UpdateAction |
+  DeleteAction
