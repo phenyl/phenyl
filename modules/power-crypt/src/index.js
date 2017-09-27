@@ -1,7 +1,7 @@
 // @flow
 import shajs from 'sha.js'
 
-type PowerCryptOptions = {
+export type PowerCryptOptions = {
   nStretch?: number,
   algorithm?: 'sha224' | 'sha256' | 'sha384' | 'sha384' | 'sha512',
   encode?: 'hex' | 'utf8' | 'base64',
@@ -11,7 +11,7 @@ type PowerCryptOptions = {
 /**
  *
  */
-export default function powerCrypt(str: string, options: PowerCryptOptions = {}): string {
+export default function powerCrypt(str: string, options?: PowerCryptOptions = {}): string {
   let { nStretch, algorithm, encode, salt } = options
   salt = salt || ''
   encode = encode || 'base64'

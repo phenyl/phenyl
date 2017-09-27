@@ -4,7 +4,7 @@ import type {
   IdQuery,
   IdsQuery,
   InsertCommand,
-  Restorable,
+  RestorableEntity,
   UpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -13,14 +13,14 @@ import { filter } from 'power-filter/jsnext'
 import { assign } from 'power-assign/jsnext'
 
 type PlainPhenylState = {
-  entities: {}
+  entities: { [name: string]: { [key: string]: RestorableEntity } }
 }
 
 /**
  *
  */
 export default class PhenylState {
-  entities: { [name: string]: { [key: string]: {} } }
+  entities: { [name: string]: { [key: string]: RestorableEntity } }
 
   constructor(plain: PlainPhenylState) {
     this.entities = plain.entities
@@ -29,7 +29,7 @@ export default class PhenylState {
   /**
    *
    */
-  find(query: WhereQuery): Array<Restorable> {
+  find(query: WhereQuery): Array<RestorableEntity> {
     const entities = this.entities[query.entityName]
     const allEntities = Object.keys(entities).map(key => entities[key])
     return filter(allEntities, query.where)
@@ -38,14 +38,14 @@ export default class PhenylState {
   /**
    *
    */
-  findOne(query: WhereQuery): Restorable {
+  findOne(query: WhereQuery): RestorableEntity {
     return this.find(query)[0]
   }
 
   /**
    *
    */
-  get(query: IdQuery): Restorable {
+  get(query: IdQuery): RestorableEntity {
     const entity = this.entities[query.entityName][query.id]
     if (entity == null) throw new Error('NoId')
     return entity

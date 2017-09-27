@@ -10,7 +10,11 @@ describe('find', () => {
     const user2 = { id: '2', name: 'kory' }
     const user3 = { id: '3', name: 'kiry' }
     const state = new PhenylState({
-      entities: { user: [user1, user2, user3] }
+      entities: { user: {
+        '1': user1,
+        '2': user2,
+        '3': user3,
+      }}
     })
     const usersFoundByQuery = state.find({
       entityName: 'user',
@@ -25,7 +29,7 @@ describe('findOne', () => {
   it('', () => {
     const user = { id: '1', name: 'kery' }
     const state = new PhenylState({
-      entities: { user }
+      entities: { user: { '1': user } },
     })
     const userFromState = state.findOne({
       entityName: 'user',
@@ -39,9 +43,9 @@ describe('findOne', () => {
 
 describe('get', () => {
   it('', () => {
-    const user = { id: 1, name: 'kery' }
+    const user = { id: '1', name: 'kery' }
     const state = new PhenylState({
-      entities: { user }
+      entities: { user: { '1': user } },
     })
     const userFromState = state.get({
       entityName: 'user',
@@ -54,7 +58,7 @@ describe('get', () => {
 describe('$update', () => {
   it('', () => {
     const state = new PhenylState({
-      entities: { user: { id: '1', name: 'kery' }}
+      entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$update({
       entityName: 'user',
@@ -62,7 +66,7 @@ describe('$update', () => {
       operators: { $set: { name: 'kory' }}
     })
     const expectedState = new PhenylState({
-      entities: { user: { id: '1', name: 'kory' }}
+      entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     assert.deepEqual(newState, expectedState)
   })
@@ -71,7 +75,7 @@ describe('$update', () => {
 describe('$delete', () => {
   it('', () => {
     const state = new PhenylState({
-      entities: { user: { id: '1', name: 'kery' }}
+      entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$delete({
       entityName: 'user',
@@ -88,7 +92,7 @@ describe('$delete', () => {
 describe('$register', () => {
   it('', () => {
     const state = new PhenylState({
-      entities: { user: { id: '1' } }
+      entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$insert({
       entityName: 'user',
@@ -96,7 +100,7 @@ describe('$register', () => {
     })
 
     const expectedState = new PhenylState({
-      entities: { user: { id: '1' }}
+      entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     assert.deepEqual(newState, expectedState)
   })

@@ -1,7 +1,7 @@
 // @flow
 
 import type {
-  Restorable,
+  RestorableEntity,
   WhereConditions,
 } from 'phenyl-interfaces'
 
@@ -9,17 +9,16 @@ import type {
  *
  */
 export default class PowerFilter {
-  static find(values: Array<Restorable>, where: WhereConditions): Array<Restorable> {
-    // TODO
+  static find(values: Array<RestorableEntity>, where: WhereConditions): Array<RestorableEntity> {
     return values
   }
 
-  static findOne(values: Array<Restorable>, where: WhereConditions): Restorable {
-    // TODO
-    return values[0]
+  static findOne(values: Array<RestorableEntity>, where: WhereConditions): RestorableEntity {
+    const filteredValues = this.find(values, where)
+    return filteredValues[0]
   }
 }
 
-export function filter(values: Array<Restorable>, where: WhereConditions): Array<Restorable> {
+export function filter(values: Array<RestorableEntity>, where: WhereConditions): Array<RestorableEntity> {
   return PowerFilter.find(values, where)
 }
