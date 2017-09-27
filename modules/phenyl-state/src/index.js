@@ -17,17 +17,17 @@ import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
 import { assignToProp, unassignProp } from 'power-assign/jsnext'
 
-export type PhenylEntityStateParams = {
+export type PhenylStateParams = {
   entities?: { [name: string]: { [key: string]: RestorableEntity } }
 }
 
 /**
  *
  */
-export default class PhenylEntityState implements EntityState {
+export default class PhenylState implements EntityState {
   entities: { [entityName: string]: { [id: string]: RestorableEntity } }
 
-  constructor(plain: PhenylEntityStateParams = {}) {
+  constructor(plain: PhenylStateParams = {}) {
     this.entities = plain.entities || {}
   }
 
@@ -87,7 +87,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $update(command: UpdateCommand): PhenylEntityState {
+  $update(command: UpdateCommand): PhenylState {
     if (command.where) {
       return this.$updateByWhereCondition(command)
     }
@@ -97,7 +97,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $updateById(command: IdUpdateCommand): PhenylEntityState {
+  $updateById(command: IdUpdateCommand): PhenylState {
     const { id, entityName, operators } = command
     const thisPropName = ['entities', entityName, id].join('.')
     return assignToProp(this, thisPropName, operators)
@@ -106,7 +106,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $updateByWhereCondition(command: MultiUpdateCommand): PhenylEntityState {
+  $updateByWhereCondition(command: MultiUpdateCommand): PhenylState {
     const { where, entityName, operators } = command
     const targetEntities = this.find({ entityName, where })
     return targetEntities.reduce((self, targetEntity) => {
@@ -118,10 +118,10 @@ export default class PhenylEntityState implements EntityState {
   /**
    * Register entities.
    * As RestorablePreEntities in InsertCommand does not have "id",
-   * PhenylEntityState cannot handle InsertCommand.
+   * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  $register(entityName: string, ...entities: Array<RestorableEntity>): PhenylEntityState {
+  $register(entityName: string, ...entities: Array<RestorableEntity>): PhenylState {
     return entities.reduce((self, entity) => {
       const thisPropName = ['entities', entityName, entity.id].join('.')
       return assignToProp(self, thisPropName, { $set: entity })
@@ -131,7 +131,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $delete(command: DeleteCommand): PhenylEntityState {
+  $delete(command: DeleteCommand): PhenylState {
     if (command.where) {
       return this.$deleteByWhereConditions(command)
     }
@@ -141,7 +141,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $deleteById(command: IdDeleteCommand): PhenylEntityState {
+  $deleteById(command: IdDeleteCommand): PhenylState {
     const { id, entityName } = command
     return unassignProp(this, ['entities', entityName, id].join('.'))
   }
@@ -149,7 +149,7 @@ export default class PhenylEntityState implements EntityState {
   /**
    *
    */
-  $deleteByWhereConditions(command: MultiDeleteCommand): PhenylEntityState {
+  $deleteByWhereConditions(command: MultiDeleteCommand): PhenylState {
     const { where, entityName } = command
     const targetEntities = this.find({ entityName, where })
     return targetEntities.reduce((self, targetEntity) => {

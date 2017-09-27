@@ -2,14 +2,14 @@
 
 import { describe, it } from 'kocha'
 import assert from 'assert'
-import PhenylEntityState from '../src/index.js'
+import PhenylState from '../src/index.js'
 
 describe('find', () => {
   it('', () => {
     const user1 = { id: '1', name: 'kery' }
     const user2 = { id: '2', name: 'kory' }
     const user3 = { id: '3', name: 'kiry' }
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: {
         '1': user1,
         '2': user2,
@@ -27,7 +27,7 @@ describe('find', () => {
 describe('findOne', () => {
   it('', () => {
     const user = { id: '1', name: 'kery' }
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: { '1': user } },
     })
     const userFromState = state.findOne({
@@ -42,7 +42,7 @@ describe('findOne', () => {
 describe('get', () => {
   it('', () => {
     const user = { id: '1', name: 'kery' }
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: { '1': user } },
     })
     const userFromState = state.get({
@@ -55,7 +55,7 @@ describe('get', () => {
 
 describe('$update', () => {
   it('', () => {
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$update({
@@ -63,7 +63,7 @@ describe('$update', () => {
       id: '1',
       operators: { $set: { name: 'kory' }}
     })
-    const expectedState = new PhenylEntityState({
+    const expectedState = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     assert.deepEqual(newState, expectedState)
@@ -72,7 +72,7 @@ describe('$update', () => {
 
 describe('$delete', () => {
   it('', () => {
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$delete({
@@ -80,7 +80,7 @@ describe('$delete', () => {
       id: '1',
     })
 
-    const expectedState = new PhenylEntityState({
+    const expectedState = new PhenylState({
       entities: { user: {} }
     })
     assert.deepEqual(newState, expectedState)
@@ -89,7 +89,7 @@ describe('$delete', () => {
 
 describe('$register', () => {
   it('', () => {
-    const state = new PhenylEntityState({
+    const state = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     const newState = state.$insert({
@@ -97,7 +97,7 @@ describe('$register', () => {
       value: { id: 'diary1' }
     })
 
-    const expectedState = new PhenylEntityState({
+    const expectedState = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
     assert.deepEqual(newState, expectedState)
