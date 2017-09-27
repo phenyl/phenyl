@@ -32,7 +32,7 @@ export default class PhenylHTTPServer {
   /**
    *
    */
-  listen(port: number, hostname: string, backlog: number, callback: Function) {
+  listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
     this.server.on('request', this.onRequest)
     this.server.listen(port, hostname, backlog, callback)
   }
