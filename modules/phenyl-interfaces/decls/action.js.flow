@@ -1,8 +1,8 @@
 // @flow
 
 import type {
-  EntitiesState,
-} from './entities-state.js.flow'
+  EntityState,
+} from './entity-state.js.flow'
 
 import type {
   RestorableEntity,
@@ -15,7 +15,7 @@ import type {
 
 export type SetAction = {|
   type: 'phenyl/$set',
-  payload: EntitiesState,
+  payload: EntityState,
 |}
 
 export type RegisterAction = {|

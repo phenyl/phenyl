@@ -52,8 +52,8 @@ import type {
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
-  EntitiesState,
-} from './decls/entities-state.js.flow'
+  EntityState,
+} from './decls/entity-state.js.flow'
 import type {
   Entity,
   PreEntity,
@@ -213,7 +213,7 @@ export type {
   DotNotationString,
   EncodedHttpRequest,
   EncodedHttpResponse,
-  EntitiesState,
+  EntityState,
   EntityClient,
   EntityDefinition,
   EntityDefinitions

@@ -3,7 +3,7 @@ import PhenylState from 'phenyl-state/jsnext'
 import type {
   DeleteAction,
   DeleteCommand,
-  EntitiesState,
+  EntityState,
   PhenylAction,
   RegisterAction,
   RestorableEntity,
@@ -15,7 +15,7 @@ import type {
 /**
  *
  */
-export default function phenylReducer(state: ?EntitiesState, action: PhenylAction): EntitiesState {
+export default function phenylReducer(state: ?EntityState, action: PhenylAction): EntityState {
   if (state == null) {
     return new PhenylState()
   }
@@ -38,7 +38,7 @@ export default function phenylReducer(state: ?EntitiesState, action: PhenylActio
   }
 }
 
-export function $set(state: EntitiesState): SetAction {
+export function $set(state: EntityState): SetAction {
   return {
     type: 'phenyl/$set',
     payload: state
