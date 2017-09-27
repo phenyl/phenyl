@@ -66,8 +66,6 @@ export default class PhenylHTTPServer {
 
   /**
    * @private
-   * @param {IncomingMessage} request
-   * @param {ServerResponse} response
    */
   async onRequest(request: IncomingMessage, response: ServerResponse) {
     const requestUrl = url.parse(request.url, true)
