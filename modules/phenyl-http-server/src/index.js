@@ -26,14 +26,13 @@ export default class PhenylHTTPServer {
   constructor(server: net$Server, phenylCore: PhenylRunner) {
     this.server = server
     this.phenylCore = phenylCore
-    this.onRequest = this.onRequest.bind(this)
   }
 
   /**
    *
    */
   listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
-    this.server.on('request', this.onRequest)
+    this.server.on('request', this.onRequest.bind(this))
     this.server.listen(port, hostname, backlog, callback)
   }
 
@@ -46,7 +45,9 @@ export default class PhenylHTTPServer {
           let chunk
           let totalLength = 0
           while (null !== (chunk = request.read())) {
+            // $FlowIssue(chunk-is-always-Buffer)
             chunks.push(chunk)
+            // $FlowIssue(chunk-is-always-Buffer)
             totalLength += chunk.length
           }
           resolve(Buffer.concat(chunks, totalLength).toString('utf8'))
@@ -73,6 +74,7 @@ export default class PhenylHTTPServer {
 
     try {
       // 1. Decoding Request
+      // $FlowIssue(request.method-is-always-compatible)
       const [requestData, sessionId] = decodeRequest({
         method: request.method,
         path: requestUrl.pathname,
@@ -91,7 +93,7 @@ export default class PhenylHTTPServer {
     const statusCode = getStatusCode(responseData)
     const body = JSON.stringify(encodeResponse(responseData))
     const headers = {
-      'Content-Length': Buffer.byteLength(body),
+      'Content-Length': Buffer.byteLength(body).toString(),
       'Content-Type': 'application/json',
     }
     response.writeHead(statusCode, headers)
