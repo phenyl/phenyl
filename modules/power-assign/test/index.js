@@ -154,6 +154,30 @@ describe('assign', () => {
     assert.deepEqual(newObj.categories, ['news', 'cooking-recipies'])
   })
 
+  context('Checking compatibility with MongoDB Docs', () => {
+    it('increment properties with $inc operator', () => {
+      const obj = {
+        _id: 1,
+        sku: "abc123",
+        quantity: 10,
+        metrics: {
+          orders: 2,
+          ratings: 3.5
+        }
+      }
+      const newObj = assign(obj, { $inc: { quantity: -2, "metrics.orders": 1 }})
+      assert.deepEqual(newObj, {
+        _id: 1,
+        sku: "abc123",
+        quantity: 8,
+        metrics: {
+          orders: 3,
+          ratings: 3.5
+        }
+      })
+    })
+  })
+
   context('with class instance', () => {
     class Name {
       first: string
