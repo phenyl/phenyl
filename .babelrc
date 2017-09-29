@@ -1,7 +1,8 @@
 {
   "env": {
     "build": {
-      "presets": ["env", "flow"]
+      "presets": ["env", "flow"],
+      "plugins": ["transform-strip-jsnext"]
     },
 
     "development": {
