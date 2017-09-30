@@ -363,6 +363,6 @@ export function assign<T: Restorable>(obj: T, ops: Object): T {
 }
 
 export function assignToProp<T: Restorable>(obj: T, propName: DotNotationString, _ops: Object): T {
-  const modifiedOps = retargetToProp(_ops, propName)
+  const modifiedOps = retargetToProp(propName, _ops)
   return assign(obj, modifiedOps)
 }

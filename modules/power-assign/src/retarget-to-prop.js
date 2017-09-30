@@ -6,7 +6,7 @@ import type {
   UpdateOperators,
 } from 'phenyl-interfaces'
 
-export function retargetToProp(_ops: Object, propName: DotNotationString): UpdateOperators {
+export function retargetToProp(propName: DotNotationString, _ops: Object): UpdateOperators {
 
   const firstKey = Object.keys(_ops)[0]
   if (!firstKey) return {}
