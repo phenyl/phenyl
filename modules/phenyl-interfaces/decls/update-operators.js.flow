@@ -14,6 +14,7 @@ export type MaxOperator = { [field: DotNotationString]: any }
 export type MulOperator = { [field: DotNotationString]: number }
 export type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
 export type PopOperator = { [field: DotNotationString]: 1 | - 1 }
+export type UnsetOperator = { [field: DotNotationString]: '' }
 
 export type PullOperator = { +[field: DotNotationString]: QueryCondition | EqCondition }
 
@@ -47,6 +48,7 @@ export type UpdateOperators = $Shape<{
   $push: PushOperator,
   $currentDate: CurrentDateOperator,
   $bit: BitOperator,
+  $unset: UnsetOperator,
 }>
 
 export type UpdateOperator =
@@ -60,4 +62,5 @@ export type UpdateOperator =
   PullOperator |
   PushOperator |
   CurrentDateOperator |
-  BitOperator
+  BitOperator |
+  UnsetOperator

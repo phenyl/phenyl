@@ -163,6 +163,7 @@ import type {
   PushModifier,
   PushOperator,
   SetOperator,
+  UnsetOperator,
   UpdateOperator,
   UpdateOperators,
 } from './decls/update-operators.js.flow'
@@ -301,6 +302,7 @@ export type {
   SingleQueryResult,
   SingleQueryResultOrError,
   SortNotation,
+  UnsetOperator,
   UpdateAction,
   UpdateAndFetchRequestData,
   UpdateAndFetchResponseData,

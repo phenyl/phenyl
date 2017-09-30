@@ -23,6 +23,7 @@ import type {
   QueryCondition,
   Restorable,
   SetOperator,
+  UnsetOperator,
   UpdateOperators,
   WhereConditions,
 } from 'phenyl-interfaces'
@@ -100,9 +101,13 @@ export default class PowerAssign {
           updatedObj = this.$bit(updatedObj, ops.$bit)
           break
 
+        case '$unset':
+          if (ops.$bit == null) break // for flowtype checking...
+          updatedObj = this.$unset(updatedObj, ops.$unset)
+          break
+
         case '$rename':
         case '$setOnInsert':
-        case '$unset':
           throw new Error(`The given operator "${operatorName}" is not implemented yet.`)
 
         default:
@@ -333,6 +338,30 @@ export default class PowerAssign {
       }
     })
     return this.$set(obj, valuesToSet)
+  }
+
+  /**
+   *
+   */
+  static $unset(obj: Object, unsetOp: UnsetOperator): Object {
+
+    return Object.keys(unsetOp).reduce((newObj, dnStr) => {
+
+      const propNames = dnStr.split('.')
+      const lastPropName = propNames.pop()
+
+      const lastObjPropName = propNames.join('.')
+      const lastObj = lastObjPropName
+        ? getNestedValue(obj, lastObjPropName)
+        : obj
+
+      const copiedLastObj = Object.assign({}, lastObj)
+      delete copiedLastObj[lastPropName]
+
+      return lastObjPropName
+        ? this.$set(obj, { [lastObjPropName]: copiedLastObj })
+        : copiedLastObj
+    }, obj)
   }
 
   /**

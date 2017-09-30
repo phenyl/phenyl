@@ -10,12 +10,13 @@ import type {
   MultiDeleteCommand,
   RestorableEntity,
   UpdateCommand,
+  UpdateOperators,
   WhereQuery,
 } from 'phenyl-interfaces'
 
 import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
-import { assignToProp, unassignProp } from 'power-assign/jsnext'
+import { assignToProp, retargetToProp, unassignProp } from 'power-assign/jsnext'
 
 export type PhenylStateParams = {
   entities?: { [name: string]: { [key: string]: RestorableEntity } }
@@ -87,7 +88,7 @@ export default class PhenylState implements EntityState {
   /**
    *
    */
-  $update(command: UpdateCommand): PhenylState {
+  $update(command: UpdateCommand): UpdateOperators {
     if (command.where) {
       return this.$updateByWhereCondition(command)
     }
@@ -97,22 +98,23 @@ export default class PhenylState implements EntityState {
   /**
    *
    */
-  $updateById(command: IdUpdateCommand): PhenylState {
+  $updateById(command: IdUpdateCommand): UpdateOperators {
     const { id, entityName, operators } = command
     const thisPropName = ['entities', entityName, id].join('.')
-    return assignToProp(this, thisPropName, operators)
+    return retargetToProp(thisPropName, operators)
   }
 
   /**
    *
    */
-  $updateByWhereCondition(command: MultiUpdateCommand): PhenylState {
+  $updateByWhereCondition(command: MultiUpdateCommand): UpdateOperators {
     const { where, entityName, operators } = command
     const targetEntities = this.find({ entityName, where })
-    return targetEntities.reduce((self, targetEntity) => {
+    return targetEntities.reduce((ops, targetEntity) => {
       const thisPropName = ['entities', entityName, targetEntity.id].join('.')
-      return assignToProp(self, thisPropName, operators)
-    }, this)
+      const thisOps = retargetToProp(thisPropName, operators)
+      return mergeOperators(ops, thisOps)
+    }, operators)
   }
 
   /**
