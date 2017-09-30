@@ -1,7 +1,7 @@
 // @flow
-import { assign, unassignProp } from 'power-assign/jsnext'
+import { assignWithRestoration, unassignProp } from 'power-assign/jsnext'
 import type {
-  Entity,
+  RestorableEntity,
   PreEntity,
   KvsClient,
   Id,
@@ -16,7 +16,7 @@ type MemoryKvsClientParams<T> = {
   pool?: KeyValuePool<T>
 }
 
-export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
+export default class MemoryKvsClient<T: RestorableEntity> implements KvsClient<T> {
   pool: KeyValuePool<T>
 
   constructor(params: MemoryKvsClientParams<T> = {}) {
@@ -39,12 +39,12 @@ export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
       return this.set(value)
     }
 
-    const newValue = assign(value, { id: randomString() })
+    const newValue = assignWithRestoration(value, { id: randomString() })
     return this.set(newValue)
   }
 
   async set(value: T): Promise<T> {
-    this.pool = assign(this.pool, { $set: { [value.id]: value } })
+    this.pool = assignWithRestoration(this.pool, { $set: { [value.id]: value } })
     return value
   }
 

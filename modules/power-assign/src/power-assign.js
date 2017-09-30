@@ -38,8 +38,8 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign<T: Restorable>(obj: T, ops: UpdateOperators): T {
-    let updatedObj: T = obj
+  static assign(obj: Object, ops: UpdateOperators): Object {
+    let updatedObj: Object = obj
     const operatorNames = Object.keys(ops)
 
     for (const operatorName of operatorNames) {
@@ -109,9 +109,7 @@ export default class PowerAssign {
           throw new Error(`Invalid operator: "${operatorName}"`)
       }
     }
-
-    const Constructor = obj.constructor
-    return (Constructor === Object) ? updatedObj : new Constructor(updatedObj)
+    return updatedObj
   }
 
   /**
@@ -355,14 +353,36 @@ export default class PowerAssign {
 /**
  *
  */
-export function assign<T: Restorable>(obj: T, ops: Object): T {
+export function assign(obj: Object, ops: Object): Object {
   const firstKey = Object.keys(ops)[0]
   if (!firstKey) return obj
   if (firstKey.charAt(0) !== '$') return PowerAssign.assign(obj, { $set: ops })
   return PowerAssign.assign(obj, ops)
 }
 
-export function assignToProp<T: Restorable>(obj: T, propName: DotNotationString, _ops: Object): T {
-  const modifiedOps = retargetToProp(propName, _ops)
+/**
+ *
+ */
+export function assignToProp(obj: Object, propName: DotNotationString, ops: Object): Object {
+  const modifiedOps = retargetToProp(propName, ops)
   return assign(obj, modifiedOps)
+}
+
+/**
+ *
+ */
+export function assignWithRestoration<T: Restorable>(obj: T, ops: Object): T {
+  const updatedObj = assign(obj, ops)
+  const Constructor = obj.constructor
+  return new Constructor(updatedObj) // if Constructor is Object, it's OK!
+}
+
+
+/**
+ *
+ */
+export function assignToPropWithRestoration<T: Restorable>(obj: T, propName: DotNotationString, ops: Object): T {
+  const updatedObj = assignToProp(obj, propName, ops)
+  const Constructor = obj.constructor
+  return new Constructor(updatedObj) // if Constructor is Object, it's OK!
 }

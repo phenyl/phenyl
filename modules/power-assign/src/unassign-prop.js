@@ -14,7 +14,7 @@ import { assign } from './power-assign.js'
 /**
  * Delete value of the propName from obj
  */
-export function unassignProp<T: Restorable>(obj: T, propName: DotNotationString): T {
+export function unassignProp(obj: Object, propName: DotNotationString): Object {
   const propNames = propName.split('.')
 
   const lastPropName = propNames.pop()
