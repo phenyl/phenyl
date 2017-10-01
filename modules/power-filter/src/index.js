@@ -6,7 +6,6 @@ import type {
   BSONTypeNumber,
   BSONTypeString,
   RestorableEntity,
-  DotNotationString,
   WhereConditions,
   QueryCondition,
 } from 'phenyl-interfaces'
