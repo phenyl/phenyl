@@ -7,16 +7,16 @@ import type {
 import type { SortNotation } from './sort-notation.js.flow'
 type DotNotationString = string
 
-export type SetOperator = { [field: DotNotationString]: any }
-export type IncOperator = { [field: DotNotationString]: number }
-export type MinOperator = { [field: DotNotationString]: any }
-export type MaxOperator = { [field: DotNotationString]: any }
-export type MulOperator = { [field: DotNotationString]: number }
-export type AddToSetOperator = { [field: DotNotationString]: any | { $each: Array<any> } }
-export type PopOperator = { [field: DotNotationString]: 1 | - 1 }
-export type UnsetOperator = { [field: DotNotationString]: '' }
+export type SetOperator = { [field: DocumentPath]: any }
+export type IncOperator = { [field: DocumentPath]: number }
+export type MinOperator = { [field: DocumentPath]: any }
+export type MaxOperator = { [field: DocumentPath]: any }
+export type MulOperator = { [field: DocumentPath]: number }
+export type AddToSetOperator = { [field: DocumentPath]: any | { $each: Array<any> } }
+export type PopOperator = { [field: DocumentPath]: 1 | - 1 }
+export type UnsetOperator = { [field: DocumentPath]: '' }
 
-export type PullOperator = { +[field: DotNotationString]: QueryCondition | EqCondition }
+export type PullOperator = { +[field: DocumentPath]: QueryCondition | EqCondition }
 
 export type PushModifier = {
   $each: Array<any>,
@@ -24,12 +24,12 @@ export type PushModifier = {
   $sort?: SortNotation,
   $position?: number,
 }
-export type PushOperator = { [field: DotNotationString]: any | PushModifier }
+export type PushOperator = { [field: DocumentPath]: any | PushModifier }
 
 type TypeSpecification = true | { $type: 'timestamp' | 'date' }
-export type CurrentDateOperator = { [field: DotNotationString]: TypeSpecification }
+export type CurrentDateOperator = { [field: DocumentPath]: TypeSpecification }
 export type BitOperator = {
-  [field: DotNotationString]: {
+  [field: DocumentPath]: {
     and?: number,
     or?: number,
     xor?: number,
@@ -54,7 +54,7 @@ export type BitOperator = {
  *    JSON.stringify(toJSON(operators)) // {"$restore":{"foo":""}}
  */
 export type RestoreOperator = {
-  [field: DotNotationString]: '' | Class<Restorable>
+  [field: DocumentPath]: '' | Class<Restorable>
 }
 
 export type UpdateOperators = $Shape<{
