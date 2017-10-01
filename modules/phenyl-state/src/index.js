@@ -110,11 +110,11 @@ export default class PhenylState implements EntityState {
   $updateByWhereCondition(command: MultiUpdateCommand): UpdateOperators {
     const { where, entityName, operators } = command
     const targetEntities = this.find({ entityName, where })
-    return targetEntities.reduce((ops, targetEntity) => {
+    const operatorsList = targetEntities.map(targetEntity => {
       const thisPropName = ['entities', entityName, targetEntity.id].join('.')
-      const thisOps = retargetToProp(thisPropName, operators)
-      return mergeOperators(ops, thisOps)
-    }, operators)
+      return retargetToProp(thisPropName, operators)
+    })
+    return mergeOperators(...operatorsList)
   }
 
   /**
@@ -123,17 +123,18 @@ export default class PhenylState implements EntityState {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  $register(entityName: string, ...entities: Array<RestorableEntity>): PhenylState {
-    return entities.reduce((self, entity) => {
-      const thisPropName = ['entities', entityName, entity.id].join('.')
-      return assignToProp(self, thisPropName, { $set: entity })
-    }, this)
+  $register(entityName: string, ...entities: Array<RestorableEntity>): UpdateOperators {
+    const operatorsList = entities.map(entity => {
+      const docPath = ['entities', entityName, entity.id].join('.')
+      return retargetToProp(docPath, { $set: entity })
+    })
+    return mergeOperators(...operatorsList)
   }
 
   /**
    *
    */
-  $delete(command: DeleteCommand): PhenylState {
+  $delete(command: DeleteCommand): UpdateOperators {
     if (command.where) {
       return this.$deleteByWhereConditions(command)
     }
@@ -143,7 +144,7 @@ export default class PhenylState implements EntityState {
   /**
    *
    */
-  $deleteById(command: IdDeleteCommand): PhenylState {
+  $deleteById(command: IdDeleteCommand): UpdateOperators {
     const { id, entityName } = command
     return unassignProp(this, ['entities', entityName, id].join('.'))
   }
@@ -151,12 +152,13 @@ export default class PhenylState implements EntityState {
   /**
    *
    */
-  $deleteByWhereConditions(command: MultiDeleteCommand): PhenylState {
+  $deleteByWhereConditions(command: MultiDeleteCommand): UpdateOperators {
     const { where, entityName } = command
     const targetEntities = this.find({ entityName, where })
-    return targetEntities.reduce((self, targetEntity) => {
-      const thisPropName = ['entities', entityName, targetEntity.id].join('.')
-      return unassignProp(self, thisPropName)
-    }, this)
+    const operatorsList = targetEntities.map(targetEntity => {
+      const docPath = ['entities', entityName, targetEntity.id].join('.')
+      return { $unset: { [docPath]: ''} }
+    })
+    return mergeOperators(...operatorsList)
   }
 }

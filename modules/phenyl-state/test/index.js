@@ -92,10 +92,7 @@ describe('$register', () => {
     const state = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },
     })
-    const newState = state.$insert({
-      entityName: 'user',
-      value: { id: 'diary1' }
-    })
+    const newState = state.$register('user', { id: 'diary1' })
 
     const expectedState = new PhenylState({
       entities: { user: { '1': { id: '1', name: 'kery' } } },

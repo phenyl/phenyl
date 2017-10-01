@@ -14,12 +14,16 @@ import type {
   DeleteCommand,
 } from './command.js.flow'
 
+import type {
+  UpdateOperators
+} from './update-operators.js.flow'
+
 export interface EntityState {
   find(query: WhereQuery): Array<RestorableEntity>,
   findOne(query: WhereQuery): ?RestorableEntity,
   get(query: IdQuery): RestorableEntity,
   getByIds(query: IdsQuery): Array<RestorableEntity>,
-  $register(entityName: string, ...entities: Array<RestorableEntity>): EntityState,
-  $update(command: UpdateCommand): EntityState,
-  $delete(command: DeleteCommand): EntityState,
+  $register(entityName: string, ...entities: Array<RestorableEntity>): UpdateOperators,
+  $update(command: UpdateCommand): UpdateOperators,
+  $delete(command: DeleteCommand): UpdateOperators,
 }

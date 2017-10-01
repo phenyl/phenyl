@@ -1,7 +1,7 @@
 // @flow
 import PhenylState from 'phenyl-state/jsnext'
 import { createErrorResult } from 'phenyl-utils/jsnext'
-import { assign } from 'power-assign/jsnext'
+import { assign, assignWithRestoration } from 'power-assign/jsnext'
 import type { PhenylStateParams } from 'phenyl-state/jsnext'
 import randomString from './random-string.js'
 
@@ -148,7 +148,8 @@ export default class PhenylMemoryClient implements EntityClient {
     const newValue = value.id
       ? value
       : assign(value, { id: randomString() })
-    this.phenylState = this.phenylState.$register(entityName, newValue)
+    const operators = this.phenylState.$register(entityName, newValue)
+    this.phenylState = assignWithRestoration(this.phenylState, operators)
     return {
       ok: 1,
       n: 1,
@@ -166,7 +167,8 @@ export default class PhenylMemoryClient implements EntityClient {
       const newValue = value.id
         ? value
         : assign(value, { id: randomString() })
-      this.phenylState = this.phenylState.$register(entityName, newValue)
+      const operators = this.phenylState.$register(entityName, newValue)
+      this.phenylState = assignWithRestoration(this.phenylState, operators)
       newValues.push(newValue)
     }
     return {
@@ -181,7 +183,8 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
     try {
-      this.phenylState = this.phenylState.$update(command)
+      const operators = this.phenylState.$update(command)
+      this.phenylState = assignWithRestoration(this.phenylState, operators)
       return { ok: 1, n: 1 }
     }
     catch (e) {
@@ -195,7 +198,8 @@ export default class PhenylMemoryClient implements EntityClient {
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
     const { entityName, id } = command
     try {
-      this.phenylState = this.phenylState.$update(command)
+      const operators = this.phenylState.$update(command)
+      this.phenylState = assignWithRestoration(this.phenylState, operators)
       return { ok: 1, n: 1, value: this.phenylState.get({ entityName, id }) }
     }
     catch (e) {
@@ -212,7 +216,8 @@ export default class PhenylMemoryClient implements EntityClient {
       // TODO Performance issue: find() runs twice for just getting N
       const values = this.phenylState.find({ entityName, where })
       const ids = values.map(value => value.id)
-      this.phenylState = this.phenylState.$update(command)
+      const operators = this.phenylState.$update(command)
+      this.phenylState = assignWithRestoration(this.phenylState, operators)
       return { ok: 1, n: values.length, values: this.phenylState.getByIds({ ids, entityName }) }
     }
     catch (e) {
@@ -228,7 +233,8 @@ export default class PhenylMemoryClient implements EntityClient {
     try {
       // TODO Performance issue: find() runs twice for just getting N
       const n = command.where ? this.phenylState.find({ where: command.where, entityName }).length : 1
-      this.phenylState = this.phenylState.$delete(command)
+      const operators = this.phenylState.$delete(command)
+      this.phenylState = assignWithRestoration(this.phenylState, operators)
       return { ok: 1, n }
     }
     catch (e) {

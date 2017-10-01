@@ -58,7 +58,7 @@ export type RestoreOperator = {
 }
 
 export type AndOperators = {|
-  $and: Array<$Diff<Object, { $restore: Object }>>, // almost Array<UpdateOperators>
+  $and: Array<Object>, // almost Array<UpdateOperators>
   $restore?: RestoreOperator,
 |}
 
