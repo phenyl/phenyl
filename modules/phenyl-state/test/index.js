@@ -3,6 +3,7 @@
 import { describe, it } from 'kocha'
 import assert from 'assert'
 import PhenylState from '../src/index.js'
+import { assignWithRestoration } from 'power-assign/jsnext'
 
 describe('find', () => {
   it('', () => {
@@ -54,49 +55,99 @@ describe('get', () => {
 })
 
 describe('$update', () => {
-  it('', () => {
+  it('returns modified UpdateOperators', () => {
+    class User {
+      id: string
+      name: string
+      constructor({ id, name }: { id: string, name: string }) {
+        this.id = id
+        this.name = name
+      }
+    }
     const state = new PhenylState({
-      entities: { user: { '1': { id: '1', name: 'kery' } } },
+      entities: { user: { '1': new User({ id: '1', name: 'Shin' }) } },
     })
-    const newState = state.$update({
+
+    const operators = state.$update({
       entityName: 'user',
       id: '1',
-      operators: { $set: { name: 'kory' }}
+      operators: { $set: { name: 'Shinji' }}
     })
-    const expectedState = new PhenylState({
-      entities: { user: { '1': { id: '1', name: 'kery' } } },
+
+    const expected = {
+      $set: {
+        'entities.user.1.name': 'Shinji'
+      },
+      $restore: {
+        'entities.user.1': ''
+      }
+    }
+    const newState = assignWithRestoration(state, operators)
+    const expectedNewState = new PhenylState({
+      entities: { user: { '1': new User({ id: '1', name: 'Shinji' }) } },
     })
-    assert.deepEqual(newState, expectedState)
+    assert.deepEqual(expected, operators)
+    assert.deepEqual(expectedNewState, newState)
   })
 })
 
 describe('$delete', () => {
-  it('', () => {
+  it('returns UpdateOperators to delete entities', () => {
     const state = new PhenylState({
-      entities: { user: { '1': { id: '1', name: 'kery' } } },
+      entities: { user: {
+        '1': { id: '1', name: 'Shin' },
+        '2': { id: '2', name: 'Tom' },
+        '3': { id: '3', name: 'Jenkins' },
+      } },
     })
-    const newState = state.$delete({
+    const operators = state.$delete({
       entityName: 'user',
-      id: '1',
+      where: { name: { $regex: /in/ } }
     })
+    const expected = { $unset: {
+      'entities.user.1': '',
+      'entities.user.3': '',
+    } }
 
-    const expectedState = new PhenylState({
-      entities: { user: {} }
+    const newState = assignWithRestoration(state, operators)
+    const expectedNewState = new PhenylState({
+      entities: { user: {
+        '2': { id: '2', name: 'Tom' },
+      } },
     })
-    assert.deepEqual(newState, expectedState)
+    assert.deepEqual(expected, operators)
+    assert.deepEqual(expectedNewState, newState)
   })
 })
 
 describe('$register', () => {
-  it('', () => {
+  it('returns UpdateOperators to register entities', () => {
     const state = new PhenylState({
-      entities: { user: { '1': { id: '1', name: 'kery' } } },
+      entities: {
+        user: { '1': { id: '1', name: 'Shin' } }
+      },
     })
-    const newState = state.$register('user', { id: 'diary1' })
+    const operators = state.$register('book', { id: 'book01', title: 'ABC-Z' })
+    const expected = {
+      $and: [{
+        $set: {
+          'entities.book.book01': {
+            id: 'book01',
+            title: 'ABC-Z',
+          }
+        }
+      }]
+    }
+    const newState = assignWithRestoration(state, operators)
 
-    const expectedState = new PhenylState({
-      entities: { user: { '1': { id: '1', name: 'kery' } } },
+    const expectedNewState = new PhenylState({
+      entities: {
+        user: { '1': { id: '1', name: 'Shin' } },
+        book: { 'book01': { id: 'book01', title: 'ABC-Z' } },
+      },
     })
-    assert.deepEqual(newState, expectedState)
+
+    assert.deepEqual(expected, operators)
+    assert.deepEqual(expectedNewState, newState)
   })
 })

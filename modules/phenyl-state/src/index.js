@@ -129,7 +129,7 @@ export default class PhenylState implements EntityState {
   $register(entityName: string, ...entities: Array<RestorableEntity>): UpdateOperators {
     const operatorsList = entities.map(entity => {
       const docPath = ['entities', entityName, entity.id].join('.')
-      return  { [docPath]: { $set: entity } }
+      return  { $set: { [docPath]: entity } }
     })
     return mergeOperators(...operatorsList)
   }
@@ -159,10 +159,11 @@ export default class PhenylState implements EntityState {
   $deleteByWhereConditions(command: MultiDeleteCommand): UpdateOperators {
     const { where, entityName } = command
     const targetEntities = this.find({ entityName, where })
-    const operatorsList = targetEntities.map(targetEntity => {
+    const $unset = {}
+    targetEntities.forEach(targetEntity => {
       const docPath = ['entities', entityName, targetEntity.id].join('.')
-      return { $unset: { [docPath]: ''} }
+      $unset[docPath] = ''
     })
-    return mergeOperators(...operatorsList)
+    return { $unset }
   }
 }
