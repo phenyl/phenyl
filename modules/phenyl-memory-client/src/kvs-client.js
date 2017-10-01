@@ -1,5 +1,5 @@
 // @flow
-import { assignWithRestoration, unassignProp } from 'power-assign/jsnext'
+import { assignWithRestoration } from 'power-assign/jsnext'
 import type {
   RestorableEntity,
   PreEntity,
@@ -53,7 +53,7 @@ export default class MemoryKvsClient<T: RestorableEntity> implements KvsClient<T
       return false
     }
     console.log(this.pool)
-    this.pool = unassignProp(this.pool, id)
+    this.pool = assignWithRestoration(this.pool, { $unset: { [id]: '' } })
     return true
   }
 }
