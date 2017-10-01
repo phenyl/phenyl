@@ -16,7 +16,7 @@ import type {
 
 import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
-import { assignToProp, retargetToProp, unassignProp } from 'power-assign/jsnext'
+import { assignToProp, retargetToProp, unassignProp, mergeOperators } from 'power-assign/jsnext'
 
 export type PhenylStateParams = {
   entities?: { [name: string]: { [key: string]: RestorableEntity } }

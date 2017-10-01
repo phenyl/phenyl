@@ -5,7 +5,7 @@ import type {
   EqCondition,
 } from './query-condition.js.flow'
 import type { SortNotation } from './sort-notation.js.flow'
-type DotNotationString = string
+import type { DocumentPath } from './document-path.js.flow'
 
 export type SetOperator = { [field: DocumentPath]: any }
 export type IncOperator = { [field: DocumentPath]: number }
@@ -58,7 +58,7 @@ export type RestoreOperator = {
 }
 
 export type AndOperators = {|
-  $and: Array<Diff<Object, { $restore: Object }>>, // almost Array<UpdateOperators>
+  $and: Array<$Diff<Object, { $restore: Object }>>, // almost Array<UpdateOperators>
   $restore?: RestoreOperator,
 |}
 

@@ -409,7 +409,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static setValue<T: Restorable>(obj: T, docPath: DocPath, value: any): T {
+  static setValue<T: Restorable>(obj: T, docPath: DocumentPath, value: any): T {
     const revObjsToBeAssigned = getObjectsToBeAssigned(obj, docPath).reverse()
     const revKeys = parseDocumentPath(docPath).reverse()
     // assert(objsToBeAssigned.length === keys.length)
