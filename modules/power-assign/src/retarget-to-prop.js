@@ -27,3 +27,13 @@ export function retargetToProp(propName: DotNotationString, _ops: Object): Updat
   }
   return newOps
 }
+
+export function retargetToPropWithRestoration(propName: DotNotationString, _ops: Object): UpdateOperators {
+  const ops = retargetToProp(propName, _ops)
+
+  const $restore = ops.$restore || {}
+  $restore[propName] = ''
+
+  // here we write to the ops (mutable)
+  return Object.assign(ops, { $restore })
+}
