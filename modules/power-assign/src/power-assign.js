@@ -10,6 +10,7 @@ import {
 
 import type {
   AddToSetOperator,
+  AndOperators,
   BitOperator,
   CurrentDateOperator,
   DocumentPath,
@@ -41,8 +42,17 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, ops: UpdateOperators): Object {
+  static assign(obj: Object, ops: $Subtype<UpdateOperators>): Object {
     let updatedObj: Object = obj
+
+    if (ops.$and != null) {
+      updatedObj = ops.$and.reduce((_updatedObj, ops) => this.assign(_updatedObj, ops), updatedObj)
+      if (ops.$restore != null) {
+        updatedObj = this.$restore(obj, updatedObj, ops.$restore)
+      }
+      return updatedObj
+    }
+
     const operatorNames = Object.keys(ops)
 
     for (const operatorName of operatorNames) {
@@ -438,7 +448,6 @@ export function assignWithRestoration<T: Restorable>(obj: T, ops: Object): T {
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
 }
 
-
 /**
  *
  */
@@ -446,6 +455,24 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
   const updatedObj = assignToProp(obj, docPath, ops)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
+}
+
+/**
+ *
+ */
+export function mergeOperators(...operatorsList: Array<Object>): UpdateOperators {
+  const merged: AndOperators = { $and: operatorsList }
+  const $restore = operatorsList.reduce((restoreOp, ops) => {
+    if (ops.$restore == null) {
+      return restoreOp
+    }
+    return Object.assign({}, restoreOp, ops.$restore)
+  }, {})
+
+  if (Object.keys($restore).length > 0) {
+    merged.$restore = $restore
+  }
+  return merged
 }
 
 function isPrimitive(value: any): boolean {

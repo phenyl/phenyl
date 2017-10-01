@@ -57,6 +57,11 @@ export type RestoreOperator = {
   [field: DocumentPath]: '' | Class<Restorable>
 }
 
+export type AndOperators = {|
+  $and: Array<Diff<Object, { $restore: Object }>>, // almost Array<UpdateOperators>
+  $restore?: RestoreOperator,
+|}
+
 export type UpdateOperators = $Shape<{
   $set: SetOperator,
   $inc: IncOperator,
@@ -71,7 +76,7 @@ export type UpdateOperators = $Shape<{
   $bit: BitOperator,
   $unset: UnsetOperator,
   $restore: RestoreOperator,
-}>
+}> | AndOperators
 
 export type UpdateOperator =
   SetOperator |

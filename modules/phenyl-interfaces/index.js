@@ -152,6 +152,7 @@ import type {
 import type { PreSession, Session } from './decls/session.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
+  AndOperators,
   AddToSetOperator,
   BitOperator,
   CurrentDateOperator,
@@ -184,6 +185,7 @@ import type {
 export type {
   AclHandler,
   AddToSetOperator,
+  AndOperators,
   AndWhereConditions,
   AuthenticationHandler,
   AuthenticationResult,
