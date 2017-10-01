@@ -141,8 +141,8 @@ export default class PowerAssign {
    */
   static $set<T: Restorable>(obj: T, setOp: SetOperator): T {
     let updatedObj = obj
-    Object.keys(setOp).forEach(dnStr => {
-      updatedObj = this.setValue(updatedObj, dnStr, setOp[dnStr])
+    Object.keys(setOp).forEach(docPath => {
+      updatedObj = this.setValue(updatedObj, docPath, setOp[docPath])
     })
     return updatedObj
   }
@@ -154,10 +154,10 @@ export default class PowerAssign {
   static $inc<T: Restorable>(obj: T, incOp: IncOperator): T {
     const valuesToSet = {}
 
-    Object.keys(incOp).forEach(dnStr => {
-      const currentVal = getNestedValue(obj, dnStr)
-      const inc = incOp[dnStr]
-      valuesToSet[dnStr] = currentVal + inc
+    Object.keys(incOp).forEach(docPath => {
+      const currentVal = getNestedValue(obj, docPath)
+      const inc = incOp[docPath]
+      valuesToSet[docPath] = currentVal + inc
     })
     return this.$set(obj, valuesToSet)
   }
@@ -168,11 +168,11 @@ export default class PowerAssign {
   static $min<T: Restorable>(obj: T, minOp: MinOperator): T {
     const valuesToSet = {}
 
-    Object.keys(minOp).forEach(dnStr => {
-      const currentVal = getNestedValue(obj, dnStr)
-      const newVal = minOp[dnStr]
+    Object.keys(minOp).forEach(docPath => {
+      const currentVal = getNestedValue(obj, docPath)
+      const newVal = minOp[docPath]
       if (newVal < currentVal) {
-        valuesToSet[dnStr] = newVal
+        valuesToSet[docPath] = newVal
       }
     })
     return this.$set(obj, valuesToSet)
@@ -184,11 +184,11 @@ export default class PowerAssign {
   static $max<T: Restorable>(obj: T, maxOp: MaxOperator): T {
     const valuesToSet = {}
 
-    Object.keys(maxOp).forEach(dnStr => {
-      const currentVal = getNestedValue(obj, dnStr)
-      const newVal = maxOp[dnStr]
+    Object.keys(maxOp).forEach(docPath => {
+      const currentVal = getNestedValue(obj, docPath)
+      const newVal = maxOp[docPath]
       if (newVal > currentVal) {
-        valuesToSet[dnStr] = newVal
+        valuesToSet[docPath] = newVal
       }
     })
     return this.$set(obj, valuesToSet)
@@ -200,12 +200,12 @@ export default class PowerAssign {
   static $mul<T: Restorable>(obj: T, mulOp: MulOperator): T {
     const valuesToSet = {}
 
-    Object.keys(mulOp).forEach(dnStr => {
-      const currentNum = getNestedValue(obj, dnStr)
+    Object.keys(mulOp).forEach(docPath => {
+      const currentNum = getNestedValue(obj, docPath)
       if (currentNum == null) {
         throw Error('operand must not be null')
       }
-      valuesToSet[dnStr] = currentNum * mulOp[dnStr]
+      valuesToSet[docPath] = currentNum * mulOp[docPath]
     })
     return this.$set(obj, valuesToSet)
   }
@@ -216,22 +216,22 @@ export default class PowerAssign {
   static $addToSet<T: Restorable>(obj: T, addToSetOp: AddToSetOperator): T {
     const valuesToSet = {}
 
-    Object.keys(addToSetOp).forEach(dnStr => {
-      let arr: ?Array<any> = getNestedValue(obj, dnStr)
+    Object.keys(addToSetOp).forEach(docPath => {
+      let arr: ?Array<any> = getNestedValue(obj, docPath)
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$addToSet" operator must be applied to an array. Dot notation: "${dnStr}".`)
+        throw new Error(`"$addToSet" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      let modifier = addToSetOp[dnStr]
+      let modifier = addToSetOp[docPath]
 
       if (modifier.$each == null) {
         modifier = { $each: [modifier] }
       }
       // $FlowIssue(arr-is-Array)
       const newArr = modifier.$each.filter(element => !arr.some(arrEl => deepEqual(arrEl, element)))
-      valuesToSet[dnStr] = arr.concat(newArr)
+      valuesToSet[docPath] = arr.concat(newArr)
     })
     return this.$set(obj, valuesToSet)
   }
@@ -242,20 +242,20 @@ export default class PowerAssign {
   static $pop<T: Restorable>(obj: T, popOp: PopOperator): T {
     const valuesToSet = {}
 
-    Object.keys(popOp).forEach(dnStr => {
-      let arr: ?Array<any> = getNestedValue(obj, dnStr).slice()
+    Object.keys(popOp).forEach(docPath => {
+      let arr: ?Array<any> = getNestedValue(obj, docPath).slice()
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${dnStr}".`)
+        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      if (popOp[dnStr] === 1) {
+      if (popOp[docPath] === 1) {
         arr.pop()
       } else {
         arr.shift()
       }
-      valuesToSet[dnStr] = arr
+      valuesToSet[docPath] = arr
     })
     return this.$set(obj, valuesToSet)
   }
@@ -266,16 +266,16 @@ export default class PowerAssign {
   static $pull<T: Restorable>(obj: T, pullOp: PullOperator): T {
     const valuesToSet = {}
 
-    Object.keys(pullOp).forEach(dnStr => {
-      let arr: ?Array<any> = getNestedValue(obj, dnStr)
+    Object.keys(pullOp).forEach(docPath => {
+      let arr: ?Array<any> = getNestedValue(obj, docPath)
       if (arr == null) {
         return // If the field is absent, no requests will be executed
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${dnStr}".`)
+        throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      const condition = pullOp[dnStr]
-      valuesToSet[dnStr] = arr.filter(val => checkCondition(val, condition) === false)
+      const condition = pullOp[docPath]
+      valuesToSet[docPath] = arr.filter(val => checkCondition(val, condition) === false)
     })
     return this.$set(obj, valuesToSet)
   }
@@ -286,15 +286,15 @@ export default class PowerAssign {
   static $push<T: Restorable>(obj: T, pushOp: PushOperator): T {
     const valuesToSet = {}
 
-    Object.keys(pushOp).forEach(dnStr => {
-      let arr: ?Array<any> = getNestedValue(obj, dnStr)
+    Object.keys(pushOp).forEach(docPath => {
+      let arr: ?Array<any> = getNestedValue(obj, docPath)
       if (arr == null) {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${dnStr}".`)
+        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      let modifier: PushModifier = pushOp[dnStr]
+      let modifier: PushModifier = pushOp[docPath]
 
       // Is type of newVal PushModifier or just the value?
       if (modifier.$each == null) {
@@ -310,7 +310,7 @@ export default class PowerAssign {
       if (modifier.$slice != null) {
         newArr = newArr.slice(0, modifier.$slice)
       }
-      valuesToSet[dnStr] = newArr
+      valuesToSet[docPath] = newArr
     })
     return this.$set(obj, valuesToSet)
   }
@@ -321,14 +321,14 @@ export default class PowerAssign {
   static $currentDate<T: Restorable>(obj: T, curDateOp: CurrentDateOperator): T {
     const valuesToSet = {}
 
-    Object.keys(curDateOp).forEach(dnStr => {
-      let typeSpecification = curDateOp[dnStr]
+    Object.keys(curDateOp).forEach(docPath => {
+      let typeSpecification = curDateOp[docPath]
 
       if (typeSpecification === true) {
         typeSpecification = { $type: 'date'}
       }
       const now = new Date()
-      valuesToSet[dnStr] = typeSpecification.$type === 'date' ? now : now.getTime()
+      valuesToSet[docPath] = typeSpecification.$type === 'date' ? now : now.getTime()
     })
     return this.$set(obj, valuesToSet)
   }
@@ -339,20 +339,20 @@ export default class PowerAssign {
   static $bit<T: Restorable>(obj: T, bitOp: BitOperator): T {
     const valuesToSet = {}
 
-    Object.keys(bitOp).forEach(dnStr => {
-      const currentNum = getNestedValue(obj, dnStr) || 0 // If the field is absent, 0 is set.
-      const logicalOperator = Object.keys(bitOp[dnStr])[0]
+    Object.keys(bitOp).forEach(docPath => {
+      const currentNum = getNestedValue(obj, docPath) || 0 // If the field is absent, 0 is set.
+      const logicalOperator = Object.keys(bitOp[docPath])[0]
       // $FlowIssue(return-number)
-      const operand: number = bitOp[dnStr][logicalOperator]
+      const operand: number = bitOp[docPath][logicalOperator]
       switch (logicalOperator) {
         case 'and':
-          valuesToSet[dnStr] = currentNum & operand
+          valuesToSet[docPath] = currentNum & operand
           break
         case 'or':
-          valuesToSet[dnStr] = currentNum | operand
+          valuesToSet[docPath] = currentNum | operand
           break
         case 'xor':
-          valuesToSet[dnStr] = currentNum ^ operand
+          valuesToSet[docPath] = currentNum ^ operand
           break
       }
     })
@@ -364,9 +364,9 @@ export default class PowerAssign {
    */
   static $unset(obj: Object, unsetOp: UnsetOperator): Object {
 
-    return Object.keys(unsetOp).reduce((newObj, dnStr) => {
+    return Object.keys(unsetOp).reduce((newObj, docPath) => {
 
-      const propNames = dnStr.split('.')
+      const propNames = docPath.split('.')
       const lastPropName = propNames.pop()
 
       const lastObjPropName = propNames.join('.')
