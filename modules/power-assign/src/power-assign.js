@@ -6,6 +6,7 @@ import {
   getNestedValue,
   sortByNotation,
   parseDocumentPath,
+  createDocumentPath,
 } from 'phenyl-utils/jsnext'
 import { normalizeOperators } from './normalize-operators.js'
 import { retargetToProp } from './retarget-to-prop.js'
@@ -61,62 +62,50 @@ export default class PowerAssign {
       switch (operatorName) {
 
         case '$inc':
-          if (ops.$inc == null) break // for flowtype checking...
           updatedObj = this.$inc(updatedObj, ops.$inc)
           break
 
         case '$set':
-          if (ops.$set == null) break // for flowtype checking...
           updatedObj = this.$set(updatedObj, ops.$set)
           break
 
         case '$min':
-          if (ops.$min == null) break // for flowtype checking...
           updatedObj = this.$min(updatedObj, ops.$min)
           break
 
         case '$max':
-          if (ops.$max == null) break // for flowtype checking...
           updatedObj = this.$max(updatedObj, ops.$max)
           break
 
         case '$mul':
-          if (ops.$mul == null) break // for flowtype checking...
           updatedObj = this.$mul(updatedObj, ops.$mul)
           break
 
         case '$addToSet':
-          if (ops.$addToSet == null) break // for flowtype checking...
           updatedObj = this.$addToSet(updatedObj, ops.$addToSet)
           break
 
         case '$pop':
-          if (ops.$pop == null) break // for flowtype checking...
           updatedObj = this.$pop(updatedObj, ops.$pop)
           break
 
         case '$pull':
-          if (ops.$pull == null) break // for flowtype checking...
           updatedObj = this.$pull(updatedObj, ops.$pull)
           break
 
         case '$push':
-          if (ops.$push == null) break // for flowtype checking...
           updatedObj = this.$push(updatedObj, ops.$push)
           break
 
         case '$currentDate':
-          if (ops.$currentDate == null) break // for flowtype checking...
           updatedObj = this.$currentDate(updatedObj, ops.$currentDate)
           break
 
         case '$bit':
-          if (ops.$bit == null) break // for flowtype checking...
           updatedObj = this.$bit(updatedObj, ops.$bit)
           break
 
         case '$unset':
-          if (ops.$bit == null) break // for flowtype checking...
           updatedObj = this.$unset(updatedObj, ops.$unset)
           break
 
@@ -362,25 +351,31 @@ export default class PowerAssign {
   }
 
   /**
-   *
+   * Unset the value of the given DocumentPaths.
+   * NOTICE: The objects whose property are deleted will be converted into a plain object.
    */
   static $unset(obj: Object, unsetOp: UnsetOperator): Object {
 
     return Object.keys(unsetOp).reduce((newObj, docPath) => {
+      const attrs = parseDocumentPath(docPath)
+      const lastAttr = attrs.pop()
+      const pathToLast = createDocumentPath(...attrs)
+      const lastObj = pathToLast
+        ? getNestedValue(newObj, pathToLast)
+        : newObj
 
-      const propNames = docPath.split('.')
-      const lastPropName = propNames.pop()
+      let copiedLastObj: Array<any> | Object
+      if (Array.isArray(lastObj)) {
+        copiedLastObj = lastObj.slice()
+        copiedLastObj[lastAttr] = null
+      }
+      else {
+        copiedLastObj = Object.assign({}, lastObj)
+        delete copiedLastObj[lastAttr]
+      }
 
-      const lastObjPropName = propNames.join('.')
-      const lastObj = lastObjPropName
-        ? getNestedValue(obj, lastObjPropName)
-        : obj
-
-      const copiedLastObj = Object.assign({}, lastObj)
-      delete copiedLastObj[lastPropName]
-
-      return lastObjPropName
-        ? this.$set(obj, { [lastObjPropName]: copiedLastObj })
+      return pathToLast
+        ? this.$set(newObj, { [pathToLast]: copiedLastObj })
         : copiedLastObj
     }, obj)
   }

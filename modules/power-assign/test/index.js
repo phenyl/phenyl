@@ -154,6 +154,18 @@ describe('assign', () => {
     assert.deepEqual(newObj.categories, ['news', 'cooking-recipies'])
   })
 
+  it('remove props by $unset operator', () => {
+    const obj = {
+      categories: ['fashion', 'news', 'cooking-recipies'],
+      name: { first: 'Shin', last: 'Suzuki' }
+    }
+    const newObj = assign(obj, { $unset: { 'categories[1]': '', 'name.last': '' } })
+    assert.deepEqual(newObj, {
+      categories: ['fashion', null, 'cooking-recipies'],
+      name: { first: 'Shin' }
+    })
+  })
+
   context('with class instance', () => {
     class Name {
       first: string
