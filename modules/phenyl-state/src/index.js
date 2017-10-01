@@ -16,7 +16,10 @@ import type {
 
 import { sortByNotation } from 'phenyl-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
-import { assignToProp, retargetToProp, unassignProp, mergeOperators } from 'power-assign/jsnext'
+import {
+  retargetToPropWithRestoration,
+  mergeOperators,
+} from 'power-assign/jsnext'
 
 export type PhenylStateParams = {
   entities?: { [name: string]: { [key: string]: RestorableEntity } }
@@ -100,8 +103,8 @@ export default class PhenylState implements EntityState {
    */
   $updateById(command: IdUpdateCommand): UpdateOperators {
     const { id, entityName, operators } = command
-    const thisPropName = ['entities', entityName, id].join('.')
-    return retargetToProp(thisPropName, operators)
+    const docPath = ['entities', entityName, id].join('.')
+    return retargetToPropWithRestoration(docPath, operators)
   }
 
   /**
@@ -111,8 +114,8 @@ export default class PhenylState implements EntityState {
     const { where, entityName, operators } = command
     const targetEntities = this.find({ entityName, where })
     const operatorsList = targetEntities.map(targetEntity => {
-      const thisPropName = ['entities', entityName, targetEntity.id].join('.')
-      return retargetToProp(thisPropName, operators)
+      const docPath = ['entities', entityName, targetEntity.id].join('.')
+      return retargetToPropWithRestoration(docPath, operators)
     })
     return mergeOperators(...operatorsList)
   }
@@ -126,7 +129,7 @@ export default class PhenylState implements EntityState {
   $register(entityName: string, ...entities: Array<RestorableEntity>): UpdateOperators {
     const operatorsList = entities.map(entity => {
       const docPath = ['entities', entityName, entity.id].join('.')
-      return retargetToProp(docPath, { $set: entity })
+      return  { [docPath]: { $set: entity } }
     })
     return mergeOperators(...operatorsList)
   }
@@ -146,7 +149,8 @@ export default class PhenylState implements EntityState {
    */
   $deleteById(command: IdDeleteCommand): UpdateOperators {
     const { id, entityName } = command
-    return unassignProp(this, ['entities', entityName, id].join('.'))
+    const docPath = ['entities', entityName, id].join('.')
+    return { $unset: {[docPath]: '' } }
   }
 
   /**
