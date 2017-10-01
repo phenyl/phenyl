@@ -1,6 +1,6 @@
 // @flow
 
-import { parseDocumentPath } from './parse-document-path.js'
+import { parseDocumentPath } from './document-path.js'
 
 import type {
   DocumentPath,
