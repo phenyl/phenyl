@@ -36,6 +36,13 @@ export type BitOperator = {
   }
 }
 
+/**
+ * new operator which construct instances of the given path
+ */
+export type RestoreOperator = {
+  [field: DotNotationString]: '' | Class<Restorable>
+}
+
 export type UpdateOperators = $Shape<{
   $set: SetOperator,
   $inc: IncOperator,
@@ -49,6 +56,7 @@ export type UpdateOperators = $Shape<{
   $currentDate: CurrentDateOperator,
   $bit: BitOperator,
   $unset: UnsetOperator,
+  $restore: RestoreOperator,
 }>
 
 export type UpdateOperator =
@@ -63,4 +71,5 @@ export type UpdateOperator =
   PushOperator |
   CurrentDateOperator |
   BitOperator |
-  UnsetOperator
+  UnsetOperator |
+  RestoreOperator

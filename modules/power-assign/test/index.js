@@ -2,7 +2,7 @@
 
 import { describe, it, context } from 'kocha'
 import assert from 'power-assert'
-import { assign } from '../src/index.js'
+import { assign, assignWithRestoration } from '../src/index.js'
 
 describe('assign', () => {
   it('set a value', () => {
@@ -180,13 +180,13 @@ describe('assign', () => {
       }
     }
 
-    it('apply operator to class instances', () => {
+    it('applies operators to class instances using assignWithRestoration()', () => {
       const user = new User({
         id: 'user1',
         name: { first: 'Shin', last: 'Suzuki' },
         age: { value: 31 },
       })
-      const newUser = assign(user, { $inc: { 'age.value': 1 }, $set: { id: 'user001', 'name.first': 'Shinji' } })
+      const newUser = assignWithRestoration(user, { $inc: { 'age.value': 1 }, $set: { id: 'user001', 'name.first': 'Shinji' } })
       const expectedNewUser = new User({
         id: 'user001',
         name: { first: 'Shinji', last: 'Suzuki' },
@@ -195,6 +195,77 @@ describe('assign', () => {
       assert(newUser instanceof User)
       assert(newUser.name instanceof Name)
       assert(newUser.age instanceof Age)
+      assert.deepEqual(expectedNewUser, newUser)
+    })
+
+    it('convert affected class instances into plain objects when using assign()', () => {
+      const user = new User({
+        id: 'user1',
+        name: { first: 'Shin', last: 'Suzuki' },
+        age: { value: 31 },
+      })
+      const newUser = assign(user, {
+        $inc: { 'age.value': 1 },
+        $set: { id: 'user001', 'name.first': 'Shinji', name2: { first: 'Shinzo', last: 'Sasaki' }, },
+      })
+
+      const expectedNewUser = {
+        id: 'user001',
+        name: { first: 'Shinji', last: 'Suzuki' },
+        name2: { first: 'Shinzo', last: 'Sasaki' },
+        age: { value: 32 },
+      }
+      assert(!(newUser instanceof User))
+      assert(!(newUser.name instanceof Name))
+      assert(!(newUser.age instanceof Age))
+      assert.deepEqual(expectedNewUser, newUser)
+    })
+
+    it('restores class instances by using $restore operator', () => {
+      const user = new User({
+        id: 'user1',
+        name: { first: 'Shin', last: 'Suzuki' },
+        age: { value: 31 },
+      })
+      const newUser = assign(user, {
+        $inc: { 'age.value': 1 },
+        $set: { id: 'user001', 'name.first': 'Shinji', name2: { first: 'Shinzo', last: 'Sasaki' }, },
+        $restore: { name: '', name2: Name, age: Age },
+      })
+
+      const expectedNewUser = {
+        id: 'user001',
+        name: new Name({ first: 'Shinji', last: 'Suzuki' }),
+        name2: new Name({ first: 'Shinzo', last: 'Sasaki' }),
+        age: new Age({ value: 32 }),
+      }
+      assert(newUser.name instanceof Name)
+      assert(newUser.name2 instanceof Name)
+      assert(newUser.age instanceof Age)
+      assert.deepEqual(expectedNewUser, newUser)
+    })
+
+    it('$restore operator before other operators may not be effective', () => {
+      const user = new User({
+        id: 'user1',
+        name: { first: 'Shin', last: 'Suzuki' },
+        age: { value: 31 },
+      })
+      const newUser = assign(user, {
+        $restore: { name: '', name2: Name, age: Age },
+        $inc: { 'age.value': 1 },
+        $set: { id: 'user001', 'name.first': 'Shinji', name2: { first: 'Shinzo', last: 'Sasaki' }, },
+      })
+
+      const expectedNewUser = {
+        id: 'user001',
+        name: new Name({ first: 'Shinji', last: 'Suzuki' }),
+        name2: new Name({ first: 'Shinzo', last: 'Sasaki' }),
+        age: new Age({ value: 32 }),
+      }
+      assert(!(newUser instanceof User))
+      assert(!(newUser.name instanceof Name))
+      assert(!(newUser.age instanceof Age))
       assert.deepEqual(expectedNewUser, newUser)
     })
   })

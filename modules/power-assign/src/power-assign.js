@@ -22,6 +22,7 @@ import type {
   PushOperator,
   QueryCondition,
   Restorable,
+  RestoreOperator,
   SetOperator,
   UnsetOperator,
   UpdateOperators,
@@ -104,6 +105,11 @@ export default class PowerAssign {
         case '$unset':
           if (ops.$bit == null) break // for flowtype checking...
           updatedObj = this.$unset(updatedObj, ops.$unset)
+          break
+
+        case '$restore':
+          if (ops.$restore == null) break // for flowtype checking...
+          updatedObj = this.$restore(obj, updatedObj, ops.$restore)
           break
 
         case '$rename':
@@ -367,6 +373,29 @@ export default class PowerAssign {
   /**
    *
    */
+  static $restore(originalObj: Object, targetObj: Object, restoreOp: RestoreOperator): Object {
+    const valuesToSet = {}
+
+    Object.keys(restoreOp).forEach(docPath => {
+      const currentValue = getNestedValue(targetObj, docPath)
+      if (isPrimitive(currentValue)) {
+        valuesToSet[docPath] = currentValue
+        return
+      }
+
+      let Constructor = restoreOp[docPath]
+      if (!Constructor) {
+        const originalValue = getNestedValue(originalObj, docPath)
+        Constructor = originalValue.constructor
+      }
+      valuesToSet[docPath] = new Constructor(currentValue)
+    })
+    return this.$set(targetObj, valuesToSet)
+  }
+
+  /**
+   *
+   */
   static setValue<T: Restorable>(obj: T, dnStr: DotNotationString, value: any): T {
     const revObjsToBeAssigned = getObjectsToBeAssigned(obj, dnStr).reverse()
     const revKeys = dnStr.split('.').reverse()
@@ -414,4 +443,9 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, propName: Dot
   const updatedObj = assignToProp(obj, propName, ops)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
+}
+
+function isPrimitive(value: any): boolean {
+  const t = typeof value
+  return value == null || (t != 'object' && t != 'function')
 }
