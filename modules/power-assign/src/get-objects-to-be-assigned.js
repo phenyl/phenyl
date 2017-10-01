@@ -1,13 +1,14 @@
 // @flow
 
 import type {
-  DotNotationString,
+  DocumentPath,
   Restorable,
 } from 'phenyl-interfaces'
+import { parseDocumentPath } from 'phenyl-utils/jsnext'
 
-export function getObjectsToBeAssigned(obj: Restorable, propName: DotNotationString): Array<Restorable> {
+export function getObjectsToBeAssigned(obj: Restorable, docPath: DocumentPath): Array<Restorable> {
   const ret = [obj]
-  const keys = propName.split('.')
+  const keys = parseDocumentPath(docPath)
   keys.pop()
   let currentObj = obj
   for (const key of keys) {

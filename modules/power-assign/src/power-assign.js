@@ -5,13 +5,14 @@ import { checkCondition } from 'power-filter/jsnext'
 import {
   getNestedValue,
   sortByNotation,
+  parseDocumentPath,
 } from 'phenyl-utils/jsnext'
 
 import type {
   AddToSetOperator,
   BitOperator,
   CurrentDateOperator,
-  DotNotationString,
+  DocumentPath,
   IncOperator,
   MaxOperator,
   MinOperator,
@@ -398,9 +399,9 @@ export default class PowerAssign {
   /**
    *
    */
-  static setValue<T: Restorable>(obj: T, dnStr: DotNotationString, value: any): T {
-    const revObjsToBeAssigned = getObjectsToBeAssigned(obj, dnStr).reverse()
-    const revKeys = dnStr.split('.').reverse()
+  static setValue<T: Restorable>(obj: T, docPath: DocPath, value: any): T {
+    const revObjsToBeAssigned = getObjectsToBeAssigned(obj, docPath).reverse()
+    const revKeys = parseDocumentPath(docPath).reverse()
     // assert(objsToBeAssigned.length === keys.length)
     // $FlowIssue(return-T)
     return revKeys.reduce((newValue, key, i) =>
@@ -423,8 +424,8 @@ export function assign(obj: Object, ops: Object): Object {
 /**
  *
  */
-export function assignToProp(obj: Object, propName: DotNotationString, ops: Object): Object {
-  const modifiedOps = retargetToProp(propName, ops)
+export function assignToProp(obj: Object, docPath: DocumentPath, ops: Object): Object {
+  const modifiedOps = retargetToProp(docPath, ops)
   return assign(obj, modifiedOps)
 }
 
@@ -441,8 +442,8 @@ export function assignWithRestoration<T: Restorable>(obj: T, ops: Object): T {
 /**
  *
  */
-export function assignToPropWithRestoration<T: Restorable>(obj: T, propName: DotNotationString, ops: Object): T {
-  const updatedObj = assignToProp(obj, propName, ops)
+export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, ops: Object): T {
+  const updatedObj = assignToProp(obj, docPath, ops)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
 }

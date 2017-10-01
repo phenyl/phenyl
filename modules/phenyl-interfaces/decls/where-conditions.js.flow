@@ -1,9 +1,9 @@
 // @flow
 import type { QueryCondition, EqCondition } from './query-condition.js.flow'
-type DotNotationString = string
+import type { DocumentPath } from './document-path.js.flow'
 
 export type SimpleWhereConditions = {
-  [fieldName: DotNotationString]: QueryCondition | EqCondition,
+  [fieldName: DocumentPath]: QueryCondition | EqCondition,
   // three keys below have no meanings, just for flow
   $and?: null,
   $nor?: null,

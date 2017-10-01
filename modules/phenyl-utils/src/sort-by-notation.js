@@ -1,7 +1,6 @@
 // @flow
 
 import type {
-  DotNotationString,
   SortNotation,
   Restorable,
 } from 'phenyl-interfaces'
