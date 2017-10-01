@@ -1,0 +1,18 @@
+{
+  "name": "power-string-storage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js"
+  },
+  "devDependencies": {
+    "babel-register": "^6.24.1",
+    "kocha": "^1.8.0",
+    "phenyl-interfaces": "*",
+    "power-assert": "^1.4.4"
+  },
+  "author": "",
+  "license": "ISC"
+}
