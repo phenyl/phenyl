@@ -30,4 +30,7 @@ describe('createDocumentPath', function () {
     const docPath = createDocumentPath(...attrs)
     assert(docPath === 'users[1].favorites.musics[24].title.3.value')
   })
+  it ('returns empty string when no attribute list is given', function () {
+    assert(createDocumentPath() === '')
+  })
 })
