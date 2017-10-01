@@ -7,6 +7,9 @@ import {
   sortByNotation,
   parseDocumentPath,
 } from 'phenyl-utils/jsnext'
+import { normalizeOperators } from './normalize-operators.js'
+import { retargetToProp } from './retarget-to-prop.js'
+import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 import type {
   AddToSetOperator,
@@ -31,9 +34,6 @@ import type {
   WhereConditions,
 } from 'phenyl-interfaces'
 
-import { retargetToProp } from './retarget-to-prop.js'
-import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
-
 /**
  *
  */
@@ -46,7 +46,9 @@ export default class PowerAssign {
     let updatedObj: Object = obj
 
     if (ops.$and != null) {
-      updatedObj = ops.$and.reduce((_updatedObj, ops) => this.assign(_updatedObj, ops), updatedObj)
+      updatedObj = ops.$and.reduce((_updatedObj, ops) =>
+        this.assign(_updatedObj, normalizeOperators(ops)), updatedObj)
+
       if (ops.$restore != null) {
         updatedObj = this.$restore(obj, updatedObj, ops.$restore)
       }
@@ -425,10 +427,7 @@ export default class PowerAssign {
  *
  */
 export function assign(obj: Object, ops: Object): Object {
-  const firstKey = Object.keys(ops)[0]
-  if (!firstKey) return obj
-  if (firstKey.charAt(0) !== '$') return PowerAssign.assign(obj, { $set: ops })
-  return PowerAssign.assign(obj, ops)
+  return PowerAssign.assign(obj, normalizeOperators(ops))
 }
 
 /**
