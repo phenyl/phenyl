@@ -108,8 +108,7 @@ export default class PowerAssign {
           break
 
         case '$restore':
-          if (ops.$restore == null) break // for flowtype checking...
-          updatedObj = this.$restore(obj, updatedObj, ops.$restore)
+          // this operation must run at the end of all other opreations
           break
 
         case '$rename':
@@ -119,6 +118,9 @@ export default class PowerAssign {
         default:
           throw new Error(`Invalid operator: "${operatorName}"`)
       }
+    }
+    if (ops.$restore != null) {
+      updatedObj = this.$restore(obj, updatedObj, ops.$restore)
     }
     return updatedObj
   }

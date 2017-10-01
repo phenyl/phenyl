@@ -245,7 +245,7 @@ describe('assign', () => {
       assert.deepEqual(expectedNewUser, newUser)
     })
 
-    it('$restore operator before other operators may not be effective', () => {
+    it('$restore operator is evaluated at the last time even if located before other operators', () => {
       const user = new User({
         id: 'user1',
         name: { first: 'Shin', last: 'Suzuki' },
@@ -263,9 +263,9 @@ describe('assign', () => {
         name2: new Name({ first: 'Shinzo', last: 'Sasaki' }),
         age: new Age({ value: 32 }),
       }
-      assert(!(newUser instanceof User))
-      assert(!(newUser.name instanceof Name))
-      assert(!(newUser.age instanceof Age))
+      assert(newUser.name instanceof Name)
+      assert(newUser.name2 instanceof Name)
+      assert(newUser.age instanceof Age)
       assert.deepEqual(expectedNewUser, newUser)
     })
   })
