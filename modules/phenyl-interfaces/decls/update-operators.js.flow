@@ -37,7 +37,21 @@ export type BitOperator = {
 }
 
 /**
- * new operator which construct instances of the given path
+ * New operator which construct instances of the given path
+ * Notice:
+ *
+ * Once RestoreOperator is JSON.stringify-ed, the fields with Class<Restorable> will be removed.
+ * To avoid this, you can choose two alternatives.
+ *
+ * 1) Implement static method toJSON() to Classes
+ *   class Foo {
+ *     static toJSON() { return '' }
+ *   }
+ *
+ * 2) Use toJSON() function exported from power-assign
+ *    import { toJSON } from 'power-assign/jsnext'
+ *    const operators: UpdateOperators = { $restore: { foo: Foo } }
+ *    JSON.stringify(toJSON(operators)) // {"$restore":{"foo":""}}
  */
 export type RestoreOperator = {
   [field: DotNotationString]: '' | Class<Restorable>
