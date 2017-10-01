@@ -37,6 +37,27 @@ export type BitOperator = {
 }
 
 /**
+ * RenameOperator
+ * a bit different operator from MongoDB's $rename operator
+ * https://docs.mongodb.com/manual/reference/operator/update/rename/
+ *
+ * The values are not 'DotNotationString's but field names.
+ * The following sample object in mongodb
+ * { $rename: { "name.first": "name.fname" } }
+ *
+ * will be the following object in power-assign.
+ *
+ * { $rename: { "name.first": "fname" } }
+ *
+ * See that the value doesn't contain "name".
+ * When this operator is passed to MongoDB via phenyl-mongodb-client,
+ * new field names will be automatically corrected to fit the MongoDB's spec.
+ */
+export type RenameOperator = {
+  [field: DocumentPath]: string
+}
+
+/**
  * New operator which construct instances of the given path
  * Notice:
  *
@@ -91,4 +112,5 @@ export type UpdateOperator =
   CurrentDateOperator |
   BitOperator |
   UnsetOperator |
+  RenameOperator |
   RestoreOperator

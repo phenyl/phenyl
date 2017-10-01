@@ -166,6 +166,36 @@ describe('assign', () => {
     })
   })
 
+  it('rename props by $rename operator', () => {
+    const obj = {
+      ttle: 'October',
+      names: [
+        { first: 'Shin', lsat: 'Suzuki' }
+      ],
+    }
+    const newObj = assign(obj, { $rename: {
+      'ttle': 'title',
+      'names[0].lsat': 'last',
+      'names[0].nonExistingField': 'abc',
+    } })
+    assert.deepEqual(newObj, {
+      title: 'October',
+      names: [
+        { first: 'Shin', last: 'Suzuki' }
+      ],
+    })
+  })
+
+  it('cannot rename array props by $rename operator', () => {
+    const obj = {
+      categories: ['fashion', 'news', 'cooking-recipies'],
+      name: { first: 'Shin', last: 'Suzuki' }
+    }
+    assert.throws(() =>
+      assign(obj, { $rename: { 'categories[1]': '3' } })
+    , /cannot be applied to array field/)
+  })
+
   context('with class instance', () => {
     class Name {
       first: string

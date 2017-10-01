@@ -27,6 +27,7 @@ import type {
   PushModifier,
   PushOperator,
   QueryCondition,
+  RenameOperator,
   Restorable,
   RestoreOperator,
   SetOperator,
@@ -109,11 +110,14 @@ export default class PowerAssign {
           updatedObj = this.$unset(updatedObj, ops.$unset)
           break
 
+        case '$rename':
+          updatedObj = this.$rename(updatedObj, ops.$rename)
+          break
+
         case '$restore':
           // this operation must run at the end of all other opreations
           break
 
-        case '$rename':
         case '$setOnInsert':
           throw new Error(`The given operator "${operatorName}" is not implemented yet.`)
 
@@ -373,6 +377,40 @@ export default class PowerAssign {
         copiedLastObj = Object.assign({}, lastObj)
         delete copiedLastObj[lastAttr]
       }
+
+      return pathToLast
+        ? this.$set(newObj, { [pathToLast]: copiedLastObj })
+        : copiedLastObj
+    }, obj)
+  }
+
+  /**
+   * Unset the value of the given DocumentPaths.
+   * NOTICE: The objects whose property are renamed will be converted into a plain object.
+   */
+  static $rename(obj: Object, renameOp: RenameOperator): Object {
+
+    return Object.keys(renameOp).reduce((newObj, docPath) => {
+      const attrs = parseDocumentPath(docPath)
+      const lastAttr = attrs.pop()
+      const pathToLast = createDocumentPath(...attrs)
+      const lastObj = pathToLast
+        ? getNestedValue(newObj, pathToLast)
+        : newObj
+
+      if (Array.isArray(lastObj)) {
+        throw Error(`$rename operators cannot be applied to array field: "${pathToLast}".`)
+      }
+
+      if (!lastObj.hasOwnProperty(lastAttr)) {
+        return newObj
+      }
+
+      const copiedLastObj = Object.assign({}, lastObj)
+      delete copiedLastObj[lastAttr]
+
+      const newAttr = renameOp[docPath]
+      copiedLastObj[newAttr] = lastObj[lastAttr]
 
       return pathToLast
         ? this.$set(newObj, { [pathToLast]: copiedLastObj })
