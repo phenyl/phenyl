@@ -1,0 +1,7 @@
+// @flow
+
+/**
+ * documentPath reference
+ * http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Expressions.Attributes.html#Expressions.Attributes.NestedElements.DocumentPathExamples
+ */
+export type DocumentPath = string

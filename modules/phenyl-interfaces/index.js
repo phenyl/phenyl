@@ -49,6 +49,7 @@ import type {
   CustomQueryDefinition,
   CustomQueryDefinitions,
 } from './decls/custom-query-definition.js.flow'
+import type { DocumentPath } from './decls/document-path.js.flow'
 import type { DotNotationString } from './decls/dot-notation-string.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
@@ -211,6 +212,7 @@ export type {
   DeleteCommand,
   DeleteRequestData,
   DeleteResponseData,
+  DocumentPath,
   DotNotationString,
   EncodedHttpRequest,
   EncodedHttpResponse,
