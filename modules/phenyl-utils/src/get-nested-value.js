@@ -1,10 +1,12 @@
 // @flow
 
+import { parseDocumentPath } from './parse-document-path.js'
+
 import type {
-  DotNotationString,
+  DocumentPath,
   Restorable,
 } from 'phenyl-interfaces'
 
-export function getNestedValue(obj: Restorable, dnStr: DotNotationString): any {
-  return dnStr.split('.').reduce((currentObj, key) => currentObj[key], obj)
+export function getNestedValue(obj: Restorable, docPath: DocumentPath): any {
+  return parseDocumentPath(docPath).reduce((currentObj, key) => currentObj[key], obj)
 }
