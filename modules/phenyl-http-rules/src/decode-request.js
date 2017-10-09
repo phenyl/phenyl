@@ -46,7 +46,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   if (qsParams == null || Object.keys(qsParams).length === 0) {
     return {
       method: 'get',
-      get: { entityName: path[1], id: path[2] }
+      payload: { entityName: path[1], id: path[2] }
     }
   }
   const methodName = path[2]
@@ -54,28 +54,28 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   if (!methodName) {
     return {
       method: 'runCustomQuery',
-      runCustomQuery: decodeQsParams(qsParams)
+      payload: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'find') {
     return {
       method: 'find',
-      find: decodeQsParams(qsParams)
+      payload: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'findOne') {
     return {
       method: 'findOne',
-      findOne: decodeQsParams(qsParams)
+      payload: decodeQsParams(qsParams)
     }
   }
 
   if (methodName === 'getByIds') {
     return {
       method: 'getByIds',
-      getByIds: decodeQsParams(qsParams)
+      payload: decodeQsParams(qsParams)
     }
   }
   throw new Error(`Could not decode the given GET request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
@@ -95,21 +95,21 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   if (headers['X-Phenyl-Custom']) {
     return {
       method: 'runCustomCommand',
-      runCustomCommand: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
 
   if (path === '/login') {
     return {
       method: 'login',
-      login: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
 
   if (path === '/logout') {
     return {
       method: 'logout',
-      logout: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
   const paths = path.split('/')
@@ -118,20 +118,20 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   if (methodName === 'insert') {
     return {
       method: 'insert',
-      insert: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
 
   if (methodName === 'insertAndGet') {
     return {
       method: 'insertAndGet',
-      insertAndGet: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
   if (methodName === 'insertAndGetMulti') {
     return {
       method: 'insertAndGetMulti',
-      insertAndGetMulti: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
   throw new Error(`Could not decode the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
@@ -149,24 +149,23 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
 
   const paths = path.split('/')
   const methodName = path[2]
-
   if (methodName === 'update') {
     return {
       method: 'update',
-      update: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
 
   if (methodName === 'updateAndGet') {
     return {
       method: 'updateAndGet',
-      updateAndGet: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
   if (methodName === 'updateAndFetch') {
     return {
       method: 'updateAndFetch',
-      updateAndFetch: decodeBody(body),
+      payload: decodeBody(body),
     }
   }
   throw new Error(`Could not decode the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
@@ -184,7 +183,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   if (path[2] === 'delete' && qsParams) {
     return {
       method: 'delete',
-      delete: decodeQsParams(qsParams),
+      payload: decodeQsParams(qsParams),
     }
   }
 
@@ -192,7 +191,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
     // single deletion
     return {
       method: 'delete',
-      delete: {
+      payload: {
         entityName: path[1],
         id: path[2],
       }

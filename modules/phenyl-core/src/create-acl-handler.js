@@ -32,40 +32,35 @@ export default function createAclHandler(fg: FunctionalGroup): AclHandler {
       case 'updateAndGet':
       case 'updateAndFetch':
       case 'delete': {
-        // $FlowIssue(request-data-has-the-same-key-as-method)
-        const data = reqData[method]
+        const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertAclFunction(entityDefinition.acl, data.entityName, method)
         return entityDefinition.acl(reqData, session, clients)
       }
 
-      case 'runCustomQuery':
-        const { runCustomQuery } = reqData
-        const customQueryDefinition = customQueries[runCustomQuery.name]
-        if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${runCustomQuery.name}".`)
-        assertAclFunction(customQueryDefinition.acl, runCustomQuery.name, method)
-        return customQueryDefinition.acl(runCustomQuery, session, clients)
+      case 'runCustomQuery': {
+        const { payload } = reqData
+        const customQueryDefinition = customQueries[payload.name]
+        if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${payload.name}".`)
+        assertAclFunction(customQueryDefinition.acl, payload.name, method)
+        return customQueryDefinition.acl(payload, session, clients)
+      }
 
-      case 'runCustomCommand':
-        const { runCustomCommand } = reqData
-        const customCommandDefinition = customCommands[runCustomCommand.name]
-        if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${runCustomCommand.name}".`)
-        assertAclFunction(customCommandDefinition.acl, runCustomCommand.name, method)
-        return customCommandDefinition.acl(runCustomCommand, session, clients)
+      case 'runCustomCommand': {
+        const { payload } = reqData
+        const customCommandDefinition = customCommands[payload.name]
+        if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${payload.name}".`)
+        assertAclFunction(customCommandDefinition.acl, payload.name, method)
+        return customCommandDefinition.acl(payload, session, clients)
+      }
 
-      case 'login':
-        const { login } = reqData
-        const userEntityDefinition = users[login.entityName]
-        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${login.entityName}".`)
-        assertAclFunction(userEntityDefinition.acl, login.entityName, method)
-        return userEntityDefinition.acl(reqData, session, clients)
-
-      case 'logout': {
-        const { logout } = reqData
-        const userEntityDefinition = users[logout.entityName]
-        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${logout.entityName}".`)
-        assertAclFunction(userEntityDefinition.acl, logout.entityName, method)
+      case 'logout':
+      case 'login': {
+        const { payload } = reqData
+        const userEntityDefinition = users[payload.entityName]
+        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${payload.entityName}".`)
+        assertAclFunction(userEntityDefinition.acl, payload.entityName, method)
         return userEntityDefinition.acl(reqData, session, clients)
       }
       default:

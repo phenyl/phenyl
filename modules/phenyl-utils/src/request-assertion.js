@@ -15,35 +15,35 @@ export function assertValidRequestData(rd: any): void {
   try {
     switch(method) {
       case 'find':
-        return assertValidWhereQuery(rd.find)
+        return assertValidWhereQuery(rd.payload)
       case 'findOne':
-        return assertValidWhereQuery(rd.findOne)
+        return assertValidWhereQuery(rd.payload)
       case 'get':
-        return assertValidIdQuery(rd.get)
+        return assertValidIdQuery(rd.payload)
       case 'getByIds':
-        return assertValidIdsQuery(rd.getByIds)
+        return assertValidIdsQuery(rd.payload)
       case 'insert':
-        return assertValidInsertCommand(rd.insert)
+        return assertValidInsertCommand(rd.payload)
       case 'insertAndGet':
-        return assertValidInsertCommand(rd.insertAndGet)
+        return assertValidInsertCommand(rd.payload)
       case 'insertAndGetMulti':
-        return assertValidInsertCommand(rd.insertAndGetMulti)
+        return assertValidInsertCommand(rd.payload)
       case 'update':
-        return assertValidUpdateCommand(rd.update)
+        return assertValidUpdateCommand(rd.payload)
       case 'updateAndGet':
-        return assertValidUpdateCommand(rd.updateAndGet)
+        return assertValidUpdateCommand(rd.payload)
       case 'updateAndFetch':
-        return assertValidUpdateCommand(rd.updateAndFetch)
+        return assertValidUpdateCommand(rd.payload)
       case 'delete':
-        return assertValidDeleteCommand(rd.delete)
+        return assertValidDeleteCommand(rd.payload)
       case 'runCustomQuery':
-        return assertValidCustomQuery(rd.runCustomQuery)
+        return assertValidCustomQuery(rd.payload)
       case 'runCustomCommand':
-        return assertValidCustomCommand(rd.runCustomCommand)
+        return assertValidCustomCommand(rd.payload)
       case 'login':
-        return assertValidLoginCommand(rd.login)
+        return assertValidLoginCommand(rd.payload)
       case 'logout':
-        return assertValidLogoutCommand(rd.logout)
+        return assertValidLogoutCommand(rd.payload)
       default:
         throw new Error(`Invalid method name.`)
     }

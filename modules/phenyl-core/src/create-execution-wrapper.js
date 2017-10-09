@@ -21,7 +21,7 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
   const { users, nonUsers, customQueries, customCommands } = fg
   return async function executionWrapper(reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution) :Promise<ResponseData> {
     const { method } = reqData
-    switch (method) {
+    switch (reqData.method) {
       case 'find':
       case 'findOne':
       case 'get':
@@ -35,8 +35,7 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
       case 'delete':
       case 'login':
       case 'logout': {
-        // $FlowIssue(request-data-has-the-same-key-as-method)
-        const data = reqData[method]
+        const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertExecutionWrapper(entityDefinition.executionWrapper, data.entityName, method)

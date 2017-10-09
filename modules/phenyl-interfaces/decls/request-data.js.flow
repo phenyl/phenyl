@@ -54,75 +54,75 @@ export type RequestData =
 
 export type FindRequestData = {|
   method: 'find',
-  +find: WhereQuery,
+  +payload: WhereQuery,
 |}
 
 export type FindOneRequestData = {|
   method: 'findOne',
-  +findOne: WhereQuery,
+  +payload: WhereQuery,
 |}
 
 export type GetRequestData = {|
   method: 'get',
-  +get: IdQuery,
+  +payload: IdQuery,
 |}
 
 export type GetByIdsRequestData = {|
   method: 'getByIds',
-  +getByIds: IdsQuery,
+  +payload: IdsQuery,
 |}
 
 export type InsertRequestData = {|
   method: 'insert',
-  +insert: InsertCommand,
+  +payload: InsertCommand,
 |}
 
 export type InsertAndGetRequestData = {|
   method: 'insertAndGet',
-  +insertAndGet: SingleInsertCommand,
+  +payload: SingleInsertCommand,
 |}
 
 export type InsertAndGetMultiRequestData = {|
   method: 'insertAndGetMulti',
-  +insertAndGetMulti: MultiInsertCommand,
+  +payload: MultiInsertCommand,
 |}
 
 export type UpdateRequestData = {|
   method: 'update',
-  +update: UpdateCommand,
+  +payload: UpdateCommand,
 |}
 
 export type UpdateAndGetRequestData = {|
   method: 'updateAndGet',
-  +updateAndGet: IdUpdateCommand,
+  +payload: IdUpdateCommand,
 |}
 
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
-  +updateAndFetch: MultiUpdateCommand,
+  +payload: MultiUpdateCommand,
 |}
 
 export type DeleteRequestData = {|
   method: 'delete',
-  +delete: DeleteCommand,
+  +payload: DeleteCommand,
 |}
 
 export type RunCustomQueryRequestData = {|
   method: 'runCustomQuery',
-  +runCustomQuery: CustomQuery,
+  +payload: CustomQuery,
 |}
 
 export type RunCustomCommandRequestData = {|
   method: 'runCustomCommand',
-  +runCustomCommand: CustomCommand,
+  +payload: CustomCommand,
 |}
 
 export type LoginRequestData = {|
   method: 'login',
-  +login: LoginCommand,
+  +payload: LoginCommand,
 |}
 
 export type LogoutRequestData = {|
   method: 'logout',
-  +logout: LogoutCommand,
+  +payload: LogoutCommand,
 |}

@@ -32,40 +32,35 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
       case 'updateAndGet':
       case 'updateAndFetch':
       case 'delete': {
-        // $FlowIssue(request-data-has-the-same-key-as-method)
-        const data = reqData[method]
+        const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertValidationFunction(entityDefinition.validation, data.entityName, method)
         return entityDefinition.validation(reqData, session, clients)
       }
 
-      case 'runCustomQuery':
-        const { runCustomQuery } = reqData
-        const customQueryDefinition = customQueries[runCustomQuery.name]
-        if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${runCustomQuery.name}".`)
-        assertValidationFunction(customQueryDefinition.validation, runCustomQuery.name, method)
-        return customQueryDefinition.validation(runCustomQuery, session, clients)
+      case 'runCustomQuery': {
+        const { payload } = reqData
+        const customQueryDefinition = customQueries[payload.name]
+        if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${payload.name}".`)
+        assertValidationFunction(customQueryDefinition.validation, payload.name, method)
+        return customQueryDefinition.validation(payload, session, clients)
+      }
 
-      case 'runCustomCommand':
-        const { runCustomCommand } = reqData
-        const customCommandDefinition = customCommands[runCustomCommand.name]
-        if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${runCustomCommand.name}".`)
-        assertValidationFunction(customCommandDefinition.validation, runCustomCommand.name, method)
-        return customCommandDefinition.validation(runCustomCommand, session, clients)
+      case 'runCustomCommand': {
+        const { payload } = reqData
+        const customCommandDefinition = customCommands[payload.name]
+        if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${payload.name}".`)
+        assertValidationFunction(customCommandDefinition.validation, payload.name, method)
+        return customCommandDefinition.validation(payload, session, clients)
+      }
 
       case 'login':
-        const { login } = reqData
-        const userEntityDefinition = users[login.entityName]
-        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${login.entityName}".`)
-        assertValidationFunction(userEntityDefinition.validation, login.entityName, method)
-        return userEntityDefinition.validation(reqData, session, clients)
-
       case 'logout': {
-        const { logout } = reqData
-        const userEntityDefinition = users[logout.entityName]
-        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${logout.entityName}".`)
-        assertValidationFunction(userEntityDefinition.validation, logout.entityName, method)
+        const { payload } = reqData
+        const userEntityDefinition = users[payload.entityName]
+        if (userEntityDefinition == null) throw new Error(`Unknown entity name "${payload.entityName}".`)
+        assertValidationFunction(userEntityDefinition.validation, payload.entityName, method)
         return userEntityDefinition.validation(reqData, session, clients)
       }
       default:

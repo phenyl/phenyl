@@ -93,63 +93,63 @@ export default class PhenylCore implements PhenylRunner, AuthClient {
 
     switch (reqData.method) {
       case 'find': {
-        const result = await entityClient.find(reqData.find)
+        const result = await entityClient.find(reqData.payload)
         return result.ok ? { find: result } : { error: result }
       }
       case 'findOne': {
-        const result = await entityClient.findOne(reqData.findOne)
+        const result = await entityClient.findOne(reqData.payload)
         return result.ok ? { findOne: result } : { error: result }
       }
       case 'get': {
-        const result = await entityClient.get(reqData.get)
+        const result = await entityClient.get(reqData.payload)
         return result.ok ? { get: result } : { error: result }
       }
       case 'getByIds': {
-        const result = await entityClient.getByIds(reqData.getByIds)
+        const result = await entityClient.getByIds(reqData.payload)
         return result.ok ? { getByIds: result } : { error: result }
       }
       case 'insert': {
-        const result = await entityClient.insert(reqData.insert)
+        const result = await entityClient.insert(reqData.payload)
         return result.ok ? { insert: result } : { error: result }
       }
       case 'insertAndGet': {
-        const result = await entityClient.insertAndGet(reqData.insertAndGet)
+        const result = await entityClient.insertAndGet(reqData.payload)
         return result.ok ? { insertAndGet: result } : { error: result }
       }
       case 'insertAndGetMulti': {
-        const result = await entityClient.insertAndGetMulti(reqData.insertAndGetMulti)
+        const result = await entityClient.insertAndGetMulti(reqData.payload)
         return result.ok ? { insertAndGetMulti: result } : { error: result }
       }
       case 'update': {
-        const result = await entityClient.update(reqData.update)
+        const result = await entityClient.update(reqData.payload)
         return result.ok ? { update: result } : { error: result }
       }
       case 'updateAndGet': {
-        const result = await entityClient.updateAndGet(reqData.updateAndGet)
+        const result = await entityClient.updateAndGet(reqData.payload)
         return result.ok ? { updateAndGet: result } : { error: result }
       }
       case 'updateAndFetch': {
-        const result = await entityClient.updateAndFetch(reqData.updateAndFetch)
+        const result = await entityClient.updateAndFetch(reqData.payload)
         return result.ok ? { updateAndFetch: result } : { error: result }
       }
       case 'delete': {
-        const result = await entityClient.delete(reqData.delete)
+        const result = await entityClient.delete(reqData.payload)
         return result.ok ? { delete: result } : { error: result }
       }
       case 'runCustomQuery': {
-        const result = await this.customQueryHandler(reqData.runCustomQuery, session, this.clients)
+        const result = await this.customQueryHandler(reqData.payload, session, this.clients)
         return result.ok ? { runCustomQuery: result } : { error: result }
       }
       case 'runCustomCommand': {
-        const result = await this.customCommandHandler(reqData.runCustomCommand, session, this.clients)
+        const result = await this.customCommandHandler(reqData.payload, session, this.clients)
         return result.ok ? { runCustomCommand: result } : { error: result }
       }
       case 'login': {
-        const result = await this.login(reqData.login, session)
+        const result = await this.login(reqData.payload, session)
         return result.ok ? { login: result } : { error: result }
       }
       case 'logout': {
-        const result = await this.logout(reqData.logout, session)
+        const result = await this.logout(reqData.payload, session)
         return result.ok ? { logout: result } : { error: result }
       }
       default: {

@@ -15,7 +15,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
 
   switch (reqData.method) {
     case 'find':
-      data = reqData.find
+      data = reqData.payload
       return {
         method: 'GET',
         headers,
@@ -24,7 +24,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'findOne':
-      data = reqData.findOne
+      data = reqData.payload
       return {
         method: 'GET',
         headers,
@@ -33,7 +33,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'get':
-      data = reqData.get
+      data = reqData.payload
       return {
         method: 'GET',
         headers,
@@ -41,7 +41,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'getByIds':
-      data = reqData.getByIds
+      data = reqData.payload
       return {
         method: 'GET',
         headers,
@@ -50,7 +50,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'insert':
-      data = reqData.insert
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -60,7 +60,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'insertAndGet':
-      data = reqData.insertAndGet
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -70,7 +70,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'insertAndGetMulti':
-      data = reqData.insertAndGetMulti
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -80,7 +80,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'update':
-      data = reqData.update
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -90,7 +90,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'updateAndGet':
-      data = reqData.updateAndGet
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -100,7 +100,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'updateAndFetch':
-      data = reqData.updateAndFetch
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
@@ -110,7 +110,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'delete':
-      data = reqData.delete
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
 
       // single deletion
@@ -130,7 +130,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'runCustomQuery':
-      data = reqData.runCustomQuery
+      data = reqData.payload
       headers['X-Phenyl-Custom'] = 'query'
       return {
         method: 'GET',
@@ -140,7 +140,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'runCustomCommand':
-      data = reqData.runCustomCommand
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       headers['X-Phenyl-Custom'] = 'command'
       return {
@@ -151,7 +151,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'login':
-      data = reqData.login
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
@@ -161,7 +161,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: Id): Enc
       }
 
     case 'logout':
-      data = reqData.logout
+      data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',

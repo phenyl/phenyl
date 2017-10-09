@@ -76,7 +76,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async find(query: WhereQuery): Promise<QueryResultOrError> {
-    const reqData = { method: 'find', find: query }
+    const reqData = { method: 'find', payload: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.find != null) return resData.find
@@ -87,7 +87,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async findOne(query: WhereQuery): Promise<SingleQueryResultOrError> {
-    const reqData = { method: 'findOne', findOne: query }
+    const reqData = { method: 'findOne', payload: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.findOne != null) return resData.findOne
@@ -98,7 +98,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async get(query: IdQuery): Promise<SingleQueryResultOrError> {
-    const reqData = { method: 'get', get: query }
+    const reqData = { method: 'get', payload: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.get != null) return resData.get
@@ -109,7 +109,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async getByIds(query: IdsQuery): Promise<QueryResultOrError> {
-    const reqData = { method: 'getByIds', getByIds: query }
+    const reqData = { method: 'getByIds', payload: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.getByIds != null) return resData.getByIds
@@ -120,7 +120,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async insert(command: InsertCommand): Promise<CommandResultOrError> {
-    const reqData = { method: 'insert', insert: command }
+    const reqData = { method: 'insert', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.insert != null) return resData.insert
@@ -131,7 +131,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
-    const reqData = { method: 'insertAndGet', insertAndGet: command }
+    const reqData = { method: 'insertAndGet', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.insertAndGet != null) return resData.insertAndGet
@@ -142,7 +142,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
-    const reqData = { method: 'insertAndGetMulti', insertAndGetMulti: command }
+    const reqData = { method: 'insertAndGetMulti', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.insertAndGetMulti != null) return resData.insertAndGetMulti
@@ -153,7 +153,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
-    const reqData = { method: 'update', update: command }
+    const reqData = { method: 'update', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.update != null) return resData.update
@@ -164,7 +164,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
-    const reqData = { method: 'updateAndGet', updateAndGet: command }
+    const reqData = { method: 'updateAndGet', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.updateAndGet != null) return resData.updateAndGet
@@ -175,7 +175,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
-    const reqData = { method: 'updateAndFetch', updateAndFetch: command }
+    const reqData = { method: 'updateAndFetch', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.updateAndFetch != null) return resData.updateAndFetch
@@ -186,7 +186,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResultOrError> {
-    const reqData = { method: 'delete', delete: command }
+    const reqData = { method: 'delete', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.delete != null) return resData.delete
@@ -197,7 +197,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async runCustomQuery(query: CustomQuery): Promise<CustomQueryResultOrError> {
-    const reqData = { method: 'runCustomQuery', runCustomQuery: query }
+    const reqData = { method: 'runCustomQuery', payload: query }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.runCustomQuery != null) return resData.runCustomQuery
@@ -208,7 +208,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async runCustomCommand(command: CustomCommand): Promise<CustomCommandResultOrError> {
-    const reqData = { method: 'runCustomCommand', runCustomCommand: command }
+    const reqData = { method: 'runCustomCommand', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.runCustomCommand != null) return resData.runCustomCommand
@@ -219,7 +219,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async login(command: LoginCommand): Promise<LoginCommandResultOrError> {
-    const reqData = { method: 'login', login: command }
+    const reqData = { method: 'login', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.login != null) return resData.login
@@ -230,7 +230,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
    *
    */
   async logout(command: LogoutCommand): Promise<LogoutCommandResultOrError> {
-    const reqData = { method: 'logout', logout: command }
+    const reqData = { method: 'logout', payload: command }
     const resData = await this.request(reqData)
     if (resData.error != null) return resData.error
     if (resData.logout != null) return resData.logout
