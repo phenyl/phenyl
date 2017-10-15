@@ -8,7 +8,7 @@ import type {
   RestorableEntity,
   WhereConditions,
   QueryCondition,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 
 import {
   normalizeQueryCondition,
