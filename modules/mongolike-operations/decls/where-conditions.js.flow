@@ -1,0 +1,27 @@
+// @flow
+import type { QueryCondition, EqCondition } from './query-condition.js.flow'
+import type { DocumentPath } from './document-path.js.flow'
+
+export type SimpleWhereConditions = {
+  [fieldName: DocumentPath]: QueryCondition | EqCondition,
+  // three keys below have no meanings, just for flow
+  $and?: null,
+  $nor?: null,
+  $or?: null,
+}
+
+export type AndWhereConditions = {|
+  $and: Array<WhereConditions>,
+|}
+export type NorWhereConditions = {|
+  $nor: Array<WhereConditions>,
+|}
+export type OrWhereConditions = {|
+  $or: Array<WhereConditions>,
+|}
+
+export type WhereConditions =
+  SimpleWhereConditions |
+  AndWhereConditions |
+  NorWhereConditions |
+  OrWhereConditions

@@ -1,0 +1,4 @@
+// @flow
+import type { DocumentPath } from './document-path.js.flow'
+
+export type SortNotation = { [field: DocumentPath]: 1 | -1 }

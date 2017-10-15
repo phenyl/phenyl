@@ -1,0 +1,18 @@
+// @flow
+
+import type { Session } from './session.js.flow'
+import type { ClientPool } from './client.js.flow'
+import type {
+  CustomQuery,
+} from './query.js.flow'
+import type {
+  CustomQueryResult,
+} from './query-result.js.flow'
+
+export interface CustomQueryDefinition {
+  acl(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
+  validation(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
+  execution(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<CustomQueryResult>, // CustomQueryHandler
+}
+
+export type CustomQueryDefinitions = { [name: string]: CustomQueryDefinition }

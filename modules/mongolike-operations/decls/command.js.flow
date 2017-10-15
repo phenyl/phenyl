@@ -1,0 +1,72 @@
+// @flow
+import type { WhereConditions } from './where-conditions.js.flow'
+import type { UpdateOperators } from './update-operators.js.flow'
+import type { RestorableEntity } from './restorable.js.flow' // Object
+import type { Id } from './id.js.flow' // string
+import type { PreEntity } from './entity.js.flow' // string
+
+type EntityName = string
+
+// see https://docs.mongodb.com/manual/reference/command/insert/
+export type InsertCommand = SingleInsertCommand | MultiInsertCommand
+
+export type SingleInsertCommand = {|
+  entityName: EntityName, // "insert" key in MongoDB reference
+  value: PreEntity<RestorableEntity>, // "documents" key in MongoDB reference
+  ordered?: boolean,
+|}
+
+export type MultiInsertCommand = {|
+  entityName: EntityName, // "insert" key in MongoDB reference
+  values: Array<PreEntity<RestorableEntity>>, // "documents" key in MongoDB reference
+  ordered?: boolean,
+|}
+
+// see https://docs.mongodb.com/manual/reference/command/update/
+export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
+
+export type IdUpdateCommand = {|
+  entityName: EntityName, // "update" key in MongoDB reference
+  id: Id,
+  operators: UpdateOperators, // "u" key in MongoDB reference
+|}
+
+export type MultiUpdateCommand = {|
+  entityName: EntityName, // "update" key in MongoDB reference
+  +where: WhereConditions, // "q" key in MongoDB reference
+  operators: UpdateOperators, // "u" key in MongoDB reference
+  ordered?: boolean,
+|}
+
+// see https://docs.mongodb.com/manual/reference/command/delete/
+export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
+
+export type IdDeleteCommand = {|
+  entityName: EntityName, // "delete" key in MongoDB reference
+  id: Id,
+|}
+
+export type MultiDeleteCommand = {|
+  entityName: EntityName, // "delete" key in MongoDB reference
+  +where: WhereConditions, // "q" key in MongoDB reference
+  limit?: number,
+  ordered?: boolean,
+|}
+
+export interface CustomCommand {
+  name: string, // custom insert command name
+  params?: Object
+}
+
+
+export interface LoginCommand {
+  credentials: { [key: string]: string },
+  entityName: EntityName,
+  options?: Object,
+}
+
+export interface LogoutCommand {
+  sessionId: Id,
+  userId: Id,
+  entityName: EntityName,
+}

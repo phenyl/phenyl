@@ -1,0 +1,44 @@
+// @flow
+
+import type { Restorable } from './restorable.js.flow'
+import type { Session } from './session.js.flow'
+import type { RestorableEntity } from './restorable.js.flow'
+import type { ErrorResult } from './error-result.js.flow'
+
+export type CommandResult = {
+  ok: 1,
+  n: number,
+}
+export type CommandResultOrError = CommandResult | ErrorResult
+
+export type MultiValuesCommandResult = {
+  ok: 1,
+  n: number,
+  values: Array<RestorableEntity>
+}
+export type MultiValuesCommandResultOrError = MultiValuesCommandResult | ErrorResult
+
+export type GetCommandResult = {
+  ok: 1,
+  n: number,
+  value: RestorableEntity
+}
+export type GetCommandResultOrError = GetCommandResult | ErrorResult
+
+export type CustomCommandResult = {
+  ok: 1,
+  result?: Object
+}
+export type CustomCommandResultOrError = CustomCommandResult | ErrorResult
+
+export type LoginCommandResult = {
+  ok: 1,
+  session: Session,
+  user: ?RestorableEntity,
+}
+export type LoginCommandResultOrError = LoginCommandResult | ErrorResult
+
+export type LogoutCommandResult = {
+  ok: 1,
+}
+export type LogoutCommandResultOrError = LogoutCommandResult | ErrorResult

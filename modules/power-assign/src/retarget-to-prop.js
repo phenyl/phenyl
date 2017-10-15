@@ -5,7 +5,7 @@ import type {
   UpdateOperator,
   UpdateOperators,
   DocumentPath,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 
 export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<UpdateOperators> {
 

@@ -1,0 +1,28 @@
+// @flow
+import type { WhereConditions } from './where-conditions.js.flow'
+import type { Id } from './id.js.flow' // string
+import type { SortNotation } from './sort-notation.js.flow'
+type EntityName = string
+
+export interface WhereQuery {
+  entityName: EntityName,
+  +where: WhereConditions,
+  skip?: number,
+  limit?: number,
+  sort?: SortNotation, // { [key: string]: 1 | -1 }
+}
+
+export interface IdQuery {
+  entityName: string,
+  id: Id
+}
+
+export interface IdsQuery {
+  entityName: string,
+  ids: Array<Id>
+}
+
+export interface CustomQuery {
+  name: string, // custom query name
+  params?: Object,
+}

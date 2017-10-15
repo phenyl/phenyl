@@ -1,7 +1,7 @@
 // @flow
 import type {
   UpdateOperators,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 
 export function toJSON(ops: Object): UpdateOperators {
   if (ops.$restore == null) {

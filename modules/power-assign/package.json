@@ -11,7 +11,7 @@
   "license": "ISC",
   "devDependencies": {
     "kocha": "^1.8.0",
-    "phenyl-interfaces": "*",
+    "mongolike-operations": "*",
     "power-assert": "^1.4.4"
   },
   "dependencies": {

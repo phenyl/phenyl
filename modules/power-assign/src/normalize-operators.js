@@ -2,7 +2,7 @@
 
 import type {
   UpdateOperators,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 
 /**
  *

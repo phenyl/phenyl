@@ -34,7 +34,7 @@ import type {
   UnsetOperator,
   UpdateOperators,
   WhereConditions,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 
 /**
  *

@@ -3,7 +3,7 @@
 import type {
   DocumentPath,
   Restorable,
-} from 'phenyl-interfaces'
+} from 'mongolike-operations'
 import { parseDocumentPath } from 'phenyl-utils/jsnext'
 
 export function getObjectsToBeAssigned(obj: Restorable, docPath: DocumentPath): Array<Restorable> {
