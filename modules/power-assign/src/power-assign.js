@@ -7,7 +7,7 @@ import {
   sortByNotation,
   parseDocumentPath,
   createDocumentPath,
-} from 'phenyl-utils/jsnext'
+} from 'oad-utils/jsnext'
 import { normalizeOperators } from './normalize-operators.js'
 import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'

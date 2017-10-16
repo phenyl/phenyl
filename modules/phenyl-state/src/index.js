@@ -14,7 +14,7 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-import { sortByNotation } from 'phenyl-utils/jsnext'
+import { sortByNotation } from 'oad-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
 import {
   retargetToPropWithRestoration,

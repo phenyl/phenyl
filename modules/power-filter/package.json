@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "phenyl-utils": "*"
+    "oad-utils": "*"
   },
   "author": "",
   "license": "ISC"

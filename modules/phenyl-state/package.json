@@ -10,7 +10,7 @@
   "dependencies": {
     "power-assign": "*",
     "power-filter": "*",
-    "phenyl-utils": "*"
+    "oad-utils": "*"
   },
   "devDependencies": {
     "kocha": "^1.8.0",
