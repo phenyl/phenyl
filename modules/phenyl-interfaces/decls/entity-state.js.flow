@@ -1,7 +1,11 @@
 // @flow
 import type {
+  UpdateOperators
+} from 'mongolike-operations'
+
+import type {
   RestorableEntity
-} from './restorable.js.flow'
+} from './restorable-entity.js.flow'
 
 import type {
   IdQuery,
@@ -13,10 +17,6 @@ import type {
   UpdateCommand,
   DeleteCommand,
 } from './command.js.flow'
-
-import type {
-  UpdateOperators
-} from './update-operators.js.flow'
 
 export interface EntityState {
   find(query: WhereQuery): Array<RestorableEntity>,

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Restorable } from './restorable.js.flow'
+import type { Restorable } from 'mongolike-operations'
 import type { ErrorResult } from './error-result.js.flow'
 
 export type CustomQueryResult = {

@@ -1,7 +1,9 @@
 // @flow
-import type { WhereConditions } from './where-conditions.js.flow'
-import type { UpdateOperators } from './update-operators.js.flow'
-import type { RestorableEntity } from './restorable.js.flow' // Object
+import type {
+  WhereConditions,
+  UpdateOperators,
+} from 'mongolike-operations'
+import type { RestorableEntity } from './restorable-entity.js.flow' // Object
 import type { Id } from './id.js.flow' // string
 import type { PreEntity } from './entity.js.flow' // string
 

@@ -6,7 +6,7 @@ import type {
 
 import type {
   RestorableEntity,
-} from './restorable.js.flow'
+} from './restorable-entity.js.flow'
 
 import type {
   UpdateCommand,

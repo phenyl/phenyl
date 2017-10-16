@@ -1,7 +1,7 @@
 // @flow
 import type {
   Restorable,
-} from './restorable.js.flow'
+} from 'mongolike-operations'
 
 import type {
   ErrorResult,

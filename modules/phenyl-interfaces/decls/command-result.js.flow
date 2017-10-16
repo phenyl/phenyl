@@ -1,8 +1,8 @@
 // @flow
 
-import type { Restorable } from './restorable.js.flow'
+import type { Restorable } from 'mongolike-operations'
 import type { Session } from './session.js.flow'
-import type { RestorableEntity } from './restorable.js.flow'
+import type { RestorableEntity } from './restorable-entity.js.flow'
 import type { ErrorResult } from './error-result.js.flow'
 
 export type CommandResult = {

@@ -5,7 +5,6 @@ import deepEqual from 'fast-deep-equal'
 import type {
   BSONTypeNumber,
   BSONTypeString,
-  RestorableEntity,
   WhereConditions,
   QueryCondition,
 } from 'mongolike-operations'
@@ -16,14 +15,14 @@ import {
 } from 'phenyl-utils/jsnext'
 
 type Classified = {
-  ok: Array<RestorableEntity>,
-  ng: Array<RestorableEntity>,
+  ok: Array<Object>,
+  ng: Array<Object>,
 }
 /**
  *
  */
 export default class PowerFilter {
-  static filter(values: Array<RestorableEntity>, where: WhereConditions): Array<RestorableEntity> {
+  static filter(values: Array<Object>, where: WhereConditions): Array<Object> {
     return this.classify(values, where).ok
   }
 
@@ -31,7 +30,7 @@ export default class PowerFilter {
    * @private
    * Classify values into match or unmatch groups
    */
-  static classify(values: Array<RestorableEntity>, where: WhereConditions): Classified {
+  static classify(values: Array<Object>, where: WhereConditions): Classified {
     if (where.$and != null) {
       // TODO: confirm spec when $and is []
       return where.$and.reduce((vals, conds) => {
@@ -165,7 +164,7 @@ export default class PowerFilter {
 /**
  * Filter the given values
  */
-export function filter(values: Array<RestorableEntity>, where: WhereConditions): Array<RestorableEntity> {
+export function filter(values: Array<Object>, where: WhereConditions): Array<Object> {
   return PowerFilter.filter(values, where)
 }
 

@@ -134,7 +134,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $set<T: Restorable>(obj: T, setOp: SetOperator): T {
+  static $set<T: Object>(obj: T, setOp: SetOperator): T {
     let updatedObj = obj
     Object.keys(setOp).forEach(docPath => {
       updatedObj = this.setValue(updatedObj, docPath, setOp[docPath])
@@ -146,7 +146,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $inc<T: Restorable>(obj: T, incOp: IncOperator): T {
+  static $inc<T: Object>(obj: T, incOp: IncOperator): T {
     const valuesToSet = {}
 
     Object.keys(incOp).forEach(docPath => {
@@ -160,7 +160,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $min<T: Restorable>(obj: T, minOp: MinOperator): T {
+  static $min<T: Object>(obj: T, minOp: MinOperator): T {
     const valuesToSet = {}
 
     Object.keys(minOp).forEach(docPath => {
@@ -176,7 +176,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $max<T: Restorable>(obj: T, maxOp: MaxOperator): T {
+  static $max<T: Object>(obj: T, maxOp: MaxOperator): T {
     const valuesToSet = {}
 
     Object.keys(maxOp).forEach(docPath => {
@@ -192,7 +192,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $mul<T: Restorable>(obj: T, mulOp: MulOperator): T {
+  static $mul<T: Object>(obj: T, mulOp: MulOperator): T {
     const valuesToSet = {}
 
     Object.keys(mulOp).forEach(docPath => {
@@ -208,7 +208,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $addToSet<T: Restorable>(obj: T, addToSetOp: AddToSetOperator): T {
+  static $addToSet<T: Object>(obj: T, addToSetOp: AddToSetOperator): T {
     const valuesToSet = {}
 
     Object.keys(addToSetOp).forEach(docPath => {
@@ -234,7 +234,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $pop<T: Restorable>(obj: T, popOp: PopOperator): T {
+  static $pop<T: Object>(obj: T, popOp: PopOperator): T {
     const valuesToSet = {}
 
     Object.keys(popOp).forEach(docPath => {
@@ -258,7 +258,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $pull<T: Restorable>(obj: T, pullOp: PullOperator): T {
+  static $pull<T: Object>(obj: T, pullOp: PullOperator): T {
     const valuesToSet = {}
 
     Object.keys(pullOp).forEach(docPath => {
@@ -278,7 +278,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $push<T: Restorable>(obj: T, pushOp: PushOperator): T {
+  static $push<T: Object>(obj: T, pushOp: PushOperator): T {
     const valuesToSet = {}
 
     Object.keys(pushOp).forEach(docPath => {
@@ -313,7 +313,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $currentDate<T: Restorable>(obj: T, curDateOp: CurrentDateOperator): T {
+  static $currentDate<T: Object>(obj: T, curDateOp: CurrentDateOperator): T {
     const valuesToSet = {}
 
     Object.keys(curDateOp).forEach(docPath => {
@@ -331,7 +331,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $bit<T: Restorable>(obj: T, bitOp: BitOperator): T {
+  static $bit<T: Object>(obj: T, bitOp: BitOperator): T {
     const valuesToSet = {}
 
     Object.keys(bitOp).forEach(docPath => {
@@ -444,7 +444,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static setValue<T: Restorable>(obj: T, docPath: DocumentPath, value: any): T {
+  static setValue<T: Object>(obj: T, docPath: DocumentPath, value: any): T {
     const revObjsToBeAssigned = getObjectsToBeAssigned(obj, docPath).reverse()
     const revKeys = parseDocumentPath(docPath).reverse()
     // assert(objsToBeAssigned.length === keys.length)
