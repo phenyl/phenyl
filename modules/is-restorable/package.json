@@ -10,7 +10,7 @@
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "mongolike-operations": "*"
   },
   "author": "",
   "license": "ISC"
