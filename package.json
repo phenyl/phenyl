@@ -5,10 +5,11 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:is-restorable && npm run build:power-assign && npm run build:power-crypt && npm run build:power-debugger && npm run build:power-filter && npm run build:phenyl-async-storage-client && npm run build:phenyl-http-client && npm run build:phenyl-memory-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards && npm run build:phenyl-redux && npm run build:phenyl-state && npm run build:phenyl-mongodb-client",
+    "build": "npm run build:is-restorable && npm run build:oad-utils && npm run build:power-assign && npm run build:power-crypt && npm run build:power-debugger && npm run build:power-filter && npm run build:phenyl-async-storage-client && npm run build:phenyl-http-client && npm run build:phenyl-memory-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards && npm run build:phenyl-redux && npm run build:phenyl-state && npm run build:phenyl-mongodb-client",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
     "build:is-restorable": "BABEL_ENV=build babel modules/is-restorable/src -d modules/is-restorable/dist",
+    "build:oad-utils": "BABEL_ENV=build babel modules/oad-utils/src -d modules/oad-utils/dist",
     "build:power-assign": "BABEL_ENV=build babel modules/power-assign/src -d modules/power-assign/dist",
     "build:power-crypt": "BABEL_ENV=build babel modules/power-crypt/src -d modules/power-crypt/dist",
     "build:power-debugger": "BABEL_ENV=build babel modules/power-debugger/src -d modules/power-debugger/dist",
