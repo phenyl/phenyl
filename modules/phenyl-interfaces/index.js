@@ -9,7 +9,6 @@ import type {
   UpdateAction,
 } from './decls/action.js.flow'
 
-
 import type {
   AuthClient,
   CustomClient,
@@ -54,7 +53,10 @@ import type {
   CustomQueryDefinitions,
 } from './decls/custom-query-definition.js.flow'
 import type {
+  EntityPool,
   EntityState,
+  EntityStateFinder,
+  EntityStateUpdater,
 } from './decls/entity-state.js.flow'
 import type {
   Entity,
@@ -142,10 +144,6 @@ import type {
   LogoutResponseData,
 } from './decls/response-data.js.flow'
 
-import type {
-  RestorableEntity,
-} from './decls/restorable-entity.js.flow'
-
 import type { PreSession, Session } from './decls/session.js.flow'
 
 import type {
@@ -186,7 +184,10 @@ export type {
   EntityClient,
   EntityDefinition,
   EntityDefinitions
+  EntityPool,
   EntityState,
+  EntityStateFinder,
+  EntityStateUpdater,
   ErrorResult,
   ErrorResultType,
   ExecutionWrapper,
@@ -243,7 +244,6 @@ export type {
   RequestMethodName,
   RegisterAction,
   ResponseData,
-  RestorableEntity,
   RunCustomCommandRequestData,
   RunCustomCommandResponseData,
   RunCustomQueryRequestData,

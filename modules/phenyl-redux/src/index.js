@@ -1,12 +1,16 @@
 // @flow
-import PhenylState from 'phenyl-state/jsnext'
+import {
+  PhenylState,
+  PhenylStateFinder,
+  PhenylStateUpdater,
+ } from 'phenyl-state/jsnext'
 import type {
   DeleteAction,
   DeleteCommand,
   EntityState,
   PhenylAction,
   RegisterAction,
-  RestorableEntity,
+  Entity,
   SetAction,
   UpdateAction,
   UpdateCommand,
@@ -30,17 +34,17 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
 
     case 'phenyl/$register': {
       const { entityName, entities } = action.payload
-      const operators = state.$register(entityName, ...entities)
+      const operators = PhenylStateUpdater.$register(state, entityName, ...entities)
       return assignWithRestoration(state, operators)
     }
 
     case 'phenyl/$update': {
-      const operators = state.$update(action.payload)
+      const operators = PhenylStateUpdater.$update(state, action.payload)
       return assignWithRestoration(state, operators)
     }
 
     case 'phenyl/$delete': {
-      const operators = state.$delete(action.payload)
+      const operators = PhenylStateUpdater.$delete(state, action.payload)
       return assignWithRestoration(state, operators)
     }
     default: {
@@ -56,7 +60,7 @@ export function $set(state: EntityState): SetAction {
   }
 }
 
-export function $register(entityName: string, ...entities: Array<RestorableEntity>): RegisterAction {
+export function $register(entityName: string, ...entities: Array<Entity>): RegisterAction {
   return {
     type: 'phenyl/$register',
     payload: {

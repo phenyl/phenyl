@@ -8,12 +8,12 @@ import type { CustomQueryResult } from './query-result.js.flow'
 import type { LoginCommand, CustomCommand } from './command.js.flow'
 import type { ErrorResultType } from './error-result.js.flow'
 import type { CustomCommandResult } from './command-result.js.flow'
-import type { RestorableEntity } from './restorable-entity.js.flow'
+import type { Entity } from './entity.js.flow'
 
 export type OKAuthenticationResult = {|
   ok: 1,
   preSession: PreSession,
-  user: ?RestorableEntity,
+  user: ?Entity,
 |}
 
 export type NGAuthenticationResult = {|

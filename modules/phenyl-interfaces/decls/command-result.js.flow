@@ -2,7 +2,7 @@
 
 import type { Restorable } from 'mongolike-operations'
 import type { Session } from './session.js.flow'
-import type { RestorableEntity } from './restorable-entity.js.flow'
+import type { Entity } from './entity.js.flow'
 import type { ErrorResult } from './error-result.js.flow'
 
 export type CommandResult = {
@@ -14,14 +14,14 @@ export type CommandResultOrError = CommandResult | ErrorResult
 export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
-  values: Array<RestorableEntity>
+  values: Array<Entity>
 }
 export type MultiValuesCommandResultOrError = MultiValuesCommandResult | ErrorResult
 
 export type GetCommandResult = {
   ok: 1,
   n: number,
-  value: RestorableEntity
+  value: Entity
 }
 export type GetCommandResultOrError = GetCommandResult | ErrorResult
 
@@ -34,7 +34,7 @@ export type CustomCommandResultOrError = CustomCommandResult | ErrorResult
 export type LoginCommandResult = {
   ok: 1,
   session: Session,
-  user: ?RestorableEntity,
+  user: ?Entity,
 }
 export type LoginCommandResultOrError = LoginCommandResult | ErrorResult
 

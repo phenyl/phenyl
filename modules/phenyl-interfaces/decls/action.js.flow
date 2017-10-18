@@ -1,12 +1,12 @@
 // @flow
 
 import type {
-  EntityState,
-} from './entity-state.js.flow'
+  Entity,
+} from './entity.js.flow'
 
 import type {
-  RestorableEntity,
-} from './restorable-entity.js.flow'
+  EntityState,
+} from './entity-state.js.flow'
 
 import type {
   UpdateCommand,
@@ -22,7 +22,7 @@ export type RegisterAction = {|
   type: 'phenyl/$register',
   payload: {|
     entityName: string,
-    entities: Array<RestorableEntity>
+    entities: Array<Entity>
   |}
 |}
 

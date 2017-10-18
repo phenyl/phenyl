@@ -1,3 +1,0 @@
-// @flow
-import type { Entity } from './entity.js.flow'
-export type RestorableEntity = Entity

@@ -1,7 +1,7 @@
 // @flow
 import { assignWithRestoration } from 'power-assign/jsnext'
 import type {
-  RestorableEntity,
+  Entity,
   PreEntity,
   KvsClient,
   Id,
@@ -16,7 +16,7 @@ type MemoryKvsClientParams<T> = {
   pool?: KeyValuePool<T>
 }
 
-export default class MemoryKvsClient<T: RestorableEntity> implements KvsClient<T> {
+export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
   pool: KeyValuePool<T>
 
   constructor(params: MemoryKvsClientParams<T> = {}) {
