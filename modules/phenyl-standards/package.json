@@ -5,14 +5,15 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
-    "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
+    "kocha": "^1.8.0",
     "phenyl-interfaces": "*",
-    "power-assign": "*"
+    "power-assert": "^1.4.4"
   },
   "dependencies": {
     "oad-utils": "*",
     "phenyl-utils": "*",
+    "power-assign": "*",
     "power-crypt": "*"
   },
   "author": "",
