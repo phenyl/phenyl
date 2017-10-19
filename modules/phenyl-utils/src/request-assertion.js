@@ -49,7 +49,7 @@ export function assertValidRequestData(rd: any): void {
     }
   }
   catch (e) {
-    throw new Error(`Error in "requestData.${method}": \n\t{$e.message}`)
+    throw new Error(`Error in "requestData.${method}": ${e.message}`)
   }
 }
 
@@ -154,13 +154,13 @@ export function assertValidUpdateCommand(com: any): void {
     throw new Error(`updateCommand must be an object. ${typeof com} given.`)
   }
 
-  const { entityName, rderators, id, where } = com
+  const { entityName, operators, id, where } = com
 
   if (typeof entityName !== 'string' || !entityName) {
     throw new Error(`updateCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
-  assertValidUpdateOperators(rderators)
+  assertValidUpdateOperators(operators)
 
   if (id != null) {
     if (typeof id !== 'string' || !id) {
