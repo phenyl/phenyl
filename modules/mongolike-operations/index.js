@@ -32,17 +32,17 @@ import type {
   UpdateOperation,
 } from './decls/update-operation.js.flow'
 import type {
-  AndWhereConditions,
-  NorWhereConditions,
-  OrWhereConditions,
-  SimpleWhereConditions,
-  WhereConditions,
-} from './decls/where-conditions.js.flow'
+  AndFindOperation,
+  NorFindOperation,
+  OrFindOperation,
+  SimpleFindOperation,
+  FindOperation,
+} from './decls/find-operation.js.flow'
 
 export type {
   AddToSetOperator,
   CombinedUpdateOperation,
-  AndWhereConditions,
+  AndFindOperation,
   BitOperator,
   BSONTypeNumber,
   BSONTypeString,
@@ -54,8 +54,8 @@ export type {
   MaxOperator,
   MinOperator,
   MulOperator,
-  NorWhereConditions,
-  OrWhereConditions,
+  NorFindOperation,
+  OrFindOperation,
   PopOperator,
   PullOperator,
   PushModifier,
@@ -65,10 +65,10 @@ export type {
   Restorable,
   RestoreOperator,
   SetOperator,
-  SimpleWhereConditions,
+  SimpleFindOperation,
   SortNotation,
   UnsetOperator,
   UpdateOperator,
   UpdateOperation,
-  WhereConditions,
+  FindOperation,
 }

@@ -5,7 +5,7 @@ import deepEqual from 'fast-deep-equal'
 import type {
   BSONTypeNumber,
   BSONTypeString,
-  WhereConditions,
+  FindOperation,
   QueryCondition,
 } from 'mongolike-operations'
 
@@ -22,7 +22,7 @@ type Classified = {
  *
  */
 export default class PowerFilter {
-  static filter(values: Array<Object>, where: WhereConditions): Array<Object> {
+  static filter(values: Array<Object>, where: FindOperation): Array<Object> {
     return this.classify(values, where).ok
   }
 
@@ -30,7 +30,7 @@ export default class PowerFilter {
    * @private
    * Classify values into match or unmatch groups
    */
-  static classify(values: Array<Object>, where: WhereConditions): Classified {
+  static classify(values: Array<Object>, where: FindOperation): Classified {
     if (where.$and != null) {
       // TODO: confirm spec when $and is []
       return where.$and.reduce((vals, conds) => {
@@ -164,7 +164,7 @@ export default class PowerFilter {
 /**
  * Filter the given values
  */
-export function filter(values: Array<Object>, where: WhereConditions): Array<Object> {
+export function filter(values: Array<Object>, where: FindOperation): Array<Object> {
   return PowerFilter.filter(values, where)
 }
 

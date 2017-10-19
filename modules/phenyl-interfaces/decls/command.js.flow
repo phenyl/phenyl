@@ -1,6 +1,6 @@
 // @flow
 import type {
-  WhereConditions,
+  FindOperation,
   UpdateOperation,
 } from 'mongolike-operations'
 import type { Entity } from './entity.js.flow' // Object
@@ -35,7 +35,7 @@ export type IdUpdateCommand = {|
 
 export type MultiUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
-  +where: WhereConditions, // "q" key in MongoDB reference
+  +where: FindOperation, // "q" key in MongoDB reference
   operation: UpdateOperation, // "u" key in MongoDB reference
   ordered?: boolean,
 |}
@@ -50,7 +50,7 @@ export type IdDeleteCommand = {|
 
 export type MultiDeleteCommand = {|
   entityName: EntityName, // "delete" key in MongoDB reference
-  +where: WhereConditions, // "q" key in MongoDB reference
+  +where: FindOperation, // "q" key in MongoDB reference
   limit?: number,
   ordered?: boolean,
 |}

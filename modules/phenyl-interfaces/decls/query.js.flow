@@ -1,14 +1,14 @@
 // @flow
 import type {
   SortNotation,
-  WhereConditions,
+  FindOperation,
 } from 'mongolike-operations'
 import type { Id } from './id.js.flow' // string
 type EntityName = string
 
 export interface WhereQuery {
   entityName: EntityName,
-  +where: WhereConditions,
+  +where: FindOperation,
   skip?: number,
   limit?: number,
   sort?: SortNotation, // { [key: string]: 1 | -1 }

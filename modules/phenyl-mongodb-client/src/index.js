@@ -18,12 +18,12 @@ import type {
   QueryResultOrError,
   SingleQueryResultOrError,
   CommandResultOrError,
-  WhereConditions,
+  FindOperation,
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
 
-function set_idToId(where: WhereConditions): WhereConditions {
+function set_idToId(where: FindOperation): FindOperation {
   return where
   /*
   return visitSimpleConditions(where, (simpleConditions) => {

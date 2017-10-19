@@ -33,7 +33,7 @@ import type {
   SetOperator,
   UnsetOperator,
   UpdateOperation,
-  WhereConditions,
+  FindOperation,
 } from 'mongolike-operations'
 
 /**

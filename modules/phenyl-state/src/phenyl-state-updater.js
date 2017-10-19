@@ -80,8 +80,8 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  $deleteByWhereConditions(command: MultiDeleteCommand): UpdateOperation {
-    return this.constructor.$deleteByWhereConditions(this.state, command)
+  $deleteByFindOperation(command: MultiDeleteCommand): UpdateOperation {
+    return this.constructor.$deleteByFindOperation(this.state, command)
   }
 
   /**
@@ -135,7 +135,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    */
   static $delete(state: EntityState, command: DeleteCommand): UpdateOperation {
     if (command.where) {
-      return this.$deleteByWhereConditions(state, command)
+      return this.$deleteByFindOperation(state, command)
     }
     return this.$deleteById(state, command)
   }
@@ -152,7 +152,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $deleteByWhereConditions(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
+  static $deleteByFindOperation(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
     const { where, entityName } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const $unset = {}
