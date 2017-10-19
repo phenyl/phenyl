@@ -41,12 +41,12 @@ import type {
 
 type HttpClientParams = {
   url: string,
-  sessionId: Id,
+  sessionId?: ?Id,
 }
 
 export default class PhenylHttpClient implements EntityClient, CustomClient, AuthClient {
   url: string
-  sessionId: Id
+  sessionId: ?Id
 
   constructor(params: HttpClientParams) {
     this.url = params.url
