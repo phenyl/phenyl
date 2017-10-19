@@ -12,6 +12,9 @@
     "babel-register": "^6.24.1",
     "mongolike-operations": "*"
   },
+  "dependencies": {
+    "fast-deep-equal": "^1.0.0"
+  },
   "author": "",
   "license": "ISC"
 }
