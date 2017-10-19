@@ -151,8 +151,8 @@ export default class PhenylMemoryClient implements EntityClient {
     const newValue = value.id
       ? value
       : assign(value, { id: randomString() })
-    const operators = PhenylStateUpdater.$register(this.entityState, entityName, newValue)
-    this.entityState = assign(this.entityState, operators)
+    const operation = PhenylStateUpdater.$register(this.entityState, entityName, newValue)
+    this.entityState = assign(this.entityState, operation)
     return {
       ok: 1,
       n: 1,
@@ -170,8 +170,8 @@ export default class PhenylMemoryClient implements EntityClient {
       const newValue = value.id
         ? value
         : assign(value, { id: randomString() })
-      const operators = PhenylStateUpdater.$register(this.entityState, entityName, newValue)
-      this.entityState = assign(this.entityState, operators)
+      const operation = PhenylStateUpdater.$register(this.entityState, entityName, newValue)
+      this.entityState = assign(this.entityState, operation)
       newValues.push(newValue)
     }
     return {
@@ -186,8 +186,8 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
     try {
-      const operators = PhenylStateUpdater.$update(this.entityState, command)
-      this.entityState = assign(this.entityState, operators)
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
       return { ok: 1, n: 1 }
     }
     catch (e) {
@@ -201,8 +201,8 @@ export default class PhenylMemoryClient implements EntityClient {
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
     const { entityName, id } = command
     try {
-      const operators = PhenylStateUpdater.$update(this.entityState, command)
-      this.entityState = assign(this.entityState, operators)
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
       return { ok: 1, n: 1, value: PhenylStateFinder.get(this.entityState, { entityName, id }) }
     }
     catch (e) {
@@ -219,8 +219,8 @@ export default class PhenylMemoryClient implements EntityClient {
       // TODO Performance issue: find() runs twice for just getting N
       const values = PhenylStateFinder.find(this.entityState, { entityName, where })
       const ids = values.map(value => value.id)
-      const operators = PhenylStateUpdater.$update(this.entityState, command)
-      this.entityState = assign(this.entityState, operators)
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
       return { ok: 1, n: values.length, values: PhenylStateFinder.getByIds(this.entityState, { ids, entityName }) }
     }
     catch (e) {
@@ -236,8 +236,8 @@ export default class PhenylMemoryClient implements EntityClient {
     try {
       // TODO Performance issue: find() runs twice for just getting N
       const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1
-      const operators = PhenylStateUpdater.$delete(this.entityState, command)
-      this.entityState = assign(this.entityState, operators)
+      const operation = PhenylStateUpdater.$delete(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
       return { ok: 1, n }
     }
     catch (e) {

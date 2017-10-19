@@ -2,7 +2,7 @@
 
 import {
   retargetToProp,
-  mergeOperators,
+  mergeOperation,
 } from 'power-assign/jsnext'
 
 import type {
@@ -98,22 +98,22 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    *
    */
   static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
-    const { id, entityName, operators } = command
+    const { id, entityName, operation } = command
     const docPath = ['pool', entityName, id].join('.')
-    return retargetToProp(docPath, operators)
+    return retargetToProp(docPath, operation)
   }
 
   /**
    *
    */
   static $updateByWhereCondition(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
-    const { where, entityName, operators } = command
+    const { where, entityName, operation } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
-    const operatorsList = targetEntities.map(targetEntity => {
+    const operationList = targetEntities.map(targetEntity => {
       const docPath = ['pool', entityName, targetEntity.id].join('.')
-      return retargetToProp(docPath, operators)
+      return retargetToProp(docPath, operation)
     })
-    return mergeOperators(...operatorsList)
+    return mergeOperation(...operationList)
   }
 
   /**
@@ -123,11 +123,11 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * Instead, it receives in entities created in server.
    */
   static $register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
-    const operatorsList = entities.map(entity => {
+    const operationList = entities.map(entity => {
       const docPath = ['pool', entityName, entity.id].join('.')
       return  { $set: { [docPath]: entity } }
     })
-    return mergeOperators(...operatorsList)
+    return mergeOperation(...operationList)
   }
 
   /**

@@ -34,18 +34,18 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
 
     case 'phenyl/$register': {
       const { entityName, entities } = action.payload
-      const operators = PhenylStateUpdater.$register(state, entityName, ...entities)
-      return assignWithRestoration(state, operators)
+      const operation = PhenylStateUpdater.$register(state, entityName, ...entities)
+      return assignWithRestoration(state, operation)
     }
 
     case 'phenyl/$update': {
-      const operators = PhenylStateUpdater.$update(state, action.payload)
-      return assignWithRestoration(state, operators)
+      const operation = PhenylStateUpdater.$update(state, action.payload)
+      return assignWithRestoration(state, operation)
     }
 
     case 'phenyl/$delete': {
-      const operators = PhenylStateUpdater.$delete(state, action.payload)
-      return assignWithRestoration(state, operators)
+      const operation = PhenylStateUpdater.$delete(state, action.payload)
+      return assignWithRestoration(state, operation)
     }
     default: {
       return state

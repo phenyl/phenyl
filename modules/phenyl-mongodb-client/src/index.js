@@ -128,16 +128,16 @@ export default class PhenylMongoDbClient implements EntityClient {
   }
 
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
-    const { entityName, id, operators } = command
+    const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateOne({ _id: id }, operators)
+    const result = await coll.updateOne({ _id: id }, operation)
     return { ok: 1, n: 1, value: result }
   }
 
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
-    const { entityName, where, operators } = command
+    const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateMany(where, operators)
+    const result = await coll.updateMany(where, operation)
     return { ok: 1, n: 1, values: result }
   }
 

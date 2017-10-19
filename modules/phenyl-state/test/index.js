@@ -68,10 +68,10 @@ describe('$update', () => {
       pool: { user: { '1': new User({ id: '1', name: 'Shin' }) } },
     })
 
-    const operators = state.$update({
+    const operation = state.$update({
       entityName: 'user',
       id: '1',
-      operators: { $set: { name: 'Shinji' }}
+      operation: { $set: { name: 'Shinji' }}
     })
 
     const expected = {
@@ -82,11 +82,11 @@ describe('$update', () => {
         'pool.user.1': ''
       }
     }
-    const newState = assignWithRestoration(state, operators)
+    const newState = assignWithRestoration(state, operation)
     const expectedNewState = new PhenylState({
       pool: { user: { '1': new User({ id: '1', name: 'Shinji' }) } },
     })
-    assert.deepEqual(expected, operators)
+    assert.deepEqual(expected, operation)
     assert.deepEqual(expectedNewState, newState)
   })
 })
@@ -100,7 +100,7 @@ describe('$delete', () => {
         '3': { id: '3', name: 'Jenkins' },
       } },
     })
-    const operators = state.$delete({
+    const operation = state.$delete({
       entityName: 'user',
       where: { name: { $regex: /in/ } }
     })
@@ -109,13 +109,13 @@ describe('$delete', () => {
       'pool.user.3': '',
     } }
 
-    const newState = assignWithRestoration(state, operators)
+    const newState = assignWithRestoration(state, operation)
     const expectedNewState = new PhenylState({
       pool: { user: {
         '2': { id: '2', name: 'Tom' },
       } },
     })
-    assert.deepEqual(expected, operators)
+    assert.deepEqual(expected, operation)
     assert.deepEqual(expectedNewState, newState)
   })
 })
@@ -127,7 +127,7 @@ describe('$register', () => {
         user: { '1': { id: '1', name: 'Shin' } }
       },
     })
-    const operators = state.$register('book', { id: 'book01', title: 'ABC-Z' })
+    const operation = state.$register('book', { id: 'book01', title: 'ABC-Z' })
     const expected = {
       $and: [{
         $set: {
@@ -138,7 +138,7 @@ describe('$register', () => {
         }
       }]
     }
-    const newState = assignWithRestoration(state, operators)
+    const newState = assignWithRestoration(state, operation)
 
     const expectedNewState = new PhenylState({
       pool: {
@@ -147,7 +147,7 @@ describe('$register', () => {
       },
     })
 
-    assert.deepEqual(expected, operators)
+    assert.deepEqual(expected, operation)
     assert.deepEqual(expectedNewState, newState)
   })
 })

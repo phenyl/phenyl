@@ -30,13 +30,13 @@ export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 export type IdUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   id: Id,
-  operators: UpdateOperation, // "u" key in MongoDB reference
+  operation: UpdateOperation, // "u" key in MongoDB reference
 |}
 
 export type MultiUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   +where: WhereConditions, // "q" key in MongoDB reference
-  operators: UpdateOperation, // "u" key in MongoDB reference
+  operation: UpdateOperation, // "u" key in MongoDB reference
   ordered?: boolean,
 |}
 

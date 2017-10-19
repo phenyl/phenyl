@@ -5,7 +5,7 @@ import assert from 'power-assert'
 import { retargetToProp, retargetToPropWithRestoration } from '../src/retarget-to-prop.js'
 
 describe('retargetToProp', () => {
-  it('converts operators so that it sets to propName', () => {
+  it('converts operation so that it sets to propName', () => {
     const ops = {
       $inc: { value: 1 },
     }

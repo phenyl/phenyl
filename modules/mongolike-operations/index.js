@@ -30,7 +30,7 @@ import type {
   UnsetOperator,
   UpdateOperator,
   UpdateOperation,
-} from './decls/update-operators.js.flow'
+} from './decls/update-operation.js.flow'
 import type {
   AndWhereConditions,
   NorWhereConditions,

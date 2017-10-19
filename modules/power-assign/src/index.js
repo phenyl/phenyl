@@ -5,7 +5,7 @@ export {
   assignToProp,
   assignWithRestoration,
   assignToPropWithRestoration,
-  mergeOperators,
+  mergeOperation,
 } from './power-assign.js'
 export {
   retargetToProp,

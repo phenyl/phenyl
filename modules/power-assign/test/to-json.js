@@ -5,7 +5,7 @@ import assert from 'power-assert'
 import { toJSON } from '../src/to-json.js'
 
 describe('toJSON', () => {
-  it('no conversion when operators do not contain $restore property', () => {
+  it('no conversion when operation do not contain $restore property', () => {
     const ops = {
       $inc: { value: 1 }
     }

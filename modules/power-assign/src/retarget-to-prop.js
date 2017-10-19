@@ -1,5 +1,5 @@
 // @flow
-import { normalizeOperators } from './normalize-operators.js'
+import { normalizeOperation } from './normalize-operation.js'
 
 import type {
   UpdateOperator,
@@ -9,7 +9,7 @@ import type {
 
 export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<UpdateOperation> {
 
-  const ops = normalizeOperators(_ops)
+  const ops = normalizeOperation(_ops)
   const newOps: UpdateOperator = {}
 
   if (ops.$and) {

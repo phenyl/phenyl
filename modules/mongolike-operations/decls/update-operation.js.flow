@@ -71,8 +71,8 @@ export type RenameOperator = {
  *
  * 2) Use toJSON() function exported from power-assign
  *    import { toJSON } from 'power-assign/jsnext'
- *    const operators: UpdateOperation = { $restore: { foo: Foo } }
- *    JSON.stringify(toJSON(operators)) // {"$restore":{"foo":""}}
+ *    const operation: UpdateOperation = { $restore: { foo: Foo } }
+ *    JSON.stringify(toJSON(operation)) // {"$restore":{"foo":""}}
  */
 export type RestoreOperator = {
   [field: DocumentPath]: '' | Class<Restorable>

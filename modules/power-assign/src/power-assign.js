@@ -8,7 +8,7 @@ import {
   parseDocumentPath,
   createDocumentPath,
 } from 'oad-utils/jsnext'
-import { normalizeOperators } from './normalize-operators.js'
+import { normalizeOperation } from './normalize-operation.js'
 import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
@@ -49,7 +49,7 @@ export default class PowerAssign {
 
     if (ops.$and != null) {
       updatedObj = ops.$and.reduce((_updatedObj, ops) =>
-        this.assign(_updatedObj, normalizeOperators(ops)), updatedObj)
+        this.assign(_updatedObj, normalizeOperation(ops)), updatedObj)
 
       if (ops.$restore != null) {
         updatedObj = this.$restore(obj, updatedObj, ops.$restore)
@@ -399,7 +399,7 @@ export default class PowerAssign {
         : newObj
 
       if (Array.isArray(lastObj)) {
-        throw Error(`$rename operators cannot be applied to array field: "${pathToLast}".`)
+        throw Error(`$rename operation cannot be applied to array field: "${pathToLast}".`)
       }
 
       if (!lastObj.hasOwnProperty(lastAttr)) {
@@ -460,7 +460,7 @@ export default class PowerAssign {
  *
  */
 export function assign(obj: Object, ops: Object): Object {
-  return PowerAssign.assign(obj, normalizeOperators(ops))
+  return PowerAssign.assign(obj, normalizeOperation(ops))
 }
 
 /**
@@ -492,9 +492,9 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
 /**
  *
  */
-export function mergeOperators(...operatorsList: Array<Object>): UpdateOperation {
-  const merged: CombinedUpdateOperation = { $and: operatorsList }
-  const $restore = operatorsList.reduce((restoreOp, ops) => {
+export function mergeOperation(...operationList: Array<Object>): UpdateOperation {
+  const merged: CombinedUpdateOperation = { $and: operationList }
+  const $restore = operationList.reduce((restoreOp, ops) => {
     if (ops.$restore == null) {
       return restoreOp
     }

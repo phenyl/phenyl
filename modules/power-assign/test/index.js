@@ -222,7 +222,7 @@ describe('assign', () => {
       }
     }
 
-    it('applies operators to class instances using assignWithRestoration()', () => {
+    it('applies operation to class instances using assignWithRestoration()', () => {
       const user = new User({
         id: 'user1',
         name: { first: 'Shin', last: 'Suzuki' },
@@ -287,7 +287,7 @@ describe('assign', () => {
       assert.deepEqual(expectedNewUser, newUser)
     })
 
-    it('$restore operator is evaluated at the last time even if located before other operators', () => {
+    it('$restore operator is evaluated at the last time even if located before other operation', () => {
       const user = new User({
         id: 'user1',
         name: { first: 'Shin', last: 'Suzuki' },
