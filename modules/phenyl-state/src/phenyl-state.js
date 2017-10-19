@@ -13,7 +13,7 @@ import type {
   MultiDeleteCommand,
   Entity,
   UpdateCommand,
-  UpdateOperators,
+  UpdateOperation,
   WhereQuery,
 } from 'phenyl-interfaces'
 
@@ -72,21 +72,21 @@ export default class PhenylState implements EntityState, EntityStateFinder, Enti
   /**
    *
    */
-  $update(command: UpdateCommand): UpdateOperators {
+  $update(command: UpdateCommand): UpdateOperation {
     return PhenylStateUpdater.$update(this, command)
   }
 
   /**
    *
    */
-  $register(entityName: string, ...pool: Array<Entity>): UpdateOperators {
+  $register(entityName: string, ...pool: Array<Entity>): UpdateOperation {
     return PhenylStateUpdater.$register(this, entityName, ...pool)
   }
 
   /**
    *
    */
-  $delete(command: DeleteCommand): UpdateOperators {
+  $delete(command: DeleteCommand): UpdateOperation {
     return PhenylStateUpdater.$delete(this, command)
   }
 }

@@ -32,7 +32,7 @@ import type {
   RestoreOperator,
   SetOperator,
   UnsetOperator,
-  UpdateOperators,
+  UpdateOperation,
   WhereConditions,
 } from 'mongolike-operations'
 
@@ -44,7 +44,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, ops: $Subtype<UpdateOperators>): Object {
+  static assign(obj: Object, ops: $Subtype<UpdateOperation>): Object {
     let updatedObj: Object = obj
 
     if (ops.$and != null) {
@@ -492,7 +492,7 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
 /**
  *
  */
-export function mergeOperators(...operatorsList: Array<Object>): UpdateOperators {
+export function mergeOperators(...operatorsList: Array<Object>): UpdateOperation {
   const merged: AndOperators = { $and: operatorsList }
   const $restore = operatorsList.reduce((restoreOp, ops) => {
     if (ops.$restore == null) {

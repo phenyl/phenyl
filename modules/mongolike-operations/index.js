@@ -29,7 +29,7 @@ import type {
   SetOperator,
   UnsetOperator,
   UpdateOperator,
-  UpdateOperators,
+  UpdateOperation,
 } from './decls/update-operators.js.flow'
 import type {
   AndWhereConditions,
@@ -69,6 +69,6 @@ export type {
   SortNotation,
   UnsetOperator,
   UpdateOperator,
-  UpdateOperators,
+  UpdateOperation,
   WhereConditions,
 }

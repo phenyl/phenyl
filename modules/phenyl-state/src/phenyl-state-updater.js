@@ -15,7 +15,7 @@ import type {
   MultiDeleteCommand,
   Entity,
   UpdateCommand,
-  UpdateOperators,
+  UpdateOperation,
 } from 'phenyl-interfaces'
 
 import PhenylStateFinder from './phenyl-state-finder.js'
@@ -35,21 +35,21 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  $update(command: UpdateCommand): UpdateOperators {
+  $update(command: UpdateCommand): UpdateOperation {
     return this.constructor.$update(this.state, command)
   }
 
   /**
    *
    */
-  $updateById(command: IdUpdateCommand): UpdateOperators {
+  $updateById(command: IdUpdateCommand): UpdateOperation {
     return this.constructor.$updateById(this.state, command)
   }
 
   /**
    *
    */
-  $updateByWhereCondition(command: MultiUpdateCommand): UpdateOperators {
+  $updateByWhereCondition(command: MultiUpdateCommand): UpdateOperation {
     return this.constructor.$updateByWhereCondition(this.state, command)
   }
 
@@ -59,35 +59,35 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  $register(entityName: string, ...entities: Array<Entity>): UpdateOperators {
+  $register(entityName: string, ...entities: Array<Entity>): UpdateOperation {
     return this.constructor.$register(this.state, entityName, ...entities)
   }
 
   /**
    *
    */
-  $delete(command: DeleteCommand): UpdateOperators {
+  $delete(command: DeleteCommand): UpdateOperation {
     return this.constructor.$delete(this.state, command)
   }
 
   /**
    *
    */
-  $deleteById(command: IdDeleteCommand): UpdateOperators {
+  $deleteById(command: IdDeleteCommand): UpdateOperation {
     return this.constructor.$deleteById(this.state, command)
   }
 
   /**
    *
    */
-  $deleteByWhereConditions(command: MultiDeleteCommand): UpdateOperators {
+  $deleteByWhereConditions(command: MultiDeleteCommand): UpdateOperation {
     return this.constructor.$deleteByWhereConditions(this.state, command)
   }
 
   /**
    *
    */
-  static $update(state: EntityState, command: UpdateCommand): UpdateOperators {
+  static $update(state: EntityState, command: UpdateCommand): UpdateOperation {
     if (command.where) {
       return this.$updateByWhereCondition(state, command)
     }
@@ -97,7 +97,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperators {
+  static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
     const { id, entityName, operators } = command
     const docPath = ['pool', entityName, id].join('.')
     return retargetToProp(docPath, operators)
@@ -106,7 +106,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $updateByWhereCondition(state: EntityState, command: MultiUpdateCommand): UpdateOperators {
+  static $updateByWhereCondition(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
     const { where, entityName, operators } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const operatorsList = targetEntities.map(targetEntity => {
@@ -122,7 +122,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static $register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperators {
+  static $register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
     const operatorsList = entities.map(entity => {
       const docPath = ['pool', entityName, entity.id].join('.')
       return  { $set: { [docPath]: entity } }
@@ -133,7 +133,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $delete(state: EntityState, command: DeleteCommand): UpdateOperators {
+  static $delete(state: EntityState, command: DeleteCommand): UpdateOperation {
     if (command.where) {
       return this.$deleteByWhereConditions(state, command)
     }
@@ -143,7 +143,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperators {
+  static $deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperation {
     const { id, entityName } = command
     const docPath = ['pool', entityName, id].join('.')
     return { $unset: {[docPath]: '' } }
@@ -152,7 +152,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $deleteByWhereConditions(state: EntityState, command: MultiDeleteCommand): UpdateOperators {
+  static $deleteByWhereConditions(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
     const { where, entityName } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const $unset = {}

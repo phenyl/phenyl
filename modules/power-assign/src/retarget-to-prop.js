@@ -3,11 +3,11 @@ import { normalizeOperators } from './normalize-operators.js'
 
 import type {
   UpdateOperator,
-  UpdateOperators,
+  UpdateOperation,
   DocumentPath,
 } from 'mongolike-operations'
 
-export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<UpdateOperators> {
+export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<UpdateOperation> {
 
   const ops = normalizeOperators(_ops)
   const newOps: UpdateOperator = {}
@@ -37,7 +37,7 @@ export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<Up
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _ops: Object): UpdateOperators {
+export function retargetToPropWithRestoration(docPath: DocumentPath, _ops: Object): UpdateOperation {
   const ops = retargetToProp(docPath, _ops)
 
   const $restore = ops.$restore || {}

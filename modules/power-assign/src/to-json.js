@@ -1,9 +1,9 @@
 // @flow
 import type {
-  UpdateOperators,
+  UpdateOperation,
 } from 'mongolike-operations'
 
-export function toJSON(ops: Object): UpdateOperators {
+export function toJSON(ops: Object): UpdateOperation {
   if (ops.$restore == null) {
     return ops
   }

@@ -1,7 +1,7 @@
 // @flow
 import type {
   WhereConditions,
-  UpdateOperators,
+  UpdateOperation,
 } from 'mongolike-operations'
 import type { Entity } from './entity.js.flow' // Object
 import type { Id } from './id.js.flow' // string
@@ -30,13 +30,13 @@ export type UpdateCommand = IdUpdateCommand | MultiUpdateCommand
 export type IdUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   id: Id,
-  operators: UpdateOperators, // "u" key in MongoDB reference
+  operators: UpdateOperation, // "u" key in MongoDB reference
 |}
 
 export type MultiUpdateCommand = {|
   entityName: EntityName, // "update" key in MongoDB reference
   +where: WhereConditions, // "q" key in MongoDB reference
-  operators: UpdateOperators, // "u" key in MongoDB reference
+  operators: UpdateOperation, // "u" key in MongoDB reference
   ordered?: boolean,
 |}
 

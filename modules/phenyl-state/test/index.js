@@ -55,7 +55,7 @@ describe('get', () => {
 })
 
 describe('$update', () => {
-  it('returns modified UpdateOperators', () => {
+  it('returns modified UpdateOperation', () => {
     class User {
       id: string
       name: string
@@ -92,7 +92,7 @@ describe('$update', () => {
 })
 
 describe('$delete', () => {
-  it('returns UpdateOperators to delete pool', () => {
+  it('returns UpdateOperation to delete pool', () => {
     const state = new PhenylState({
       pool: { user: {
         '1': { id: '1', name: 'Shin' },
@@ -121,7 +121,7 @@ describe('$delete', () => {
 })
 
 describe('$register', () => {
-  it('returns UpdateOperators to register pool', () => {
+  it('returns UpdateOperation to register pool', () => {
     const state = new PhenylState({
       pool: {
         user: { '1': { id: '1', name: 'Shin' } }

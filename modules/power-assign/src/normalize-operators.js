@@ -1,13 +1,13 @@
 // @flow
 
 import type {
-  UpdateOperators,
+  UpdateOperation,
 } from 'mongolike-operations'
 
 /**
  *
  */
-export function normalizeOperators(ops: Object): UpdateOperators {
+export function normalizeOperators(ops: Object): UpdateOperation {
   const firstKey = Object.keys(ops)[0]
   if (!firstKey) return ops
   if (firstKey.charAt(0) !== '$') return { $set: ops }

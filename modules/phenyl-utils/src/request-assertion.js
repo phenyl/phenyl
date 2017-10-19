@@ -160,7 +160,7 @@ export function assertValidUpdateCommand(com: any): void {
     throw new Error(`updateCommand.entityName must be a non-empty string. "${entityName}" given.`)
   }
 
-  assertValidUpdateOperators(operators)
+  assertValidUpdateOperation(operators)
 
   if (id != null) {
     if (typeof id !== 'string' || !id) {
@@ -305,7 +305,7 @@ export function assertValidLogoutCommand(com: any): void {
 /**
  *
  */
-export function assertValidUpdateOperators(ope: any): void {
+export function assertValidUpdateOperation(ope: any): void {
   if (typeof ope !== 'object' || ope === null) {
     throw new Error(`update operators must be an object. "${ope}" given.`)
   }
