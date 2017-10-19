@@ -3,11 +3,11 @@ import type {
   UpdateOperation,
 } from 'mongolike-operations'
 
-export function toJSON(ops: Object): UpdateOperation {
-  if (ops.$restore == null) {
-    return ops
+export function toJSON(operation: Object): UpdateOperation {
+  if (operation.$restore == null) {
+    return operation
   }
   const $restore = {}
-  Object.keys(ops.$restore).forEach(docPath => $restore[docPath] = '')
-  return Object.assign({}, ops, { $restore })
+  Object.keys(operation.$restore).forEach(docPath => $restore[docPath] = '')
+  return Object.assign({}, operation, { $restore })
 }

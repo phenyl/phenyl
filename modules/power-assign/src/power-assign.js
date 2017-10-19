@@ -44,74 +44,74 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, ops: $Subtype<UpdateOperation>): Object {
+  static assign(obj: Object, uOp: $Subtype<UpdateOperation>): Object {
     let updatedObj: Object = obj
 
-    if (ops.$and != null) {
-      updatedObj = ops.$and.reduce((_updatedObj, ops) =>
-        this.assign(_updatedObj, normalizeOperation(ops)), updatedObj)
+    if (uOp.$and != null) {
+      updatedObj = uOp.$and.reduce((_updatedObj, uOp) =>
+        this.assign(_updatedObj, normalizeOperation(uOp)), updatedObj)
 
-      if (ops.$restore != null) {
-        updatedObj = this.$restore(obj, updatedObj, ops.$restore)
+      if (uOp.$restore != null) {
+        updatedObj = this.$restore(obj, updatedObj, uOp.$restore)
       }
       return updatedObj
     }
 
-    const operatorNames = Object.keys(ops)
+    const operatorNames = Object.keys(uOp)
 
     for (const operatorName of operatorNames) {
       switch (operatorName) {
 
         case '$inc':
-          updatedObj = this.$inc(updatedObj, ops.$inc)
+          updatedObj = this.$inc(updatedObj, uOp.$inc)
           break
 
         case '$set':
-          updatedObj = this.$set(updatedObj, ops.$set)
+          updatedObj = this.$set(updatedObj, uOp.$set)
           break
 
         case '$min':
-          updatedObj = this.$min(updatedObj, ops.$min)
+          updatedObj = this.$min(updatedObj, uOp.$min)
           break
 
         case '$max':
-          updatedObj = this.$max(updatedObj, ops.$max)
+          updatedObj = this.$max(updatedObj, uOp.$max)
           break
 
         case '$mul':
-          updatedObj = this.$mul(updatedObj, ops.$mul)
+          updatedObj = this.$mul(updatedObj, uOp.$mul)
           break
 
         case '$addToSet':
-          updatedObj = this.$addToSet(updatedObj, ops.$addToSet)
+          updatedObj = this.$addToSet(updatedObj, uOp.$addToSet)
           break
 
         case '$pop':
-          updatedObj = this.$pop(updatedObj, ops.$pop)
+          updatedObj = this.$pop(updatedObj, uOp.$pop)
           break
 
         case '$pull':
-          updatedObj = this.$pull(updatedObj, ops.$pull)
+          updatedObj = this.$pull(updatedObj, uOp.$pull)
           break
 
         case '$push':
-          updatedObj = this.$push(updatedObj, ops.$push)
+          updatedObj = this.$push(updatedObj, uOp.$push)
           break
 
         case '$currentDate':
-          updatedObj = this.$currentDate(updatedObj, ops.$currentDate)
+          updatedObj = this.$currentDate(updatedObj, uOp.$currentDate)
           break
 
         case '$bit':
-          updatedObj = this.$bit(updatedObj, ops.$bit)
+          updatedObj = this.$bit(updatedObj, uOp.$bit)
           break
 
         case '$unset':
-          updatedObj = this.$unset(updatedObj, ops.$unset)
+          updatedObj = this.$unset(updatedObj, uOp.$unset)
           break
 
         case '$rename':
-          updatedObj = this.$rename(updatedObj, ops.$rename)
+          updatedObj = this.$rename(updatedObj, uOp.$rename)
           break
 
         case '$restore':
@@ -125,8 +125,8 @@ export default class PowerAssign {
           throw new Error(`Invalid operator: "${operatorName}"`)
       }
     }
-    if (ops.$restore != null) {
-      updatedObj = this.$restore(obj, updatedObj, ops.$restore)
+    if (uOp.$restore != null) {
+      updatedObj = this.$restore(obj, updatedObj, uOp.$restore)
     }
     return updatedObj
   }
@@ -459,23 +459,23 @@ export default class PowerAssign {
 /**
  *
  */
-export function assign(obj: Object, ops: Object): Object {
-  return PowerAssign.assign(obj, normalizeOperation(ops))
+export function assign(obj: Object, uOp: Object): Object {
+  return PowerAssign.assign(obj, normalizeOperation(uOp))
 }
 
 /**
  *
  */
-export function assignToProp(obj: Object, docPath: DocumentPath, ops: Object): Object {
-  const modifiedOps = retargetToProp(docPath, ops)
+export function assignToProp(obj: Object, docPath: DocumentPath, uOp: Object): Object {
+  const modifiedOps = retargetToProp(docPath, uOp)
   return assign(obj, modifiedOps)
 }
 
 /**
  *
  */
-export function assignWithRestoration<T: Restorable>(obj: T, ops: Object): T {
-  const updatedObj = assign(obj, ops)
+export function assignWithRestoration<T: Restorable>(obj: T, uOp: Object): T {
+  const updatedObj = assign(obj, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
 }
@@ -483,8 +483,8 @@ export function assignWithRestoration<T: Restorable>(obj: T, ops: Object): T {
 /**
  *
  */
-export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, ops: Object): T {
-  const updatedObj = assignToProp(obj, docPath, ops)
+export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, uOp: Object): T {
+  const updatedObj = assignToProp(obj, docPath, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
 }
@@ -494,11 +494,11 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
  */
 export function mergeOperation(...operationList: Array<Object>): UpdateOperation {
   const merged: CombinedUpdateOperation = { $and: operationList }
-  const $restore = operationList.reduce((restoreOp, ops) => {
-    if (ops.$restore == null) {
+  const $restore = operationList.reduce((restoreOp, uOp) => {
+    if (uOp.$restore == null) {
       return restoreOp
     }
-    return Object.assign({}, restoreOp, ops.$restore)
+    return Object.assign({}, restoreOp, uOp.$restore)
   }, {})
 
   if (Object.keys($restore).length > 0) {

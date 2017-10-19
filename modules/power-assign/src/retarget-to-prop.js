@@ -7,25 +7,25 @@ import type {
   DocumentPath,
 } from 'mongolike-operations'
 
-export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<UpdateOperation> {
+export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subtype<UpdateOperation> {
 
-  const ops = normalizeOperation(_ops)
+  const operation = normalizeOperation(_operation)
   const newOps: UpdateOperator = {}
 
-  if (ops.$and) {
-    // $FlowIssue(ops.$and-is-Array)
-    newOps.$and = ops.$and.map(subOps => retargetToProp(docPath, subOps))
-    if (ops.$restore) {
+  if (operation.$and) {
+    // $FlowIssue(operation.$and-is-Array)
+    newOps.$and = operation.$and.map(subOps => retargetToProp(docPath, subOps))
+    if (operation.$restore) {
       // $FlowIssue(newOps-can-have-$restore-property)
-      newOps.$restore = retargetToProp(docPath, { $restore: ops.$restore }).$restore
+      newOps.$restore = retargetToProp(docPath, { $restore: operation.$restore }).$restore
     }
     return newOps
   }
 
-  const operatorNames = Object.keys(ops)
+  const operatorNames = Object.keys(operation)
 
   for (const operatorName of operatorNames) {
-    const operator: UpdateOperator = ops[operatorName]
+    const operator: UpdateOperator = operation[operatorName]
       // $FlowIssue(newOps-can-have-property-of-operatorName)
     newOps[operatorName] = {}
     Object.keys(operator).forEach(originalDocPath => {
@@ -37,12 +37,12 @@ export function retargetToProp(docPath: DocumentPath, _ops: Object): $Subtype<Up
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _ops: Object): UpdateOperation {
-  const ops = retargetToProp(docPath, _ops)
+export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): UpdateOperation {
+  const operation = retargetToProp(docPath, _operation)
 
-  const $restore = ops.$restore || {}
+  const $restore = operation.$restore || {}
   $restore[docPath] = ''
 
-  // here we write to the ops (mutable)
-  return Object.assign(ops, { $restore })
+  // here we write to the operation (mutable)
+  return Object.assign(operation, { $restore })
 }

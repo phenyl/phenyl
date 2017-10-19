@@ -6,10 +6,10 @@ import { retargetToProp, retargetToPropWithRestoration } from '../src/retarget-t
 
 describe('retargetToProp', () => {
   it('converts operation so that it sets to propName', () => {
-    const ops = {
+    const operation = {
       $inc: { value: 1 },
     }
-    const retargetedOps = retargetToProp('age', ops)
+    const retargetedOps = retargetToProp('age', operation)
     const expected = {
       $inc: { 'age.value': 1 }
     }
@@ -20,10 +20,10 @@ describe('retargetToProp', () => {
 describe('retargetToPropWithRestoration', () => {
 
   it('attaches $restore operation for restoration of the prop', () => {
-    const ops = {
+    const operation = {
       $inc: { value: 1 },
     }
-    const retargetedOps = retargetToPropWithRestoration('age', ops)
+    const retargetedOps = retargetToPropWithRestoration('age', operation)
     const expected = {
       $inc: { 'age.value': 1 },
       $restore: { age: '' },
@@ -33,15 +33,15 @@ describe('retargetToPropWithRestoration', () => {
 
   it('attaches $restore operation when it already exists', () => {
     class SomeClass {}
-    const ops = {
+    const operation = {
       $inc: { value: 1 },
       $restore: { someValue: SomeClass },
     }
-    const retargetedOps = retargetToPropWithRestoration('age', ops)
+    const retargetedOperation = retargetToPropWithRestoration('age', operation)
     const expected = {
       $inc: { 'age.value': 1 },
       $restore: { 'age.someValue': SomeClass, age: '' },
     }
-    assert.deepEqual(expected, retargetedOps)
+    assert.deepEqual(expected, retargetedOperation)
   })
 })
