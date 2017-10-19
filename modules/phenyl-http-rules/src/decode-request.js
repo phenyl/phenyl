@@ -46,10 +46,10 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   if (qsParams == null || Object.keys(qsParams).length === 0) {
     return {
       method: 'get',
-      payload: { entityName: path[1], id: path[2] }
+      payload: { entityName: paths[1], id: paths[2] }
     }
   }
-  const methodName = path[2]
+  const methodName = paths[2]
 
   if (!methodName) {
     return {
@@ -113,7 +113,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     }
   }
   const paths = path.split('/')
-  const methodName = path[2]
+  const methodName = paths[2]
 
   if (methodName === 'insert') {
     return {
@@ -148,7 +148,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   const paths = path.split('/')
-  const methodName = path[2]
+  const methodName = paths[2]
   if (methodName === 'update') {
     return {
       method: 'update',
@@ -180,20 +180,20 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   const paths = path.split('/')
 
   // multi deletion
-  if (path[2] === 'delete' && qsParams) {
+  if (paths[2] === 'delete' && qsParams) {
     return {
       method: 'delete',
       payload: decodeQsParams(qsParams),
     }
   }
 
-  if (path[1] && path[2]) {
+  if (paths[1] && paths[2]) {
     // single deletion
     return {
       method: 'delete',
       payload: {
-        entityName: path[1],
-        id: path[2],
+        entityName: paths[1],
+        id: paths[2],
       }
     }
   }
