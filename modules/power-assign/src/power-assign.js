@@ -14,7 +14,7 @@ import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 import type {
   AddToSetOperator,
-  AndOperators,
+  CombinedUpdateOperation,
   BitOperator,
   CurrentDateOperator,
   DocumentPath,
@@ -493,7 +493,7 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
  *
  */
 export function mergeOperators(...operatorsList: Array<Object>): UpdateOperation {
-  const merged: AndOperators = { $and: operatorsList }
+  const merged: CombinedUpdateOperation = { $and: operatorsList }
   const $restore = operatorsList.reduce((restoreOp, ops) => {
     if (ops.$restore == null) {
       return restoreOp
