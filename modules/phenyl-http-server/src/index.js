@@ -19,7 +19,7 @@ import {
   createErrorResult,
 } from 'phenyl-utils/jsnext'
 
-export default class PhenylHTTPServer {
+export default class PhenylHttpServer {
   server: net$Server
   phenylCore: PhenylRunner
 
