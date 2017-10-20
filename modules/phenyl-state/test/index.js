@@ -2,7 +2,7 @@
 
 import { describe, it } from 'kocha'
 import assert from 'assert'
-import PhenylState from '../src/index.js'
+import { PhenylState } from '../src/index.js'
 import { assignWithRestoration } from 'power-assign/jsnext'
 
 describe('find', () => {
@@ -77,9 +77,6 @@ describe('$update', () => {
     const expected = {
       $set: {
         'pool.user.1.name': 'Shinji'
-      },
-      $restore: {
-        'pool.user.1': ''
       }
     }
     const newState = assignWithRestoration(state, operation)
