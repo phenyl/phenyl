@@ -14,7 +14,7 @@ import type {
 
 import { getNestedValue } from 'phenyl-utils'
 
-import { assign, assignToProp } from 'power-assign'
+import { assign } from 'power-assign'
 
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
@@ -27,24 +27,29 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
       const { payload } = reqData
 
       if (payload.values) {
-        const valuesWithEncryptedPass = payload.values.slice()
+        const valuesWithEncryptedPass = payload.values.map(value => {
+          const password = getNestedValue(value, passwordPropName)
 
-        valuesWithEncryptedPass.map(value => {
-          const encryptedPass = encrypt(getNestedValue(value, passwordPropName))
-          return assign(value, { $set: { [passwordPropName]: encryptedPass } })
+          if (password) {
+            return assign(value, { $set: { [passwordPropName]: encrypt(password)} })
+          } else {
+            return value
+          }
         })
 
-        reqDataWithEncryptedPass =
-          assign(reqData, { $set: { 'payload.values': valuesWithEncryptedPass }})
-      }
+        return assign(reqData, { $set: { 'payload.values': valuesWithEncryptedPass }})
+      } else if (payload.value) {
+        const password = getNestedValue(payload.value, passwordPropName)
 
-      if (payload.value) {
-        const encryptedPass = encrypt(getNestedValue(payload.value, passwordPropName))
-        const valueWithEncryptedPass = assign(payload.value, { $set: { [passwordPropName]: encryptedPass } })
-        reqDataWithEncryptedPass = assign(reqData, { $set: { 'payload.value': valueWithEncryptedPass }})
+        if (password) {
+          const valueWithEncryptedPass = assign(payload.value, { $set: { [passwordPropName]: encrypt(password) } })
+          return assign(reqData, { $set: { 'payload.value': valueWithEncryptedPass }})
+        } else {
+          return reqData
+        }
+      } else {
+        return reqData
       }
-
-      return reqDataWithEncryptedPass
     }
     case 'update':
     case 'updateAndGet':
@@ -52,15 +57,17 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
 
       const operators = reqData.payload.operators
 
-      let operatorsWithEncryptedPass = {}
+      let operatorsWithEncryptedPass = operators
 
       Object.keys(operators).forEach(key => {
-        const encryptedPass = encrypt(getNestedValue(operators[key], passwordPropName))
-        operatorsWithEncryptedPass = assign(operators, { $set: { [`${key}.${passwordPropName}`]: encryptedPass } })
-        reqDataWithEncryptedPass = assign(reqData, { $set: { 'payload.operators': operatorsWithEncryptedPass }})
+        const password = getNestedValue(operators[key], passwordPropName)
+
+        if (password) {
+          operatorsWithEncryptedPass = assign(operatorsWithEncryptedPass, { $set: { [`${key}.${passwordPropName}`]: encrypt(password) } })
+        }
       })
 
-      return reqDataWithEncryptedPass
+      return assign(reqData, { $set: { 'payload.operators': operatorsWithEncryptedPass }})
     }
     default:
       return reqData

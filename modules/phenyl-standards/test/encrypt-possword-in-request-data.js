@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import { it, describe, context } from 'kocha'
 import powerCrypt from 'power-crypt'
 import assert from 'power-assert'
 import { encryptPasswordInRequestData } from '../src/encrypt-password-in-request-data.js'
@@ -41,12 +41,37 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, expectedRequestData)
   })
 
+  it ('encrypts password if password is in request data with insert method', function () {
+    const requestData = {
+      method: 'insert',
+      payload: {
+        entityName: 'user',
+        values: [{ password: 'test1234' }, { name: 'user1' }],
+      },
+    }
+
+    const encryptedRequestData = encryptPasswordInRequestData(requestData, 'password', powerCrypt)
+
+    const expectedRequestData = {
+      method: 'insert',
+      payload: {
+        entityName: 'user',
+        values: [{ password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' }, { name: 'user1' }],
+      }
+    }
+
+    assert.deepEqual(encryptedRequestData, expectedRequestData)
+  })
+
   it ('encrypts password if password is in request data with update method', function () {
     const requestData = {
       method: 'update',
       payload: {
         entityName: 'user',
-        operators: { $set: { password: 'test1234' } },
+        operators: {
+          $set: { password: 'test1234' },
+          $inc: { friends: 3 },
+        },
       },
     }
 
@@ -56,7 +81,10 @@ describe('encryptPasswordInRequestData', function () {
       method: 'update',
       payload: {
         entityName: 'user',
-        operators: { $set: { password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' }},
+        operators: {
+          $set: { password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' },
+          $inc: { friends: 3 },
+        },
       },
     }
 
