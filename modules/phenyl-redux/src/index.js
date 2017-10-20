@@ -17,7 +17,7 @@ import type {
 } from 'phenyl-interfaces'
 
 import {
-  assignWithRestoration
+  assign
 } from 'power-assign/jsnext'
 
 /**
@@ -25,7 +25,7 @@ import {
  */
 export default function phenylReducer(state: ?EntityState, action: PhenylAction): EntityState {
   if (state == null) {
-    return new PhenylState()
+    return { pool: {} }
   }
 
   switch (action.type) {
@@ -35,17 +35,17 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
     case 'phenyl/$register': {
       const { entityName, entities } = action.payload
       const operation = PhenylStateUpdater.$register(state, entityName, ...entities)
-      return assignWithRestoration(state, operation)
+      return assign(state, operation)
     }
 
     case 'phenyl/$update': {
       const operation = PhenylStateUpdater.$update(state, action.payload)
-      return assignWithRestoration(state, operation)
+      return assign(state, operation)
     }
 
     case 'phenyl/$delete': {
       const operation = PhenylStateUpdater.$delete(state, action.payload)
-      return assignWithRestoration(state, operation)
+      return assign(state, operation)
     }
     default: {
       return state
