@@ -19,8 +19,6 @@ describe('Check encode/decode deep equality: ', () => {
     }
     const sessionId = 'foobar'
     const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    // $FlowIssue(qsParams.d-exists)
-    encodedHttpRequest.qsParams.d = decodeURIComponent(encodedHttpRequest.qsParams.d)
     const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
@@ -38,8 +36,6 @@ describe('Check encode/decode deep equality: ', () => {
     }
     const sessionId = 'foobar'
     const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    // $FlowIssue(qsParams.d-exists)
-    encodedHttpRequest.qsParams.d = decodeURIComponent(encodedHttpRequest.qsParams.d)
     const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
@@ -70,8 +66,6 @@ describe('Check encode/decode deep equality: ', () => {
     }
     const sessionId = 'foobar'
     const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    // $FlowIssue(qsParams.d-exists)
-    encodedHttpRequest.qsParams.d = decodeURIComponent(encodedHttpRequest.qsParams.d)
     const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
@@ -208,8 +202,6 @@ describe('Check encode/decode deep equality: ', () => {
     }
     const sessionId = 'foobar'
     const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    // $FlowIssue(qsParams.d-exists)
-    encodedHttpRequest.qsParams.d = decodeURIComponent(encodedHttpRequest.qsParams.d)
     const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
@@ -227,11 +219,21 @@ describe('Check encode/decode deep equality: ', () => {
     }
     const sessionId = 'foobar'
     const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    // $FlowIssue(qsParams.d-exists)
-    encodedHttpRequest.qsParams.d = decodeURIComponent(encodedHttpRequest.qsParams.d)
     const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
+  })
+
+  it('runCustomQuery without params', () => {
+    const reqData = {
+      method: 'runCustomQuery',
+      payload: {
+        name: 'is-occupied',
+      }
+    }
+    const encodedHttpRequest = encodeRequest(reqData)
+    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(reqData, decodedReqData)
   })
 
   it('runCustomCommand', () => {

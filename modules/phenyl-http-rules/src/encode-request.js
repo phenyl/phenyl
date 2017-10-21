@@ -178,8 +178,9 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
   }
 }
 
+// params are not encoded into URI format.
 function createQsParams(data: Object): QueryStringParams {
-  return { d: encodeURIComponent(JSON.stringify(data)) }
+  return { d: JSON.stringify(data) }
 }
 
 function createBody(data: Object): string {
