@@ -62,7 +62,7 @@ export interface CustomCommand {
 
 
 export interface LoginCommand {
-  credentials: { [key: string]: string },
+  credentials: Object,
   entityName: EntityName,
   options?: Object,
 }
