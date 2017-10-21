@@ -80,7 +80,7 @@ export default class PhenylHttpServer {
         path: requestUrl.pathname,
         body: await this.getRequestBody(request),
         headers: request.headers,
-        queryString: requestUrl.query,
+        qsParams: requestUrl.query,
       })
       // 2. Invoking PhenylCore
       responseData = await this.phenylCore.run(requestData, sessionId)
