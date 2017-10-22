@@ -4,6 +4,12 @@ import {
   createErrorResult,
 } from 'phenyl-utils/jsnext'
 
+import {
+  passThroughHandler,
+  noHandler,
+  simpleExecutionWrapper
+} from './default-handlers.js'
+
 import type {
   Id,
   AuthClient,
@@ -26,12 +32,12 @@ import type {
 
 type PhenylCoreParams = {
   clients: ClientPool,
-  aclHandler: AclHandler,
-  validationHandler: ValidationHandler,
-  customQueryHandler: CustomQueryHandler,
-  customCommandHandler: CustomCommandHandler,
-  authenticationHandler: AuthenticationHandler,
-  executionWrapper: ExecutionWrapper,
+  aclHandler?: AclHandler,
+  validationHandler?: ValidationHandler,
+  customQueryHandler?: CustomQueryHandler,
+  customCommandHandler?: CustomCommandHandler,
+  authenticationHandler?: AuthenticationHandler,
+  executionWrapper?: ExecutionWrapper,
 }
 
 /**
@@ -48,12 +54,12 @@ export default class PhenylCore implements PhenylRunner, AuthClient {
 
   constructor(params: PhenylCoreParams) {
     this.clients = params.clients
-    this.aclHandler = params.aclHandler
-    this.validationHandler = params.validationHandler
-    this.customQueryHandler = params.customQueryHandler
-    this.customCommandHandler = params.customCommandHandler
-    this.authenticationHandler = params.authenticationHandler
-    this.executionWrapper = params.executionWrapper
+    this.aclHandler = params.aclHandler || passThroughHandler
+    this.validationHandler = params.validationHandler || passThroughHandler
+    this.customQueryHandler = params.customQueryHandler || noHandler
+    this.customCommandHandler = params.customCommandHandler || noHandler
+    this.authenticationHandler = params.authenticationHandler || noHandler
+    this.executionWrapper = params.executionWrapper || simpleExecutionWrapper
   }
 
   /**
