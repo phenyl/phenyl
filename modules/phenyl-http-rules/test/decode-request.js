@@ -8,6 +8,34 @@ import decodeRequest from '../src/decode-request.js'
  * DecodeRequest allows wider expressions than encodeRequest returns.
  * This test checks "wider" parts.
  */
+describe('Parsing path', () => {
+
+  it('detects first "/api/" and parse URLs', () => {
+    const request = {
+      headers: {},
+      path: '/api/api/api',
+      method: 'GET'
+    }
+    const [reqData, sessionId] = decodeRequest(request)
+    assert.deepEqual(reqData, {
+      method: 'get',
+      payload: {
+        id: 'api',
+        entityName: 'api'
+      }
+    })
+  })
+
+  it('path whose depth is greater than three are not allowed', () => {
+    const request = {
+      headers: {},
+      path: '/api/api/api/api',
+      method: 'GET'
+    }
+    assert.throws(() => decodeRequest(request), /greater than 3/)
+  })
+})
+
 describe('sessionId', () => {
 
   it('uses value in querystring prior to headers', () => {

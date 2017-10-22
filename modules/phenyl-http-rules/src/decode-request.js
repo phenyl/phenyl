@@ -46,7 +46,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   } = request
 
   const payload = decodeDataInQsParams(qsParams)
-  let [entityName, methodName] = stripPrefix(path).split('/')
+  let { entityName, methodName } = parsePath(path)
 
   // CustomQuery or WhereQuery?
   if (!methodName) {
@@ -108,7 +108,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   const payload = decodeBody(body)
-  let [entityName, methodName] = stripPrefix(path).split('/')
+  let { entityName, methodName } = parsePath(path)
 
   // CustomCommand or InsertCommand
   if (!methodName) {
@@ -163,7 +163,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   const payload = decodeBody(body)
-  let [entityName, methodName] = stripPrefix(path).split('/')
+  let { entityName, methodName } = parsePath(path)
 
   // "update" method can be omitted
   if (!methodName) {
@@ -205,7 +205,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   } = request
 
   const payload = decodeDataInQsParams(qsParams)
-  let [entityName, methodName] = stripPrefix(path).split('/')
+  let { entityName, methodName } = parsePath(path)
 
   // multi deletion
   if (methodName === 'delete' && Object.keys(payload).length > 0) {
@@ -264,10 +264,14 @@ function decodeSessionId(request: EncodedHttpRequest): ?Id {
 /**
  *
  */
- function stripPrefix(path: string): string {
-   const index = path.indexOf('/api/')
-   if (index === -1) {
-     throw new Error(`Invalid request path: "${path}". Paths must include "/api/" prefix.`)
+ function parsePath(path: string): { entityName: string, methodName: ?string } {
+   const prefix = path.slice(0, 5)
+   if (prefix !== '/api/') {
+     throw new Error(`Invalid request path: "${path}". Paths must start with "/api/" prefix.`)
    }
-   return path.slice(index + 5)
+   const strippedPaths = path.slice(5).split('/')
+   if (strippedPaths.length >= 3) {
+     throw new Error(`Invalid request path: "${path}". Paths depth must not be greater than 3.`) // this error comments consider prefix /api/
+   }
+   return { entityName: strippedPaths[0], methodName: strippedPaths[1] }
  }
