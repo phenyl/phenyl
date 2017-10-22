@@ -13,7 +13,7 @@ import type {
  */
 export default function decodeRequest(request: EncodedHttpRequest): [RequestData, ?Id] {
   let reqData: RequestData
-  const sessionId = request.headers.Authorization || null
+  const sessionId = request.headers.authorization || null
   switch (request.method) {
     case 'GET':
       reqData = decodeGETRequest(request)

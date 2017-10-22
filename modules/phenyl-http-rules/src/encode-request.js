@@ -10,7 +10,7 @@ import type {
  *
  */
 export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): EncodedHttpRequest {
-  const headers: Object = (sessionId != null) ? { Authorization: sessionId } : {}
+  const headers: Object = (sessionId != null) ? { authorization: sessionId } : {}
   let data
 
   switch (reqData.method) {
