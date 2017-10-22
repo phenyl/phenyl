@@ -61,10 +61,7 @@ export function assertValidWhereQuery(q: any): void {
     throw new Error(`WhereQuery must be an object. ${typeof q} given.`)
   }
   const { entityName, where } = q
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`WhereQuery.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'WhereQuery')
 
   if (typeof where !== 'object' || where === null) {
     throw new Error(`WhereQuery.where must be an object. "${where}" given.`)
@@ -79,10 +76,7 @@ export function assertValidIdQuery(q: any): void {
     throw new Error(`IdQuery must be an object. ${typeof q} given.`)
   }
   const { entityName, id } = q
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`IdQuery.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'IdQuery')
 
   if (typeof id !== 'string' || !id) {
     throw new Error(`IdQuery.id must be a non-empty string. "${id}" given.`)
@@ -97,10 +91,7 @@ export function assertValidIdsQuery(q: any): void {
     throw new Error(`IdsQuery must be an object. ${typeof q} given.`)
   }
   const { entityName, ids } = q
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`IdsQuery.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'IdsQuery')
 
   if (!Array.isArray(ids)) {
     throw new Error(`IdsQuery.ids must be an array. "${typeof ids}" given.`)
@@ -120,10 +111,7 @@ export function assertValidInsertCommand(com: any): void {
   }
 
   const { entityName, value, values } = com
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`InsertCommand.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'InsertCommand')
 
   if (value != null) {
     if (typeof value !== 'object') {
@@ -155,11 +143,7 @@ export function assertValidUpdateCommand(com: any): void {
   }
 
   const { entityName, operation, id, where } = com
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`UpdateCommand.entityName must be a non-empty string. "${entityName}" given.`)
-  }
-
+  assertValidEntityName(entityName, 'UpdateCommand')
   assertValidUpdateOperation(operation)
 
   if (id != null) {
@@ -187,10 +171,7 @@ export function assertValidDeleteCommand(com: any): void {
   }
 
   const { entityName, id, where } = com
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`DeleteCommand.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'DeleteCommand')
 
   if (id != null) {
     if (typeof id !== 'string' || !id) {
@@ -216,10 +197,7 @@ export function assertValidCustomQuery(q: any): void {
     throw new Error(`CustomQuery must be an object. ${typeof q} given.`)
   }
   const { name, params } = q
-
-  if (typeof name !== 'string' || !name) {
-    throw new Error(`CustomQuery.name must be a non-empty string. "${name}" given.`)
-  }
+  assertValidCustomName(name, 'CustomQuery')
 
   // params can be null
   if (params == null) {
@@ -241,10 +219,7 @@ export function assertValidCustomCommand(com: any): void {
   }
 
   const { name, params } = com
-
-  if (typeof name !== 'string' || !name) {
-    throw new Error(`CustomCommand.name must be a non-empty string. "${name}" given.`)
-  }
+  assertValidCustomName(name, 'CustomCommand')
 
   // params can be null
   if (params == null) {
@@ -266,10 +241,7 @@ export function assertValidLoginCommand(com: any): void {
   }
 
   const { credentials, entityName } = com
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`LoginCommand.entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertValidEntityName(entityName, 'LoginCommand')
 
   // credentials must be an object
   if (typeof credentials !== 'object' || com === null) {
@@ -292,10 +264,7 @@ export function assertValidLogoutCommand(com: any): void {
   }
 
   const { sessionId, entityName } = com
-
-  if (typeof sessionId !== 'string' || !sessionId) {
-    throw new Error(`LogoutCommand.sessionId must be a non-empty string. "${sessionId}" given.`) // ISSUE: sessionId is explicitly shown (but not string...).
-  }
+  assertValidEntityName(entityName, 'LogoutCommand')
 
   if (typeof entityName !== 'string' || !entityName) {
     throw new Error(`LoginCommand.entityName must be a non-empty string. "${entityName}" given.`)
@@ -308,5 +277,33 @@ export function assertValidLogoutCommand(com: any): void {
 export function assertValidUpdateOperation(ope: any): void {
   if (typeof ope !== 'object' || ope === null) {
     throw new Error(`Update operation must be an object. "${ope}" given.`)
+  }
+}
+
+/**
+ *
+ */
+export function assertValidEntityName(entityName: any, _dataName?: string) {
+  const dataName = _dataName ? _dataName + '.' : ''
+  if (typeof entityName !== 'string' || !entityName) {
+    throw new Error(`${dataName}entityName must be a non-empty string. "${entityName}" given.`)
+  }
+
+  if (!/[A-Za-z][A-Za-z0-9-_]*/.test(entityName)) {
+    throw new Error(`${dataName}entityName must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${entityName}" given.`)
+  }
+}
+
+/**
+ *
+ */
+export function assertValidCustomName(name: any, _dataName?: string) {
+  const dataName = _dataName ? _dataName + '.' : ''
+  if (typeof name !== 'string' || !name) {
+    throw new Error(`${dataName}name must be a non-empty string. "${name}" given.`)
+  }
+
+  if (!/[A-Za-z][A-Za-z0-9-_]*/.test(name)) {
+    throw new Error(`${dataName}name must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${name}" given.`)
   }
 }
