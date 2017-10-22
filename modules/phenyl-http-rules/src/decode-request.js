@@ -30,8 +30,9 @@ export default function decodeRequest(request: EncodedHttpRequest): [RequestData
     case 'DELETE':
       reqData = decodeDELETERequest(request)
       break
+    default:
+      throw new Error(`Could not handle HTTP method: ${request.method}. Only GET|POST|PUT|DELETE are allowed.`)
   }
-  // $FlowIssue(reqData-is-always-initialized)
   return [reqData, sessionId]
 }
 
