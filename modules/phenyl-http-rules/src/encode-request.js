@@ -154,7 +154,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/login`,
+        path: `/${data.entityName}/login`,
         body: createBody(data)
       }
 
@@ -164,7 +164,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: '/logout',
+        path: `/${data.entityName}/logout`,
         body: createBody(data)
       }
 

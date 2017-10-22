@@ -36,52 +36,60 @@ export default function decodeRequest(request: EncodedHttpRequest): [RequestData
   return [reqData, sessionId]
 }
 
+/**
+ * @private
+ */
 function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
     qsParams,
   } = request
 
+  const payload = decodeQsParams(qsParams)
   const paths = path.split('/') // path[0] must be an empty string.
 
-  if (qsParams == null || Object.keys(qsParams).length === 0) {
-    return {
-      method: 'get',
-      payload: { entityName: paths[1], id: paths[2] }
+  // custom queries: path: /{name}
+  if (!paths[2]) {
+    const name = paths[1]
+    if (payload.name && payload.name !== name) {
+      throw new Error(`CustomQuery name in payload is different from that in URL. in payload: "${payload.name}", in URL: "${name}".`)
     }
-  }
-  const methodName = paths[2]
-
-  if (!methodName) {
     return {
       method: 'runCustomQuery',
-      payload: decodeQsParams(qsParams)
+      payload: Object.assign(payload, { name })
+    }
+  }
+  const [__empty, entityName, methodName] = paths
+
+  // if no payload, it's "get-by-id" method
+  if (Object.keys(payload).length === 0) {
+    return {
+      method: 'get',
+      payload: { entityName, id: methodName }
     }
   }
 
-  if (methodName === 'find') {
-    return {
-      method: 'find',
-      payload: decodeQsParams(qsParams)
+  switch (methodName) {
+    case 'find':
+    case 'findOne':
+    case 'getByIds': {
+      if (payload.entityName && payload.entityName !== entityName) {
+        throw new Error(`Invalid GET request (method=${methodName}). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+      }
+      // $FlowIssue(this-is-always-valid-request-data)
+      return {
+        method: methodName,
+        payload: Object.assign(payload, { entityName })
+      }
     }
+    default:
+      throw new Error(`Could not decode the given GET request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
-
-  if (methodName === 'findOne') {
-    return {
-      method: 'findOne',
-      payload: decodeQsParams(qsParams)
-    }
-  }
-
-  if (methodName === 'getByIds') {
-    return {
-      method: 'getByIds',
-      payload: decodeQsParams(qsParams)
-    }
-  }
-  throw new Error(`Could not decode the given GET request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
 }
 
+/**
+ * @private
+ */
 function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   const {
     headers,
@@ -93,51 +101,45 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     throw new Error(`Request body is empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
-  if (path === '/login') {
-    return {
-      method: 'login',
-      payload: decodeBody(body),
-    }
-  }
+  const payload = decodeBody(body)
+  const paths = path.split('/') // path[0] must be an empty string.
 
-  if (path === '/logout') {
-    return {
-      method: 'logout',
-      payload: decodeBody(body),
+  // custom command: path: /{name}
+  if (!paths[2]) {
+    const name = paths[1]
+    if (payload.name && payload.name !== name) {
+      throw new Error(`CustomQuery command in payload is different from that in URL. in payload: "${payload.name}", in URL: "${name}".`)
     }
-  }
-  const paths = path.split('/')
-  const methodName = paths[2]
-
-  if (!methodName) {
     return {
       method: 'runCustomCommand',
-      payload: decodeBody(body),
+      payload: Object.assign(payload, { name })
     }
   }
+  const [__empty, entityName, methodName] = paths
 
-  if (methodName === 'insert') {
-    return {
-      method: 'insert',
-      payload: decodeBody(body),
+  switch (methodName) {
+    case 'login':
+    case 'logout':
+    case 'insert':
+    case 'insertAndGet':
+    case 'insertAndGetMulti': {
+      if (payload.entityName && payload.entityName !== entityName) {
+        throw new Error(`Invalid POST request (method=${methodName}). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+      }
+      // $FlowIssue(this-is-always-valid-request-data)
+      return {
+        method: methodName,
+        payload: Object.assign(payload, { entityName }),
+      }
     }
+    default:
+      throw new Error(`Could not decode the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
-
-  if (methodName === 'insertAndGet') {
-    return {
-      method: 'insertAndGet',
-      payload: decodeBody(body),
-    }
-  }
-  if (methodName === 'insertAndGetMulti') {
-    return {
-      method: 'insertAndGetMulti',
-      payload: decodeBody(body),
-    }
-  }
-  throw new Error(`Could not decode the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
 }
 
+/**
+ * @private
+ */
 function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
@@ -148,53 +150,57 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
     throw new Error(`Request body is empty in the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
-  const paths = path.split('/')
-  const methodName = paths[2]
-  if (methodName === 'update') {
-    return {
-      method: 'update',
-      payload: decodeBody(body),
-    }
-  }
+  const payload = decodeBody(body)
+  const paths = path.split('/') // path[0] must be an empty string.
+  const [__empty, entityName, methodName] = paths
 
-  if (methodName === 'updateAndGet') {
-    return {
-      method: 'updateAndGet',
-      payload: decodeBody(body),
+  switch (methodName) {
+    case 'update':
+    case 'updateAndGet':
+    case 'updateAndFetch': {
+      if (payload.entityName && payload.entityName !== entityName) {
+        throw new Error(`Invalid PUT request (method=${methodName}). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+      }
+      // $FlowIssue(this-is-always-valid-request-data)
+      return {
+        method: methodName,
+        payload: Object.assign(payload, { entityName }),
+      }
     }
+    default:
+      throw new Error(`Could not decode the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
-  if (methodName === 'updateAndFetch') {
-    return {
-      method: 'updateAndFetch',
-      payload: decodeBody(body),
-    }
-  }
-  throw new Error(`Could not decode the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
 }
 
+/**
+ * @private
+ */
 function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
     qsParams,
   } = request
 
-  const paths = path.split('/')
+  const payload = decodeQsParams(qsParams)
+  const paths = path.split('/') // path[0] must be an empty string.
+  const [__empty, entityName, methodName] = paths
 
   // multi deletion
-  if (paths[2] === 'delete' && qsParams) {
+  if (methodName === 'delete' && Object.keys(payload).length > 0) {
     return {
       method: 'delete',
-      payload: decodeQsParams(qsParams),
+      // $FlowIssue(this-is-MultiDeleteCommand)
+      payload: Object.assign(payload, { entityName })
     }
   }
 
-  if (paths[1] && paths[2]) {
+  if (methodName != null) {
     // single deletion
     return {
       method: 'delete',
       payload: {
-        entityName: paths[1],
-        id: paths[2],
+        entityName,
+        id: methodName
       }
     }
   }
@@ -206,6 +212,9 @@ function decodeBody(body: string): any { // return "any" type for suppressing fl
 }
 
 
-function decodeQsParams(qsParams: QueryStringParams): any { // return "any" type for suppressing flow error
+function decodeQsParams(qsParams: ?QueryStringParams): Object { // return "any" type for suppressing flow error
+  if (qsParams == null || qsParams.d == null) {
+    return {}
+  }
   return JSON.parse(qsParams.d)
 }
