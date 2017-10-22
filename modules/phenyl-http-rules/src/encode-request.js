@@ -1,4 +1,8 @@
 // @flow
+import {
+  assertValidRequestData
+} from 'phenyl-utils/jsnext'
+
 import type {
   EncodedHttpRequest,
   Id,
@@ -10,6 +14,7 @@ import type {
  *
  */
 export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): EncodedHttpRequest {
+  assertValidRequestData(reqData)
   const headers: Object = (sessionId != null) ? { authorization: sessionId } : {}
   let data
 

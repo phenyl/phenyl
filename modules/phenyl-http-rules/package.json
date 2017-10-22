@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fetch-ponyfill": "^4.1.0"
+    "fetch-ponyfill": "^4.1.0",
+    "phenyl-utils": "*"
   }
 }
