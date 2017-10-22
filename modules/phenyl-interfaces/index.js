@@ -87,6 +87,14 @@ import type {
   HttpMethod,
   QueryStringParams,
 } from './decls/http.js.flow'
+import type {
+  HttpClientParams,
+  ClientPathModifier,
+} from './decls/http-client.js.flow'
+import type {
+  ServerOptions,
+  PathModifier,
+} from './decls/http-server.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
 import type { PhenylRunner } from './decls/phenyl-runner.js.flow'
@@ -157,6 +165,7 @@ export type {
   AuthenticationHandler,
   AuthenticationResult,
   AuthClient,
+  ClientPathModifier,
   ClientPool,
   CommandResult,
   CommandResultOrError,
@@ -202,6 +211,7 @@ export type {
   GetCommandResultOrError,
   GetRequestData,
   GetResponseData,
+  HttpClientParams,
   HttpMethod,
   Id,
   IdQuery,
@@ -233,6 +243,7 @@ export type {
   MultiValuesCommandResultOrError,
   NGAuthenticationResult,
   OKAuthenticationResult,
+  PathModifier,
   PhenylAction,
   PhenylRunner,
   PreEntity,
@@ -248,9 +259,10 @@ export type {
   RunCustomCommandResponseData,
   RunCustomQueryRequestData,
   RunCustomQueryResponseData,
-  SetAction,
+  ServerOptions,
   Session,
   SessionClient,
+  SetAction,
   SingleInsertCommand,
   SingleQueryResult,
   SingleQueryResultOrError,

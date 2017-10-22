@@ -6,7 +6,9 @@ import type {
 import type {
   RequestData,
   ResponseData,
+  PathModifier,
   PhenylRunner,
+  ServerOptions,
 } from 'phenyl-interfaces'
 
 import url from 'url'
@@ -22,10 +24,18 @@ import {
 export default class PhenylHttpServer {
   server: net$Server
   phenylCore: PhenylRunner
+  /**
+   * (path: string) => string
+   * Real server path to regular path.
+   * The argument is path string, start with "/api/".
+   * e.g. (path) => path.slice(5)
+   */
+  modifyPath: PathModifier
 
-  constructor(server: net$Server, phenylCore: PhenylRunner) {
+  constructor(server: net$Server, phenylCore: PhenylRunner, options: ServerOptions = {}) {
     this.server = server
     this.phenylCore = phenylCore
+    this.modifyPath = options.modifyPath || (path => path)
   }
 
   /**
@@ -77,7 +87,7 @@ export default class PhenylHttpServer {
       // $FlowIssue(request.method-is-always-compatible)
       const [requestData, sessionId] = decodeRequest({
         method: request.method,
-        path: requestUrl.pathname,
+        path: this.modifyPath(requestUrl.pathname || ''),
         body: await this.getRequestBody(request),
         headers: request.headers,
         qsParams: requestUrl.query,

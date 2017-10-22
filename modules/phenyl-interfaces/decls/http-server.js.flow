@@ -1,0 +1,14 @@
+// @flow
+
+export type ServerOptions = {
+  modifyPath?: PathModifier
+}
+
+/**
+ * (path: string) => string
+ * Real server path to regular path.
+ * The argument is real path string, start with "/".
+ * e.g. (path) => path.slice(8)
+ * e.g. (path) => path.split(/^\/path\/to/)[1]
+ */
+export type PathModifier = (path: string) => string

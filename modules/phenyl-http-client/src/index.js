@@ -30,6 +30,8 @@ import type {
   AuthClient,
   EntityClient,
   CustomClient,
+  HttpClientParams,
+  ClientPathModifier,
   QueryResultOrError,
   QueryStringParams,
   SingleQueryResultOrError,
@@ -39,18 +41,26 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-type HttpClientParams = {
-  url: string,
-  sessionId?: ?Id,
-}
-
 export default class PhenylHttpClient implements EntityClient, CustomClient, AuthClient {
+  /**
+   * Base URL without "/api".
+   *  No slash at the last.
+   * e.g. https://example.com
+   */
   url: string
   sessionId: ?Id
+  /**
+   * (path: string) => string
+   * Regular path to real server path.
+   * The argument is real path string, start with "/api/".
+   * e.g. (path) => `/path/to${path}`
+   */
+  modifyPath: ClientPathModifier
 
   constructor(params: HttpClientParams) {
     this.url = params.url
     this.sessionId = params.sessionId
+    this.modifyPath = params.modifyPath || (path => path)
   }
 
   async request(reqData: RequestData): Promise<ResponseData> {
@@ -62,7 +72,7 @@ export default class PhenylHttpClient implements EntityClient, CustomClient, Aut
       body,
     } = encodeRequest(reqData, this.sessionId)
     const qs = stringifyQsParams(qsParams)
-    const url = `${this.url}${path}${qs}`
+    const url = `${this.url}${this.modifyPath(path)}${qs}`
 
     const response = await fetch(url, {
       method,
