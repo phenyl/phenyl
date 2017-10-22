@@ -18,7 +18,7 @@ describe('sessionId', () => {
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
-      path: '/user/xxxx',
+      path: '/api/user/xxxx',
       method: 'GET'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -28,7 +28,7 @@ describe('sessionId', () => {
   it('is null in querystring', () => {
     const request = {
       headers: {},
-      path: '/user/xxxx',
+      path: '/api/user/xxxx',
       method: 'GET'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -44,7 +44,7 @@ describe('GET request', () => {
         d: JSON.stringify({ where: { firstName: 'John' } }),
         sessionId: 'sessionId-in-querystring',
       },
-      path: '/user',
+      path: '/api/user',
       method: 'GET'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -56,7 +56,7 @@ describe('GET request', () => {
   it('when no methodName is given and payload.where does not exist, regarded as "runCustomQuery"', () => {
     const request = {
       headers: {},
-      path: '/user',
+      path: '/api/user',
       method: 'GET'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -74,7 +74,7 @@ describe('POST request', () => {
         sessionId: 'sessionId-in-querystring',
       },
       body: JSON.stringify({ values : { firstName: 'John' } }),
-      path: '/user',
+      path: '/api/user',
       method: 'POST'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -87,7 +87,7 @@ describe('POST request', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ params: { firstName: 'John' } }),
-      path: '/user',
+      path: '/api/user',
       method: 'POST'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -105,7 +105,7 @@ describe('PUT request', () => {
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
-      path: '/user',
+      path: '/api/user',
       method: 'PUT'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -123,7 +123,7 @@ describe('PUT request', () => {
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
-      path: '/user/john',
+      path: '/api/user/john',
       method: 'PUT'
     }
     const [reqData, sessionId] = decodeRequest(request)
@@ -139,7 +139,7 @@ describe('PUT request', () => {
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
-      path: '/user/john',
+      path: '/api/user/john',
       method: 'PUT'
     }
     assert.throws(() => decodeRequest(request), /Could not decode the given PUT request/)

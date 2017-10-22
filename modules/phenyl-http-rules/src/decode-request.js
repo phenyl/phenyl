@@ -46,7 +46,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   } = request
 
   const payload = decodeDataInQsParams(qsParams)
-  let [__empty, entityName, methodName] = path.split('/') // path[0] must be an empty string.
+  let [entityName, methodName] = stripPrefix(path).split('/')
 
   // CustomQuery or WhereQuery?
   if (!methodName) {
@@ -108,7 +108,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   const payload = decodeBody(body)
-  let [__empty, entityName, methodName] = path.split('/') // path[0] must be an empty string.
+  let [entityName, methodName] = stripPrefix(path).split('/')
 
   // CustomCommand or InsertCommand
   if (!methodName) {
@@ -163,7 +163,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   const payload = decodeBody(body)
-  let [__empty, entityName, methodName] = path.split('/') // path[0] must be an empty string.
+  let [entityName, methodName] = stripPrefix(path).split('/')
 
   // "update" method can be omitted
   if (!methodName) {
@@ -205,7 +205,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   } = request
 
   const payload = decodeDataInQsParams(qsParams)
-  const [__empty, entityName, methodName] = path.split('/') // path[0] must be an empty string.
+  let [entityName, methodName] = stripPrefix(path).split('/')
 
   // multi deletion
   if (methodName === 'delete' && Object.keys(payload).length > 0) {
@@ -260,3 +260,14 @@ function decodeSessionId(request: EncodedHttpRequest): ?Id {
   } = request
   return (qsParams && qsParams.sessionId) || headers.authorization || null
 }
+
+/**
+ *
+ */
+ function stripPrefix(path: string): string {
+   const index = path.indexOf('/api/')
+   if (index === -1) {
+     throw new Error(`Invalid request path: "${path}". Paths must include "/api/" prefix.`)
+   }
+   return path.slice(index + 5)
+ }

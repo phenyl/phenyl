@@ -24,7 +24,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'GET',
         headers,
-        path: `/${data.entityName}/find`,
+        path: addPrefix(`/${data.entityName}/find`),
         qsParams: createQsParams(data)
       }
 
@@ -33,7 +33,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'GET',
         headers,
-        path: `/${data.entityName}/findOne`,
+        path: addPrefix(`/${data.entityName}/findOne`),
         qsParams: createQsParams(data)
       }
 
@@ -42,7 +42,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'GET',
         headers,
-        path: `/${data.entityName}/${data.id}`,
+        path: addPrefix(`/${data.entityName}/${data.id}`),
       }
 
     case 'getByIds':
@@ -50,7 +50,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'GET',
         headers,
-        path: `/${data.entityName}/getByIds`,
+        path: addPrefix(`/${data.entityName}/getByIds`),
         qsParams: createQsParams(data)
       }
 
@@ -60,7 +60,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/insert`,
+        path: addPrefix(`/${data.entityName}/insert`),
         body: createBody(data)
       }
 
@@ -70,7 +70,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/insertAndGet`,
+        path: addPrefix(`/${data.entityName}/insertAndGet`),
         body: createBody(data)
       }
 
@@ -80,7 +80,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/insertAndGetMulti`,
+        path: addPrefix(`/${data.entityName}/insertAndGetMulti`),
         body: createBody(data)
       }
 
@@ -90,7 +90,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'PUT',
         headers,
-        path: `/${data.entityName}/update`,
+        path: addPrefix(`/${data.entityName}/update`),
         body: createBody(data)
       }
 
@@ -100,7 +100,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'PUT',
         headers,
-        path: `/${data.entityName}/updateAndGet`,
+        path: addPrefix(`/${data.entityName}/updateAndGet`),
         body: createBody(data)
       }
 
@@ -110,7 +110,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'PUT',
         headers,
-        path: `/${data.entityName}/updateAndFetch`,
+        path: addPrefix(`/${data.entityName}/updateAndFetch`),
         body: createBody(data)
       }
 
@@ -123,14 +123,14 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
         return {
           method: 'DELETE',
           headers,
-          path: `/${data.entityName}/${data.id}`,
+          path: addPrefix(`/${data.entityName}/${data.id}`),
         }
       }
       // multi deletion
       return {
         method: 'DELETE',
         headers,
-        path: `/${data.entityName}/delete`,
+        path: addPrefix(`/${data.entityName}/delete`),
         qsParams: createQsParams(data)
       }
 
@@ -139,7 +139,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'GET',
         headers,
-        path: `/${data.name}`,
+        path: addPrefix(`/${data.name}`),
         qsParams: createQsParams(data)
       }
 
@@ -149,7 +149,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.name}`,
+        path: addPrefix(`/${data.name}`),
         body: createBody(data)
       }
 
@@ -159,7 +159,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/login`,
+        path: addPrefix(`/${data.entityName}/login`),
         body: createBody(data)
       }
 
@@ -169,7 +169,7 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
       return {
         method: 'POST',
         headers,
-        path: `/${data.entityName}/logout`,
+        path: addPrefix(`/${data.entityName}/logout`),
         body: createBody(data)
       }
 
@@ -188,4 +188,11 @@ function createQsParams(data: Object): QueryStringParams {
 
 function createBody(data: Object): string {
   return JSON.stringify(data)
+}
+
+/**
+ * Attach prefix(="/api") to the path
+ */
+function addPrefix(path: string): string {
+  return `/api${path}`
 }
