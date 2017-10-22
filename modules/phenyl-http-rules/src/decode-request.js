@@ -93,13 +93,6 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     throw new Error(`Request body is empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
-  if (headers['X-Phenyl-Custom']) {
-    return {
-      method: 'runCustomCommand',
-      payload: decodeBody(body),
-    }
-  }
-
   if (path === '/login') {
     return {
       method: 'login',
@@ -115,6 +108,13 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   }
   const paths = path.split('/')
   const methodName = paths[2]
+
+  if (!methodName) {
+    return {
+      method: 'runCustomCommand',
+      payload: decodeBody(body),
+    }
+  }
 
   if (methodName === 'insert') {
     return {

@@ -131,7 +131,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
 
     case 'runCustomQuery':
       data = reqData.payload
-      headers['X-Phenyl-Custom'] = 'query'
       return {
         method: 'GET',
         headers,
@@ -142,7 +141,6 @@ export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): En
     case 'runCustomCommand':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
-      headers['X-Phenyl-Custom'] = 'command'
       return {
         method: 'POST',
         headers,
