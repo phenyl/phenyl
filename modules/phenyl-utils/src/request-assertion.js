@@ -277,7 +277,7 @@ export function assertValidLoginCommand(com: any): void {
   }
   // values in credentials must be strings
   Object.keys(credentials).forEach(credKey => {
-    if (!credentials[credKey] !== 'string' || !credentials[credKey]) {
+    if (credentials[credKey] !== 'string' || !credentials[credKey]) {
       throw new Error(`loginCommand.credentials['${credKey}'] must be a non-empty string.`)
     }
   })
