@@ -286,5 +286,4 @@ describe('Check encode/decode deep equality: ', () => {
     assert.deepEqual(reqData, decodedReqData)
     assert.deepEqual(sessionId, decodedSessionId)
   })
-
 })

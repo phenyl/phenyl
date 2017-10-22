@@ -13,7 +13,7 @@ import type {
  */
 export default function decodeRequest(request: EncodedHttpRequest): [RequestData, ?Id] {
   let reqData: RequestData
-  const sessionId = request.headers.authorization || null
+  const sessionId = decodeSessionId(request)
   switch (request.method) {
     case 'GET':
       reqData = decodeGETRequest(request)
@@ -45,7 +45,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
     qsParams,
   } = request
 
-  const payload = decodeQsParams(qsParams)
+  const payload = decodeDataInQsParams(qsParams)
   const paths = path.split('/') // path[0] must be an empty string.
 
   // custom queries: path: /{name}
@@ -181,7 +181,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
     qsParams,
   } = request
 
-  const payload = decodeQsParams(qsParams)
+  const payload = decodeDataInQsParams(qsParams)
   const paths = path.split('/') // path[0] must be an empty string.
   const [__empty, entityName, methodName] = paths
 
@@ -212,9 +212,29 @@ function decodeBody(body: string): any { // return "any" type for suppressing fl
 }
 
 
-function decodeQsParams(qsParams: ?QueryStringParams): Object { // return "any" type for suppressing flow error
+/**
+ * extract data from query string params
+ * parse JSON in "d" field
+ * @private
+ */
+function decodeDataInQsParams(qsParams: ?QueryStringParams): Object { // return "any" type for suppressing flow error
   if (qsParams == null || qsParams.d == null) {
     return {}
   }
   return JSON.parse(qsParams.d)
+}
+
+/**
+ * extract sessionId from request
+ * 1. return "sessionId" value in query string if exists
+ * 2. return "authorization" value in header if exists
+ * 3. return null
+ * @private
+ */
+function decodeSessionId(request: EncodedHttpRequest): ?Id {
+  const {
+    headers,
+    qsParams,
+  } = request
+  return (qsParams && qsParams.sessionId) || headers.authorization || null
 }
