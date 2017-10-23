@@ -1,7 +1,15 @@
 // @flow
+import type {
+  EncodedHttpRequest,
+  EncodedHttpResponse
+} from './http.js.flow'
+import type {
+  CoreClient
+} from './client.js.flow'
 
 export type ServerOptions = {
-  modifyPath?: PathModifier
+  modifyPath?: PathModifier,
+  customRequestHandler?: CustomRequestHandler
 }
 
 /**
@@ -12,3 +20,22 @@ export type ServerOptions = {
  * e.g. (path) => path.split(/^\/path\/to/)[1]
  */
 export type PathModifier = (path: string) => string
+
+export type CustomResponse = {
+  +body: string | Buffer,
+  statusCode: number,
+  headers: { [key: string]: string },
+}
+
+/**
+ * Custom Request Handler.
+ * Receive non-API HTTP request and return HTTP response in 'phenyl-http-server' and 'phenyl-lambda-adapter' modules.
+ *  (non-API Request: request whose path doesn't start with "/api/")
+ * Response can be any type, like HTML/CSS/JavaScript/Image.
+ *
+ * Intended Use: Web page. Don't use this function as API.
+ * Example: Rich API explorer like swagger.
+ *
+ * The second argument "coreClient" is a client to access directly to PhenylCore (bypass HTTP).
+ */
+export type CustomRequestHandler = (encodedHttpRequest: EncodedHttpRequest, coreClient: CoreClient) => Promise<EncodedHttpResponse>

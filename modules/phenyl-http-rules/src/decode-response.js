@@ -5,9 +5,14 @@ import type {
   EncodedHttpResponse,
 } from 'phenyl-interfaces'
 
-export default function encodeResponse(responseBody: string | EncodedHttpResponse): ResponseData {
-  if (typeof responseBody === 'string') {
-    return JSON.parse(responseBody).d
+/**
+ * Decode HTTP Response into ResponseData.
+ * Only "body" field is used for decoding.
+ */
+export default function decodeResponse(encodedResponse: EncodedHttpResponse): ResponseData {
+  const { body } = encodedResponse
+  if (typeof body === 'string') {
+    return JSON.parse(body)
   }
-  return responseBody.d
+  return body
 }

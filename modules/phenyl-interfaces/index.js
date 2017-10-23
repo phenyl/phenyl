@@ -95,6 +95,7 @@ import type {
 import type {
   ServerOptions,
   PathModifier,
+  CustomRequestHandler,
 } from './decls/http-server.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
@@ -185,6 +186,7 @@ export type {
   CustomQueryResultOrError,
   CustomQueryDefinition,
   CustomQueryDefinitions,
+  CustomRequestHandler,
   DeleteAction,
   DeleteCommand,
   DeleteRequestData,

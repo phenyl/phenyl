@@ -2,7 +2,6 @@
 import {
   decodeRequest,
   encodeResponse,
-  getStatusCode,
 } from 'phenyl-http-rules/jsnext'
 
 import {
@@ -42,15 +41,17 @@ export const createLambdaHandler = (phenylCore: PhenylRunner, options: ServerOpt
      */
     const modifyPath = options.modifyPath || (path => path)
 
+    const encodedHttpRequest = {
+      method: event.httpMethod,
+      path: modifyPath(event.path),
+      body: event.body,
+      headers: event.headers,
+      qsParams: event.queryStringParameters,
+    }
+
     try {
       // 1. Decoding Request
-      requestData = decodeRequest({
-        method: event.httpMethod,
-        path: modifyPath(event.path),
-        body: event.body,
-        headers: event.headers,
-        queryString: event.queryStringParameters,
-      })
+      requestData = decodeRequest(encodedHttpRequest)
       // 2. Invoking PhenylCore
       responseData = await phenylCore.run(requestData)
     }
@@ -59,10 +60,6 @@ export const createLambdaHandler = (phenylCore: PhenylRunner, options: ServerOpt
     }
 
     // 3. Encoding Response
-    cb(null, {
-      statusCode: getStatusCode(responseData),
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(encodeResponse(responseData)),
-    })
+    cb(null, encodeResponse(responseData))
   }
 }

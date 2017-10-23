@@ -77,9 +77,15 @@ export default class PhenylHttpClient extends PhenylCoreClient {
       method,
       headers,
       body,
-    }).then(res => res.json())
+    })
 
-    return decodeResponse(response)
+    const encodedResponse = {
+      body: await response.json(),
+      statusCode: response.status,
+      headers: response.headers // FIXME: headers from polyfilled fetch don't implement Headers API.
+    }
+
+    return decodeResponse(encodedResponse)
   }
 }
 

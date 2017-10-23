@@ -182,6 +182,10 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
   }
 }
 
+export function isApiRequest(path: string): boolean {
+  return path.slice(0, 5) === '/api/'
+}
+
 // params are not encoded into URI format.
 function createQsParams(data: Object): QueryStringParams {
   return { d: JSON.stringify(data) }
