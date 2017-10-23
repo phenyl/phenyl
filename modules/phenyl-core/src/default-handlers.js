@@ -14,7 +14,7 @@ import type {
 
 /**
  * PassThroughHandler: handler passing through any request,
- * designed to apply for AclHandler and ValidationHandler
+ * designed to apply for AuthorizationHandler and ValidationHandler
  */
 export async function passThroughHandler() {
   return true

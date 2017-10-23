@@ -10,7 +10,7 @@ import type {
 } from './command-result.js.flow'
 
 export interface CustomCommandDefinition {
-  acl(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<boolean>,
+  authorization(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<boolean>,
   validation(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<boolean>,
   execution(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<CustomCommandResult>,
 }

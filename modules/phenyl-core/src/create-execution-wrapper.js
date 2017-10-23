@@ -1,6 +1,6 @@
 // @flow
 import type {
-  AclHandler,
+  AuthorizationHandler,
   ClientPool,
   CoreExecution,
   ExecutionWrapper,
@@ -11,7 +11,7 @@ import type {
 } from 'phenyl-interfaces'
 
 function assertExecutionWrapper(fn: any, name: string, methodName: string) {
-  if (typeof fn !== 'function') throw new Error(`No acl function found for ${name} (methodName = ${methodName})`)
+  if (typeof fn !== 'function') throw new Error(`No authorization function found for ${name} (methodName = ${methodName})`)
 }
 
 /**

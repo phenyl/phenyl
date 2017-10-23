@@ -10,7 +10,7 @@ import type {
 } from './query-result.js.flow'
 
 export interface CustomQueryDefinition {
-  acl(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
+  authorization(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
   validation(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
   execution(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<CustomQueryResult>, // CustomQueryHandler
 }

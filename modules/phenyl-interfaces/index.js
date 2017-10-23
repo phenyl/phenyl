@@ -71,7 +71,7 @@ import type {
 
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
-  AclHandler,
+  AuthorizationHandler,
   AuthenticationHandler,
   AuthenticationResult,
   CustomCommandHandler,
@@ -163,7 +163,7 @@ import type {
 
 
 export type {
-  AclHandler,
+  AuthorizationHandler,
   AuthenticationHandler,
   AuthenticationResult,
   AuthClient,

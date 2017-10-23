@@ -8,17 +8,17 @@ import type {
   CoreExecution,
 } from 'phenyl-interfaces'
 
-type AclSetting = {
+type AuthorizationSetting = {
 }
 
 export default class StandardEntityDefinition implements EntityDefinition {
-  aclSetting: AclSetting
+  authorizationSetting: AuthorizationSetting
 
-  constructor(aclSetting: AclSetting) {
-    this.aclSetting = aclSetting
+  constructor(authorizationSetting: AuthorizationSetting) {
+    this.authorizationSetting = authorizationSetting
   }
 
-  async acl(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean> {
+  async authorization(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean> {
     // TODO
     return false
   }

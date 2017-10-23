@@ -18,7 +18,7 @@ import type {
   ClientPool,
   PhenylRunner,
   Session,
-  AclHandler,
+  AuthorizationHandler,
   ValidationHandler,
   CustomQueryHandler,
   CustomCommandHandler,
@@ -32,7 +32,7 @@ import type {
 
 type PhenylCoreParams = {
   clients: ClientPool,
-  aclHandler?: AclHandler,
+  authorizationHandler?: AuthorizationHandler,
   validationHandler?: ValidationHandler,
   customQueryHandler?: CustomQueryHandler,
   customCommandHandler?: CustomCommandHandler,
@@ -45,7 +45,7 @@ type PhenylCoreParams = {
  */
 export default class PhenylCore implements PhenylRunner {
   clients: ClientPool
-  aclHandler: AclHandler
+  authorizationHandler: AuthorizationHandler
   validationHandler: ValidationHandler
   customQueryHandler: CustomQueryHandler
   customCommandHandler: CustomCommandHandler
@@ -54,7 +54,7 @@ export default class PhenylCore implements PhenylRunner {
 
   constructor(params: PhenylCoreParams) {
     this.clients = params.clients
-    this.aclHandler = params.aclHandler || passThroughHandler
+    this.authorizationHandler = params.authorizationHandler || passThroughHandler
     this.validationHandler = params.validationHandler || passThroughHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
     this.customCommandHandler = params.customCommandHandler || noHandler
@@ -73,8 +73,8 @@ export default class PhenylCore implements PhenylRunner {
       // 1. Get session information
       const session = await this.clients.sessionClient.get(reqData.sessionId)
 
-      // 2. ACL
-      const isAccessible = await this.aclHandler(reqData, session, this.clients)
+      // 2. Authorization
+      const isAccessible = await this.authorizationHandler(reqData, session, this.clients)
       if (!isAccessible) {
         return { error: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
       }

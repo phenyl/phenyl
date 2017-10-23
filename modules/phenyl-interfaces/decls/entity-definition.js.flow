@@ -7,7 +7,7 @@ import type { ResponseData } from './response-data.js.flow'
 import type { CoreExecution } from './handler.js.flow'
 
 export interface EntityDefinition {
-  acl(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean>, // AclHandler
+  authorization(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean>, // AuthorizationHandler
   validation(reqData: RequestData, session: ?Session, clients: ClientPool): Promise<boolean>, // ValidationHandler
   executionWrapper(reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution): Promise<ResponseData>, // ExecutionWrapper
 }

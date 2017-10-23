@@ -26,7 +26,7 @@ TBD
 import Phenyl from 'phenyl'
 
 const server = new Phenyl({
-  aclHandler: asnyc (request, session, client) => {
+  authorizationHandler: asnyc (request, session, client) => {
     return true
   },
 
