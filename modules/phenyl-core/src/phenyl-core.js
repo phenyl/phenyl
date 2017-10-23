@@ -12,7 +12,6 @@ import {
 
 import type {
   Id,
-  AuthClient,
   RequestData,
   ResponseData,
   ClientPool,
@@ -43,7 +42,7 @@ type PhenylCoreParams = {
 /**
  *
  */
-export default class PhenylCore implements PhenylRunner, AuthClient {
+export default class PhenylCore implements PhenylRunner {
   clients: ClientPool
   aclHandler: AclHandler
   validationHandler: ValidationHandler

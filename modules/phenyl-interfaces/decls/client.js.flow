@@ -1,5 +1,8 @@
 // @flow
 import type {
+  Id
+} from './id.js.flow'
+import type {
   WhereQuery,
   IdQuery,
   IdsQuery,
@@ -37,30 +40,30 @@ import type {
 } from './command.js.flow'
 
 export interface EntityClient {
-  find(query: WhereQuery): Promise<QueryResultOrError>,
-  findOne(query: WhereQuery): Promise<SingleQueryResultOrError>,
-  get(query: IdQuery): Promise<SingleQueryResultOrError>,
-  getByIds(query: IdsQuery): Promise<QueryResultOrError>,
+  find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResultOrError>,
+  findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
+  get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
+  getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResultOrError>,
 
-  insert(command: InsertCommand): Promise<CommandResultOrError>,
-  insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError>,
-  insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError>,
+  insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
+  insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
+  insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError>,
 
-  update(command: UpdateCommand): Promise<CommandResultOrError>,
-  updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError>,
-  updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError>,
+  update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
+  updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
+  updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError>,
 
-  delete(command: DeleteCommand): Promise<CommandResultOrError>,
+  delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
 }
 
 export interface CustomClient {
-  runCustomQuery(query: CustomQuery): Promise<CustomQueryResultOrError>,
-  runCustomCommand(command: CustomCommand): Promise<CustomCommandResultOrError>,
+  runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResultOrError>,
+  runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResultOrError>,
 }
 
 export interface AuthClient {
-  login(command: LoginCommand): Promise<LoginCommandResultOrError>,
-  logout(command: LogoutCommand): Promise<LogoutCommandResultOrError>,
+  login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResultOrError>,
+  logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResultOrError>,
 }
 
 export type SessionClient = KvsClient<Session>
