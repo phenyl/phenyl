@@ -66,6 +66,8 @@ export interface AuthClient {
   logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResultOrError>,
 }
 
+export type CoreClient = EntityClient & CustomClient & AuthClient
+
 export type SessionClient = KvsClient<Session>
 
 export interface ClientPool {

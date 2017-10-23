@@ -16,7 +16,7 @@ import type {
  *                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                                             handleRequestData()
  * @see PhenylCoreClient in module 'phenyl-utils' for all interfaces.
- * Roughly, this implements EntityClient, CustomClient and AuthClient.
+ * Roughly, this implements CoreClient = (EntityClient, CustomClient and AuthClient).
  * EntityClient:
  *   find | findOne | get | getByIds
  *   insert | insertAndGet | insertAndGetMulti

@@ -11,8 +11,9 @@ import type {
 
 import type {
   AuthClient,
-  CustomClient,
   ClientPool,
+  CoreClient,
+  CustomClient,
   EntityClient,
   SessionClient,
 } from './decls/client.js.flow'
@@ -169,6 +170,7 @@ export type {
   ClientPool,
   CommandResult,
   CommandResultOrError,
+  CoreClient,
   CoreExecution,
   CustomClient,
   CustomCommand,

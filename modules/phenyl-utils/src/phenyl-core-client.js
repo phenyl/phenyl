@@ -1,6 +1,7 @@
 // @flow
 
 import type {
+  CoreClient,
   CommandResultOrError,
   CustomQuery,
   CustomQueryResultOrError,
@@ -21,9 +22,6 @@ import type {
   LogoutCommandResultOrError,
   RequestData,
   ResponseData,
-  AuthClient,
-  EntityClient,
-  CustomClient,
   HttpClientParams,
   ClientPathModifier,
   QueryResultOrError,
@@ -46,7 +44,7 @@ import type {
  * For example, PhenylHttpClient is the child and its "handleRequestData()" is to access to PhenylCore via HttpServer.
  * Also, PhenylCoreDirectClient is the direct client which contains PhenylCore instance.
  */
-export class PhenylCoreClient implements EntityClient, CustomClient, AuthClient {
+export class PhenylCoreClient implements CoreClient {
 
   /**
    * @abstract
