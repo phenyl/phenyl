@@ -6,6 +6,7 @@ import createCustomQueryHandler from './create-custom-query-handler.js'
 import createCustomCommandHandler from './create-custom-command-handler.js'
 import createAuthenticationHandler from './create-authentication-handler.js'
 import createExecutionWrapper from './create-execution-wrapper.js'
+import PhenylCoreDirectClient from './direct-client.js'
 
 export default PhenylCore
 export {
@@ -15,4 +16,5 @@ export {
   createExecutionWrapper,
   createAuthenticationHandler,
   createValidationHandler,
+  PhenylCoreDirectClient,
 }
