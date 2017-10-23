@@ -101,7 +101,9 @@ export default class PhenylStateFinder implements EntityStateFinder {
    *
    */
   static get(state: EntityState, query: IdQuery): Entity {
-    const entity = state.pool[query.entityName][query.id]
+    const entitiesById = state.pool[query.entityName]
+    if (entitiesById == null) throw new Error('NoEntityRegistered')
+    const entity = entitiesById[query.id]
     if (entity == null) throw new Error('NoId')
     return entity
   }
