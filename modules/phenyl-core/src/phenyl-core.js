@@ -9,6 +9,7 @@ import {
   noHandler,
   simpleExecutionWrapper
 } from './default-handlers.js'
+import PhenylCoreDirectClient from './direct-client.js'
 
 import type {
   Id,
@@ -62,32 +63,42 @@ export default class PhenylCore implements PhenylRunner {
   }
 
   /**
-   *
+   * @public
    */
   async run(reqData: RequestData): Promise<ResponseData> {
-    const session = await this.clients.sessionClient.get(reqData.sessionId)
-
     try {
       // 0. Request data validation
       assertValidRequestData(reqData)
 
-      // 1. ACL
+      // 1. Get session information
+      const session = await this.clients.sessionClient.get(reqData.sessionId)
+
+      // 2. ACL
       const isAccessible = await this.aclHandler(reqData, session, this.clients)
       if (!isAccessible) {
         return { error: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
       }
 
-      // 2. Validation
+      // 3. Validation
       const isValid = await this.validationHandler(reqData, session, this.clients)
       if (!isValid) {
         return { error: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
       }
-      // 3. Execution
-      return this.executionWrapper(reqData, session, this.clients, this.execute.bind(this))
+      // 4. Execution
+      const resData = await this.executionWrapper(reqData, session, this.clients, this.execute.bind(this))
+      return resData
     }
     catch (e) {
       return { error: createErrorResult(e) }
     }
+  }
+
+ /**
+   * @public
+   * Create PhenylCoreDirectClient of this instance.
+   */
+  createDirectClient(): PhenylCoreDirectClient {
+    return new PhenylCoreDirectClient(this)
   }
 
   /**
