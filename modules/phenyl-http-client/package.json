@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "fetch-ponyfill": "^4.1.0",
-    "phenyl-http-rules": "*"
+    "phenyl-http-rules": "*",
+    "phenyl-utils": "*"
   }
 }
