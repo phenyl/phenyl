@@ -17,7 +17,7 @@ import type {
   ResponseData,
   PathModifier,
   PhenylRunner,
-  ServerOptions,
+  ServerParams,
 } from 'phenyl-interfaces'
 
 /**
@@ -25,8 +25,8 @@ import type {
  */
 export default class ServerLogic {
   /**
-   * Instance with methods: run(RequestData) => Promise<ResponseData>
-   * In almost all the cases it will be put instance of PhenylCore.
+   * Instance containing API logic invoked via run().
+   * PhenylCore instance is expected.
    */
   runner: PhenylRunner
   /**
@@ -49,16 +49,21 @@ export default class ServerLogic {
    */
   customRequestHandler: CustomRequestHandler
 
-  constructor(runner: PhenylRunner, options: ServerOptions = {}) {
-    this.runner = runner
-    this.modifyPath = options.modifyPath || (path => path)
-    this.customRequestHandler = options.customRequestHandler || notFoundHandler
+  constructor(params: ServerParams) {
+    this.runner = params.runner
+    this.modifyPath = params.modifyPath || (path => path)
+    this.customRequestHandler = params.customRequestHandler || notFoundHandler
   }
 
+  /**
+   * Handle request to get response.
+   * If modified path starts with "/api/", invoke PhenylRunner#run().
+   * Otherwise, invoke registered customRequestHandler.
+   */
   async handleRequest(encodedHttpRequest: EncodedHttpRequest): Promise<EncodedHttpResponse> {
     const modifiedPath = this.modifyPath(encodedHttpRequest.path)
 
-     // Check if modified path start with "/api/"
+    // Check if modified path start with "/api/"
     return isApiRequest(modifiedPath)
       ? await this.handleApiRequest(Object.assign(encodedHttpRequest, { path: modifiedPath }))  //  "path" is modifiedPath here.
       : await this.handleCustomRequest(encodedHttpRequest) //  "path" is original path here.
@@ -66,7 +71,7 @@ export default class ServerLogic {
 
   /**
    * @private
-   * PhenylRunner#run(RequestData) => Promise<ResponseData>
+   * Invoke PhenylRunner#run().
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
     let responseData
@@ -85,8 +90,8 @@ export default class ServerLogic {
 
   /**
    * @private
-   * Run custom request registered
-   * Note that encodedHttpRequest.path is originalPath ( not equal to the modified path by this.modifyPath())
+   * Run custom request registered.
+   * Note that encodedHttpRequest.path is originalPath ( not equal to the modified path by this.modifyPath()).
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {

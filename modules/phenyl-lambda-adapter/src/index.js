@@ -3,23 +3,8 @@ import {
   ServerLogic,
 } from 'phenyl-http-rules/jsnext'
 
-import {
-  createErrorResult,
-} from 'phenyl-utils/jsnext'
-
 import type {
-  Id,
-  RequestData,
-  ResponseData,
-  EntityClient,
-  PhenylRunner,
-  Session,
-  AclHandler,
-  ValidationHandler,
-  SessionClient,
-  ServerOptions,
-  CustomQueryHandler,
-  CustomCommandHandler,
+  ServerParams,
 } from 'phenyl-interfaces'
 
 import type {
@@ -29,10 +14,20 @@ import type {
   LambdaHandler,
 } from '../decls/lambda.js.flow'
 
-export const createLambdaHandler = (runner: PhenylRunner, options: ServerOptions = {}): LambdaHandler => {
+/**
+ * This adapter runs the following three steps.
+ * 1. Prepare EncodedHttpRequest.
+ * 2. Invoke ServerLogic.
+ * 3. Return EncodedHttpResponse using callback.
+ */
+export const createLambdaHandler = (params: ServerParams): LambdaHandler => {
   return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
 
-    const logic = new ServerLogic(runner, options)
+    /**
+     * Universal server logic.
+     * Offers the flow: EncodedHttpRequest => EncodedHttpResponse
+     */
+    const logic = new ServerLogic(params)
 
     const encodedHttpRequest = {
       method: event.httpMethod,

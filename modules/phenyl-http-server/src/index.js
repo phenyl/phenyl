@@ -3,29 +3,20 @@ import url from 'url'
 import {
   ServerLogic,
 } from 'phenyl-http-rules/jsnext'
-import {
-  createErrorResult,
-} from 'phenyl-utils/jsnext'
 
 import type {
   IncomingMessage,
   ServerResponse,
 } from 'http'
 import type {
-  CoreClient,
-  CustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
   HttpMethod,
-  RequestData,
-  ResponseData,
-  PathModifier,
-  PhenylRunner,
-  ServerOptions,
+  ServerParams,
 } from 'phenyl-interfaces'
 
 /**
- * HTTP(s) server wrapping PhenylRunner( ≒ PhenylCore)
+ * HTTP(s) server wrapping ServerLogic (implemented at "phenyl-http-rules") and Node.js server.
  */
 export default class PhenylHttpServer {
   /**
@@ -38,9 +29,9 @@ export default class PhenylHttpServer {
    */
   logic: ServerLogic
 
-  constructor(server: net$Server, runner: PhenylRunner, options: ServerOptions = {}) {
+  constructor(server: net$Server, params: ServerParams) {
     this.server = server
-    this.logic = new ServerLogic(runner, options)
+    this.logic = new ServerLogic(params)
   }
 
   /**
@@ -48,7 +39,7 @@ export default class PhenylHttpServer {
    * Listen the given port to launch http server.
    */
   listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
-    this.server.on('request', this.handleRequest.bind(this))
+    this.server.on('request', this.handleIncomingMessage.bind(this))
     this.server.listen(port, hostname, backlog, callback)
   }
 
@@ -87,11 +78,13 @@ export default class PhenylHttpServer {
 
   /**
    * @private
-   * Handle one request.
-   * When API request comes, get response from PhenylRunner.
-   * Otherwise, delegate execution to customRequestHandler.
+   * Handle one IncomingMessage.
+   *
+   * 1. Prepare EncodedHttpRequest.
+   * 2. Invoke ServerLogic.
+   * 3. Response to client via ServerResponse object.
    */
-  async handleRequest(request: IncomingMessage, response: ServerResponse) {
+  async handleIncomingMessage(request: IncomingMessage, response: ServerResponse) {
     const requestUrl = url.parse(request.url, true)
 
     const encodedHttpRequest = {

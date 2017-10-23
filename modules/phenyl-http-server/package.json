@@ -13,8 +13,7 @@
     "phenyl-interfaces": "*"
   },
   "dependencies": {
-    "phenyl-http-rules": "*",
-    "phenyl-utils": "*"
+    "phenyl-http-rules": "*"
   },
   "author": "",
   "license": "ISC"

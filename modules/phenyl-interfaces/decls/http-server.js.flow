@@ -6,8 +6,12 @@ import type {
 import type {
   CoreClient
 } from './client.js.flow'
+import type {
+  PhenylRunner
+} from './phenyl-runner.js.flow'
 
-export type ServerOptions = {
+export type ServerParams = {
+  runner: PhenylRunner,
   modifyPath?: PathModifier,
   customRequestHandler?: CustomRequestHandler
 }
@@ -20,12 +24,6 @@ export type ServerOptions = {
  * e.g. (path) => path.split(/^\/path\/to/)[1]
  */
 export type PathModifier = (path: string) => string
-
-export type CustomResponse = {
-  +body: string | Buffer,
-  statusCode: number,
-  headers: { [key: string]: string },
-}
 
 /**
  * Custom Request Handler.

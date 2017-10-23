@@ -93,7 +93,7 @@ import type {
   ClientPathModifier,
 } from './decls/http-client.js.flow'
 import type {
-  ServerOptions,
+  ServerParams,
   PathModifier,
   CustomRequestHandler,
 } from './decls/http-server.js.flow'
@@ -263,7 +263,7 @@ export type {
   RunCustomCommandResponseData,
   RunCustomQueryRequestData,
   RunCustomQueryResponseData,
-  ServerOptions,
+  ServerParams,
   Session,
   SessionClient,
   SetAction,
