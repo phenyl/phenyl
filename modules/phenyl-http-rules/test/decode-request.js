@@ -16,7 +16,7 @@ describe('Parsing path', () => {
       path: '/api/api/api',
       method: 'GET'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert.deepEqual(reqData, {
       method: 'get',
       payload: {
@@ -49,8 +49,8 @@ describe('sessionId', () => {
       path: '/api/user/xxxx',
       method: 'GET'
     }
-    const [reqData, sessionId] = decodeRequest(request)
-    assert(sessionId === 'sessionId-in-querystring')
+    const reqData = decodeRequest(request)
+    assert(reqData.sessionId === 'sessionId-in-querystring')
   })
 
   it('is null in querystring', () => {
@@ -59,8 +59,8 @@ describe('sessionId', () => {
       path: '/api/user/xxxx',
       method: 'GET'
     }
-    const [reqData, sessionId] = decodeRequest(request)
-    assert(sessionId == null)
+    const reqData = decodeRequest(request)
+    assert(reqData.sessionId == null)
   })
 })
 
@@ -75,7 +75,7 @@ describe('GET request', () => {
       path: '/api/user',
       method: 'GET'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'find')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
@@ -87,7 +87,7 @@ describe('GET request', () => {
       path: '/api/user',
       method: 'GET'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'runCustomQuery')
     // $FlowIssue(payload.name-exists)
     assert(reqData.payload.name === 'user')
@@ -105,7 +105,7 @@ describe('POST request', () => {
       path: '/api/user',
       method: 'POST'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'insert')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
@@ -118,7 +118,7 @@ describe('POST request', () => {
       path: '/api/user',
       method: 'POST'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'runCustomCommand')
     // $FlowIssue(payload.name-exists)
     assert(reqData.payload.name === 'user')
@@ -136,7 +136,7 @@ describe('PUT request', () => {
       path: '/api/user',
       method: 'PUT'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'update')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
@@ -154,7 +154,7 @@ describe('PUT request', () => {
       path: '/api/user/john',
       method: 'PUT'
     }
-    const [reqData, sessionId] = decodeRequest(request)
+    const reqData = decodeRequest(request)
     assert(reqData.method === 'update')
     // $FlowIssue(payload.id-exists)
     assert(reqData.payload.id === 'john')

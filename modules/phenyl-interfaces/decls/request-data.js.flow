@@ -1,5 +1,8 @@
 // @flow
 import type {
+  Id
+} from './id.js.flow'
+import type {
   IdsQuery,
   IdQuery,
   WhereQuery,
@@ -55,74 +58,89 @@ export type RequestData =
 export type FindRequestData = {|
   method: 'find',
   +payload: WhereQuery,
+  sessionId?: ?Id,
 |}
 
 export type FindOneRequestData = {|
   method: 'findOne',
   +payload: WhereQuery,
+  sessionId?: ?Id,
 |}
 
 export type GetRequestData = {|
   method: 'get',
   +payload: IdQuery,
+  sessionId?: ?Id,
 |}
 
 export type GetByIdsRequestData = {|
   method: 'getByIds',
   +payload: IdsQuery,
+  sessionId?: ?Id,
 |}
 
 export type InsertRequestData = {|
   method: 'insert',
   +payload: InsertCommand,
+  sessionId?: ?Id,
 |}
 
 export type InsertAndGetRequestData = {|
   method: 'insertAndGet',
   +payload: SingleInsertCommand,
+  sessionId?: ?Id,
 |}
 
 export type InsertAndGetMultiRequestData = {|
   method: 'insertAndGetMulti',
   +payload: MultiInsertCommand,
+  sessionId?: ?Id,
 |}
 
 export type UpdateRequestData = {|
   method: 'update',
   +payload: UpdateCommand,
+  sessionId?: ?Id,
 |}
 
 export type UpdateAndGetRequestData = {|
   method: 'updateAndGet',
   +payload: IdUpdateCommand,
+  sessionId?: ?Id,
 |}
 
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
   +payload: MultiUpdateCommand,
+  sessionId?: ?Id,
 |}
 
 export type DeleteRequestData = {|
   method: 'delete',
   +payload: DeleteCommand,
+  sessionId?: ?Id,
 |}
 
 export type RunCustomQueryRequestData = {|
   method: 'runCustomQuery',
   +payload: CustomQuery,
+  sessionId?: ?Id,
 |}
 
 export type RunCustomCommandRequestData = {|
   method: 'runCustomCommand',
   +payload: CustomCommand,
+  sessionId?: ?Id,
 |}
 
 export type LoginRequestData = {|
   method: 'login',
   +payload: LoginCommand,
+  sessionId?: ?Id,
 |}
 
 export type LogoutRequestData = {|
   method: 'logout',
   +payload: LogoutCommand,
+  sessionId?: ?Id,
 |}

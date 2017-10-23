@@ -7,7 +7,10 @@ export function assertValidRequestData(rd: any): void {
   if (typeof rd !== 'object' || rd === null) {
     throw new Error(`RequestData must be an object. ${typeof rd} given.`)
   }
-  const { method } = rd
+  const { method, sessionId } = rd
+  if (sessionId != null && typeof sessionId !== 'string') {
+    throw new Error(`RequestData.sessionId must be null or string.`)
+  }
   if (!method) {
     throw new Error(`RequestData must have "method" property.`)
   }

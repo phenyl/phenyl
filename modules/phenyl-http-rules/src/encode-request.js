@@ -13,8 +13,9 @@ import type {
 /**
  *
  */
-export default function encodeRequest(reqData: RequestData, sessionId?: ?Id): EncodedHttpRequest {
+export default function encodeRequest(reqData: RequestData): EncodedHttpRequest {
   assertValidRequestData(reqData)
+  const { sessionId } = reqData
   const headers: Object = (sessionId != null) ? { authorization: sessionId } : {}
   let data
 

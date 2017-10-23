@@ -4,5 +4,5 @@ import type { ResponseData } from './response-data.js.flow'
 import type { Id } from './id.js.flow'
 
 export interface PhenylRunner {
-  run(reqData: RequestData, sessionId: ?Id): Promise<ResponseData>
+  run(reqData: RequestData): Promise<ResponseData>
 }

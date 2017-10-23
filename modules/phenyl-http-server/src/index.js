@@ -85,7 +85,7 @@ export default class PhenylHttpServer {
     try {
       // 1. Decoding Request
       // $FlowIssue(request.method-is-always-compatible)
-      const [requestData, sessionId] = decodeRequest({
+      const requestData = decodeRequest({
         method: request.method,
         path: this.modifyPath(requestUrl.pathname || ''),
         body: await this.getRequestBody(request),
@@ -93,7 +93,7 @@ export default class PhenylHttpServer {
         qsParams: requestUrl.query,
       })
       // 2. Invoking PhenylCore
-      responseData = await this.phenylCore.run(requestData, sessionId)
+      responseData = await this.phenylCore.run(requestData)
     }
     catch (err) {
       responseData = { error: createErrorResult(err) }

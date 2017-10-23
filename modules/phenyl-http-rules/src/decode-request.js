@@ -11,7 +11,7 @@ import type {
 /**
  *
  */
-export default function decodeRequest(request: EncodedHttpRequest): [RequestData, ?Id] {
+export default function decodeRequest(request: EncodedHttpRequest): RequestData {
   let reqData: RequestData
   const sessionId = decodeSessionId(request)
   switch (request.method) {
@@ -33,7 +33,7 @@ export default function decodeRequest(request: EncodedHttpRequest): [RequestData
     default:
       throw new Error(`Could not handle HTTP method: ${request.method}. Only GET|POST|PUT|DELETE are allowed.`)
   }
-  return [reqData, sessionId]
+  return (sessionId) ? Object.assign(reqData, { sessionId }) : reqData
 }
 
 /**

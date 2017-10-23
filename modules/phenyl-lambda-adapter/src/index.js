@@ -33,7 +33,7 @@ import type {
 
 export const createLambdaHandler = (phenylCore: PhenylRunner, options: ServerOptions = {}): LambdaHandler => {
   return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
-    let requestData, sessionId, responseData
+    let requestData, responseData
     /**
      * (path: string) => string
      * Real server path to regular path.
@@ -44,7 +44,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner, options: ServerOpt
 
     try {
       // 1. Decoding Request
-      [requestData, sessionId] = decodeRequest({
+      requestData = decodeRequest({
         method: event.httpMethod,
         path: modifyPath(event.path),
         body: event.body,
@@ -52,7 +52,7 @@ export const createLambdaHandler = (phenylCore: PhenylRunner, options: ServerOpt
         queryString: event.queryStringParameters,
       })
       // 2. Invoking PhenylCore
-      responseData = await phenylCore.run(requestData, sessionId)
+      responseData = await phenylCore.run(requestData)
     }
     catch (err) {
       responseData = { error: createErrorResult(err) }

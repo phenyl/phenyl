@@ -15,13 +15,13 @@ describe('Check encode/decode deep equality: ', () => {
         where: {
           name: 'Tokyo Hospital'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('findOne', () => {
@@ -32,13 +32,13 @@ describe('Check encode/decode deep equality: ', () => {
         where: {
           name: 'Tokyo Hospital'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('get', () => {
@@ -47,13 +47,13 @@ describe('Check encode/decode deep equality: ', () => {
       payload: {
         entityName: 'hospital',
         id: 'tokyo',
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('getByIds', () => {
@@ -62,13 +62,13 @@ describe('Check encode/decode deep equality: ', () => {
       payload: {
         entityName: 'hospital',
         ids: ['tokyo', 'nagoya', 'osaka']
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('insert', () => {
@@ -80,13 +80,13 @@ describe('Check encode/decode deep equality: ', () => {
           name: 'Tokyo Hospital',
           address: 'dummy-dummy'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('insertAndGet', () => {
@@ -98,13 +98,13 @@ describe('Check encode/decode deep equality: ', () => {
           name: 'Tokyo Hospital',
           address: 'dummy-dummy'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('insertAndGetMulti', () => {
@@ -119,13 +119,13 @@ describe('Check encode/decode deep equality: ', () => {
           name: 'Nagoya Hospital',
           address: 'dummy-dummy-dummy'
         }]
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('update', () => {
@@ -139,13 +139,13 @@ describe('Check encode/decode deep equality: ', () => {
             tel: 'dummy'
           }
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('updateAndGet', () => {
@@ -159,13 +159,13 @@ describe('Check encode/decode deep equality: ', () => {
             tel: 'dummy'
           }
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('updateAndFetch', () => {
@@ -181,13 +181,13 @@ describe('Check encode/decode deep equality: ', () => {
             tel: 'dummy'
           }
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('delete', () => {
@@ -198,13 +198,13 @@ describe('Check encode/decode deep equality: ', () => {
         where: {
           name: 'tokyo'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('runCustomQuery', () => {
@@ -215,13 +215,13 @@ describe('Check encode/decode deep equality: ', () => {
         params: {
           email: 'abc@example.com'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('runCustomQuery without params', () => {
@@ -232,7 +232,7 @@ describe('Check encode/decode deep equality: ', () => {
       }
     }
     const encodedHttpRequest = encodeRequest(reqData)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
     assert.deepEqual(reqData, decodedReqData)
   })
 
@@ -244,13 +244,13 @@ describe('Check encode/decode deep equality: ', () => {
         params: {
           email: 'abc@example.com'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('login', () => {
@@ -262,13 +262,13 @@ describe('Check encode/decode deep equality: ', () => {
           email: 'abc@example.com',
           password: 'dummy'
         }
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 
   it('logout', () => {
@@ -278,12 +278,12 @@ describe('Check encode/decode deep equality: ', () => {
         entityName: 'doctor',
         sessionId: 'foobar',
         userId: 'shinout'
-      }
+      },
+      sessionId: 'foobar'
     }
-    const sessionId = 'foobar'
-    const encodedHttpRequest = encodeRequest(reqData, sessionId)
-    const [decodedReqData, decodedSessionId] = decodeRequest(encodedHttpRequest)
-    assert.deepEqual(reqData, decodedReqData)
-    assert.deepEqual(sessionId, decodedSessionId)
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
   })
 })

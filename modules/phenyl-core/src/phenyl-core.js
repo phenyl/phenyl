@@ -64,8 +64,8 @@ export default class PhenylCore implements PhenylRunner {
   /**
    *
    */
-  async run(reqData: RequestData, sessionId: ?Id): Promise<ResponseData> {
-    const session = await this.clients.sessionClient.get(sessionId)
+  async run(reqData: RequestData): Promise<ResponseData> {
+    const session = await this.clients.sessionClient.get(reqData.sessionId)
 
     try {
       // 0. Request data validation
