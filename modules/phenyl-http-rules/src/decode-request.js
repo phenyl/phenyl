@@ -7,7 +7,6 @@ import type {
   RequestData,
 } from 'phenyl-interfaces'
 
-
 /**
  *
  */
@@ -251,9 +250,8 @@ function decodeDataInQsParams(qsParams: ?QueryStringParams): Object { // return 
  * 1. return "sessionId" value in query string if exists
  * 2. return "authorization" value in header if exists
  * 3. return null
- * @private
  */
-function decodeSessionId(request: EncodedHttpRequest): ?Id {
+export function decodeSessionId(request: EncodedHttpRequest): ?Id {
   const {
     headers,
     qsParams,

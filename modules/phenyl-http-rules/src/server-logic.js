@@ -61,7 +61,7 @@ export default class ServerLogic {
    * Otherwise, invoke registered customRequestHandler.
    */
   async handleRequest(encodedHttpRequest: EncodedHttpRequest): Promise<EncodedHttpResponse> {
-    const modifiedPath = this.modifyPath(encodedHttpRequest.path)
+    const modifiedPath = this.modifyPath(encodedHttpRequest.path) || ''
 
     // Check if modified path start with "/api/"
     return isApiRequest(modifiedPath)
