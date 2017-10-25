@@ -1,7 +1,6 @@
 // @flow
 import type {
   ValidationHandler,
-  ClientPool,
   ExecutionWrapper,
   FunctionalGroup,
   RequestData,
@@ -18,7 +17,7 @@ function assertValidationFunction(fn: any, name: string, methodName: string) {
  */
 export default function createValidationHandler(fg: FunctionalGroup): ValidationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
-  return async function validationHandler(reqData: RequestData, session: ?Session, clients: ClientPool) :Promise<boolean> {
+  return async function validationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':
@@ -36,7 +35,7 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertValidationFunction(entityDefinition.validation, data.entityName, method)
-        return entityDefinition.validation(reqData, session, clients)
+        return entityDefinition.validation(reqData, session)
       }
 
       case 'runCustomQuery': {
@@ -44,7 +43,7 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
         const customQueryDefinition = customQueries[payload.name]
         if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${payload.name}".`)
         assertValidationFunction(customQueryDefinition.validation, payload.name, method)
-        return customQueryDefinition.validation(payload, session, clients)
+        return customQueryDefinition.validation(payload, session)
       }
 
       case 'runCustomCommand': {
@@ -52,7 +51,7 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
         const customCommandDefinition = customCommands[payload.name]
         if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${payload.name}".`)
         assertValidationFunction(customCommandDefinition.validation, payload.name, method)
-        return customCommandDefinition.validation(payload, session, clients)
+        return customCommandDefinition.validation(payload, session)
       }
 
       case 'login':
@@ -61,7 +60,7 @@ export default function createValidationHandler(fg: FunctionalGroup): Validation
         const userEntityDefinition = users[payload.entityName]
         if (userEntityDefinition == null) throw new Error(`Unknown entity name "${payload.entityName}".`)
         assertValidationFunction(userEntityDefinition.validation, payload.entityName, method)
-        return userEntityDefinition.validation(reqData, session, clients)
+        return userEntityDefinition.validation(reqData, session)
       }
       default:
         throw new Error(`Unknown method "${method}" given in RequestData.`)

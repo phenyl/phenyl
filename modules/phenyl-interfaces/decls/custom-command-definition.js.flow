@@ -1,7 +1,6 @@
 // @flow
 
 import type { Session } from './session.js.flow'
-import type { ClientPool } from './client.js.flow'
 import type {
   CustomCommand,
 } from './command.js.flow'
@@ -10,9 +9,9 @@ import type {
 } from './command-result.js.flow'
 
 export interface CustomCommandDefinition {
-  authorization(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<boolean>,
-  validation(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<boolean>,
-  execution(command: CustomCommand, session: ?Session, clients: ClientPool): Promise<CustomCommandResult>,
+  authorization(command: CustomCommand, session: ?Session): Promise<boolean>,
+  validation(command: CustomCommand, session: ?Session): Promise<boolean>,
+  execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult>,
 }
 
 export type CustomCommandDefinitions = { [name: string]: CustomCommandDefinition }

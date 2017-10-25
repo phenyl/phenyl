@@ -1,7 +1,6 @@
 // @flow
 import type {
   AuthorizationHandler,
-  ClientPool,
   ExecutionWrapper,
   FunctionalGroup,
   RequestData,
@@ -18,7 +17,7 @@ function assertAuthorizationFunction(fn: any, name: string, methodName: string) 
  */
 export default function createAuthorizationHandler(fg: FunctionalGroup): AuthorizationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
-  return async function authorizationHandler(reqData: RequestData, session: ?Session, clients: ClientPool) :Promise<boolean> {
+  return async function authorizationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':
@@ -36,7 +35,7 @@ export default function createAuthorizationHandler(fg: FunctionalGroup): Authori
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertAuthorizationFunction(entityDefinition.authorization, data.entityName, method)
-        return entityDefinition.authorization(reqData, session, clients)
+        return entityDefinition.authorization(reqData, session)
       }
 
       case 'runCustomQuery': {
@@ -44,7 +43,7 @@ export default function createAuthorizationHandler(fg: FunctionalGroup): Authori
         const customQueryDefinition = customQueries[payload.name]
         if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${payload.name}".`)
         assertAuthorizationFunction(customQueryDefinition.authorization, payload.name, method)
-        return customQueryDefinition.authorization(payload, session, clients)
+        return customQueryDefinition.authorization(payload, session)
       }
 
       case 'runCustomCommand': {
@@ -52,7 +51,7 @@ export default function createAuthorizationHandler(fg: FunctionalGroup): Authori
         const customCommandDefinition = customCommands[payload.name]
         if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${payload.name}".`)
         assertAuthorizationFunction(customCommandDefinition.authorization, payload.name, method)
-        return customCommandDefinition.authorization(payload, session, clients)
+        return customCommandDefinition.authorization(payload, session)
       }
 
       case 'logout':
@@ -61,7 +60,7 @@ export default function createAuthorizationHandler(fg: FunctionalGroup): Authori
         const userEntityDefinition = users[payload.entityName]
         if (userEntityDefinition == null) throw new Error(`Unknown entity name "${payload.entityName}".`)
         assertAuthorizationFunction(userEntityDefinition.authorization, payload.entityName, method)
-        return userEntityDefinition.authorization(reqData, session, clients)
+        return userEntityDefinition.authorization(reqData, session)
       }
       default:
         throw new Error(`Unknown method "${method}" given in RequestData.`)

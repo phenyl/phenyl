@@ -1,7 +1,6 @@
 // @flow
 import type {
   AuthorizationHandler,
-  ClientPool,
   CoreExecution,
   ExecutionWrapper,
   FunctionalGroup,
@@ -19,7 +18,7 @@ function assertExecutionWrapper(fn: any, name: string, methodName: string) {
  */
 export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
   const { users, nonUsers, customQueries, customCommands } = fg
-  return async function executionWrapper(reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution) :Promise<ResponseData> {
+  return async function executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution) :Promise<ResponseData> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':
@@ -39,7 +38,7 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
         assertExecutionWrapper(entityDefinition.executionWrapper, data.entityName, method)
-        return entityDefinition.executionWrapper(reqData, session, clients, execution)
+        return entityDefinition.executionWrapper(reqData, session, execution)
       }
 
       case 'runCustomQuery':

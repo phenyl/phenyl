@@ -7,7 +7,6 @@ import type {
   CustomQuery,
   LoginCommand,
   Session,
-  ClientPool,
   CoreExecution,
 } from 'phenyl-interfaces'
 
@@ -37,6 +36,6 @@ export async function noHandler(commandOrQuery: LoginCommand | CustomCommand | C
 /**
  * SimpleExecutionWrapper: ExecutionWrapper which simply wraps execution function.
  */
-export async function simpleExecutionWrapper(reqData: RequestData, session: ?Session, clients: ClientPool, execution: CoreExecution): Promise<ResponseData> {
+export async function simpleExecutionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
   return execution(reqData, session)
 }

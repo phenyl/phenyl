@@ -74,18 +74,18 @@ export default class PhenylCore implements PhenylRunner {
       const session = await this.clients.sessionClient.get(reqData.sessionId)
 
       // 2. Authorization
-      const isAccessible = await this.authorizationHandler(reqData, session, this.clients)
+      const isAccessible = await this.authorizationHandler(reqData, session)
       if (!isAccessible) {
         return { error: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
       }
 
       // 3. Validation
-      const isValid = await this.validationHandler(reqData, session, this.clients)
+      const isValid = await this.validationHandler(reqData, session)
       if (!isValid) {
         return { error: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
       }
       // 4. Execution
-      const resData = await this.executionWrapper(reqData, session, this.clients, this.execute.bind(this))
+      const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
       return resData
     }
     catch (e) {
@@ -153,11 +153,11 @@ export default class PhenylCore implements PhenylRunner {
         return result.ok ? { delete: result } : { error: result }
       }
       case 'runCustomQuery': {
-        const result = await this.customQueryHandler(reqData.payload, session, this.clients)
+        const result = await this.customQueryHandler(reqData.payload, session)
         return result.ok ? { runCustomQuery: result } : { error: result }
       }
       case 'runCustomCommand': {
-        const result = await this.customCommandHandler(reqData.payload, session, this.clients)
+        const result = await this.customCommandHandler(reqData.payload, session)
         return result.ok ? { runCustomCommand: result } : { error: result }
       }
       case 'login': {
@@ -179,7 +179,7 @@ export default class PhenylCore implements PhenylRunner {
    */
   async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResultOrError> {
     try {
-      const result = await this.authenticationHandler(loginCommand, session, this.clients)
+      const result = await this.authenticationHandler(loginCommand, session)
 
       // login failed
       if (!result.ok) {

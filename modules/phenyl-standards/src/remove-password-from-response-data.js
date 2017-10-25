@@ -3,7 +3,6 @@ import type {
   EntityDefinition,
   RequestData,
   Session,
-  ClientPool,
   ResponseData,
   CoreExecution,
 } from 'phenyl-interfaces'

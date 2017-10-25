@@ -1,7 +1,6 @@
 // @flow
 
 import type { Session } from './session.js.flow'
-import type { ClientPool } from './client.js.flow'
 import type {
   CustomQuery,
 } from './query.js.flow'
@@ -10,9 +9,9 @@ import type {
 } from './query-result.js.flow'
 
 export interface CustomQueryDefinition {
-  authorization(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
-  validation(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<boolean>,
-  execution(query: CustomQuery, session: ?Session, clients: ClientPool): Promise<CustomQueryResult>, // CustomQueryHandler
+  authorization(query: CustomQuery, session: ?Session): Promise<boolean>,
+  validation(query: CustomQuery, session: ?Session): Promise<boolean>,
+  execution(query: CustomQuery, session: ?Session): Promise<CustomQueryResult>, // CustomQueryHandler
 }
 
 export type CustomQueryDefinitions = { [name: string]: CustomQueryDefinition }
