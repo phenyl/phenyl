@@ -27,7 +27,7 @@ export default class StandardEntityDefinition implements EntityDefinition {
     return false
   }
 
-  async executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
     return execution(reqData, session)
   }
 }

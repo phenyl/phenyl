@@ -8,7 +8,7 @@ import type { CoreExecution } from './handler.js.flow'
 export interface EntityDefinition {
   authorization(reqData: RequestData, session: ?Session): Promise<boolean>, // AuthorizationHandler
   validation(reqData: RequestData, session: ?Session): Promise<boolean>, // ValidationHandler
-  executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData>, // ExecutionWrapper
+  wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData>, // ExecutionWrapper
 }
 
 export type EntityDefinitions = { [entityName: string]: EntityDefinition }
