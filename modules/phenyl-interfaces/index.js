@@ -135,6 +135,11 @@ import type {
   LoginRequestData,
   LogoutRequestData,
 } from './decls/request-data.js.flow'
+
+import type {
+  RequestDataHandlers,
+} from './decls/request-data-handlers.js.flow'
+
 import type {
   ResponseData,
   FindResponseData,
@@ -256,6 +261,7 @@ export type {
   QueryResultOrError,
   QueryStringParams,
   RequestData,
+  RequestDataHandlers,
   RequestMethodName,
   RegisterAction,
   ResponseData,

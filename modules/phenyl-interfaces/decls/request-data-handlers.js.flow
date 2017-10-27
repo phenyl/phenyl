@@ -1,0 +1,45 @@
+// @flow
+import type {
+  RequestData
+} from './request-data.js.flow'
+import type {
+  WhereQuery,
+  IdQuery,
+  IdsQuery,
+  CustomQuery,
+} from './query.js.flow'
+
+import type {
+  InsertCommand,
+  SingleInsertCommand,
+  MultiInsertCommand,
+  UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
+  DeleteCommand,
+  CustomCommand,
+  LoginCommand,
+  LogoutCommand,
+} from './command.js.flow'
+
+export type RequestDataHandlers<T> = {
+  handleDefault: (reqData: RequestData) => Promise<T>,
+
+  find?: (query: WhereQuery) => Promise<T>,
+  findOne?: (query: WhereQuery) => Promise<T>,
+  get?: (query: IdQuery) => Promise<T>,
+  getByIds?: (query: IdsQuery) => Promise<T>,
+  insert?: (command: InsertCommand) => Promise<T>,
+  insertAndGet?: (command: SingleInsertCommand) => Promise<T>,
+  insertAndGetMulti?: (command: MultiInsertCommand) => Promise<T>,
+  update?: (command: UpdateCommand) => Promise<T>,
+  updateAndGet?: (command: IdUpdateCommand) => Promise<T>,
+  updateAndFetch?: (command: MultiUpdateCommand) => Promise<T>,
+  delete?: (command: DeleteCommand) => Promise<T>,
+  runCustomQuery?: (query: CustomQuery) => Promise<T>,
+  runCustomCommand?: (command: CustomCommand) => Promise<T>,
+  login?: (command: LoginCommand) => Promise<T>,
+  logout?: (command: LogoutCommand) => Promise<T>,
+
+  notMatch?: (reqData: RequestData) => Promise<T>,
+}
