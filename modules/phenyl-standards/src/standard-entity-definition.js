@@ -22,9 +22,7 @@ export default class StandardEntityDefinition implements EntityDefinition {
     return false
   }
 
-  async validation(reqData: RequestData, session: ?Session): Promise<boolean> {
-    // TODO
-    return false
+  async validation(reqData: RequestData, session: ?Session): Promise<void> {
   }
 
   async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
