@@ -80,10 +80,7 @@ export function assertValidIdQuery(q: any): void {
   }
   const { entityName, id } = q
   assertValidEntityName(entityName, 'IdQuery')
-
-  if (typeof id !== 'string' || !id) {
-    throw new Error(`IdQuery.id must be a non-empty string. "${id}" given.`)
-  }
+  assertNonEmptyString(id, `IdQuery.id must be a non-empty string. "${id}" given.`)
 }
 
 /**
@@ -99,10 +96,7 @@ export function assertValidIdsQuery(q: any): void {
   if (!Array.isArray(ids)) {
     throw new Error(`IdsQuery.ids must be an array. "${typeof ids}" given.`)
   }
-
-  if (typeof ids[0] !== 'string' || !ids[0]) {
-    throw new Error(`IdsQuery.ids must be a non-empty array.`)
-  }
+  assertNonEmptyString(ids[0], `IdsQuery.ids must be a non-empty array.`)
 }
 
 /**
@@ -150,9 +144,7 @@ export function assertValidUpdateCommand(com: any): void {
   assertValidUpdateOperation(operation)
 
   if (id != null) {
-    if (typeof id !== 'string' || !id) {
-      throw new Error(`UpdateCommand.id must be a non-empty string. "${id}" given.`)
-    }
+    assertNonEmptyString(id, `UpdateCommand.id must be a non-empty string. "${id}" given.`)
     return
   }
 
@@ -177,9 +169,7 @@ export function assertValidDeleteCommand(com: any): void {
   assertValidEntityName(entityName, 'DeleteCommand')
 
   if (id != null) {
-    if (typeof id !== 'string' || !id) {
-      throw new Error(`DeleteCommand.id must be a non-empty string. "${id}" given.`)
-    }
+    assertNonEmptyString(id, `DeleteCommand.id must be a non-empty string. "${id}" given.`)
     return
   }
 
@@ -252,9 +242,8 @@ export function assertValidLoginCommand(com: any): void {
   }
   // values in credentials must be strings
   Object.keys(credentials).forEach(credKey => {
-    if (typeof credentials[credKey] !== 'string' || !credentials[credKey]) {
-      throw new Error(`LoginCommand.credentials['${credKey}'] must be a non-empty string.`)
-    }
+    const value = credentials[credKey]
+    assertNonEmptyString(value, `LoginCommand.credentials['${credKey}'] must be a non-empty string.`)
   })
 }
 
@@ -268,10 +257,6 @@ export function assertValidLogoutCommand(com: any): void {
 
   const { sessionId, entityName } = com
   assertValidEntityName(entityName, 'LogoutCommand')
-
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`LoginCommand.entityName must be a non-empty string. "${entityName}" given.`)
-  }
 }
 
 /**
@@ -288,9 +273,7 @@ export function assertValidUpdateOperation(ope: any): void {
  */
 export function assertValidEntityName(entityName: any, _dataName?: string) {
   const dataName = _dataName ? _dataName + '.' : ''
-  if (typeof entityName !== 'string' || !entityName) {
-    throw new Error(`${dataName}entityName must be a non-empty string. "${entityName}" given.`)
-  }
+  assertNonEmptyString(entityName, `${dataName}entityName must be a non-empty string. "${entityName}" given.`)
 
   if (!/[A-Za-z][A-Za-z0-9-_]*/.test(entityName)) {
     throw new Error(`${dataName}entityName must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${entityName}" given.`)
@@ -302,11 +285,18 @@ export function assertValidEntityName(entityName: any, _dataName?: string) {
  */
 export function assertValidCustomName(name: any, _dataName?: string) {
   const dataName = _dataName ? _dataName + '.' : ''
-  if (typeof name !== 'string' || !name) {
-    throw new Error(`${dataName}name must be a non-empty string. "${name}" given.`)
-  }
+  assertNonEmptyString(name, `${dataName}name must be a non-empty string. "${name}" given.`)
 
   if (!/[A-Za-z][A-Za-z0-9-_]*/.test(name)) {
     throw new Error(`${dataName}name must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${name}" given.`)
+  }
+}
+
+/**
+ *
+ */
+export function assertNonEmptyString(val: any, message: string) {
+  if (typeof val !== 'string' || !val) {
+    throw new Error(message)
   }
 }
