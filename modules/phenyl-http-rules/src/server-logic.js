@@ -82,7 +82,7 @@ export default class ServerLogic {
       responseData = await this.runner.run(requestData)
     }
     catch (err) {
-      responseData = { error: createErrorResult(err) }
+      responseData = { type: 'error', payload: createErrorResult(err) }
     }
     // 3. Encoding Response
     return encodeResponse(responseData)

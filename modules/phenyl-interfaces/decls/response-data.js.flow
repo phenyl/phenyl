@@ -41,66 +41,81 @@ export type ResponseData =
   ErrorResponseData
 
 export type FindResponseData = {|
-  +find: QueryResult,
+  type: 'find',
+  +payload: QueryResult,
 |}
 
 export type FindOneResponseData = {|
-  +findOne: SingleQueryResult,
+  type: 'findOne',
+  +payload: SingleQueryResult,
 |}
 
 export type GetResponseData = {|
-  +get: SingleQueryResult,
+  type: 'get',
+  +payload: SingleQueryResult,
 |}
 
 export type GetByIdsResponseData = {|
-  +getByIds: QueryResult,
+  type: 'getByIds',
+  +payload: QueryResult,
 |}
 
 export type InsertResponseData = {|
-  +insert: CommandResult,
+  type: 'insert',
+  +payload: CommandResult,
 |}
 
 export type InsertAndGetResponseData = {|
-  +insertAndGet: GetCommandResult,
+  type: 'insertAndGet',
+  +payload: GetCommandResult,
 |}
 
 export type InsertAndGetMultiResponseData = {|
-  +insertAndGetMulti: MultiValuesCommandResult,
+  type: 'insertAndGetMulti',
+  +payload: MultiValuesCommandResult,
 |}
 
 export type UpdateResponseData = {|
-  +update: CommandResult,
+  type: 'update',
+  +payload: CommandResult,
 |}
 
 export type UpdateAndGetResponseData = {|
-  +updateAndGet: GetCommandResult,
+  type: 'updateAndGet',
+  +payload: GetCommandResult,
 |}
 
 export type UpdateAndFetchResponseData = {|
-  +updateAndFetch: MultiValuesCommandResult,
+  type: 'updateAndFetch',
+  +payload: MultiValuesCommandResult,
 |}
 
 export type DeleteResponseData = {|
-  +delete: CommandResult,
+  type: 'delete',
+  +payload: CommandResult,
 |}
 
 export type RunCustomQueryResponseData = {|
-  +runCustomQuery: CustomQueryResult,
+  type: 'runCustomQuery',
+  +payload: CustomQueryResult,
 |}
 
 export type RunCustomCommandResponseData = {|
-  +runCustomCommand: CustomCommandResult,
+  type: 'runCustomCommand',
+  +payload: CustomCommandResult,
 |}
 
 export type LoginResponseData = {|
-  +login: LoginCommandResult,
+  type: 'login',
+  +payload: LoginCommandResult,
 |}
 
 export type LogoutResponseData = {|
-  +logout: LogoutCommandResult,
+  type: 'logout',
+  +payload: LogoutCommandResult,
 |}
 
-
 export type ErrorResponseData = {|
-  +error: ErrorResult,
+  type: 'error',
+  payload: ErrorResult,
 |}

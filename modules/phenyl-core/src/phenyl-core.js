@@ -76,20 +76,20 @@ export default class PhenylCore implements PhenylRunner {
       // 2. Authorization
       const isAccessible = await this.authorizationHandler(reqData, session)
       if (!isAccessible) {
-        return { error: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
+        return { type: 'error', payload: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
       }
 
       // 3. Validation
       const isValid = await this.validationHandler(reqData, session)
       if (!isValid) {
-        return { error: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
+        return { type: 'error', payload: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
       }
       // 4. Execution
       const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
       return resData
     }
     catch (e) {
-      return { error: createErrorResult(e) }
+      return { type: 'error', payload: createErrorResult(e) }
     }
   }
 
@@ -109,67 +109,67 @@ export default class PhenylCore implements PhenylRunner {
 
     switch (reqData.method) {
       case 'find': {
-        const result = await entityClient.find(reqData.payload)
-        return result.ok ? { find: result } : { error: result }
+        const payload = await entityClient.find(reqData.payload)
+        return payload.ok ? { type: 'find', payload } : { type: 'error', payload }
       }
       case 'findOne': {
-        const result = await entityClient.findOne(reqData.payload)
-        return result.ok ? { findOne: result } : { error: result }
+        const payload = await entityClient.findOne(reqData.payload)
+        return payload.ok ? { type: 'findOne', payload } : { type: 'error', payload }
       }
       case 'get': {
-        const result = await entityClient.get(reqData.payload)
-        return result.ok ? { get: result } : { error: result }
+        const payload = await entityClient.get(reqData.payload)
+        return payload.ok ? { type: 'get', payload } : { type: 'error', payload }
       }
       case 'getByIds': {
-        const result = await entityClient.getByIds(reqData.payload)
-        return result.ok ? { getByIds: result } : { error: result }
+        const payload = await entityClient.getByIds(reqData.payload)
+        return payload.ok ? { type: 'getByIds', payload } : { type: 'error', payload }
       }
       case 'insert': {
-        const result = await entityClient.insert(reqData.payload)
-        return result.ok ? { insert: result } : { error: result }
+        const payload = await entityClient.insert(reqData.payload)
+        return payload.ok ? { type: 'insert', payload } : { type: 'error', payload }
       }
       case 'insertAndGet': {
-        const result = await entityClient.insertAndGet(reqData.payload)
-        return result.ok ? { insertAndGet: result } : { error: result }
+        const payload = await entityClient.insertAndGet(reqData.payload)
+        return payload.ok ? { type: 'insertAndGet', payload } : { type: 'error', payload }
       }
       case 'insertAndGetMulti': {
-        const result = await entityClient.insertAndGetMulti(reqData.payload)
-        return result.ok ? { insertAndGetMulti: result } : { error: result }
+        const payload = await entityClient.insertAndGetMulti(reqData.payload)
+        return payload.ok ? { type: 'insertAndGetMulti', payload } : { type: 'error', payload }
       }
       case 'update': {
-        const result = await entityClient.update(reqData.payload)
-        return result.ok ? { update: result } : { error: result }
+        const payload = await entityClient.update(reqData.payload)
+        return payload.ok ? { type: 'update', payload } : { type: 'error', payload }
       }
       case 'updateAndGet': {
-        const result = await entityClient.updateAndGet(reqData.payload)
-        return result.ok ? { updateAndGet: result } : { error: result }
+        const payload = await entityClient.updateAndGet(reqData.payload)
+        return payload.ok ? { type: 'updateAndGet', payload } : { type: 'error', payload }
       }
       case 'updateAndFetch': {
-        const result = await entityClient.updateAndFetch(reqData.payload)
-        return result.ok ? { updateAndFetch: result } : { error: result }
+        const payload = await entityClient.updateAndFetch(reqData.payload)
+        return payload.ok ? { type: 'updateAndFetch', payload } : { type: 'error', payload }
       }
       case 'delete': {
-        const result = await entityClient.delete(reqData.payload)
-        return result.ok ? { delete: result } : { error: result }
+        const payload = await entityClient.delete(reqData.payload)
+        return payload.ok ? { type: 'delete', payload } : { type: 'error', payload }
       }
       case 'runCustomQuery': {
-        const result = await this.customQueryHandler(reqData.payload, session)
-        return result.ok ? { runCustomQuery: result } : { error: result }
+        const payload = await this.customQueryHandler(reqData.payload, session)
+        return payload.ok ? { type: 'runCustomQuery', payload } : { type: 'error', payload }
       }
       case 'runCustomCommand': {
-        const result = await this.customCommandHandler(reqData.payload, session)
-        return result.ok ? { runCustomCommand: result } : { error: result }
+        const payload = await this.customCommandHandler(reqData.payload, session)
+        return payload.ok ? { type: 'runCustomCommand', payload } : { type: 'error', payload }
       }
       case 'login': {
-        const result = await this.login(reqData.payload, session)
-        return result.ok ? { login: result } : { error: result }
+        const payload = await this.login(reqData.payload, session)
+        return payload.ok ? { type: 'login', payload } : { type: 'error', payload }
       }
       case 'logout': {
-        const result = await this.logout(reqData.payload, session)
-        return result.ok ? { logout: result } : { error: result }
+        const payload = await this.logout(reqData.payload, session)
+        return payload.ok ? { type: 'logout', payload } : { type: 'error', payload }
       }
       default: {
-        return { error: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
+        return { type: 'error', payload: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
       }
     }
   }

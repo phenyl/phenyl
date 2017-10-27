@@ -59,9 +59,8 @@ export class PhenylCoreClient implements CoreClient {
   async find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResultOrError> {
     const reqData = { method: 'find', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.find != null) return resData.find
-    throw new Error(`Invalid response data: property name "find" is not found in response.`)
+    if (resData.type === 'find' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "find" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -70,9 +69,8 @@ export class PhenylCoreClient implements CoreClient {
   async findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError> {
     const reqData = { method: 'findOne', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.findOne != null) return resData.findOne
-    throw new Error(`Invalid response data: property name "findOne" is not found in response.`)
+    if (resData.type === 'findOne' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "findOne" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -81,9 +79,8 @@ export class PhenylCoreClient implements CoreClient {
   async get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError> {
     const reqData = { method: 'get', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.get != null) return resData.get
-    throw new Error(`Invalid response data: property name "get" is not found in response.`)
+    if (resData.type === 'get' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "get" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -92,9 +89,8 @@ export class PhenylCoreClient implements CoreClient {
   async getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResultOrError> {
     const reqData = { method: 'getByIds', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.getByIds != null) return resData.getByIds
-    throw new Error(`Invalid response data: property name "getByIds" is not found in response.`)
+    if (resData.type === 'getByIds' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "getByIds" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -103,9 +99,8 @@ export class PhenylCoreClient implements CoreClient {
   async insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResultOrError> {
     const reqData = { method: 'insert', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.insert != null) return resData.insert
-    throw new Error(`Invalid response data: property name "insert" is not found in response.`)
+    if (resData.type === 'insert' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "insert" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -114,9 +109,8 @@ export class PhenylCoreClient implements CoreClient {
   async insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResultOrError> {
     const reqData = { method: 'insertAndGet', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.insertAndGet != null) return resData.insertAndGet
-    throw new Error(`Invalid response data: property name "insertAndGet" is not found in response.`)
+    if (resData.type === 'insertAndGet' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "insertAndGet" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -125,9 +119,8 @@ export class PhenylCoreClient implements CoreClient {
   async insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError> {
     const reqData = { method: 'insertAndGetMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.insertAndGetMulti != null) return resData.insertAndGetMulti
-    throw new Error(`Invalid response data: property name "insertAndGetMulti" is not found in response.`)
+    if (resData.type === 'insertAndGetMulti' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "insertAndGetMulti" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -136,9 +129,8 @@ export class PhenylCoreClient implements CoreClient {
   async update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResultOrError> {
     const reqData = { method: 'update', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.update != null) return resData.update
-    throw new Error(`Invalid response data: property name "update" is not found in response.`)
+    if (resData.type === 'update' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "update" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -147,9 +139,8 @@ export class PhenylCoreClient implements CoreClient {
   async updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResultOrError> {
     const reqData = { method: 'updateAndGet', payload: command, sessionId}
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.updateAndGet != null) return resData.updateAndGet
-    throw new Error(`Invalid response data: property name "updateAndGet" is not found in response.`)
+    if (resData.type === 'updateAndGet' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "updateAndGet" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -158,9 +149,8 @@ export class PhenylCoreClient implements CoreClient {
   async updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError> {
     const reqData = { method: 'updateAndFetch', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.updateAndFetch != null) return resData.updateAndFetch
-    throw new Error(`Invalid response data: property name "updateAndFetch" is not found in response.`)
+    if (resData.type === 'updateAndFetch' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "updateAndFetch" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -169,9 +159,8 @@ export class PhenylCoreClient implements CoreClient {
   async delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResultOrError> {
     const reqData = { method: 'delete', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.delete != null) return resData.delete
-    throw new Error(`Invalid response data: property name "delete" is not found in response.`)
+    if (resData.type === 'delete' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "delete" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -180,9 +169,8 @@ export class PhenylCoreClient implements CoreClient {
   async runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResultOrError> {
     const reqData = { method: 'runCustomQuery', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.runCustomQuery != null) return resData.runCustomQuery
-    throw new Error(`Invalid response data: property name "runCustomQuery" is not found in response.`)
+    if (resData.type === 'runCustomQuery' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "runCustomQuery" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -191,9 +179,8 @@ export class PhenylCoreClient implements CoreClient {
   async runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResultOrError> {
     const reqData = { method: 'runCustomCommand', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.runCustomCommand != null) return resData.runCustomCommand
-    throw new Error(`Invalid response data: property name "runCustomCommand" is not found in response.`)
+    if (resData.type === 'runCustomCommand' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "runCustomCommand" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -202,9 +189,8 @@ export class PhenylCoreClient implements CoreClient {
   async login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResultOrError> {
     const reqData = { method: 'login', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.login != null) return resData.login
-    throw new Error(`Invalid response data: property name "login" is not found in response.`)
+    if (resData.type === 'login' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "login" or "error". "${resData.type}" is given.`)
   }
 
   /**
@@ -213,8 +199,7 @@ export class PhenylCoreClient implements CoreClient {
   async logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResultOrError> {
     const reqData = { method: 'logout', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.error != null) return resData.error
-    if (resData.logout != null) return resData.logout
-    throw new Error(`Invalid response data: property name "logout" is not found in response.`)
+    if (resData.type === 'logout' || resData.type === 'error') return resData.payload
+    throw new Error(`Invalid response data: type must be "logout" or "error". "${resData.type}" is given.`)
   }
 }
