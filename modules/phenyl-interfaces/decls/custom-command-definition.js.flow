@@ -10,7 +10,7 @@ import type {
 
 export interface CustomCommandDefinition {
   authorization(command: CustomCommand, session: ?Session): Promise<boolean>,
-  validation(command: CustomCommand, session: ?Session): Promise<boolean>,
+  validation(command: CustomCommand, session: ?Session): Promise<void>,
   execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult>,
 }
 

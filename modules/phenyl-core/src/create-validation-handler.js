@@ -17,7 +17,7 @@ function assertValidationFunction(fn: any, name: string, methodName: string) {
  */
 export default function createValidationHandler(fg: FunctionalGroup): ValidationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
-  return async function validationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
+  return async function validationHandler(reqData: RequestData, session: ?Session) :Promise<void> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':

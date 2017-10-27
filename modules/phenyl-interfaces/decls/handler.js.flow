@@ -24,7 +24,7 @@ export type NGAuthenticationResult = {|
 export type AuthenticationResult = OKAuthenticationResult | NGAuthenticationResult
 
 export type AuthorizationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
-export type ValidationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
+export type ValidationHandler = (reqData: RequestData, session: ?Session) => Promise<void>
 export type AuthenticationHandler = (loginCommand: LoginCommand, session: ?Session) => Promise<AuthenticationResult>
 export type CoreExecution = (reqData: RequestData, session: ?Session) => Promise<ResponseData>
 export type ExecutionWrapper = (reqData: RequestData, session: ?Session, execution: CoreExecution) => Promise<ResponseData>

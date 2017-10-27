@@ -6,6 +6,7 @@ import {
 
 import {
   passThroughHandler,
+  noOperationHandler,
   noHandler,
   simpleExecutionWrapper
 } from './default-handlers.js'
@@ -55,7 +56,7 @@ export default class PhenylCore implements PhenylRunner {
   constructor(params: PhenylCoreParams) {
     this.clients = params.clients
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
-    this.validationHandler = params.validationHandler || passThroughHandler
+    this.validationHandler = params.validationHandler || noOperationHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
     this.customCommandHandler = params.customCommandHandler || noHandler
     this.authenticationHandler = params.authenticationHandler || noHandler
@@ -80,10 +81,14 @@ export default class PhenylCore implements PhenylRunner {
       }
 
       // 3. Validation
-      const isValid = await this.validationHandler(reqData, session)
-      if (!isValid) {
-        return { type: 'error', payload: createErrorResult(new Error('Params are not valid.'), 'BadRequest') }
+      try {
+        await this.validationHandler(reqData, session)
       }
+      catch (validationError) {
+        validationError.message = `Validation Failed. ${validationError.mesage}`
+        return { type: 'error', payload: createErrorResult(validationError, 'BadRequest') }
+      }
+
       // 4. Execution
       const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
       return resData

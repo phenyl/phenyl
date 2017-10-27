@@ -13,10 +13,17 @@ import type {
 
 /**
  * PassThroughHandler: handler passing through any request,
- * designed to apply for AuthorizationHandler and ValidationHandler
+ * designed to apply for AuthorizationHandler
  */
 export async function passThroughHandler() {
   return true
+}
+
+/**
+ * NoOperationHandler.
+ * designed to apply for ValidationHandler
+ */
+export async function noOperationHandler() {
 }
 
 /**

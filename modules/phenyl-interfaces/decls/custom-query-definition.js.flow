@@ -10,7 +10,7 @@ import type {
 
 export interface CustomQueryDefinition {
   authorization(query: CustomQuery, session: ?Session): Promise<boolean>,
-  validation(query: CustomQuery, session: ?Session): Promise<boolean>,
+  validation(query: CustomQuery, session: ?Session): Promise<void>,
   execution(query: CustomQuery, session: ?Session): Promise<CustomQueryResult>, // CustomQueryHandler
 }
 
