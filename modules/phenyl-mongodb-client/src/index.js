@@ -103,26 +103,35 @@ export default class PhenylMongoDbClient implements EntityClient {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.insertOne(command.value)
-    return { ok: 1, n: 1, value: result }
+    const insertedValue = await this.get({
+      entityName,
+      id: result.insertedId,
+    })
+    return { ok: 1, n: 1, value: insertedValue.value }
   }
 
   async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.insertMany(command.values)
-    return { ok: 1, n: 1, values: result }
+    const insertedValues = await this.getByIds({
+      entityName,
+      ids: result.insertedIds,
+    })
+    return { ok: 1, n: 1, values: insertedValues.values }
   }
 
   async update(command: UpdateCommand): Promise<CommandResultOrError> {
-    const { entityName } = command
+    const { entityName, operation } = command
     const coll = this.conn.collection(entityName)
-    if (command.value) {
-      const result = await coll.insertOne(command.value)
-      return { ok: 1, n: 1 }
+
+    if (command.id) {
+      const result = await coll.updateOne({ _id: command.id }, operation)
+      return { ok: 1, ng: 1 }
     }
-    if (command.values) {
-      const result = await coll.insertMany(command.values)
-      return { ok: 1, n: 1 }
+    if (command.where) {
+      const result = await coll.updateMany(command.where, operation)
+      return { ok: 1, ng: 1 }
     }
     throw new Error(`Invalid Update command is given to PhenylMongoDbClient#update().`)
   }
@@ -131,28 +140,35 @@ export default class PhenylMongoDbClient implements EntityClient {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.updateOne({ _id: id }, operation)
-    return { ok: 1, n: 1, value: result }
+    const { modifiedCount } = result
+    if (modifiedCount > 0) {
+      const updatedResult = await this.get({ entityName, id })
+      return { ok: 1, n: modifiedCount, value: updatedResult.value }
+    }
+    else {
+      return { ok: 1, n: 0, value: null }
+    }
   }
 
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.updateMany(where, operation)
-    return { ok: 1, n: 1, values: result }
+    const updatedResult = await this.find({ entityName, where })
+    return { ok: 1, n: 1, values: updatedResult.values }
   }
 
   async delete(command: DeleteCommand): Promise<CommandResultOrError> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     if (command.id) {
-      const result = await coll.deleteOne(command.id)
+      const result = await coll.deleteOne({ _id: command.id })
       return { ok: 1, n: 1 }
     }
     if (command.where) {
       const result = await coll.deleteMany(command.where)
-      return { ok: 1, n: 1 }
+      return { ok: 1, n: result.deletedCount }
     }
-    throw new Error(`Invalid Update command is given to PhenylMongoDbClient#update().`)
+    throw new Error(`Invalid Delete command is given to PhenylMongoDbClient#delete().`)
   }
-
 }

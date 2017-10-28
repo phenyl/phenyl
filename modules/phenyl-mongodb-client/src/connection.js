@@ -56,6 +56,7 @@ export class PhenylMongoDbConnection implements MongoDbConnection {
 function promisifyCollection(coll: Object): MongoDbCollection {
   return {
     find: promisifyFindChain(coll.find.bind(coll)),
+    insertOne: promisify(coll.insertOne, coll),
     insertMany: promisify(coll.insertMany, coll),
     updateOne: promisify(coll.updateOne, coll),
     updateMany: promisify(coll.updateMany, coll),
