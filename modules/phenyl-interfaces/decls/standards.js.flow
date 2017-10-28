@@ -1,0 +1,30 @@
+// @flow
+import {
+  WhereQuery,
+  IdQuery,
+  IdsQuery,
+} from './query.js.flow'
+
+import type {
+  QueryResult,
+} from './query-result.js.flow'
+
+type ForeignQuery<T> = T & {
+  foreign?: ForeignQueryParams
+}
+
+export type ForeignQueryParams = {
+  documentPath: string,
+  entityName: string,
+}
+
+type ForeignQueryResult<T> = T & {
+  foreign?: {
+    documentPath: string,
+    entityName: string,
+  }
+}
+
+export type ForeignIdQuery = ForeignQuery<IdQuery>
+export type ForeignWhereQuery = ForeignQuery<WhereQuery>
+export type ForeignIdsQuery = ForeignQuery<IdsQuery>

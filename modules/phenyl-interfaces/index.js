@@ -54,6 +54,7 @@ import type {
   CustomQueryDefinitions,
 } from './decls/custom-query-definition.js.flow'
 import type {
+  EntitiesById,
   EntityPool,
   EntityState,
   EntityStateFinder,
@@ -162,6 +163,13 @@ import type {
 import type { PreSession, Session } from './decls/session.js.flow'
 
 import type {
+  ForeignQueryParams,
+  ForeignWhereQuery,
+  ForeignIdQuery,
+  ForeignIdsQuery,
+} from './decls/standards.js.flow'
+
+import type {
   UserDefinition,
   UserDefinitions,
 } from './decls/user-definition.js.flow'
@@ -198,6 +206,7 @@ export type {
   DeleteResponseData,
   EncodedHttpRequest,
   EncodedHttpResponse,
+  EntitiesById,
   Entity,
   EntityClient,
   EntityDefinition,
@@ -213,6 +222,10 @@ export type {
   FindOneResponseData,
   FindRequestData,
   FindResponseData,
+  ForeignIdQuery,
+  ForeignIdsQuery,
+  ForeignQueryParams,
+  ForeignWhereQuery,
   FunctionalGroup,
   GetByIdsRequestData,
   GetByIdsResponseData,

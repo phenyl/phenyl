@@ -10,9 +10,12 @@
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "phenyl-interfaces": "*",
+    "power-assign": "*"
   },
   "dependencies": {
+    "oad-utils": "*",
+    "phenyl-utils": "*",
     "power-crypt": "*"
   },
   "author": "",

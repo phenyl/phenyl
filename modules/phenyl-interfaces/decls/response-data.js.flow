@@ -117,5 +117,5 @@ export type LogoutResponseData = {|
 
 export type ErrorResponseData = {|
   type: 'error',
-  payload: ErrorResult,
+  +payload: ErrorResult,
 |}
