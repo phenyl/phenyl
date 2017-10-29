@@ -55,7 +55,7 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
     case 'updateAndGet':
     case 'updateAndFetch': {
 
-      const operators = reqData.payload.operators
+      const operators = reqData.payload.operation
 
       let operatorsWithEncryptedPass = operators
 
