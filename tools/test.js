@@ -12,8 +12,8 @@ phenylModules.forEach(phenylModule => {
   console.log(
     chalk.cyan(`\n[${phenylModule.moduleName}] start test`)
   )
-  phenylModule.test()
-  if (!phenylModule.skipTest && !phenylModule.passingTest) {
+  const { passed, skipped } = phenylModule.test()
+  if (!passed && !skipped) {
     failedModules.push(phenylModule.moduleName)
   }
 })
