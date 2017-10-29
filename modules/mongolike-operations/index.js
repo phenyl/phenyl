@@ -6,6 +6,7 @@ import type {
   BSONTypeString,
   EqCondition,
   QueryCondition,
+  QueryOperator,
 } from './decls/query-condition.js.flow'
 import type {
   Restorable,
@@ -59,6 +60,7 @@ export type {
   PushModifier,
   PushOperator,
   QueryCondition,
+  QueryOperator,
   RenameOperator,
   Restorable,
   RestoreOperator,

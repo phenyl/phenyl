@@ -28,7 +28,8 @@ export interface QueryCondition {
   $type?: BSONTypeNumber | BSONTypeString,
   // evaluation
   $mod?: [number, number],
-  $regex?: RegExp,
+  $regex?: RegExp | string,
+  $options?: RegExp$flags,
   $text?: TextQueryCondition,
   $where?: Function, // To Be Implemented
   // geospatial
@@ -48,6 +49,11 @@ export interface QueryCondition {
   // comments
   // $comment: // No implementation
 }
+
+export type QueryOperator =
+  '$eq' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$exists' | '$type' | '$mod' | '$regex' |
+  '$options' | '$text' | '$where' | '$geoIntersects' | '$geoWithin' | '$near' | '$nearSphere' | '$all' |
+  '$elemMatch' | '$size' | '$bitsAllClear' | '$bitsAllSet' | '$bitsAnyClear' | '$bitsAnySet'
 
 export type BSONTypeNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | -1 | 127
 export type BSONTypeString =
