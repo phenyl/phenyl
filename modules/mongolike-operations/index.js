@@ -6,13 +6,13 @@ import type {
   BSONTypeString,
   EqCondition,
   QueryCondition,
+  QueryOperatorName,
 } from './decls/query-condition.js.flow'
 import type {
   Restorable,
 } from './decls/restorable.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
-  CombinedUpdateOperation,
   AddToSetOperator,
   BitOperator,
   CurrentDateOperator,
@@ -24,11 +24,16 @@ import type {
   PullOperator,
   PushModifier,
   PushOperator,
+  RegularAddToSetOperator,
+  RegularPullOperator,
+  RegularPushOperator,
+  RegularUpdateOperation,
   RenameOperator,
   RestoreOperator,
   SetOperator,
   UnsetOperator,
   UpdateOperator,
+  UpdateOperatorName,
   UpdateOperation,
 } from './decls/update-operation.js.flow'
 import type {
@@ -41,7 +46,6 @@ import type {
 
 export type {
   AddToSetOperator,
-  CombinedUpdateOperation,
   AndFindOperation,
   BitOperator,
   BSONTypeNumber,
@@ -61,6 +65,11 @@ export type {
   PushModifier,
   PushOperator,
   QueryCondition,
+  QueryOperatorName,
+  RegularAddToSetOperator,
+  RegularPullOperator,
+  RegularPushOperator,
+  RegularUpdateOperation,
   RenameOperator,
   Restorable,
   RestoreOperator,
@@ -69,6 +78,7 @@ export type {
   SortNotation,
   UnsetOperator,
   UpdateOperator,
+  UpdateOperatorName,
   UpdateOperation,
   FindOperation,
 }

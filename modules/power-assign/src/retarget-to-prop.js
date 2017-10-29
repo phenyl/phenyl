@@ -1,27 +1,19 @@
 // @flow
-import { normalizeOperation } from './normalize-operation.js'
+import {
+  normalizeUpdateOperation,
+} from 'oad-utils/jsnext'
 
 import type {
+  RegularUpdateOperation,
   UpdateOperator,
   UpdateOperation,
   DocumentPath,
 } from 'mongolike-operations'
 
-export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subtype<UpdateOperation> {
+export function retargetToProp(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
 
-  const operation = normalizeOperation(_operation)
+  const operation = normalizeUpdateOperation(_operation)
   const newOps: UpdateOperator = {}
-
-  if (operation.$and) {
-    // $FlowIssue(operation.$and-is-Array)
-    newOps.$and = operation.$and.map(subOps => retargetToProp(docPath, subOps))
-    if (operation.$restore) {
-      // $FlowIssue(newOps-can-have-$restore-property)
-      newOps.$restore = retargetToProp(docPath, { $restore: operation.$restore }).$restore
-    }
-    return newOps
-  }
-
   const operatorNames = Object.keys(operation)
 
   for (const operatorName of operatorNames) {
@@ -37,7 +29,7 @@ export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subt
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): UpdateOperation {
+export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
   const operation = retargetToProp(docPath, _operation)
 
   const $restore = operation.$restore || {}

@@ -14,5 +14,8 @@
     "power-assert": "^1.4.4"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "deepmerge": "^2.0.0"
+  }
 }

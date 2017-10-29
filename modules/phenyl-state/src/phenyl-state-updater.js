@@ -2,7 +2,7 @@
 
 import {
   retargetToProp,
-  mergeOperation,
+  mergeOperations,
 } from 'power-assign/jsnext'
 
 import type {
@@ -113,7 +113,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
       const docPath = ['pool', entityName, targetEntity.id].join('.')
       return retargetToProp(docPath, operation)
     })
-    return mergeOperation(...operationList)
+    return mergeOperations(...operationList)
   }
 
   /**
@@ -127,7 +127,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
       const docPath = ['pool', entityName, entity.id].join('.')
       return  { $set: { [docPath]: entity } }
     })
-    return mergeOperation(...operationList)
+    return mergeOperations(...operationList)
   }
 
   /**

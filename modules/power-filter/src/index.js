@@ -55,13 +55,13 @@ export default class PowerFilter {
       }, { ok: [], ng: values })
     }
 
-    // No query condition
-    const dotNotations = Object.keys(where)
+    // SimpleFindOperation
+    const documentPaths = Object.keys(where)
     return values.reduce((classified, value) => {
-      const isOk = dotNotations.every(dotNotation => {
+      const isOk = documentPaths.every(documentPath => {
         // $FlowIssue(queryCondition-is-QueryCondition-or-EqCondition)
-        const queryCondition = where[dotNotation]
-        const nestedValue = getNestedValue(value, dotNotation)
+        const queryCondition = where[documentPath]
+        const nestedValue = getNestedValue(value, documentPath)
         return this.checkCondition(nestedValue, normalizeQueryCondition(queryCondition || {}))
       })
       classified[isOk ? 'ok': 'ng'].push(value)
@@ -120,7 +120,10 @@ export default class PowerFilter {
 
         case '$regex':
           if (condition.$regex == null) throw new Error('$regex is not found') // for flow
-          return condition.$regex.test(leftOperand)
+          const regex = (typeof condition.$regex === 'string')
+            ? new RegExp(condition.$regex, condition.$options || undefined) // "null" is not allowed but undefined.
+            : condition.$regex
+          return regex.test(leftOperand)
 
         case '$text':
         case '$where':
@@ -153,6 +156,10 @@ export default class PowerFilter {
         case '$bitsAnyClear':
         case '$bitsAnySet':
           throw new Error(`Operator "${operator}" is currently unimplemented in power-filter.`)
+
+        // co-operator of $regex
+        case '$options':
+          return true
 
         default:
           throw new Error(`Unknown operator: "${operator}".`)

@@ -7,14 +7,12 @@ import {
   sortByNotation,
   parseDocumentPath,
   createDocumentPath,
+  normalizeUpdateOperation,
 } from 'oad-utils/jsnext'
-import { normalizeOperation } from './normalize-operation.js'
 import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 import type {
-  AddToSetOperator,
-  CombinedUpdateOperation,
   BitOperator,
   CurrentDateOperator,
   DocumentPath,
@@ -23,10 +21,12 @@ import type {
   MinOperator,
   MulOperator,
   PopOperator,
-  PullOperator,
   PushModifier,
-  PushOperator,
   QueryCondition,
+  RegularAddToSetOperator,
+  RegularPullOperator,
+  RegularPushOperator,
+  RegularUpdateOperation,
   RenameOperator,
   Restorable,
   RestoreOperator,
@@ -44,19 +44,8 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, uOp: $Subtype<UpdateOperation>): Object {
+  static assign(obj: Object, uOp: RegularUpdateOperation): Object {
     let updatedObj: Object = obj
-
-    if (uOp.$and != null) {
-      updatedObj = uOp.$and.reduce((_updatedObj, uOp) =>
-        this.assign(_updatedObj, normalizeOperation(uOp)), updatedObj)
-
-      if (uOp.$restore != null) {
-        updatedObj = this.$restore(obj, updatedObj, uOp.$restore)
-      }
-      return updatedObj
-    }
-
     const operatorNames = Object.keys(uOp)
 
     for (const operatorName of operatorNames) {
@@ -208,7 +197,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $addToSet<T: Object>(obj: T, addToSetOp: AddToSetOperator): T {
+  static $addToSet<T: Object>(obj: T, addToSetOp: RegularAddToSetOperator): T {
     const valuesToSet = {}
 
     Object.keys(addToSetOp).forEach(docPath => {
@@ -221,9 +210,6 @@ export default class PowerAssign {
       }
       let modifier = addToSetOp[docPath]
 
-      if (modifier.$each == null) {
-        modifier = { $each: [modifier] }
-      }
       // $FlowIssue(arr-is-Array)
       const newArr = modifier.$each.filter(element => !arr.some(arrEl => deepEqual(arrEl, element)))
       valuesToSet[docPath] = arr.concat(newArr)
@@ -258,7 +244,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $pull<T: Object>(obj: T, pullOp: PullOperator): T {
+  static $pull<T: Object>(obj: T, pullOp: RegularPullOperator): T {
     const valuesToSet = {}
 
     Object.keys(pullOp).forEach(docPath => {
@@ -278,7 +264,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $push<T: Object>(obj: T, pushOp: PushOperator): T {
+  static $push<T: Object>(obj: T, pushOp: RegularPushOperator): T {
     const valuesToSet = {}
 
     Object.keys(pushOp).forEach(docPath => {
@@ -289,12 +275,7 @@ export default class PowerAssign {
       if (!Array.isArray(arr)) {
         throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      let modifier: PushModifier = pushOp[docPath]
-
-      // Is type of newVal PushModifier or just the value?
-      if (modifier.$each == null) {
-        modifier = { $each: [modifier] }
-      }
+      let modifier = pushOp[docPath]
 
       let position = (modifier.$position != null) ? modifier.$position : arr.length
       let newArr = arr.slice()
@@ -460,7 +441,7 @@ export default class PowerAssign {
  *
  */
 export function assign(obj: Object, uOp: Object): Object {
-  return PowerAssign.assign(obj, normalizeOperation(uOp))
+  return PowerAssign.assign(obj, normalizeUpdateOperation(uOp))
 }
 
 /**
@@ -487,24 +468,6 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
   const updatedObj = assignToProp(obj, docPath, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
-}
-
-/**
- *
- */
-export function mergeOperation(...operationList: Array<Object>): UpdateOperation {
-  const merged: CombinedUpdateOperation = { $and: operationList }
-  const $restore = operationList.reduce((restoreOp, uOp) => {
-    if (uOp.$restore == null) {
-      return restoreOp
-    }
-    return Object.assign({}, restoreOp, uOp.$restore)
-  }, {})
-
-  if (Object.keys($restore).length > 0) {
-    merged.$restore = $restore
-  }
-  return merged
 }
 
 function isPrimitive(value: any): boolean {
