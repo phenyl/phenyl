@@ -7,7 +7,6 @@ import type {
   DocumentPath,
   FindOperation,
   QueryCondition,
-  QueryOperator,
   SimpleFindOperation,
 } from 'mongolike-operations'
 
