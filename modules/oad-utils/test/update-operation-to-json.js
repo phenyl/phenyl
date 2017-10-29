@@ -30,7 +30,45 @@ describe('updateOperationToJSON', () => {
         bar: ''
       }
     }
-    const newOps = updateOperationToJSON(operation)
-    assert.deepEqual(expected, newOps)
+    const newOperation = updateOperationToJSON(operation)
+    assert.deepEqual(newOperation, expected)
   })
+
+  it('converts values of $pull property', () => {
+
+    const operation = {
+      $inc: { value: 1 },
+      $pull: /john/i
+    }
+    const expected = {
+      $inc: { value: 1 },
+      $pull: { $regex: 'john', $options: 'i' }
+    }
+    const newOperation = updateOperationToJSON(operation)
+    assert.deepEqual(newOperation, expected)
+  })
+
+  it('converts both $restore and $pull properties', () => {
+    class Bar {}
+
+    const operation = {
+      $inc: { value: 1 },
+      $pull: /john/i,
+      $restore: {
+        foo: '',
+        bar: Bar
+      }
+    }
+    const expected = {
+      $inc: { value: 1 },
+      $pull: { $regex: 'john', $options: 'i' },
+      $restore: {
+        foo: '',
+        bar: ''
+      }
+    }
+    const newOperation = updateOperationToJSON(operation)
+    assert.deepEqual(newOperation, expected)
+  })
+
 })

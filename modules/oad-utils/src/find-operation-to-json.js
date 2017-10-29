@@ -8,6 +8,9 @@ import {
   visitFindOperation
 } from './visit-find-operation.js'
 
+/**
+ *
+ */
 export function findOperationToJSON(where: Object): FindOperation {
   let modifiedOperation = where
 
@@ -18,7 +21,10 @@ export function findOperationToJSON(where: Object): FindOperation {
   })
 }
 
-function queryConditionToJSON(queryCondition: QueryCondition): $Supertype<QueryCondition> {
+/**
+ *
+ */
+export function queryConditionToJSON(queryCondition: QueryCondition): $Supertype<QueryCondition> {
   if (queryCondition.$regex == null || typeof queryCondition.$regex === 'string') {
     return queryCondition
   }
