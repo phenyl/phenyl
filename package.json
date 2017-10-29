@@ -8,8 +8,7 @@
     "build": "node tools/build.js",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
-    "flow": "flow",
-    "danger": "danger"
+    "flow": "flow"
   },
   "repository": {
     "type": "git",
@@ -28,7 +27,6 @@
     "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.24.1",
     "chalk": "^2.3.0",
-    "danger": "^2.0.0-alpha.20",
     "flow-bin": "^0.52.0",
     "shelljs": "^0.7.8"
   }
