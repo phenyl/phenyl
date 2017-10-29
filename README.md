@@ -20,33 +20,7 @@ npm install --save phenyl
 TBD
 
 ### Usage
-
-
-```js
-import Phenyl from 'phenyl'
-
-const server = new Phenyl({
-  authorizationHandler: asnyc (request, session, client) => {
-    return true
-  },
-
-  validationHandler: async (request, session, client) => {
-    return true
-  },
-
-  client: new DynamoDbClient({ url: 'xxxx' }),
-
-  sessionClient: DynamoDbClient.createSessionClient({ url: 'xxxx' }),
-
-  users: {
-    admin: new AdminAccount(),
-    patient: new PatientAccount(),
-    doctor: new DoctorAccount(),
-  },
-})
-
-server.listen('5000')
-```
+TBD
 
 ### License
 
