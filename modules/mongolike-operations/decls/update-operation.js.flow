@@ -78,11 +78,6 @@ export type RestoreOperator = {
   [field: DocumentPath]: '' | Class<Restorable>
 }
 
-export type CombinedUpdateOperation = {|
-  $and: Array<Object>, // almost Array<UpdateOperation>
-  $restore?: RestoreOperator,
-|}
-
 export type UpdateOperation = $Shape<{
   $set: SetOperator,
   $inc: IncOperator,
@@ -97,7 +92,7 @@ export type UpdateOperation = $Shape<{
   $bit: BitOperator,
   $unset: UnsetOperator,
   $restore: RestoreOperator,
-}> | CombinedUpdateOperation
+}>
 
 export type UpdateOperator =
   SetOperator |

@@ -11,17 +11,6 @@ export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subt
 
   const operation = normalizeOperation(_operation)
   const newOps: UpdateOperator = {}
-
-  if (operation.$and) {
-    // $FlowIssue(operation.$and-is-Array)
-    newOps.$and = operation.$and.map(subOps => retargetToProp(docPath, subOps))
-    if (operation.$restore) {
-      // $FlowIssue(newOps-can-have-$restore-property)
-      newOps.$restore = retargetToProp(docPath, { $restore: operation.$restore }).$restore
-    }
-    return newOps
-  }
-
   const operatorNames = Object.keys(operation)
 
   for (const operatorName of operatorNames) {

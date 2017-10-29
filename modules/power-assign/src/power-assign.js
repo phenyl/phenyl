@@ -15,7 +15,6 @@ import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 import type {
   AddToSetOperator,
-  CombinedUpdateOperation,
   BitOperator,
   CurrentDateOperator,
   DocumentPath,
@@ -47,17 +46,6 @@ export default class PowerAssign {
    */
   static assign(obj: Object, uOp: $Subtype<UpdateOperation>): Object {
     let updatedObj: Object = obj
-
-    if (uOp.$and != null) {
-      updatedObj = uOp.$and.reduce((_updatedObj, uOp) =>
-        this.assign(_updatedObj, normalizeOperation(uOp)), updatedObj)
-
-      if (uOp.$restore != null) {
-        updatedObj = this.$restore(obj, updatedObj, uOp.$restore)
-      }
-      return updatedObj
-    }
-
     const operatorNames = Object.keys(uOp)
 
     for (const operatorName of operatorNames) {

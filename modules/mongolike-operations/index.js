@@ -12,7 +12,6 @@ import type {
 } from './decls/restorable.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
-  CombinedUpdateOperation,
   AddToSetOperator,
   BitOperator,
   CurrentDateOperator,
@@ -41,7 +40,6 @@ import type {
 
 export type {
   AddToSetOperator,
-  CombinedUpdateOperation,
   AndFindOperation,
   BitOperator,
   BSONTypeNumber,
