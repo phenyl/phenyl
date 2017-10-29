@@ -4,10 +4,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "node tools/test.js",
-    "build": "node tools/build.js",
-    "load": "node tools/load.js",
-    "clean": "node tools/clean.js",
+    "test": "babel-node tools/test.js",
+    "build": "babel-node tools/build.js",
+    "load": "babel-node tools/install.js",
+    "clean": "babel-node tools/clean.js",
     "flow": "flow"
   },
   "repository": {
