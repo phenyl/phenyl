@@ -50,7 +50,7 @@ export interface QueryCondition {
   // $comment: // No implementation
 }
 
-export type QueryOperator =
+export type QueryOperatorName =
   '$eq' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$exists' | '$type' | '$mod' | '$regex' |
   '$options' | '$text' | '$where' | '$geoIntersects' | '$geoWithin' | '$near' | '$nearSphere' | '$all' |
   '$elemMatch' | '$size' | '$bitsAllClear' | '$bitsAllSet' | '$bitsAnyClear' | '$bitsAnySet'

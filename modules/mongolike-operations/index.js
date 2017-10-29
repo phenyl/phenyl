@@ -6,7 +6,7 @@ import type {
   BSONTypeString,
   EqCondition,
   QueryCondition,
-  QueryOperator,
+  QueryOperatorName,
 } from './decls/query-condition.js.flow'
 import type {
   Restorable,
@@ -33,6 +33,7 @@ import type {
   SetOperator,
   UnsetOperator,
   UpdateOperator,
+  UpdateOperatorName,
   UpdateOperation,
 } from './decls/update-operation.js.flow'
 import type {
@@ -64,7 +65,7 @@ export type {
   PushModifier,
   PushOperator,
   QueryCondition,
-  QueryOperator,
+  QueryOperatorName,
   RegularAddToSetOperator,
   RegularPullOperator,
   RegularPushOperator,
@@ -77,6 +78,7 @@ export type {
   SortNotation,
   UnsetOperator,
   UpdateOperator,
+  UpdateOperatorName,
   UpdateOperation,
   FindOperation,
 }

@@ -115,6 +115,22 @@ export type RegularUpdateOperation = $Shape<{
   $rename: RenameOperator,
 }>
 
+export type UpdateOperatorName =
+  '$set' |
+  '$inc' |
+  '$min' |
+  '$max' |
+  '$mul' |
+  '$addToSet' |
+  '$pop' |
+  '$pull' |
+  '$push' |
+  '$currentDate' |
+  '$bit' |
+  '$unset' |
+  '$restore' |
+  '$rename'
+
 export type UpdateOperator =
   SetOperator |
   IncOperator |
@@ -129,4 +145,5 @@ export type UpdateOperator =
   BitOperator |
   UnsetOperator |
   RenameOperator |
-  RestoreOperator
+  RestoreOperator |
+  RenameOperator
