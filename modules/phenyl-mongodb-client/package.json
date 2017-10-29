@@ -4,9 +4,6 @@
   "description": "",
   "main": "index.js",
   "jsnext:main": "./jsnext.js",
-  "scripts": {
-    "test": "kocha --require babel-register test/*.js --color always"
-  },
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
