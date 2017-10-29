@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "MongoDB-like Operations (both query and Update)",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC"
 }
