@@ -10,30 +10,27 @@ const failedModules = []
 
 phenylModules.forEach(phenylModule => {
   console.log(
-    chalk.cyan('--------------------------------------\n') +
-    chalk.cyan(`start test in ${phenylModule.moduleName}\n`) +
-    chalk.cyan('--------------------------------------')
+    chalk.cyan(`\n[${phenylModule.moduleName}] start test`)
   )
   phenylModule.test()
-  if (!phenylModule.isPassingTest) {
+  if (!phenylModule.skipTest && !phenylModule.passingTest) {
     failedModules.push(phenylModule.moduleName)
   }
 })
 
-
 console.log(
   chalk.cyan('-------------------\n') +
   chalk.cyan('test summary\n') +
-  chalk.cyan('-------------------\n')
+  chalk.cyan('-------------------')
 )
 
 if (failedModules.length > 0) {
   console.log(
-    chalk.red('Tests failed in The following modules\n') +
+    chalk.red('☓ Tests failed in The following modules\n') +
     '\n' +
     failedModules.join('\n')
   )
   process.exit(1)
 } else {
-  console.log(chalk.green('Tests passed in all modules!'))
+  console.log(chalk.green('✓ Tests passed in all modules!'))
 }

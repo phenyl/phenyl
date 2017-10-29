@@ -3,6 +3,7 @@ module.exports = class PhenylModule {
   constructor(moduleName) {
     this.moduleName = moduleName
     this.passingTest = false
+    this.skipTest = false
   }
 
   test() {
@@ -15,6 +16,7 @@ module.exports = class PhenylModule {
         this.passingTest = true
       }
     } else {
+      this.skipTest = true
       shell.echo(`no test specified in ${this.moduleName}`)
     }
 
