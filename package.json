@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node tools/test.js",
     "build": "node tools/build.js",
-    "load": "node tools/install.js",
+    "load": "node tools/load.js",
     "clean": "node tools/clean.js",
     "flow": "flow"
   },

@@ -1,22 +1,16 @@
 const shell = require('shelljs')
 const path = require('path')
+const chalk = require('chalk')
 
-class ModuleLoader {
-  constructor() {
+module.exports = class ModuleLoader {
+  constructor(modules) {
     this.visitedModules = {}
     this.loadedModules = {}
-
-    shell.cd(__dirname + '/..')
-    this.modules = shell.exec(
-      'ls -F ./modules | grep / | tr -d "/"',
-      { silent: true }
-    ).trim().split('\n')
+    this.modules = modules
   }
 
-  load() {
-    this.modules.forEach(moduleName => {
-      this.installSubModules(moduleName)
-    })
+  load(moduleName) {
+    this.installSubModules(moduleName)
   }
 
   installSubModules(moduleName) {
@@ -39,25 +33,25 @@ class ModuleLoader {
       })
     }
 
-    console.log(`[${moduleName}] All dependent modules were resolved.`)
-    console.log(`[${moduleName}] Running npm install.`)
+    console.log(chalk.magenta(`[${moduleName}] All dependent modules were resolved.`))
+    console.log(chalk.cyan(`[${moduleName}] Running npm install.`))
     shell.cd(`modules/${moduleName}/`)
-    shell.exec('npm install')
+    shell.exec('npm install --color always')
     shell.cd('../../')
-    console.log(`[${moduleName}] install done.\n`)
+    console.log(chalk.green(`[${moduleName}] ✓ install done.\n`))
     this.loadedModules[moduleName] = true
   }
 
   linkModule(moduleName, ownerModuleName) {
     shell.mkdir('-p', `modules/${ownerModuleName}/node_modules`)
     shell.cd(`modules/${ownerModuleName}/node_modules`)
-    console.log(`[${ownerModuleName}] linking ${moduleName}`)
+    console.log(chalk.cyan(`[${ownerModuleName}] linking ${moduleName}`))
     shell.ln('-s', `../../${moduleName}`, moduleName)
     shell.cd('../../../')
   }
 
   getDependentModules(moduleName) {
-    const packageJson = require(path.join(__dirname, `../modules/${moduleName}/package.json`))
+    const packageJson = require(path.join(__dirname, `../../modules/${moduleName}/package.json`))
     let dependentModules = []
 
     if (packageJson.dependencies != null) {
@@ -72,5 +66,3 @@ class ModuleLoader {
     return dependentModules
   }
 }
-
-new ModuleLoader().load()
