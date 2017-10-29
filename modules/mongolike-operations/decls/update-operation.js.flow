@@ -13,10 +13,12 @@ export type MinOperator = { [field: DocumentPath]: any }
 export type MaxOperator = { [field: DocumentPath]: any }
 export type MulOperator = { [field: DocumentPath]: number }
 export type AddToSetOperator = { [field: DocumentPath]: any | { $each: Array<any> } }
+export type RegularAddToSetOperator = { [field: DocumentPath]: { $each: Array<any> } }
 export type PopOperator = { [field: DocumentPath]: 1 | - 1 }
 export type UnsetOperator = { [field: DocumentPath]: '' }
 
 export type PullOperator = { +[field: DocumentPath]: QueryCondition | EqCondition }
+export type RegularPullOperator = { +[field: DocumentPath]: QueryCondition }
 
 export type PushModifier = {
   $each: Array<any>,
@@ -25,6 +27,7 @@ export type PushModifier = {
   $position?: number,
 }
 export type PushOperator = { [field: DocumentPath]: any | PushModifier }
+export type RegularPushOperator = { [field: DocumentPath]: PushModifier }
 
 type TypeSpecification = true | { $type: 'timestamp' | 'date' }
 export type CurrentDateOperator = { [field: DocumentPath]: TypeSpecification }
@@ -84,14 +87,32 @@ export type UpdateOperation = $Shape<{
   $min: MinOperator,
   $max: MaxOperator,
   $mul: MulOperator,
+  $addToSet: RegularAddToSetOperator,
+  $pop: PopOperator,
+  $pull: RegularPullOperator,
+  $push: RegularPushOperator,
+  $currentDate: CurrentDateOperator,
+  $bit: BitOperator,
+  $unset: UnsetOperator,
+  $restore: RestoreOperator,
+  $rename: RenameOperator,
+}>
+
+export type RegularUpdateOperation = $Shape<{
+  $set: SetOperator,
+  $inc: IncOperator,
+  $min: MinOperator,
+  $max: MaxOperator,
+  $mul: MulOperator,
   $addToSet: AddToSetOperator,
   $pop: PopOperator,
-  $pull: PullOperator,
+  $pull: RegularPullOperator,
   $push: PushOperator,
   $currentDate: CurrentDateOperator,
   $bit: BitOperator,
   $unset: UnsetOperator,
   $restore: RestoreOperator,
+  $rename: RenameOperator,
 }>
 
 export type UpdateOperator =

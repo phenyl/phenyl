@@ -4,12 +4,13 @@ import {
 } from 'oad-utils/jsnext'
 
 import type {
+  RegularUpdateOperation,
   UpdateOperator,
   UpdateOperation,
   DocumentPath,
 } from 'mongolike-operations'
 
-export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subtype<UpdateOperation> {
+export function retargetToProp(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
 
   const operation = normalizeUpdateOperation(_operation)
   const newOps: UpdateOperator = {}
@@ -28,7 +29,7 @@ export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subt
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): UpdateOperation {
+export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
   const operation = retargetToProp(docPath, _operation)
 
   const $restore = operation.$restore || {}

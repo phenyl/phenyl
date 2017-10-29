@@ -13,7 +13,6 @@ import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
 import type {
-  AddToSetOperator,
   BitOperator,
   CurrentDateOperator,
   DocumentPath,
@@ -22,10 +21,12 @@ import type {
   MinOperator,
   MulOperator,
   PopOperator,
-  PullOperator,
   PushModifier,
-  PushOperator,
   QueryCondition,
+  RegularAddToSetOperator,
+  RegularPullOperator,
+  RegularPushOperator,
+  RegularUpdateOperation,
   RenameOperator,
   Restorable,
   RestoreOperator,
@@ -43,7 +44,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, uOp: $Subtype<UpdateOperation>): Object {
+  static assign(obj: Object, uOp: RegularUpdateOperation): Object {
     let updatedObj: Object = obj
     const operatorNames = Object.keys(uOp)
 
@@ -196,7 +197,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $addToSet<T: Object>(obj: T, addToSetOp: AddToSetOperator): T {
+  static $addToSet<T: Object>(obj: T, addToSetOp: RegularAddToSetOperator): T {
     const valuesToSet = {}
 
     Object.keys(addToSetOp).forEach(docPath => {
@@ -209,9 +210,6 @@ export default class PowerAssign {
       }
       let modifier = addToSetOp[docPath]
 
-      if (modifier.$each == null) {
-        modifier = { $each: [modifier] }
-      }
       // $FlowIssue(arr-is-Array)
       const newArr = modifier.$each.filter(element => !arr.some(arrEl => deepEqual(arrEl, element)))
       valuesToSet[docPath] = arr.concat(newArr)
@@ -246,7 +244,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $pull<T: Object>(obj: T, pullOp: PullOperator): T {
+  static $pull<T: Object>(obj: T, pullOp: RegularPullOperator): T {
     const valuesToSet = {}
 
     Object.keys(pullOp).forEach(docPath => {
@@ -266,7 +264,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static $push<T: Object>(obj: T, pushOp: PushOperator): T {
+  static $push<T: Object>(obj: T, pushOp: RegularPushOperator): T {
     const valuesToSet = {}
 
     Object.keys(pushOp).forEach(docPath => {
@@ -277,12 +275,7 @@ export default class PowerAssign {
       if (!Array.isArray(arr)) {
         throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
       }
-      let modifier: PushModifier = pushOp[docPath]
-
-      // Is type of newVal PushModifier or just the value?
-      if (modifier.$each == null) {
-        modifier = { $each: [modifier] }
-      }
+      let modifier = pushOp[docPath]
 
       let position = (modifier.$position != null) ? modifier.$position : arr.length
       let newArr = arr.slice()
