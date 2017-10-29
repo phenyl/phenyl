@@ -2,7 +2,7 @@
 
 import { describe, it, context } from 'kocha'
 import assert from 'power-assert'
-import { assign, assignWithRestoration } from '../src/index.js'
+import { assign, assignWithRestoration, mergeOperations } from '../src/index.js'
 
 describe('assign', () => {
   it('set a value', () => {
@@ -309,6 +309,21 @@ describe('assign', () => {
       assert(newUser.name2 instanceof Name)
       assert(newUser.age instanceof Age)
       assert.deepEqual(expectedNewUser, newUser)
+    })
+  })
+})
+
+describe('mergeOperations', () => {
+  it('can merge operations deeply', () => {
+    const op1 = {
+      $set: { 'a.b.c': { d: 1 } },
+      $inc: { foo: 2 },
+    }
+    const op2 = { 'a.b.c': { e : 1 } }
+    const merged = mergeOperations(op1, op2)
+    assert(merged, {
+      $set: { 'a.b.c': { d: 1, e: 1 } },
+      $inc: { foo: 2 },
     })
   })
 })

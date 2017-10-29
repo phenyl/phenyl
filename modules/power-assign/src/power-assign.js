@@ -1,6 +1,7 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
+import deepMerge from 'deepmerge'
 import { checkCondition } from 'power-filter/jsnext'
 import {
   getNestedValue,
@@ -490,21 +491,11 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
 }
 
 /**
- *
+ * Merge operations.
+ * TODO: Currently there are some cases are not merged well.
  */
-export function mergeOperation(...operationList: Array<Object>): UpdateOperation {
-  const merged: CombinedUpdateOperation = { $and: operationList }
-  const $restore = operationList.reduce((restoreOp, uOp) => {
-    if (uOp.$restore == null) {
-      return restoreOp
-    }
-    return Object.assign({}, restoreOp, uOp.$restore)
-  }, {})
-
-  if (Object.keys($restore).length > 0) {
-    merged.$restore = $restore
-  }
-  return merged
+export function mergeOperations(...operationList: Array<Object>): UpdateOperation {
+  return deepMerge.all(operationList.map(normalizeOperation))
 }
 
 function isPrimitive(value: any): boolean {

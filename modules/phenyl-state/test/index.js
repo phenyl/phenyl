@@ -126,14 +126,12 @@ describe('$register', () => {
     })
     const operation = state.$register('book', { id: 'book01', title: 'ABC-Z' })
     const expected = {
-      $and: [{
-        $set: {
-          'pool.book.book01': {
-            id: 'book01',
-            title: 'ABC-Z',
-          }
+      $set: {
+        'pool.book.book01': {
+          id: 'book01',
+          title: 'ABC-Z',
         }
-      }]
+      }
     }
     const newState = assignWithRestoration(state, operation)
 
