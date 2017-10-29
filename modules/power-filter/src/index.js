@@ -157,6 +157,10 @@ export default class PowerFilter {
         case '$bitsAnySet':
           throw new Error(`Operator "${operator}" is currently unimplemented in power-filter.`)
 
+        // co-operator of $regex
+        case '$options':
+          return true
+
         default:
           throw new Error(`Unknown operator: "${operator}".`)
       }

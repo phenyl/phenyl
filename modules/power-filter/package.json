@@ -5,9 +5,10 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
-    "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "mongolike-operations": "*"
+    "kocha": "^1.8.0",
+    "mongolike-operations": "*",
+    "power-assert": "^1.4.4"
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
