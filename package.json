@@ -4,27 +4,10 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build:is-restorable && npm run build:oad-utils && npm run build:power-assign && npm run build:power-crypt && npm run build:power-debugger && npm run build:power-filter && npm run build:phenyl-async-storage-client && npm run build:phenyl-http-client && npm run build:phenyl-memory-client && npm run build:phenyl-core && npm run build:phenyl-utils && npm run build:phenyl-lambda-adapter && npm run build:phenyl-http-rules && npm run build:phenyl-standards && npm run build:phenyl-redux && npm run build:phenyl-state && npm run build:phenyl-mongodb-client",
+    "test": "node tools/test.js",
+    "build": "node tools/build.js",
     "load": "node tools/install.js",
     "clean": "node tools/clean.js",
-    "build:is-restorable": "BABEL_ENV=build babel modules/is-restorable/src -d modules/is-restorable/dist",
-    "build:oad-utils": "BABEL_ENV=build babel modules/oad-utils/src -d modules/oad-utils/dist",
-    "build:power-assign": "BABEL_ENV=build babel modules/power-assign/src -d modules/power-assign/dist",
-    "build:power-crypt": "BABEL_ENV=build babel modules/power-crypt/src -d modules/power-crypt/dist",
-    "build:power-debugger": "BABEL_ENV=build babel modules/power-debugger/src -d modules/power-debugger/dist",
-    "build:power-filter": "BABEL_ENV=build babel modules/power-filter/src -d modules/power-filter/dist",
-    "build:phenyl-async-storage-client": "BABEL_ENV=build babel modules/phenyl-async-storage-client/src -d modules/phenyl-async-storage-client/dist",
-    "build:phenyl-http-client": "BABEL_ENV=build babel modules/phenyl-http-client/src -d modules/phenyl-http-client/dist",
-    "build:phenyl-memory-client": "BABEL_ENV=build babel modules/phenyl-memory-client/src -d modules/phenyl-memory-client/dist",
-    "build:phenyl-redux": "BABEL_ENV=build babel modules/phenyl-redux/src -d modules/phenyl-redux/dist",
-    "build:phenyl-standards": "BABEL_ENV=build babel modules/phenyl-standards/src -d modules/phenyl-standards/dist",
-    "build:phenyl-state": "BABEL_ENV=build babel modules/phenyl-state/src -d modules/phenyl-state/dist",
-    "build:phenyl-core": "BABEL_ENV=build babel modules/phenyl-core/src -d modules/phenyl-core/dist",
-    "build:phenyl-utils": "BABEL_ENV=build babel modules/phenyl-utils/src -d modules/phenyl-utils/dist",
-    "build:phenyl-lambda-adapter": "BABEL_ENV=build babel modules/phenyl-lambda-adapter/src -d modules/phenyl-lambda-adapter/dist",
-    "build:phenyl-mongodb-client": "BABEL_ENV=build babel modules/phenyl-mongodb-client/src -d modules/phenyl-mongodb-client/dist",
-    "build:phenyl-http-rules": "BABEL_ENV=build babel modules/phenyl-http-rules/src -d modules/phenyl-http-rules/dist",
     "flow": "flow"
   },
   "repository": {
@@ -43,6 +26,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.24.1",
+    "chalk": "^2.3.0",
     "flow-bin": "^0.52.0",
     "shelljs": "^0.7.8"
   }
