@@ -6,7 +6,7 @@
   "scripts": {
     "test": "babel-node tools/test.js",
     "build": "babel-node tools/build.js",
-    "load": "babel-node tools/install.js",
+    "load": "babel-node tools/load.js",
     "clean": "babel-node tools/clean.js",
     "flow": "flow"
   },
