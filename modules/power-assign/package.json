@@ -15,7 +15,6 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "deepmerge": "^2.0.0",
     "fast-deep-equal": "^1.0.0",
     "oad-utils": "*",
     "power-filter": "*"

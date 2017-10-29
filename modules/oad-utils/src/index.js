@@ -4,6 +4,7 @@ export { getNestedValue } from './get-nested-value.js'
 export { sortByNotation } from './sort-by-notation.js'
 export { updateOperationToJSON } from './update-operation-to-json.js'
 export { normalizeUpdateOperation } from './normalize-update-operation.js'
+export { mergeUpdateOperations } from './merge-update-operations.js'
 export {
   parseDocumentPath,
   convertToDotNotationString,
