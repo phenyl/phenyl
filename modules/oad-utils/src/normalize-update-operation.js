@@ -7,7 +7,7 @@ import type {
 /**
  *
  */
-export function normalizeOperation(operation: Object): UpdateOperation {
+export function normalizeUpdateOperation(operation: Object): UpdateOperation {
   const firstKey = Object.keys(operation)[0]
   if (!firstKey) return operation
   if (firstKey.charAt(0) !== '$') return { $set: operation }

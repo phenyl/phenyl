@@ -8,8 +8,8 @@ import {
   sortByNotation,
   parseDocumentPath,
   createDocumentPath,
+  normalizeUpdateOperation,
 } from 'oad-utils/jsnext'
-import { normalizeOperation } from './normalize-operation.js'
 import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 
@@ -449,7 +449,7 @@ export default class PowerAssign {
  *
  */
 export function assign(obj: Object, uOp: Object): Object {
-  return PowerAssign.assign(obj, normalizeOperation(uOp))
+  return PowerAssign.assign(obj, normalizeUpdateOperation(uOp))
 }
 
 /**
@@ -483,7 +483,7 @@ export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: Docu
  * TODO: Currently there are some cases are not merged well.
  */
 export function mergeOperations(...operationList: Array<Object>): UpdateOperation {
-  return deepMerge.all(operationList.map(normalizeOperation))
+  return deepMerge.all(operationList.map(normalizeUpdateOperation))
 }
 
 function isPrimitive(value: any): boolean {

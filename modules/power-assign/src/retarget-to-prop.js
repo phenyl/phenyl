@@ -1,5 +1,7 @@
 // @flow
-import { normalizeOperation } from './normalize-operation.js'
+import {
+  normalizeUpdateOperation,
+} from 'oad-utils/jsnext'
 
 import type {
   UpdateOperator,
@@ -9,7 +11,7 @@ import type {
 
 export function retargetToProp(docPath: DocumentPath, _operation: Object): $Subtype<UpdateOperation> {
 
-  const operation = normalizeOperation(_operation)
+  const operation = normalizeUpdateOperation(_operation)
   const newOps: UpdateOperator = {}
   const operatorNames = Object.keys(operation)
 
