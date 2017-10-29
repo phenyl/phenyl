@@ -3,7 +3,7 @@ import type {
   UpdateOperation,
 } from 'mongolike-operations'
 
-export function toJSON(operation: Object): UpdateOperation {
+export function updateOperationToJSON(operation: Object): UpdateOperation {
   if (operation.$restore == null) {
     return operation
   }

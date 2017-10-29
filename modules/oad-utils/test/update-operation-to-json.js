@@ -2,14 +2,14 @@
 
 import { describe, it, context } from 'kocha'
 import assert from 'power-assert'
-import { toJSON } from '../src/to-json.js'
+import { updateOperationToJSON } from '../src/update-operation-to-json.js'
 
-describe('toJSON', () => {
+describe('updateOperationToJSON', () => {
   it('no conversion when operation do not contain $restore property', () => {
     const operation = {
       $inc: { value: 1 }
     }
-    const newOps = toJSON(operation)
+    const newOps = updateOperationToJSON(operation)
     assert(operation, newOps)
   })
 
@@ -30,7 +30,7 @@ describe('toJSON', () => {
         bar: ''
       }
     }
-    const newOps = toJSON(operation)
+    const newOps = updateOperationToJSON(operation)
     assert.deepEqual(expected, newOps)
   })
 })
