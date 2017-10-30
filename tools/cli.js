@@ -30,40 +30,29 @@ class CLI {
   }
 
   clean() {
-    const commands = this.graph.getCleanCommands()
-    Object.keys(commands).forEach(name => {
+    this.graph.sortedModuleNames.forEach(name => {
       console.log(chalk.cyan(`\n[${name}] start clean`))
-      const commandsArr = commands[name]
-      commandsArr.forEach(command => {
-        if (command.option) {
-          command.path.unshift(command.option)
-        }
-        shell[command.name](...command.path)
-      })
+      shell.cd(`modules/${name}`)
+      shell.rm('-rf', 'node_modules dist')
+      shell.cd('../../')
       console.log(chalk.green(`[${name}] ✓ clean done`))
     })
   }
 
   test() {
+    const { modulesByName } = this.graph
     const failedModules = []
-    const commandsByName = this.graph.getTestCommands()
-    Object.keys(commandsByName).forEach(name => {
+
+    this.graph.sortedModuleNames.forEach(name => {
       console.log(chalk.cyan(`\n[${name}] start test`))
-      const commands = commandsByName[name]
-      if (commands.length) {
-        commands.forEach(command => {
-          if (typeof command === 'string') {
-            if (shell.exec(command).code !== 0) {
-              failedModules.push(name)
-            }
-          }
-          else {
-            if (command.option) {
-              command.path.unshift(option)
-            }
-            shell[command.name](...command.path)
-          }
-        })
+      const { scripts } = modulesByName[name]
+
+      if (scripts && Object.keys(scripts).includes('test')) {
+        shell.cd(`modules/${name}`)
+        if (shell.exec('npm test --color always').code !== 0) {
+          failedModules.push(name)
+        }
+        shell.cd('../../')
       }
       else {
         shell.echo(`no test specified in ${name}`)
@@ -89,33 +78,37 @@ class CLI {
   }
 
   load() {
-    const commands = this.graph.getLoadCommands()
-    Object.keys(commands).forEach(name => {
+    const { modulesByName } = this.graph
+    this.graph.sortedModuleNames.forEach(name => {
       console.log(chalk.cyan(`[${name}] start install.`))
-      commands[name].forEach(command => {
-        if (typeof command === 'string') {
-          shell.exec(command)
-        }
-        else {
-          if (command.option) {
-            command.path.unshift(command.option)
-          }
-          shell[command.name](...command.path)
-        }
+
+      const { dependingModuleNames } = modulesByName[name]
+      dependingModuleNames.forEach(dependingModuleName => {
+        shell.mkdir('-p', `modules/${name}/node_modules`)
+        shell.cd(`modules/${name}/node_modules`)
+        shell.ln('-s', `../../${dependingModuleName}`, `${dependingModuleName}`)
+        shell.cd('../../../')
       })
+
+      shell.cd(`modules/${name}`)
+      shell.exec('npm install --color always --loglevel=error')
+      shell.cd('../../')
       console.log(chalk.green(`[${name}] ✓ install done.\n`))
     })
   }
 
   build() {
-    this.graph.getBuildCommands().forEach(command => shell.exec(command))
+    this.graph.sortedModuleNames.forEach(name => {
+      shell.exec(`BABEL_ENV=build babel modules/${name}/src -d modules/${name}/dist`)
+    })
   }
 }
 
 
 const cli = new CLI()
 
-const [node, path, command, moduleName] = process.argv
+const command = process.argv[2]
+const moduleName = process.argv[3]
 
 switch(command) {
   case 'build':

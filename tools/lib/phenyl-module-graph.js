@@ -12,12 +12,6 @@ export type PackageJSON = {
   devDependencies: ?{ [moduleName: string]: Version },
 }
 
-export type Command = {
-  name: string,
-  option?: string,
-  path?: string,
-}
-
 type PhenylModulesByName = { [moduleName: string]: PhenylModule }
 
 export default class PhenylModuleGraph {
@@ -36,10 +30,6 @@ export default class PhenylModuleGraph {
     this.sortedModuleNames = topologicalSort(this.modulesByName)
   }
 
-  get moduleNames(): Array<string> {
-    return Object.keys(this.modulesByName)
-  }
-
   bumpVersion(moduleName: string, bumpType: BumpType): PhenylModulesByName {
     const affected = {}
     const { modulesByName } = this
@@ -54,96 +44,6 @@ export default class PhenylModuleGraph {
     }
     bump(modulesByName[moduleName])
     return affected
-  }
-
-  getLoadCommands() {
-    const commands = {}
-    this.sortedModuleNames.forEach(name => {
-      commands[name] = []
-      const dependingModules = this.modulesByName[name].dependingModuleNames
-      dependingModules.forEach(module => {
-        commands[name].push({
-          name: 'mkdir',
-          option: '-p',
-          path: [`modules/${name}/node_modules`],
-        })
-        commands[name].push({
-          name: 'cd',
-          path: [`modules/${name}/node_modules`],
-        })
-        commands[name].push({
-          name: 'ln',
-          option: '-s',
-          path: [`../../${module}`, `${module}`],
-        })
-        commands[name].push({
-          name: 'cd',
-          path:  ['../../../'],
-        })
-      })
-
-      commands[name].push({
-        name: 'cd',
-        path: [`modules/${name}`],
-      })
-      commands[name].push('npm install --color always --loglevel=error')
-      commands[name].push({
-        name: 'cd',
-        path:  ['../../'],
-      })
-    })
-
-    return commands
-  }
-
-  getCleanCommands() {
-    const commands = {}
-    this.moduleNames.forEach(name => {
-      commands[name] = []
-      commands[name].push({
-         name: 'cd',
-         path: [`modules/${name}`],
-      })
-       commands[name].push({
-         name: 'rm',
-         option: '-rf',
-         path: ['node_modules'],
-      })
-      commands[name].push({
-         name: 'cd',
-         path: ['../../'],
-      })
-    })
-    return commands
-  }
-
-  getTestCommands() {
-    const testCommandsByName = {}
-
-    this.moduleNames.forEach(name => {
-      const command = []
-      const {scripts} = this.modulesByName[name]
-
-      if (scripts && Object.keys(scripts).includes('test')) {
-        command.push({
-          name: 'cd',
-          path: [`modules/${name}`],
-        })
-        command.push('npm test --color always')
-        command.push({
-          name: 'cd',
-          path: ['../../'],
-        })
-      }
-
-      testCommandsByName[name] = command
-    })
-
-    return testCommandsByName
-  }
-
-  getBuildCommands() {
-    return this.moduleNames.map(name => `BABEL_ENV=build babel modules/${name}/src -d modules/${name}/dist`)
   }
 }
 
