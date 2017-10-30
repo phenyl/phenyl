@@ -21,12 +21,37 @@ class CLI {
     const phenylModulesByName = this.graph.bumpVersion(moduleName, bumpType)
     Object.keys(phenylModulesByName).forEach(name => {
       const phenylModule = phenylModulesByName[name]
-      const path = __dirname + `/../modules/${name}/package.json`
-      const packagejson = JSON.parse(fs.readFileSync(path, 'utf-8'))
-      packagejson.version = phenylModule.version
+      const pathToModule = __dirname + `/../modules/${name}`
+      const packagejson = JSON.parse(fs.readFileSync(pathToModule + '/package.json', 'utf-8'))
+      const oldVersion = packagejson.version
+      const newVersion = phenylModule.version
+      packagejson.version = newVersion
       fs.writeFileSync(path, JSON.stringify(packagejson, null, '  '), 'utf-8')
+
+      if (bumpType === 'patch') {
+        this.commitAndTag(oldVersion, newVersion, moduleName, pathToModule)
+        this.publish(`v${newVersion}`)
+      }
     })
-    // TODO npm publish
+  }
+
+  createGitTag(moduleName, version) {
+    return `${moduleName}-v${version}`
+  }
+
+  commitAndTag(oldVersion: string, newVersion: string, moduleName: string, pathToModule: string) {
+    shell.exec(`git commit -am ':bookmark: Release ${moduleName}'`)
+    shell.exec('git push origin master')
+    const oldTag = this.createGitTag(moduleName, oldVersion)
+    const newTag = this.createGitTag(moduleName, newVersion)
+
+    const releaseNote = shell.exec(`git log --oneline --no-merges ${oldTag}...master ${pathToModule}`).stdout
+    shell.exec(`git tag -a ${newTag} -m ${releaseNote}`)
+    shell.exec(`git push origin ${newTag}`)
+  }
+
+  publish(tag: string) {
+    shell.exec(`npm publish --tag ${tag}`)
   }
 
   clean() {
