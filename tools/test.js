@@ -1,18 +1,20 @@
-const fs = require('fs')
-const chalk = require('chalk')
+import chalk from 'chalk'
+import { getPhenylModules } from './lib/phenyl-module.js'
 
-const PhenylModule = require('./lib/phenyl-module')
-const path = __dirname + '/../modules'
-const moduleNames = fs.readdirSync(path).filter(moduleName => fs.statSync(path + '/' + moduleName).isDirectory())
+const phenylModules = getPhenylModules()
 
-const phenylModules = moduleNames.map(moduleName => new PhenylModule(moduleName))
 const failedModules = []
 
 phenylModules.forEach(phenylModule => {
   console.log(
     chalk.cyan(`\n[${phenylModule.moduleName}] start test`)
   )
-  const { passed, skipped } = phenylModule.test()
+  const { path, command, shouldSkip } = phenylModule.test()
+
+  if (shouldSkip) {
+
+
+  }
   if (!passed && !skipped) {
     failedModules.push(phenylModule.moduleName)
   }

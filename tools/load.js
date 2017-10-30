@@ -9,3 +9,4 @@ const phenylModules = moduleNames.map(moduleName => new PhenylModule(moduleName)
 const moduleLoader = new ModuleLoader(moduleNames)
 
 phenylModules.forEach(phenylModule => moduleLoader.load(phenylModule.moduleName))
+

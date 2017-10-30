@@ -1,9 +1,4 @@
-const fs = require('fs')
+import { getPhenylModules } from './lib/phenyl-module.js'
+import shell from 'shelljs'
 
-const PhenylModule = require('./lib/phenyl-module')
-const path = __dirname + '/../modules'
-const moduleNames = fs.readdirSync(path).filter(moduleName => fs.statSync(path + '/' + moduleName).isDirectory())
-
-const phenylModules = moduleNames.map(moduleName => new PhenylModule(moduleName))
-
-phenylModules.forEach(phenylModule => phenylModule.build())
+getPhenylModules().forEach(phenylModule => shell.exec(phenylModule.getBuildCommand()))

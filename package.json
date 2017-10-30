@@ -4,10 +4,13 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "babel-node tools/test.js",
-    "build": "babel-node tools/build.js",
-    "load": "babel-node tools/load.js",
-    "clean": "babel-node tools/clean.js",
+    "test": "babel-node tools/entry.js test",
+    "build": "babel-node tools/entry.js build",
+    "load": "babel-node tools/entry.js load",
+    "clean": "babel-node tools/entry.js clean",
+    "bump:major": "babel-node tools/entry.js bump:major",
+    "bump:minor": "babel-node tools/entry.js bump:minor",
+    "bump:patch": "babel-node tools/entry.js bump:patch",
     "flow": "flow"
   },
   "repository": {
