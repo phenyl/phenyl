@@ -206,7 +206,7 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$addToSet" operator must be applied to an array. Dot notation: "${docPath}".`)
+        throw new Error(`"$addToSet" operator must be applied to an array. DocumentPath: "${docPath}".`)
       }
       let modifier = addToSetOp[docPath]
 
@@ -229,7 +229,7 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
+        throw new Error(`"$pop" operator must be applied to an array. DocumentPath: "${docPath}".`)
       }
       if (popOp[docPath] === 1) {
         arr.pop()
@@ -253,7 +253,7 @@ export default class PowerAssign {
         return // If the field is absent, no requests will be executed
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$pull" operator must be applied to an array. Dot notation: "${docPath}".`)
+        throw new Error(`"$pull" operator must be applied to an array. DocumentPath: "${docPath}".`)
       }
       const condition = pullOp[docPath]
       valuesToSet[docPath] = arr.filter(val => checkCondition(val, condition) === false)
@@ -273,7 +273,7 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. Dot notation: "${docPath}".`)
+        throw new Error(`"$push" operator must be applied to an array. DocumentPath: "${docPath}".`)
       }
       let modifier = pushOp[docPath]
 
