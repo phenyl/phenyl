@@ -18,6 +18,8 @@
   "dependencies": {
     "es6-promisify": "^5.0.0",
     "phenyl-utils": "*",
+    "power-assign": "*",
+    "oad-utils": "*",
     "mongodb": "^2.2.31"
   }
 }

@@ -2,6 +2,8 @@
 import promisify from 'es6-promisify'
 
 import { createErrorResult } from 'phenyl-utils/jsnext.js'
+import { assign } from 'power-assign/jsnext.js'
+import { visitFindOperation, visitSimpleFindOperation } from 'oad-utils/jsnext.js'
 
 import type {
   EntityClient,
@@ -21,22 +23,21 @@ import type {
   SingleQueryResultOrError,
   CommandResultOrError,
   FindOperation,
+  Restorable,
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
 
-function set_idToId(where: FindOperation): FindOperation {
-  return where
-  /*
-  return visitSimpleConditions(where, (simpleConditions) => {
-    if (simpleConditions.id == null) {
-      return simpleConditions
+function setIdTo_id(where: FindOperation): FindOperation {
+  return visitFindOperation(where, {
+    simpleFindOperation: (simpleFindOperation) => {
+      return assign(simpleFindOperation, { $rename: { id: '_id' } })
     }
-    const newConditions = assign(simpleConditions, { _id: simpleConditions.id })
-    delete newConditions.id
-    return simpleConditions
   })
-  */
+}
+
+function set_idToId(restorable: Restorable): Restorable {
+  return assign(restorable, { $rename: { _id: 'id' } })
 }
 
 export default class PhenylMongoDbClient implements EntityClient {
@@ -54,8 +55,8 @@ export default class PhenylMongoDbClient implements EntityClient {
     if (limit) options.limit = limit
 
     try {
-      const result = await coll.find(set_idToId(where), options)
-      return { ok: 1, values: result }
+      const result = await coll.find(setIdTo_id(where), options)
+      return { ok: 1, values: result.map(restorable => set_idToId(restorable)) }
     }
     catch (error) {
       return createErrorResult(error)
@@ -66,8 +67,8 @@ export default class PhenylMongoDbClient implements EntityClient {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
     try {
-      const result = await coll.find(set_idToId(where), { limit: 1 })
-      return { ok: 1, value: result[0] || null }
+      const result = await coll.find(setIdTo_id(where), { limit: 1 })
+      return { ok: 1, value: set_idToId(result[0]) || null }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -78,7 +79,7 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.find({ _id: id })
-      return { ok: 1, value: result[0] || null }
+      return { ok: 1, value: set_idToId(result[0]) || null }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -89,7 +90,7 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.find({ _id: { $in: ids } })
-      return { ok: 1, values: result }
+      return { ok: 1, values: result.map(restorable => set_idToId(restorable)) }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -121,7 +122,11 @@ export default class PhenylMongoDbClient implements EntityClient {
         entityName,
         id: result.insertedId,
       })
-      return { ok: 1, n: result.insertedCount, value: insertedResult.value }
+      return {
+        ok: 1,
+        n: result.insertedCount,
+        value: set_idToId(insertedResult.value),
+      }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -137,7 +142,11 @@ export default class PhenylMongoDbClient implements EntityClient {
         entityName,
         ids: result.insertedIds,
       })
-      return { ok: 1, n: result.insertedCount, values: insertedResult.values }
+      return {
+        ok: 1,
+        n: result.insertedCount,
+        values: insertedResult.values.map(restorable => set_idToId(restorable)),
+      }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -153,7 +162,7 @@ export default class PhenylMongoDbClient implements EntityClient {
         result = await coll.updateOne({ _id: command.id }, operation)
       }
       if (command.where) {
-        result = await coll.updateMany(command.where, operation)
+        result = await coll.updateMany(setIdTo_id(command.where), operation)
       }
       const { nModified, nMatched } = result
       return { ok: 1, nMatched, nModified }
@@ -171,7 +180,11 @@ export default class PhenylMongoDbClient implements EntityClient {
       const { modifiedCount } = result
       if (modifiedCount > 0) {
         const updatedResult = await this.get({ entityName, id })
-        return { ok: 1, n: modifiedCount, value: updatedResult.value }
+        return {
+          ok: 1,
+          n: modifiedCount,
+          value: set_idToId(updatedResult.value),
+        }
       }
       else {
         return { ok: 1, n: 0, value: null }
@@ -185,10 +198,15 @@ export default class PhenylMongoDbClient implements EntityClient {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
     try {
-      const result = await coll.updateMany(where, operation)
-      const updatedResult = await this.find({ entityName, where })
+      const result = await coll.updateMany(setIdTo_id(where), operation)
+      const updatedResult = await this.find({ entityName, where: setIdTo_id(where) })
       const { nModified, nMatched } = result
-      return { ok: 1, nModified, nMatched, values: updatedResult.values }
+      return {
+        ok: 1,
+        nModified,
+        nMatched,
+        values: updatedResult.values.map(restorable => set_idToId(restorable)),
+      }
     } catch (error) {
       createErrorResult(error)
     }
@@ -203,7 +221,7 @@ export default class PhenylMongoDbClient implements EntityClient {
         result = await coll.deleteOne({ _id: command.id })
       }
       if (command.where) {
-        result = await coll.deleteMany(command.where)
+        result = await coll.deleteMany(setIdTo_id(command.where))
       }
       return { ok: 1, n: result.deletedCount }
     } catch (error) {

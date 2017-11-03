@@ -4,48 +4,48 @@ import assert from 'power-assert'
 import { it, describe, before, after } from 'kocha'
 import PhenylMongoDbClient from '../src/index.js'
 import { connect } from '../src/connection.js'
+import { assign } from 'power-assign/jsnext.js'
 
 let mongoDBClient
 
 const user1 = {
-  // TODO modify _id to id
-  _id: 'user1',
+  id: 'user1',
   name: { first: 'Shin', last: 'Tanaka' },
   age: 10,
 }
 
 const user2 = {
-  _id: 'user2',
+  id: 'user2',
   name: { first: 'Shingo', last: 'Tanaka' },
   age: 16,
 }
 
 const user3 = {
-  _id: 'user3',
+  id: 'user3',
   name: { first: 'taro', last: 'Tanaka' },
   age: 19,
 }
 
 const user4 = {
-  _id: 'user4',
+  id: 'user4',
   name: { first: 'jiro', last: 'Tanaka' },
   age: 31,
 }
 
 const user5 = {
-  _id: 'user5',
+  id: 'user5',
   name: { first: 'saburo', last: 'Tanaka' },
   age: 26,
 }
 
 const user6 = {
-  _id: 'user6',
+  id: 'user6',
   name: { first: 'shiro', last: 'Tanaka' },
   age: 22,
 }
 
 const user7 = {
-  _id: 'user7',
+  id: 'user7',
   name: { first: 'goro', last: 'Tanaka' },
   age: 47,
 }
@@ -63,7 +63,7 @@ describe('PhenylMongoDbClient', () => {
   it('insert with single insert command', async () => {
     const result = await mongoDBClient.insert({
       entityName: 'user',
-      value: user1,
+      value: assign(user1, { $rename: { id: '_id' }}),
     })
 
     assert.deepEqual(result, { ok: 1, n: 1 })
@@ -72,7 +72,11 @@ describe('PhenylMongoDbClient', () => {
   it('insert with multi insert command', async () => {
     const result = await mongoDBClient.insert({
       entityName: 'user',
-      values: [user2, user3, user4],
+      values: [
+        assign(user2, { $rename: { id: '_id' }}),
+        assign(user3, { $rename: { id: '_id' }}),
+        assign(user4, { $rename: { id: '_id' }})
+      ],
     })
 
     assert(result.ok === 1)
@@ -94,17 +98,17 @@ describe('PhenylMongoDbClient', () => {
   it('findOne', async () => {
     const result = await mongoDBClient.findOne({
       entityName: 'user',
-      where: { 'name.first': 'Shin' },
+      where: { id: user1.id },
     })
 
     assert(result.ok === 1)
-    assert(result.value.name.first === 'Shin')
+    assert(result.value.id === user1.id )
   })
 
   it('get', async () => {
     const result = await mongoDBClient.get({
       entityName: 'user',
-      id: user1._id,
+      id: user1.id,
     })
 
     assert.deepEqual(result.value, user1)
@@ -113,7 +117,7 @@ describe('PhenylMongoDbClient', () => {
   it('getByIds', async () => {
     const result = await mongoDBClient.getByIds({
       entityName: 'user',
-      ids: [user1._id, user2._id],
+      ids: [user1.id, user2.id],
     })
 
     assert.deepEqual(result.values, [user1, user2])
@@ -122,7 +126,7 @@ describe('PhenylMongoDbClient', () => {
   it('insertAndGet', async () => {
     const result = await mongoDBClient.insertAndGet({
       entityName: 'user',
-      value: user5,
+      value: assign(user5, { $rename: { id: '_id' }}),
     })
 
     assert(result.ok === 1)
@@ -132,7 +136,10 @@ describe('PhenylMongoDbClient', () => {
   it('insertAndGetMulti', async () => {
     const result = await mongoDBClient.insertAndGetMulti({
       entityName: 'user',
-      values: [user6, user7],
+      values: [
+        assign(user6, { $rename: { id: '_id' }}),
+        assign(user7, { $rename: { id: '_id' }})
+      ],
     })
 
     assert.deepEqual(result.values, [user6, user7])
@@ -141,7 +148,7 @@ describe('PhenylMongoDbClient', () => {
   it ('update with id update command', async () => {
     const result = await mongoDBClient.update({
       entityName: 'user',
-      id: user1._id,
+      id: user1.id,
       operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
     })
 
@@ -149,7 +156,7 @@ describe('PhenylMongoDbClient', () => {
 
     const result2 = await mongoDBClient.get({
       entityName: 'user',
-      id: user1._id,
+      id: user1.id,
     })
 
     assert(result2.value.favorites.music.singer === 'Tatsuro Yamashita')
@@ -177,7 +184,7 @@ describe('PhenylMongoDbClient', () => {
   it ('updateAndGet', async () => {
     const result = await mongoDBClient.updateAndGet({
       entityName: 'user',
-      id: user1._id,
+      id: user1.id,
       operation: { $set: { 'favorites.movie': { title: 'shin godzilla' }}},
     })
 
@@ -200,7 +207,7 @@ describe('PhenylMongoDbClient', () => {
   })
 
   it ('delete with id delete command', async () => {
-    const id = user1._id
+    const id = user1.id
     const result = await mongoDBClient.delete({
       entityName: 'user',
       id,
