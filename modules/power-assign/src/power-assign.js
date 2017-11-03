@@ -284,7 +284,9 @@ export default class PowerAssign {
         newArr = sortByNotation(newArr, modifier.$sort)
       }
       if (modifier.$slice != null) {
-        newArr = newArr.slice(0, modifier.$slice)
+        newArr = (modifier.$slice >= 0)
+          ? newArr.slice(0, modifier.$slice)
+          : newArr.slice(modifier.$slice)
       }
       valuesToSet[docPath] = newArr
     })

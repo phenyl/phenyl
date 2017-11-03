@@ -93,6 +93,17 @@ describe('assign', () => {
     const obj = { users: [{ id: 'user2' }, { id: 'user4' }, { id: 'user6' }]}
     const newObj = assign(obj, { $push: { users:
       { $each: [{ id: 'user1' }, { id: 'user3' }, { id: 'user5' }],
+        $position: 1,
+        $slice: 3,
+      }
+    }})
+    assert.deepEqual(newObj, { users: [{ id: 'user2' }, { id: 'user1' }, { id: 'user3'}]})
+  })
+
+  it('slice the pushed result after sort', () => {
+    const obj = { users: [{ id: 'user2' }, { id: 'user4' }, { id: 'user6' }]}
+    const newObj = assign(obj, { $push: { users:
+      { $each: [{ id: 'user1' }, { id: 'user3' }, { id: 'user5' }],
         $slice: 3,
         $sort: { id: -1 },
       }
@@ -100,15 +111,14 @@ describe('assign', () => {
     assert.deepEqual(newObj, { users: [{ id: 'user6' }, { id: 'user5' }, { id: 'user4'}]})
   })
 
-  it('slice the pushed result after sort', () => {
+  it('slice the pushed result with negative number', () => {
     const obj = { users: [{ id: 'user2' }, { id: 'user4' }, { id: 'user6' }]}
     const newObj = assign(obj, { $push: { users:
       { $each: [{ id: 'user1' }, { id: 'user3' }, { id: 'user5' }],
-        $position: 1,
-        $slice: 3,
+        $slice: -4,
       }
     }})
-    assert.deepEqual(newObj, { users: [{ id: 'user2' }, { id: 'user1' }, { id: 'user3'}]})
+    assert.deepEqual(newObj, { users: [{ id: 'user6' }, { id: 'user1' }, { id: 'user3'}, { id: 'user5'}] })
   })
 
   it('add currentDate', () => {
