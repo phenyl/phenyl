@@ -4,10 +4,13 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "node tools/test.js",
-    "build": "node tools/build.js",
-    "load": "node tools/load.js",
-    "clean": "node tools/clean.js",
+    "test": "babel-node tools/cli.js test",
+    "build": "babel-node tools/cli.js build",
+    "load": "babel-node tools/cli.js load",
+    "clean": "babel-node tools/cli.js clean",
+    "bump:major": "babel-node tools/cli.js bump:major",
+    "bump:minor": "babel-node tools/cli.js bump:minor",
+    "bump:patch": "babel-node tools/cli.js bump:patch",
     "flow": "flow"
   },
   "repository": {
@@ -21,11 +24,11 @@
   },
   "homepage": "https://github.com/shinout/phenyl#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-plugin-transform-strip-jsnext": "^2.0.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
-    "babel-register": "^6.24.1",
+    "babel-register": "^6.26.0",
     "chalk": "^2.3.0",
     "flow-bin": "^0.52.0",
     "shelljs": "^0.7.8"

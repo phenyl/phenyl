@@ -1,29 +1,32 @@
+// @flow
 const shell = require('shelljs')
-module.exports = class PhenylModule {
-  constructor(moduleName) {
-    this.moduleName = moduleName
-    this.passingTest = false
-    this.skipTest = false
-  }
 
-  test() {
-    const pathToModuleFromRoot = `modules/${this.moduleName}`
-    shell.cd(pathToModuleFromRoot)
-    const scripts = require('../../' + pathToModuleFromRoot + '/package.json').scripts
+import type {
+  Version,
+  PackageJSON,
+} from './phenyl-module-graph.js'
 
-    if (scripts && Object.keys(scripts).includes('test')) {
-      if (shell.exec('npm test --color always').code === 0) {
-        this.passingTest = true
-      }
-    } else {
-      this.skipTest = true
-      shell.echo(`no test specified in ${this.moduleName}`)
-    }
+type PhenylModuleParams = {
+  name: string,
+  version: Version,
+  scripts: ?{ [scriptName: string]: string },
+  dependingModuleNames: Array<string>,
+  dependedModuleNames: Array<string>,
+}
 
-    shell.cd(`../../`)
-  }
 
-  build() {
-    shell.exec(`BABEL_ENV=build babel modules/${this.moduleName}/src -d modules/${this.moduleName}/dist`)
+export default class PhenylModule {
+  name: string
+  version: Version
+  scripts: { [scriptName: string]: string }
+  dependingModuleNames: Array<string>
+  dependedModuleNames: Array<string>
+
+  constructor(params: PhenylModuleParams) {
+    this.name = params.name
+    this.version = params.version
+    this.scripts = params.scripts || {}
+    this.dependingModuleNames = params.dependingModuleNames
+    this.dependedModuleNames = params.dependedModuleNames
   }
 }
