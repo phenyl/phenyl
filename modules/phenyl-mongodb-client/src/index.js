@@ -164,8 +164,7 @@ export default class PhenylMongoDbClient implements EntityClient {
       if (command.where) {
         result = await coll.updateMany(setIdTo_id(command.where), operation)
       }
-      const { nModified, nMatched } = result
-      return { ok: 1, nMatched, nModified }
+      return { ok: 1, n: result.matchedCount }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -177,12 +176,12 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.updateOne({ _id: id }, operation)
-      const { modifiedCount } = result
-      if (modifiedCount > 0) {
+      const { matchedCount } = result
+      if (matchedCount > 0) {
         const updatedResult = await this.get({ entityName, id })
         return {
           ok: 1,
-          n: modifiedCount,
+          n: matchedCount,
           value: set_idToId(updatedResult.value),
         }
       }
@@ -200,11 +199,9 @@ export default class PhenylMongoDbClient implements EntityClient {
     try {
       const result = await coll.updateMany(setIdTo_id(where), operation)
       const updatedResult = await this.find({ entityName, where: setIdTo_id(where) })
-      const { nModified, nMatched } = result
       return {
         ok: 1,
-        nModified,
-        nMatched,
+        n: result.matchedCount,
         values: updatedResult.values.map(restorable => set_idToId(restorable)),
       }
     } catch (error) {

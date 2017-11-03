@@ -130,6 +130,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 1)
     assert.deepEqual(result.value, user5)
   })
 
@@ -142,6 +143,8 @@ describe('PhenylMongoDbClient', () => {
       ],
     })
 
+    assert(result.ok === 1)
+    assert(result.n === 2)
     assert.deepEqual(result.values, [user6, user7])
   })
 
@@ -153,6 +156,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 1)
 
     const result2 = await mongoDBClient.get({
       entityName: 'user',
@@ -170,6 +174,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 7)
 
     const result2 = await mongoDBClient.find({
       entityName: 'user',
@@ -189,6 +194,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 1)
     assert(result.value.favorites.movie.title === 'shin godzilla')
   })
 
@@ -201,6 +207,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 7)
     result.values.forEach(value => {
       assert(value.favorites.book.author === 'Abe Kobo')
     })
@@ -214,6 +221,7 @@ describe('PhenylMongoDbClient', () => {
     })
 
     assert(result.ok === 1)
+    assert(result.n === 1)
 
     const deletedResult = await mongoDBClient.get({
       entityName: 'user',
