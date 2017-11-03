@@ -82,7 +82,7 @@ export default class PhenylMongoDbClient implements EntityClient {
           message: '"PhenylMongodbClient#findOne()" failed. Could not find any entity with the given query.',
         }
       }
-      return { ok: 1, value: set_idToId(result[0]) || null }
+      return { ok: 1, value: set_idToId(result[0]) }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -100,7 +100,7 @@ export default class PhenylMongoDbClient implements EntityClient {
           message: '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
         }
       }
-      return { ok: 1, value: set_idToId(result[0]) || null }
+      return { ok: 1, value: set_idToId(result[0]) }
     } catch (error) {
       return createErrorResult(error)
     }
@@ -192,7 +192,15 @@ export default class PhenylMongoDbClient implements EntityClient {
       if (command.where) {
         result = await coll.updateMany(setIdTo_id(command.where), operation)
       }
-      return { ok: 1, n: result.matchedCount }
+      const { matchedCount } = result
+      if (matchedCount === 0) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
+        }
+      }
+      return { ok: 1, n: matchedCount }
     } catch (error) {
       return createErrorResult(error)
     }
