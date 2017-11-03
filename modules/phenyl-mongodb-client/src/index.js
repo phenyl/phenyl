@@ -56,6 +56,13 @@ export default class PhenylMongoDbClient implements EntityClient {
 
     try {
       const result = await coll.find(setIdTo_id(where), options)
+      if (result.length === 0) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.',
+        }
+      }
       return { ok: 1, values: result.map(restorable => set_idToId(restorable)) }
     }
     catch (error) {
@@ -68,6 +75,13 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.find(setIdTo_id(where), { limit: 1 })
+      if (result.length === 0) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#findOne()" failed. Could not find any entity with the given query.',
+        }
+      }
       return { ok: 1, value: set_idToId(result[0]) || null }
     } catch (error) {
       return createErrorResult(error)
@@ -79,6 +93,13 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.find({ _id: id })
+      if (result.length === 0) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
+        }
+      }
       return { ok: 1, value: set_idToId(result[0]) || null }
     } catch (error) {
       return createErrorResult(error)
@@ -90,6 +111,13 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.find({ _id: { $in: ids } })
+      if (result.length === 0) {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
+        }
+      }
       return { ok: 1, values: result.map(restorable => set_idToId(restorable)) }
     } catch (error) {
       return createErrorResult(error)
@@ -186,7 +214,11 @@ export default class PhenylMongoDbClient implements EntityClient {
         }
       }
       else {
-        return { ok: 1, n: 0, value: null }
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.',
+        }
       }
     } catch (error) {
       return createErrorResult(error)
@@ -198,11 +230,21 @@ export default class PhenylMongoDbClient implements EntityClient {
     const coll = this.conn.collection(entityName)
     try {
       const result = await coll.updateMany(setIdTo_id(where), operation)
-      const updatedResult = await this.find({ entityName, where: setIdTo_id(where) })
-      return {
-        ok: 1,
-        n: result.matchedCount,
-        values: updatedResult.values.map(restorable => set_idToId(restorable)),
+      const { matchedCount } = result
+      if (matchedCount > 0) {
+        const updatedResult = await this.find({ entityName, where: setIdTo_id(where) })
+        return {
+          ok: 1,
+          n: result.matchedCount,
+          values: updatedResult.values.map(restorable => set_idToId(restorable)),
+        }
+      }
+      else {
+        return {
+          ok: 0,
+          type: 'NotFound',
+          message: '"PhenylMongodbClient#updateAndFetch()" failed. Could not find any entity with the given query.',
+        }
       }
     } catch (error) {
       createErrorResult(error)
