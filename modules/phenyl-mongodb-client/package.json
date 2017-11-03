@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "es6-promisify": "^5.0.0",
+    "phenyl-utils": "*",
     "mongodb": "^2.2.31"
   }
 }
