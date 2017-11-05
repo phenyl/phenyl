@@ -159,10 +159,11 @@ import type {
 import type { PreSession, Session } from './decls/session.js.flow'
 
 import type {
-  ForeignQueryParams,
-  ForeignWhereQuery,
   ForeignIdQuery,
   ForeignIdsQuery,
+  ForeignQueryParams,
+  ForeignQueryResult,
+  ForeignWhereQuery,
 } from './decls/standards.js.flow'
 
 import type {
@@ -227,6 +228,7 @@ export type {
   ForeignIdQuery,
   ForeignIdsQuery,
   ForeignQueryParams,
+  ForeignQueryResult,
   ForeignWhereQuery,
   FunctionalGroup,
   GetByIdsRequestData,

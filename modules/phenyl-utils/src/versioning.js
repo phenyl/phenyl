@@ -36,7 +36,7 @@ export class Versioning {
   static createQueryResult(entities: Array<EntityWithMetaInfo>): QueryResult {
     return {
       ok: 1,
-      values: entities.map(this.stripMeta),
+      entities: entities.map(this.stripMeta),
       versionsById: this.getVersionIds(entities),
     }
   }
@@ -48,7 +48,7 @@ export class Versioning {
   static createSingleQueryResult(entity: EntityWithMetaInfo): SingleQueryResult {
     return {
       ok: 1,
-      value: this.stripMeta(entity),
+      entity: this.stripMeta(entity),
       versionId: this.getVersionId(entity)
     }
   }
@@ -60,7 +60,7 @@ export class Versioning {
   static createPullQueryResult(entity: EntityWithMetaInfo, versionId: Id): PullQueryResult {
     const operations = this.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
-      return { ok: 1, value: this.stripMeta(entity), versionId: null }
+      return { ok: 1, entity: this.stripMeta(entity), versionId: null }
     }
     return { ok: 1, pulled: 1, operations, versionId: this.getVersionId(entity) }
   }
@@ -73,7 +73,7 @@ export class Versioning {
     return {
       ok: 1,
       n: 1,
-      value: this.stripMeta(entity),
+      entity: this.stripMeta(entity),
       versionId: this.getVersionId(entity),
     }
   }
@@ -86,7 +86,7 @@ export class Versioning {
     return {
       ok: 1,
       n: entities.length,
-      values: entities.map(this.stripMeta),
+      entities: entities.map(this.stripMeta),
       versionsById: this.getVersionIds(entities),
     }
   }
@@ -101,7 +101,7 @@ export class Versioning {
     if (localUncommittedOperations != null) {
       return { ok: 1, n: 1, operations: localUncommittedOperations, versionId: latestVersionId }
     }
-    return { ok: 1, n: 1, value: updatedEntity, versionId: latestVersionId }
+    return { ok: 1, n: 1, entity: updatedEntity, versionId: latestVersionId }
   }
 
   /**

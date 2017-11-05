@@ -72,26 +72,26 @@ export default class ForeignQueryWrapper {
     return await switchByRequestMethod(reqData, {
       find: async (query: ForeignWhereQuery) => {
         if (resData.type !== 'find' || query.foreign == null) return resData
-        const foreignEntitiesById = await this.getForeignEntities(resData.payload.values, query.foreign)
-        return assign(resData, { 'payload.foreign': { values: foreignEntitiesById } })
+        const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
+        return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
       },
 
       findOne: async (query: ForeignWhereQuery) => {
         if (resData.type !== 'findOne' || query.foreign == null) return resData
-        const foreignEntity = await this.getForeignEntity(resData.payload.value, query.foreign)
-        return assign(resData, { 'payload.foreign': { value: foreignEntity } })
+        const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
+        return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
       },
 
       get: async (query: ForeignIdQuery) => {
         if (resData.type !== 'get' || query.foreign == null) return resData
-        const foreignEntity = await this.getForeignEntity(resData.payload.value, query.foreign)
-        return assign(resData, { 'payload.foreign': { value: foreignEntity } })
+        const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
+        return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
       },
 
       getByIds: async (query: ForeignIdsQuery) => {
         if (resData.type !== 'getByIds' || query.foreign == null) return resData
-        const foreignEntitiesById = await this.getForeignEntities(resData.payload.values, query.foreign)
-        return assign(resData, { 'payload.foreign': { values: foreignEntitiesById } })
+        const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
+        return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
       },
 
       handleDefault: async (reqData, session) => {
@@ -110,7 +110,7 @@ export default class ForeignQueryWrapper {
       const foreignIds = entities.map(entity => getNestedValue(entity, documentPath))
       const result = await this.entityClient.getByIds({ ids: foreignIds, entityName })
       const entitiesById = {}
-      for (const entity of result.values) {
+      for (const entity of result.entities) {
         entitiesById[entity.id] = entity
       }
       return entitiesById
@@ -130,7 +130,7 @@ export default class ForeignQueryWrapper {
     try {
       const foreignId = getNestedValue(entity, documentPath)
       const result = await this.entityClient.get({ id: foreignId, entityName })
-      return result.value
+      return result.entity
     }
     catch (e) {
       e.message = `Error while getting entities "${entityName}" by foreign keys "${documentPath}".\n${e.message}`

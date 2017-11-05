@@ -95,8 +95,8 @@ describe('PhenylMemoryClient (test about versioning)', () => {
       const { operations, versionId } = await client.pull({ id, entityName, versionId: firstVersionId })
       assert(operations.length === 1 && versionId === currentVersionId)
       const currentUser = assign(user, operations[0])
-      const { value } = await client.get({ entityName, id })
-      assert.deepEqual(currentUser, value)
+      const { entity } = await client.get({ entityName, id })
+      assert.deepEqual(currentUser, entity)
 
     })
   })
@@ -123,7 +123,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
         // Picking up version 20
         if (versionIds.length === 20) {
           localVersionId = versionIds[19]
-          localUser = (await client.get({ entityName, id })).value
+          localUser = (await client.get({ entityName, id })).entity
         }
 
       }
@@ -145,14 +145,14 @@ describe('PhenylMemoryClient (test about versioning)', () => {
         currentUser = assign(currentUser, operation)
       }
       const resultOfGet = await client.get({ entityName, id })
-      assert.deepEqual(currentUser, resultOfGet.value)
+      assert.deepEqual(currentUser, resultOfGet.entity)
     })
 
     it('returns no operation diffs when the given versionId is older than 100 versions', async () => {
       // $FlowIssue(firstVersionId-is-string)
       const result = await client.pull({ entityName, id, versionId: firstVersionId })
       if (result.pulled) throw new Error('Result should not have "pulled" property')
-      assert(result.value.hobbies.length === 111)
+      assert(result.entity.hobbies.length === 111)
     })
 
     it('returns empty operation diffs when the given versionId is the latest', async () => {
@@ -174,7 +174,6 @@ describe('PhenylMemoryClient (test about versioning)', () => {
       const client = new PhenylMemoryClient()
       const result = await client.insert({ entityName: 'user', value: { id: 'foo', name: 'bar' } })
       if (result.versionId == null) throw new Error('result.versionId should exist.')
-      // $FlowIssue(_PhenylMeta-exists)
       assert(client.entityState.pool.user.foo._PhenylMeta.versions, [ { id: result.versionId, op: '' }])
     })
   })
@@ -193,13 +192,12 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     it('pushs version info to meta info of the updated entity', async () => {
       const operation = { $set: { name: 'John' }, $push: { hobbies: 'jogging' } }
       const result = await client.update({ id, operation, entityName })
-      // $FlowIssue(_PhenylMeta-exists)
       const { versions } = client.entityState.pool.user.foo._PhenylMeta
       assert(versions.length === 2)
       assert(versions[1].id === result.versionId)
-      const { value } = await client.get({ entityName, id })
-      assert(value.name === 'John')
-      assert.deepEqual(value.hobbies, ['guitar', 'jogging'])
+      const { entity } = await client.get({ entityName, id })
+      assert(entity.name === 'John')
+      assert.deepEqual(entity.hobbies, ['guitar', 'jogging'])
     })
 
     it('pushs version info to meta info of all the updated entities', async () => {

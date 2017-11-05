@@ -1,11 +1,11 @@
 // @flow
 
 import type {
-  Restorable,
   UpdateOperation,
 } from 'mongolike-operations'
 import type { ErrorResult } from './error-result.js.flow'
 import type { Id } from './id.js.flow'
+import type { Entity } from './entity.js.flow'
 
 export type CustomQueryResult = {
   ok: 1,
@@ -14,13 +14,13 @@ export type CustomQueryResult = {
 
 export type QueryResult = {|
   ok: 1,
-  values: Array<Restorable>,
+  entities: Array<Entity>,
   versionsById: { [entityId: Id]: Id },
 |}
 
 export type SingleQueryResult = {|
   ok: 1,
-  value: Restorable,
+  entity: Entity,
   versionId: ?Id,
 |}
 

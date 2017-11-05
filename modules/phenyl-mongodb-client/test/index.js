@@ -93,8 +93,8 @@ describe('PhenylMongoDbClient', () => {
       })
 
       assert(result.ok === 1)
-      result.values.forEach(value => {
-        assert(value.name.first === 'Shin')
+      result.entities.forEach(entity => {
+        assert(entity.name.first === 'Shin')
       })
     })
 
@@ -117,7 +117,7 @@ describe('PhenylMongoDbClient', () => {
       })
 
       assert(result.ok === 1)
-      assert(result.value.id === user1.id )
+      assert(result.entity.id === user1.id )
     })
 
     it('does not return any entity when condition does not match', async () => {
@@ -139,7 +139,7 @@ describe('PhenylMongoDbClient', () => {
       })
 
       assert(result.ok === 1)
-      assert.deepEqual(result.value, user1)
+      assert.deepEqual(result.entity, user1)
     })
 
     it('does not return any entity when condition does not matches', async () => {
@@ -160,7 +160,7 @@ describe('PhenylMongoDbClient', () => {
         ids: [user1.id, user2.id],
       })
 
-      assert.deepEqual(result.values, [user1, user2])
+      assert.deepEqual(result.entities, [user1, user2])
     })
     it('does not return any entities when condition does not matche', async () => {
       const result = await mongoDBClient.getByIds({
@@ -182,7 +182,7 @@ describe('PhenylMongoDbClient', () => {
 
       assert(result.ok === 1)
       assert(result.n === 1)
-      assert.deepEqual(result.value, user5)
+      assert.deepEqual(result.entity, user5)
     })
   })
 
@@ -198,7 +198,7 @@ describe('PhenylMongoDbClient', () => {
 
       assert(result.ok === 1)
       assert(result.n === 2)
-      assert.deepEqual(result.values, [user6, user7])
+      assert.deepEqual(result.entities, [user6, user7])
     })
   })
 
@@ -218,7 +218,7 @@ describe('PhenylMongoDbClient', () => {
         id: user1.id,
       })
 
-      assert(result2.value.favorites.music.singer === 'Tatsuro Yamashita')
+      assert(result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
     })
 
     it ('updates entities with multi update command', async () => {
@@ -236,8 +236,8 @@ describe('PhenylMongoDbClient', () => {
         where: { 'name.last': 'Tanaka' },
       })
 
-      result2.values.forEach(value => {
-        assert(value.favorites.music.singer === 'Tatsuro Yamashita')
+      result2.entities.forEach(entity => {
+        assert(entity.favorites.music.singer === 'Tatsuro Yamashita')
       })
     })
 
@@ -263,7 +263,7 @@ describe('PhenylMongoDbClient', () => {
 
       assert(result.ok === 1)
       assert(result.n === 1)
-      assert(result.value.favorites.movie.title === 'shin godzilla')
+      assert(result.entity.favorites.movie.title === 'shin godzilla')
     })
 
     it ('does not update and get any entity when condition does not match', async () => {
@@ -288,8 +288,8 @@ describe('PhenylMongoDbClient', () => {
 
       assert(result.ok === 1)
       assert(result.n === 7)
-      result.values.forEach(value => {
-        assert(value.favorites.book.author === 'Abe Kobo')
+      result.entities.forEach(entity => {
+        assert(entity.favorites.book.author === 'Abe Kobo')
       })
     })
 
@@ -321,7 +321,7 @@ describe('PhenylMongoDbClient', () => {
         id,
       })
 
-      assert(deletedResult.value == null)
+      assert(deletedResult.entity == null)
     })
 
     it ('deletes entities with multi delete command', async () => {

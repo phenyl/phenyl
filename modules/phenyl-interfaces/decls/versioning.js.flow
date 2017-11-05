@@ -12,6 +12,7 @@ export type EntityMetaInfo = {
 }
 
 
-export type EntityWithMetaInfo = Entity & {
+export type EntityWithMetaInfo = $Subtype<{
+  id: Id,
   _PhenylMeta?: EntityMetaInfo
-}
+}>

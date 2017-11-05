@@ -63,7 +63,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
           [passwordPropName]: this.encrypt(password),
         },
       })
-      const user = result.value
+      const user = result.entity
       const preSession = { ttl, entityName, userId: user.id }
       return { ok: 1, preSession, user }
     }

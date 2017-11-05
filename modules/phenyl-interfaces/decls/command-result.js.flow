@@ -1,7 +1,6 @@
 // @flow
 
 import type {
-  Restorable,
   UpdateOperation,
 } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
@@ -19,14 +18,14 @@ export type CommandResult = {
 export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
-  values: Array<Entity>,
+  entities: Array<Entity>,
   versionsById: { [entityId: Id]: Id },
 }
 
 export type GetCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
-  value: Entity,
+  entity: Entity,
   versionId: ?Id,
 |}
 

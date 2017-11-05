@@ -5,6 +5,8 @@ import {
   IdsQuery,
 } from './query.js.flow'
 
+import type { Entity } from './entity.js.flow'
+
 import type {
   QueryResult,
 } from './query-result.js.flow'
@@ -18,11 +20,8 @@ export type ForeignQueryParams = {
   entityName: string,
 }
 
-type ForeignQueryResult<T> = T & {
-  foreign?: {
-    documentPath: string,
-    entityName: string,
-  }
+export type ForeignQueryResult<T> = T & {
+  foreign?: { entities: Array<Entity> } | { entity: Entity }
 }
 
 export type ForeignIdQuery = ForeignQuery<IdQuery>
