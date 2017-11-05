@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "power-assign": "*",
     "phenyl-state": "*"
   }
 }
