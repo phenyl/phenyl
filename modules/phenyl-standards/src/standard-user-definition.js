@@ -2,7 +2,7 @@
 
 import powerCrypt from 'power-crypt/jsnext'
 import {
-  PhenylResponseError,
+  createErrorResult,
 } from 'phenyl-utils/jsnext'
 
 import StandardEntityDefinition from './standard-entity-definition.js'
@@ -68,7 +68,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
       return { ok: 1, preSession, user }
     }
     catch (e) {
-      throw new PhenylResponseError(e.message, 'Unauthorized')
+      throw createErrorResult(e.message, 'Unauthorized')
     }
   }
 

@@ -77,7 +77,7 @@ export default class PhenylCore implements PhenylRunner {
       // 2. Authorization
       const isAccessible = await this.authorizationHandler(reqData, session)
       if (!isAccessible) {
-        return { type: 'error', payload: createErrorResult(new Error('Authorization Required.'), 'Unauthorized') }
+        return { type: 'error', payload: createErrorResult('Authorization Required.', 'Unauthorized') }
       }
 
       // 3. Validation
@@ -159,7 +159,7 @@ export default class PhenylCore implements PhenylRunner {
         return { type: 'logout', payload: await this.logout(reqData.payload, session) }
 
       default: {
-        return { type: 'error', payload: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
+        return { type: 'error', payload: createErrorResult('Invalid method name.', 'NotFound') }
       }
     }
   }
@@ -185,7 +185,7 @@ export default class PhenylCore implements PhenylRunner {
     const result = await this.clients.sessionClient.delete(sessionId)
     // sessionId not found
     if (!result) {
-      throw createErrorResult(new Error('sessionId not found'), 'BadRequest')
+      throw createErrorResult('sessionId not found', 'BadRequest')
     }
     return { ok: 1 }
   }

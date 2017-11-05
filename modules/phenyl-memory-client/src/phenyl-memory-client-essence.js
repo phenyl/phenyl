@@ -6,7 +6,7 @@ import {
 import {
 } from 'oad-utils/jsnext'
 import {
-  PhenylResponseError,
+  createErrorResult,
   randomStringWithTimeStamp,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
@@ -57,7 +57,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
   async findOne(query: WhereQuery): Promise<Entity> {
     const entity = PhenylStateFinder.findOne(this.entityState, query)
     if (entity == null) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -74,7 +74,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
-        throw new PhenylResponseError(
+        throw createErrorResult(
           `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${query.id}"`,
           'NotFound'
         )
@@ -92,7 +92,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
-        throw new PhenylResponseError(
+        throw createErrorResult(
           `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(', ')}"`, // TODO: prevent from showing existing ids
           'NotFound',
         )

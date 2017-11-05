@@ -2,7 +2,7 @@
 import promisify from 'es6-promisify'
 
 import {
-  PhenylResponseError,
+  createErrorResult,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
 import { visitFindOperation } from 'oad-utils/jsnext'
@@ -54,7 +54,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
 
     const result = await coll.find(setIdTo_id(where), options)
     if (result.length === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -67,7 +67,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const coll = this.conn.collection(entityName)
     const result = await coll.find(setIdTo_id(where), { limit: 1 })
     if (result.length === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#findOne()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -80,7 +80,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const coll = this.conn.collection(entityName)
     const result = await coll.find({ _id: id })
     if (result.length === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -93,7 +93,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const coll = this.conn.collection(entityName)
     const result = await coll.find({ _id: { $in: ids } })
     if (result.length === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
         'NotFound',
       )
@@ -145,7 +145,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     // $FlowIssue(matchedCount-exists)
     const { matchedCount } = result
     if (matchedCount === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
         'NotFound',
       )
@@ -159,7 +159,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const result = await coll.updateOne({ _id: id }, operation)
     const { matchedCount } = result
     if (matchedCount === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -174,7 +174,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const result = await coll.updateMany(setIdTo_id(where), operation)
     const { matchedCount } = result
     if (matchedCount === 0) {
-      throw new PhenylResponseError(
+      throw createErrorResult(
         '"PhenylMongodbClient#updateAndFetch()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
