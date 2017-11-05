@@ -1,0 +1,11 @@
+// @flow
+import type { Id } from './id.js.flow'
+
+export type EntityVersion = {
+  id: Id,
+  op: string, // stringified UpdateOperation
+}
+
+export type EntityMetaInfo = {
+  versions: Array<EntityVersion>,
+}

@@ -6,7 +6,7 @@ import type {
   KvsClient,
   Id,
 } from 'phenyl-interfaces'
-import randomString from './random-string.js'
+import { randomString } from 'phenyl-utils/jsnext'
 
 interface KeyValuePool<T> {
   [id: Id]: T

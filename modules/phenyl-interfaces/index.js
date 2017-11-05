@@ -180,6 +180,10 @@ import type {
   UserDefinitions,
 } from './decls/user-definition.js.flow'
 
+import type {
+  EntityMetaInfo,
+  EntityVersion,
+} from './decls/versioning.js.flow'
 
 export type {
   AuthorizationHandler,
@@ -217,10 +221,12 @@ export type {
   EntityClient,
   EntityDefinition,
   EntityDefinitions
+  EntityMetaInfo,
   EntityPool,
   EntityState,
   EntityStateFinder,
   EntityStateUpdater,
+  EntityVersion,
   ErrorResult,
   ErrorResultType,
   ExecutionWrapper,

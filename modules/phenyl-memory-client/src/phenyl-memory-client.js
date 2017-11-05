@@ -7,9 +7,12 @@ import {
   mergeUpdateOperations,
   normalizeUpdateOperation,
 } from 'oad-utils/jsnext'
-import { createErrorResult } from 'phenyl-utils/jsnext'
+import {
+  createErrorResult,
+  Versioning,
+  randomStringWithTimeStamp,
+} from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
-import { randomStringWithTimeStamp } from './random-string.js'
 
 import type {
   Entity,
@@ -41,96 +44,6 @@ import type {
   UpdateOperation,
 } from 'phenyl-interfaces'
 
-
-/////////////////////////////////////////////////////////////////////////////
-
-type Version = {
-  id: Id,
-  op: string, // stringified UpdateOperation
-}
-
-type MetaInfo = {
-  versions: Array<Version>,
-}
-
-function stripMeta(entity: Entity): Entity {
-  if (entity.hasOwnProperty('_PhenylMeta')) {
-    return assign(entity, { $unset: { _PhenylMeta: '' }})
-  }
-  return entity
-}
-
-function getVersionId(entity: Entity): ?Id {
-  if (!entity.hasOwnProperty('_PhenylMeta')) return null
-  try {
-    // $FlowIssue(has-own-prop)
-    const metaInfo: MetaInfo = entity._PhenylMeta
-    return metaInfo.versions[metaInfo.versions.length - 1].id
-  }
-  catch (e) {
-    // No metaInfo? It's OK
-    return null
-  }
-}
-
-function getVersionIds(entities: Array<Entity>): { [entityId: Id]: Id } {
-  const versionsById = {}
-  entities.forEach(entity => {
-    const versionId = getVersionId(entity)
-    if (versionId) versionsById[entity.id] = versionId
-  })
-  return versionsById
-}
-
-function getInitialMeta(): MetaInfo {
-  const versionId = randomStringWithTimeStamp()
-  return {
-    versions: [ { id: versionId, op: '' }],
-  }
-}
-
-function attachMetaInfo(entity: Entity): Entity {
-  return Object.assign({}, entity, { _PhenylMeta: getInitialMeta() })
-}
-
-function getOperationDiffsByVersion(entity: Entity, versionId: Id): ?Array<UpdateOperation> {
-  if (!entity.hasOwnProperty('_PhenylMeta')) return null
-  try {
-    // $FlowIssue(has-own-prop)
-    const metaInfo: MetaInfo = entity._PhenylMeta
-    let found = false
-    let idx = 0
-    for (const version of metaInfo.versions) {
-      if (version.id === versionId) {
-        found = true
-        break
-      }
-      idx++
-    }
-    if (!found) return null
-
-    return metaInfo.versions
-      .slice(idx + 1)
-      .map(version => JSON.parse(version.op))
-  }
-  catch (e) {
-    // Error while parsing metaInfo? It's OK
-    return null
-  }
-}
-
-function attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(command: T): T {
-  const normalizedOperation = normalizeUpdateOperation(command.operation)
-  const version = { id: randomStringWithTimeStamp(), op: JSON.stringify(command.operation) }
-  const $push = Object.assign({}, normalizedOperation.$push, {
-    '_PhenylMeta.versions': { $each: [version], $slice: -100 }
-  })
-  const newOperation = Object.assign({}, normalizedOperation, { $push })
-  return Object.assign({}, command, { operation: newOperation })
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 type MemoryClientParams = {
   entityState?: EntityState,
 }
@@ -150,8 +63,8 @@ export default class PhenylMemoryClient implements EntityClient {
       const entities = PhenylStateFinder.find(this.entityState, query)
       return {
         ok: 1,
-        values: entities.map(stripMeta),
-        versionsById: getVersionIds(entities),
+        values: entities.map(Versioning.stripMeta),
+        versionsById: Versioning.getVersionIds(entities),
       }
     }
     catch (e) {
@@ -175,7 +88,7 @@ export default class PhenylMemoryClient implements EntityClient {
       return {
         ok: 1,
         value: entity,
-        versionId: getVersionId(entity)
+        versionId: Versioning.getVersionId(entity)
       }
     }
     catch (e) {
@@ -191,8 +104,8 @@ export default class PhenylMemoryClient implements EntityClient {
       const entity = PhenylStateFinder.get(this.entityState, query)
       return {
         ok: 1,
-        value: stripMeta(entity),
-        versionId: getVersionId(entity),
+        value: Versioning.stripMeta(entity),
+        versionId: Versioning.getVersionId(entity),
       }
     }
     catch (e) {
@@ -215,8 +128,8 @@ export default class PhenylMemoryClient implements EntityClient {
       const entities = PhenylStateFinder.getByIds(this.entityState, query)
       return {
         ok: 1,
-        values: entities.map(stripMeta),
-        versionsById: getVersionIds(entities)
+        values: entities.map(Versioning.stripMeta),
+        versionsById: Versioning.getVersionIds(entities)
       }
     }
     catch (e) {
@@ -237,11 +150,11 @@ export default class PhenylMemoryClient implements EntityClient {
   async pull(query: PullQuery): Promise<PullQueryResultOrError> {
     const { versionId, entityName, id } = query
     const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-    const operations = getOperationDiffsByVersion(entity, versionId)
+    const operations = Versioning.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
-      return { ok: 1, value: stripMeta(entity), versionId: null }
+      return { ok: 1, value: Versioning.stripMeta(entity), versionId: null }
     }
-    return { ok: 1, pulled: 1, operations, versionId: getVersionId(entity) }
+    return { ok: 1, pulled: 1, operations, versionId: Versioning.getVersionId(entity) }
   }
 
   /**
@@ -268,14 +181,14 @@ export default class PhenylMemoryClient implements EntityClient {
     const newValue = value.id
       ? value
       : assign(value, { id: randomStringWithTimeStamp() })
-    const valueWithMeta = attachMetaInfo(newValue)
+    const valueWithMeta = Versioning.attachMetaInfo(newValue)
     const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
     this.entityState = assign(this.entityState, operation)
     return {
       ok: 1,
       n: 1,
       value: newValue,
-      versionId: getVersionId(valueWithMeta),
+      versionId: Versioning.getVersionId(valueWithMeta),
     }
   }
 
@@ -290,11 +203,11 @@ export default class PhenylMemoryClient implements EntityClient {
       const newValue = value.id
         ? value
         : assign(value, { id: randomStringWithTimeStamp() })
-      const valueWithMeta = attachMetaInfo(newValue)
+      const valueWithMeta = Versioning.attachMetaInfo(newValue)
       const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
       this.entityState = assign(this.entityState, operation)
       newValues.push(newValue)
-      versionsById[newValue.id] = getVersionId(valueWithMeta)
+      versionsById[newValue.id] = Versioning.getVersionId(valueWithMeta)
     }
     return {
       ok: 1,
@@ -331,12 +244,12 @@ export default class PhenylMemoryClient implements EntityClient {
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
     const { entityName, id } = command
     try {
-      const metaInfoAttachedCommand = attachMetaInfoToUpdateCommand(command)
+      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
       const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
       this.entityState = assign(this.entityState, operation)
       const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const versionId = getVersionId(entity)
-      return { ok: 1, n: 1, value: stripMeta(entity), versionId }
+      const versionId = Versioning.getVersionId(entity)
+      return { ok: 1, n: 1, value: Versioning.stripMeta(entity), versionId }
     }
     catch (e) {
       return createErrorResult(e)
@@ -351,13 +264,13 @@ export default class PhenylMemoryClient implements EntityClient {
     try {
       // TODO Performance issue: find() runs twice for just getting N
       const values = PhenylStateFinder.find(this.entityState, { entityName, where })
-      const metaInfoAttachedCommand = attachMetaInfoToUpdateCommand(command)
+      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
       const ids = values.map(value => value.id)
       const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
       this.entityState = assign(this.entityState, operation)
       const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-      const versionsById = getVersionIds(updatedValues)
-      return { ok: 1, n: values.length, values: updatedValues.map(stripMeta), versionsById }
+      const versionsById = Versioning.getVersionIds(updatedValues)
+      return { ok: 1, n: values.length, values: updatedValues.map(Versioning.stripMeta), versionsById }
     }
     catch (e) {
       return createErrorResult(e)
@@ -372,14 +285,14 @@ export default class PhenylMemoryClient implements EntityClient {
     try {
       const currentEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
       const mergedOperation = mergeUpdateOperations(...operations)
-      const { operation } = attachMetaInfoToUpdateCommand({ operation: mergedOperation })
+      const { operation } = Versioning.attachMetaInfoToUpdateCommand({ operation: mergedOperation })
       const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
 
       this.entityState = assign(this.entityState, retargetedOperation)
 
-      const localUncommittedOperations = getOperationDiffsByVersion(currentEntity, versionId)
+      const localUncommittedOperations = Versioning.getOperationDiffsByVersion(currentEntity, versionId)
       const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const latestVersionId = getVersionId(entity)
+      const latestVersionId = Versioning.getVersionId(entity)
       if (localUncommittedOperations != null) {
         return { ok: 1, n: 1, operations: localUncommittedOperations, versionId: latestVersionId }
       }
