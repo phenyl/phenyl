@@ -1,9 +1,9 @@
 // @flow
 import promisify from 'es6-promisify'
 
-import { createErrorResult } from 'phenyl-utils/jsnext.js'
-import { assign } from 'power-assign/jsnext.js'
-import { visitFindOperation, visitSimpleFindOperation } from 'oad-utils/jsnext.js'
+import { createErrorResult } from 'phenyl-utils/jsnext'
+import { assign } from 'power-assign/jsnext'
+import { visitFindOperation } from 'oad-utils/jsnext'
 
 import type {
   EntityClient,

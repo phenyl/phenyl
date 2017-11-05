@@ -4,7 +4,7 @@ import assert from 'power-assert'
 import { it, describe, before, after } from 'kocha'
 import PhenylMongoDbClient from '../src/index.js'
 import { connect } from '../src/connection.js'
-import { assign } from 'power-assign/jsnext.js'
+import { assign } from 'power-assign/jsnext'
 
 let mongoDBClient
 
