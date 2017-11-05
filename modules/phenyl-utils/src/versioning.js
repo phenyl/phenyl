@@ -159,7 +159,6 @@ export class Versioning {
   static getVersionId(entity: EntityWithMetaInfo): ?Id {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
-      // $FlowIssue(has-own-prop)
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 1].id
     }
@@ -189,7 +188,6 @@ export class Versioning {
   static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
-      // $FlowIssue(has-own-prop)
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       let found = false
       let idx = 0
