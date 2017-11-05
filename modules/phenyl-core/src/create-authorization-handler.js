@@ -22,12 +22,14 @@ export default function createAuthorizationHandler(fg: FunctionalGroup): Authori
       case 'findOne':
       case 'get':
       case 'getByIds':
+      case 'pull':
       case 'insert':
       case 'insertAndGet':
       case 'insertAndGetMulti':
       case 'update':
       case 'updateAndGet':
       case 'updateAndFetch':
+      case 'push':
       case 'delete': {
         const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]

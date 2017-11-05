@@ -77,7 +77,8 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   switch (methodName) {
     case 'find':
     case 'findOne':
-    case 'getByIds': {
+    case 'getByIds':
+    case 'pull': {
       if (payload.entityName && payload.entityName !== entityName) {
         throw new Error(`Invalid GET request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
       }
@@ -168,7 +169,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
     methodName = 'update'
   }
   // irregular methodNames are regarded as id and converted into IdUpdateCommand
-  if (!['update', 'updateAndGet', 'updateAndFetch'].includes(methodName)) {
+  if (!['update', 'updateAndGet', 'updateAndFetch', 'push'].includes(methodName)) {
     const id = methodName
     if (payload.id && payload.id !== id) {
       throw new Error(`Invalid PUT request (method="update"). id in payload is different from that in URL. in payload: "${payload.id}", in URL: "${id}".`)

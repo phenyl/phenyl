@@ -71,6 +71,22 @@ describe('Check encode/decode deep equality: ', () => {
     assert(decodedReqData.sessionId === 'foobar')
   })
 
+  it('pull', () => {
+    const reqData = {
+      method: 'pull',
+      payload: {
+        entityName: 'hospital',
+        id: 'foo',
+        versionId: 'abc123',
+      },
+      sessionId: 'foobar'
+    }
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
+  })
+
   it('insert', () => {
     const reqData = {
       method: 'insert',
@@ -181,6 +197,27 @@ describe('Check encode/decode deep equality: ', () => {
             tel: 'dummy'
           }
         }
+      },
+      sessionId: 'foobar'
+    }
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
+  })
+
+  it('push', () => {
+    const reqData = {
+      method: 'push',
+      payload: {
+        id: 'tokyo',
+        entityName: 'hospital',
+        versionId: 'abc123',
+        operations: [{
+          $set: {
+            tel: 'dummy'
+          }
+        }]
       },
       sessionId: 'foobar'
     }

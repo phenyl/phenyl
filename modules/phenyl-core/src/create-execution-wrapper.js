@@ -24,12 +24,14 @@ export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWr
       case 'findOne':
       case 'get':
       case 'getByIds':
+      case 'pull':
       case 'insert':
       case 'insertAndGet':
       case 'insertAndGetMulti':
       case 'update':
       case 'updateAndGet':
       case 'updateAndFetch':
+      case 'push':
       case 'delete':
       case 'login':
       case 'logout': {

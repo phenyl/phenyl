@@ -144,7 +144,7 @@ describe('PUT request', () => {
     assert(reqData.payload.id === 'john')
   })
 
-  it('when methodName is none of update, updateAndGet or updateAndFetch, regarded as IdUpdateCommand', () => {
+  it('when methodName is none of update, updateAndGet, updateAndFetch or push, regarded as IdUpdateCommand', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ operation: { $set: { firstName: 'John' } } }),
@@ -160,7 +160,7 @@ describe('PUT request', () => {
     assert(reqData.payload.id === 'john')
   })
 
-  it('when methodName is none of update, updateAndGet or updateAndFetch and no operation is given in body, Error is thrown', () => {
+  it('when methodName is none of update, updateAndGet, updateAndFetch or push and no operation is given in body, Error is thrown', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ params: { firstName: 'John' } }),

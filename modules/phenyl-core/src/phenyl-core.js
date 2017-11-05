@@ -124,6 +124,9 @@ export default class PhenylCore implements PhenylRunner {
       case 'getByIds':
         return { type: 'getByIds', payload: await entityClient.getByIds(reqData.payload) }
 
+      case 'pull':
+        return { type: 'pull', payload: await entityClient.pull(reqData.payload) }
+
       case 'insert':
         return { type: 'insert', payload: await entityClient.insert(reqData.payload) }
 
@@ -141,6 +144,9 @@ export default class PhenylCore implements PhenylRunner {
 
       case 'updateAndFetch':
         return { type: 'updateAndFetch', payload: await entityClient.updateAndFetch(reqData.payload) }
+
+      case 'push':
+        return { type: 'push', payload: await entityClient.push(reqData.payload) }
 
       case 'delete':
         return { type: 'delete', payload: await entityClient.delete(reqData.payload) }

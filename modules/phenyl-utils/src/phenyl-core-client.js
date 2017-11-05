@@ -23,6 +23,10 @@ import type {
   LoginCommandResult,
   LogoutCommand,
   LogoutCommandResult,
+  PullQuery,
+  PullQueryResult,
+  PushCommand,
+  PushCommandResult,
   RequestData,
   ResponseData,
   QueryResult,
@@ -97,6 +101,16 @@ export class PhenylCoreClient implements CoreClient {
   /**
    *
    */
+  async pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult> {
+    const reqData = { method: 'pull', payload: query, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'pull') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   *
+   */
   async insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResult> {
     const reqData = { method: 'insert', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
@@ -151,6 +165,15 @@ export class PhenylCoreClient implements CoreClient {
     const reqData = { method: 'updateAndFetch', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateAndFetch') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+  /**
+   *
+   */
+  async push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult> {
+    const reqData = { method: 'push', payload: command, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'push') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 

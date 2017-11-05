@@ -1,14 +1,11 @@
 // @flow
 import type {
-  Restorable,
-} from 'mongolike-operations'
-
-import type {
   ErrorResult,
 } from './error-result.js.flow'
 
 import type {
   CustomQueryResult,
+  PullQueryResult,
   QueryResult,
   SingleQueryResult,
 } from './query-result.js.flow'
@@ -20,6 +17,7 @@ import type {
   CustomCommandResult,
   LoginCommandResult,
   LogoutCommandResult,
+  PushCommandResult,
 } from './command-result.js.flow'
 
 export type ResponseData =
@@ -27,12 +25,14 @@ export type ResponseData =
   FindOneResponseData |
   GetResponseData |
   GetByIdsResponseData |
+  PullResponseData |
   InsertResponseData |
   InsertAndGetResponseData |
   InsertAndGetMultiResponseData |
   UpdateResponseData |
   UpdateAndGetResponseData |
   UpdateAndFetchResponseData |
+  PushResponseData |
   DeleteResponseData |
   RunCustomQueryResponseData |
   RunCustomCommandResponseData |
@@ -58,6 +58,11 @@ export type GetResponseData = {|
 export type GetByIdsResponseData = {|
   type: 'getByIds',
   +payload: QueryResult,
+|}
+
+export type PullResponseData = {|
+  type: 'pull',
+  +payload: PullQueryResult,
 |}
 
 export type InsertResponseData = {|
@@ -88,6 +93,11 @@ export type UpdateAndGetResponseData = {|
 export type UpdateAndFetchResponseData = {|
   type: 'updateAndFetch',
   +payload: MultiValuesCommandResult,
+|}
+
+export type PushResponseData = {|
+  type: 'push',
+  +payload: PushCommandResult,
 |}
 
 export type DeleteResponseData = {|

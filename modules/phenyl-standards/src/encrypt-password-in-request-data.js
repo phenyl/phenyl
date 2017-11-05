@@ -63,6 +63,10 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
 
       return assign(reqData, { $set: { 'payload.operators': operatorsWithEncryptedPass }})
     }
+    case 'push':
+      // TODO Implement to encrypt password in push command
+      return reqData
+      
     default:
       return reqData
   }

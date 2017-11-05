@@ -7,6 +7,7 @@ import type {
   IdQuery,
   IdsQuery,
   CustomQuery,
+  PullQuery,
 } from './query.js.flow'
 
 import type {
@@ -20,6 +21,7 @@ import type {
   CustomCommand,
   LoginCommand,
   LogoutCommand,
+  PushCommand,
 } from './command.js.flow'
 
 export type RequestDataHandlers<T> = {
@@ -29,12 +31,14 @@ export type RequestDataHandlers<T> = {
   findOne?: (query: WhereQuery) => Promise<T>,
   get?: (query: IdQuery) => Promise<T>,
   getByIds?: (query: IdsQuery) => Promise<T>,
+  pull?: (query: PullQuery) => Promise<T>,
   insert?: (command: InsertCommand) => Promise<T>,
   insertAndGet?: (command: SingleInsertCommand) => Promise<T>,
   insertAndGetMulti?: (command: MultiInsertCommand) => Promise<T>,
   update?: (command: UpdateCommand) => Promise<T>,
   updateAndGet?: (command: IdUpdateCommand) => Promise<T>,
   updateAndFetch?: (command: MultiUpdateCommand) => Promise<T>,
+  push?: (command: PushCommand) => Promise<T>,
   delete?: (command: DeleteCommand) => Promise<T>,
   runCustomQuery?: (query: CustomQuery) => Promise<T>,
   runCustomCommand?: (command: CustomCommand) => Promise<T>,

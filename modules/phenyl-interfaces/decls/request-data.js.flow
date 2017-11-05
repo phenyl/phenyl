@@ -5,6 +5,7 @@ import type {
 import type {
   IdsQuery,
   IdQuery,
+  PullQuery,
   WhereQuery,
   CustomQuery,
 } from './query.js.flow'
@@ -15,6 +16,7 @@ import type {
   MultiInsertCommand,
   LoginCommand,
   LogoutCommand,
+  PushCommand,
   UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
@@ -26,12 +28,14 @@ export type RequestMethodName =
   'findOne' |
   'get' |
   'getByIds' |
+  'pull' |
   'insert' |
   'insertAndGet' |
   'insertAndGetMulti' |
   'update' |
   'updateAndGet' |
   'updateAndFetch' |
+  'push' |
   'delete' |
   'runCustomQuery' |
   'runCustomCommand' |
@@ -43,12 +47,14 @@ export type RequestData =
   FindOneRequestData |
   GetRequestData |
   GetByIdsRequestData |
+  PullRequestData |
   InsertRequestData |
   InsertAndGetRequestData |
   InsertAndGetMultiRequestData |
   UpdateRequestData |
   UpdateAndGetRequestData |
   UpdateAndFetchRequestData |
+  PushRequestData |
   DeleteRequestData |
   RunCustomQueryRequestData |
   RunCustomCommandRequestData |
@@ -76,6 +82,12 @@ export type GetRequestData = {|
 export type GetByIdsRequestData = {|
   method: 'getByIds',
   +payload: IdsQuery,
+  sessionId?: ?Id,
+|}
+
+export type PullRequestData = {|
+  method: 'pull',
+  +payload: PullQuery,
   sessionId?: ?Id,
 |}
 
@@ -112,6 +124,12 @@ export type UpdateAndGetRequestData = {|
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
   +payload: MultiUpdateCommand,
+  sessionId?: ?Id,
+|}
+
+export type PushRequestData = {|
+  method: 'push',
+  +payload: PushCommand,
   sessionId?: ?Id,
 |}
 

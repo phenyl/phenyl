@@ -54,6 +54,15 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         qsParams: createQsParams(data)
       }
 
+    case 'pull':
+      data = reqData.payload
+      return {
+        method: 'GET',
+        headers,
+        path: addPrefix(`/${data.entityName}/pull`),
+        qsParams: createQsParams(data)
+      }
+
     case 'insert':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
@@ -111,6 +120,15 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/updateAndFetch`),
+        body: createBody(data)
+      }
+
+    case 'push':
+      data = reqData.payload
+      return {
+        method: 'PUT',
+        headers,
+        path: addPrefix(`/${data.entityName}/push`),
         body: createBody(data)
       }
 

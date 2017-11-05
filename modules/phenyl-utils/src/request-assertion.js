@@ -25,6 +25,8 @@ export function assertValidRequestData(rd: any): void {
         return assertValidIdQuery(rd.payload)
       case 'getByIds':
         return assertValidIdsQuery(rd.payload)
+      case 'pull':
+        return assertValidPullQuery(rd.payload)
       case 'insert':
         return assertValidInsertCommand(rd.payload)
       case 'insertAndGet':
@@ -37,6 +39,8 @@ export function assertValidRequestData(rd: any): void {
         return assertValidUpdateCommand(rd.payload)
       case 'updateAndFetch':
         return assertValidUpdateCommand(rd.payload)
+      case 'push':
+        return assertValidPushCommand(rd.payload)
       case 'delete':
         return assertValidDeleteCommand(rd.payload)
       case 'runCustomQuery':
@@ -52,7 +56,9 @@ export function assertValidRequestData(rd: any): void {
     }
   }
   catch (e) {
-    throw new Error(`Error in "RequestData(method=${method})": ${e.message}`)
+    const err = new Error(`Error in "RequestData(method=${method})": ${e.message}`)
+    err.stack = e.stack
+    throw err
   }
 }
 
@@ -97,6 +103,19 @@ export function assertValidIdsQuery(q: any): void {
     throw new Error(`IdsQuery.ids must be an array. "${typeof ids}" given.`)
   }
   assertNonEmptyString(ids[0], 'IdsQuery.ids must be a non-empty array.')
+}
+
+/**
+ *
+ */
+export function assertValidPullQuery(q: any): void {
+  if (typeof q !== 'object' || q === null) {
+    throw new Error(`PullQuery must be an object. ${typeof q} given.`)
+  }
+  const { entityName, id, versionId } = q
+  assertValidEntityName(entityName, 'PullQuery')
+  assertNonEmptyString(id, `PullQuery.id must be a non-empty string. "${id}" given.`)
+  assertNonEmptyString(versionId, `PullQuery.versionId must be a non-empty string. "${versionId}" given.`)
 }
 
 /**
@@ -155,6 +174,25 @@ export function assertValidUpdateCommand(com: any): void {
     return
   }
   throw new Error('UpdateCommand must have key "id" or "where". Neither given.')
+}
+
+/**
+ *
+ */
+export function assertValidPushCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`PushCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { entityName, operations, id, versionId } = com
+  assertValidEntityName(entityName, 'PushCommand')
+  assertNonEmptyString(id, `PushCommand.id must be a non-empty string. "${id}" given.`)
+  assertNonEmptyString(versionId, `PushCommand.versionId must be a non-empty string. "${versionId}" given.`)
+
+  if (!Array.isArray(operations)) {
+    throw new Error(`PushCommand.operations must be an array. "${typeof operations}" given.`)
+  }
+  operations.forEach(assertValidUpdateOperation)
 }
 
 /**
