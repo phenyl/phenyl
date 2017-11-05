@@ -49,5 +49,6 @@ function visitSimpleFindOperation(_where: SimpleFindOperation, visitor: FindOper
       modified[documentPath] = Object.assign({}, modified[documentPath], { $not: queryConditionVisitor(queryCondition.$not) })
     }
   }
+  // $FlowIssue(this-is-SimpleFindOperation)
   return Object.assign({}, where, modified)
 }
