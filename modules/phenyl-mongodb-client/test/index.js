@@ -2,7 +2,7 @@
 
 import assert from 'power-assert'
 import { it, describe, before, after } from 'kocha'
-import PhenylMongoDbClient from '../src/index.js'
+import PhenylMongoDbClient from '../src/mongodb-client.js'
 import { connect } from '../src/connection.js'
 import { assign } from 'power-assign/jsnext'
 
