@@ -64,7 +64,7 @@ describe('PhenylMongoDbClient', () => {
     it('inserts an entity with single insert command', async () => {
       const result = await mongoDBClient.insert({
         entityName: 'user',
-        value: assign(user1, { $rename: { id: '_id' }}),
+        value: user1,
       })
 
       assert.deepEqual(result, { ok: 1, n: 1 })
@@ -73,11 +73,7 @@ describe('PhenylMongoDbClient', () => {
     it('inserts entities with multi insert command', async () => {
       const result = await mongoDBClient.insert({
         entityName: 'user',
-        values: [
-          assign(user2, { $rename: { id: '_id' }}),
-          assign(user3, { $rename: { id: '_id' }}),
-          assign(user4, { $rename: { id: '_id' }})
-        ],
+        values: [ user2, user3, user4 ],
       })
 
       assert(result.ok === 1)
@@ -177,7 +173,7 @@ describe('PhenylMongoDbClient', () => {
     it('inserts and returns an entity', async () => {
       const result = await mongoDBClient.insertAndGet({
         entityName: 'user',
-        value: assign(user5, { $rename: { id: '_id' }}),
+        value: user5,
       })
 
       assert(result.ok === 1)
@@ -190,10 +186,7 @@ describe('PhenylMongoDbClient', () => {
     it('inserts and returns entities', async () => {
       const result = await mongoDBClient.insertAndGetMulti({
         entityName: 'user',
-        values: [
-          assign(user6, { $rename: { id: '_id' }}),
-          assign(user7, { $rename: { id: '_id' }})
-        ],
+        values: [ user6, user7 ],
       })
 
       assert(result.ok === 1)
