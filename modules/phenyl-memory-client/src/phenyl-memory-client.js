@@ -61,11 +61,7 @@ export default class PhenylMemoryClient implements EntityClient {
   async find(query: WhereQuery): Promise<QueryResultOrError> {
     try {
       const entities = PhenylStateFinder.find(this.entityState, query)
-      return {
-        ok: 1,
-        values: entities.map(Versioning.stripMeta),
-        versionsById: Versioning.getVersionIds(entities),
-      }
+      return Versioning.createQueryResult(entities)
     }
     catch (e) {
       return createErrorResult(e)
@@ -85,11 +81,7 @@ export default class PhenylMemoryClient implements EntityClient {
           message: '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
         }
       }
-      return {
-        ok: 1,
-        value: entity,
-        versionId: Versioning.getVersionId(entity)
-      }
+      return Versioning.createSingleQueryResult(entity)
     }
     catch (e) {
       return createErrorResult(e)
@@ -102,11 +94,7 @@ export default class PhenylMemoryClient implements EntityClient {
   async get(query: IdQuery): Promise<SingleQueryResultOrError> {
     try {
       const entity = PhenylStateFinder.get(this.entityState, query)
-      return {
-        ok: 1,
-        value: Versioning.stripMeta(entity),
-        versionId: Versioning.getVersionId(entity),
-      }
+      return Versioning.createSingleQueryResult(entity)
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
@@ -126,11 +114,7 @@ export default class PhenylMemoryClient implements EntityClient {
   async getByIds(query: IdsQuery): Promise<QueryResultOrError> {
     try {
       const entities = PhenylStateFinder.getByIds(this.entityState, query)
-      return {
-        ok: 1,
-        values: entities.map(Versioning.stripMeta),
-        versionsById: Versioning.getVersionIds(entities)
-      }
+      return Versioning.createQueryResult(entities)
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
@@ -150,11 +134,7 @@ export default class PhenylMemoryClient implements EntityClient {
   async pull(query: PullQuery): Promise<PullQueryResultOrError> {
     const { versionId, entityName, id } = query
     const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-    const operations = Versioning.getOperationDiffsByVersion(entity, versionId)
-    if (operations == null) {
-      return { ok: 1, value: Versioning.stripMeta(entity), versionId: null }
-    }
-    return { ok: 1, pulled: 1, operations, versionId: Versioning.getVersionId(entity) }
+    return Versioning.createPullQueryResult(entity, versionId)
   }
 
   /**
@@ -181,15 +161,10 @@ export default class PhenylMemoryClient implements EntityClient {
     const newValue = value.id
       ? value
       : assign(value, { id: randomStringWithTimeStamp() })
-    const valueWithMeta = Versioning.attachMetaInfo(newValue)
+    const valueWithMeta = Versioning.attachMetaInfoToNewEntity(newValue)
     const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
     this.entityState = assign(this.entityState, operation)
-    return {
-      ok: 1,
-      n: 1,
-      value: newValue,
-      versionId: Versioning.getVersionId(valueWithMeta),
-    }
+    return Versioning.createGetCommandResult(valueWithMeta)
   }
 
   /**
@@ -197,24 +172,17 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
     const { entityName, values} = command
-    const newValues = []
-    const versionsById = {}
+    const valuesWithMeta = []
     for (const value of values) {
       const newValue = value.id
         ? value
         : assign(value, { id: randomStringWithTimeStamp() })
-      const valueWithMeta = Versioning.attachMetaInfo(newValue)
+      const valueWithMeta = Versioning.attachMetaInfoToNewEntity(newValue)
       const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
       this.entityState = assign(this.entityState, operation)
-      newValues.push(newValue)
-      versionsById[newValue.id] = Versioning.getVersionId(valueWithMeta)
+      valuesWithMeta.push(newValue)
     }
-    return {
-      ok: 1,
-      n: newValues.length,
-      values: newValues,
-      versionsById,
-    }
+    return Versioning.createMultiValuesCommandResult(valuesWithMeta)
   }
 
   /**
@@ -248,8 +216,7 @@ export default class PhenylMemoryClient implements EntityClient {
       const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
       this.entityState = assign(this.entityState, operation)
       const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const versionId = Versioning.getVersionId(entity)
-      return { ok: 1, n: 1, value: Versioning.stripMeta(entity), versionId }
+      return Versioning.createGetCommandResult(entity)
     }
     catch (e) {
       return createErrorResult(e)
@@ -269,8 +236,7 @@ export default class PhenylMemoryClient implements EntityClient {
       const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
       this.entityState = assign(this.entityState, operation)
       const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-      const versionsById = Versioning.getVersionIds(updatedValues)
-      return { ok: 1, n: values.length, values: updatedValues.map(Versioning.stripMeta), versionsById }
+      return Versioning.createMultiValuesCommandResult(updatedValues)
     }
     catch (e) {
       return createErrorResult(e)
@@ -283,20 +249,12 @@ export default class PhenylMemoryClient implements EntityClient {
   async push(command: PushCommand): Promise<PushCommandResultOrError> {
     const { entityName, id, versionId, operations } = command
     try {
-      const currentEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const mergedOperation = mergeUpdateOperations(...operations)
-      const { operation } = Versioning.attachMetaInfoToUpdateCommand({ operation: mergedOperation })
-      const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
-
-      this.entityState = assign(this.entityState, retargetedOperation)
-
-      const localUncommittedOperations = Versioning.getOperationDiffsByVersion(currentEntity, versionId)
       const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const latestVersionId = Versioning.getVersionId(entity)
-      if (localUncommittedOperations != null) {
-        return { ok: 1, n: 1, operations: localUncommittedOperations, versionId: latestVersionId }
-      }
-      return { ok: 1, n: 1, value: entity, versionId: latestVersionId }
+      const operation = Versioning.mergeUpdateOperations(...operations)
+      const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
+      this.entityState = assign(this.entityState, retargetedOperation)
+      const updatedEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
+      return Versioning.createPushCommandResult(entity, updatedEntity, versionId)
     }
     catch (e) {
       return createErrorResult(e)

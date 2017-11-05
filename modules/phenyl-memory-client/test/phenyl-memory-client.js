@@ -86,20 +86,18 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     let firstVersionId
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient({})
-      // $FlowIssue(versionId-exists)
+      client = new OkClient(new PhenylMemoryClient({}))
       firstVersionId = (await client.insert({ entityName: 'user', value: user })).versionId
-
     })
     it('returns operation diffs', async () => {
       const operation = { $inc: { age: 1 }, $push: { hobbies: 'tennis' } }
-      // $FlowIssue(versionId-exists)
       const currentVersionId = (await client.update({ id, operation, entityName })).versionId
       // $FlowIssue(firstVersionId-is-string)
       const { operations, versionId } = await client.pull({ id, entityName, versionId: firstVersionId })
       assert(operations.length === 1 && versionId === currentVersionId)
       const currentUser = assign(user, operations[0])
-      assert.deepEqual()
+      const { value } = await client.get({ entityName, id })
+      assert.deepEqual(currentUser, value)
 
     })
   })

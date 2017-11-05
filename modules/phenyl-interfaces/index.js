@@ -183,6 +183,7 @@ import type {
 import type {
   EntityMetaInfo,
   EntityVersion,
+  EntityWithMetaInfo,
 } from './decls/versioning.js.flow'
 
 export type {
@@ -226,6 +227,7 @@ export type {
   EntityState,
   EntityStateFinder,
   EntityStateUpdater,
+  EntityWithMetaInfo,
   EntityVersion,
   ErrorResult,
   ErrorResultType,

@@ -1,6 +1,7 @@
 // @flow
 import {
-  normalizeUpdateOperation
+  normalizeUpdateOperation,
+  mergeUpdateOperations,
 } from 'oad-utils/jsnext'
 
 import {
@@ -9,15 +10,142 @@ import {
 
 import type {
   Entity,
-  Id,
-  UpdateOperation,
   EntityMetaInfo,
   EntityVersion,
+  EntityWithMetaInfo,
+  GetCommandResult,
+  Id,
+  MultiValuesCommandResult,
+  PreEntity,
+  PullQueryResult,
+  PushCommandResult,
+  QueryResult,
+  SingleQueryResult,
+  UpdateOperation,
 } from 'phenyl-interfaces'
 
+/**
+ * Utility classes containing static methods to attach versioning system to EntityClients.
+ */
 export class Versioning {
 
-  static stripMeta(entity: Entity): Entity {
+  /**
+   * @public
+   * Create QueryResult with version info from entities.
+   */
+  static createQueryResult(entities: Array<EntityWithMetaInfo>): QueryResult {
+    return {
+      ok: 1,
+      values: entities.map(this.stripMeta),
+      versionsById: this.getVersionIds(entities),
+    }
+  }
+
+  /**
+   * @public
+   * Create SingleQueryResult with version info from a entity.
+   */
+  static createSingleQueryResult(entity: EntityWithMetaInfo): SingleQueryResult {
+    return {
+      ok: 1,
+      value: this.stripMeta(entity),
+      versionId: this.getVersionId(entity)
+    }
+  }
+
+  /**
+   * @public
+   * Create PullQueryResult with diff operations.
+   */
+  static createPullQueryResult(entity: EntityWithMetaInfo, versionId: Id): PullQueryResult {
+    const operations = this.getOperationDiffsByVersion(entity, versionId)
+    if (operations == null) {
+      return { ok: 1, value: this.stripMeta(entity), versionId: null }
+    }
+    return { ok: 1, pulled: 1, operations, versionId: this.getVersionId(entity) }
+  }
+
+  /**
+   * @public
+   * Create GetCommandResult from entity.
+   */
+  static createGetCommandResult(entity: EntityWithMetaInfo): GetCommandResult {
+    return {
+      ok: 1,
+      n: 1,
+      value: this.stripMeta(entity),
+      versionId: this.getVersionId(entity),
+    }
+  }
+
+  /**
+   * @public
+   * Create MultiValuesCommandResult from entities.
+   */
+  static createMultiValuesCommandResult(entities: Array<EntityWithMetaInfo>): MultiValuesCommandResult {
+    return {
+      ok: 1,
+      n: entities.length,
+      values: entities.map(this.stripMeta),
+      versionsById: this.getVersionIds(entities),
+    }
+  }
+
+  /**
+   * @public
+   * Create PushCommandResult from entity, updated entity and local versionId.
+   */
+  static createPushCommandResult(entity: EntityWithMetaInfo, updatedEntity: EntityWithMetaInfo, versionId: Id): PushCommandResult {
+    const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
+    const latestVersionId = this.getVersionId(updatedEntity)
+    if (localUncommittedOperations != null) {
+      return { ok: 1, n: 1, operations: localUncommittedOperations, versionId: latestVersionId }
+    }
+    return { ok: 1, n: 1, value: updatedEntity, versionId: latestVersionId }
+  }
+
+  /**
+   * @public
+   * Merge operations into one operation and attach metaInfo.
+   * TODO This merge process (using mergeUpdateOperations) is incomplete.
+   */
+  static mergeUpdateOperations(...operations: Array<UpdateOperation>): UpdateOperation {
+    const mergedOperation = mergeUpdateOperations(...operations)
+    const { operation } = this.attachMetaInfoToUpdateCommand({ operation: mergedOperation })
+    return operation
+  }
+
+  /**
+   * @public
+   * Attach meta info ("_PhenylMeta" property) to the given entity.
+   */
+  static attachMetaInfoToNewEntity(entity: Entity): EntityWithMetaInfo {
+    const versionId = randomStringWithTimeStamp()
+    const _PhenylMeta = {
+      versions: [ { id: versionId, op: '' }],
+    }
+    return Object.assign({}, entity, { _PhenylMeta })
+  }
+
+  /**
+   * @public
+   * Attach meta info to the given update command.
+   */
+  static attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(command: T): T {
+    const normalizedOperation = normalizeUpdateOperation(command.operation)
+    const version = { id: randomStringWithTimeStamp(), op: JSON.stringify(command.operation) }
+    const $push = Object.assign({}, normalizedOperation.$push, {
+      '_PhenylMeta.versions': { $each: [version], $slice: -100 }
+    })
+    const newOperation = Object.assign({}, normalizedOperation, { $push })
+    return Object.assign({}, command, { operation: newOperation })
+  }
+
+  /**
+   * @private
+   * Strip meta info ("_PhenylMeta" property) from the given entity.
+   */
+  static stripMeta(entity: EntityWithMetaInfo): Entity {
     if (entity.hasOwnProperty('_PhenylMeta')) {
       const copied = Object.assign({}, entity)
       delete copied._PhenylMeta
@@ -26,7 +154,11 @@ export class Versioning {
     return entity
   }
 
-  static getVersionId(entity: Entity): ?Id {
+  /**
+   * @private
+   * Extract current version id from entity with meta info.
+   */
+  static getVersionId(entity: EntityWithMetaInfo): ?Id {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       // $FlowIssue(has-own-prop)
@@ -39,7 +171,11 @@ export class Versioning {
     }
   }
 
-  static getVersionIds(entities: Array<Entity>): { [entityId: Id]: Id } {
+  /**
+   * @private
+   * Extract current version ids from entities with meta info.
+   */
+  static getVersionIds(entities: Array<EntityWithMetaInfo>): { [entityId: Id]: Id } {
     const versionsById = {}
     entities.forEach(entity => {
       const versionId = this.getVersionId(entity)
@@ -48,18 +184,11 @@ export class Versioning {
     return versionsById
   }
 
-  static getInitialMeta(): EntityMetaInfo {
-    const versionId = randomStringWithTimeStamp()
-    return {
-      versions: [ { id: versionId, op: '' }],
-    }
-  }
-
-  static attachMetaInfo(entity: Entity): Entity {
-    return Object.assign({}, entity, { _PhenylMeta: this.getInitialMeta() })
-  }
-
-  static getOperationDiffsByVersion(entity: Entity, versionId: Id): ?Array<UpdateOperation> {
+  /**
+   * @private
+   * Get operation diffs by the given versionId.
+   */
+  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       // $FlowIssue(has-own-prop)
@@ -83,15 +212,5 @@ export class Versioning {
       // Error while parsing metaInfo? It's OK
       return null
     }
-  }
-
-  static attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(command: T): T {
-    const normalizedOperation = normalizeUpdateOperation(command.operation)
-    const version = { id: randomStringWithTimeStamp(), op: JSON.stringify(command.operation) }
-    const $push = Object.assign({}, normalizedOperation.$push, {
-      '_PhenylMeta.versions': { $each: [version], $slice: -100 }
-    })
-    const newOperation = Object.assign({}, normalizedOperation, { $push })
-    return Object.assign({}, command, { operation: newOperation })
   }
 }
