@@ -11,10 +11,18 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           - v1-dependencies-
       - run: npm install
+      - run: npm run load
+      - run: sudo apt-get update
+      - run: sudo apt-get install mongodb
       - save_cache:
           paths:
             - node_modules
+            - modules/*/node_modules
+            - vendor/apt
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run load
+      - run: mkdir /tmp/mongo
+      - run:
+          command: mongod --dbpath /tmp/mongo
+          background: true
       - run: npm run build
       - run: npm test
