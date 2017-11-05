@@ -81,7 +81,7 @@ export type RestoreOperator = {
   [field: DocumentPath]: '' | Class<Restorable>
 }
 
-export type UpdateOperation = $Shape<{
+export type RegularUpdateOperation = $Shape<{
   $set: SetOperator,
   $inc: IncOperator,
   $min: MinOperator,
@@ -98,7 +98,7 @@ export type UpdateOperation = $Shape<{
   $rename: RenameOperator,
 }>
 
-export type RegularUpdateOperation = $Shape<{
+export type UpdateOperation = $Shape<{
   $set: SetOperator,
   $inc: IncOperator,
   $min: MinOperator,
