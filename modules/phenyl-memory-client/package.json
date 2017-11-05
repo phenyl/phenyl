@@ -4,12 +4,17 @@
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js --color always"
+  },
   "devDependencies": {
-    "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "kocha": "^1.8.0",
+    "phenyl-interfaces": "*",
+    "power-assert": "^1.4.4"
   },
   "dependencies": {
+    "oad-utils": "*",
     "power-assign": "*",
     "phenyl-state": "*",
     "phenyl-utils": "*"

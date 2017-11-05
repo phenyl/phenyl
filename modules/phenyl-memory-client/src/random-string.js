@@ -9,3 +9,8 @@ export default function randomString(len: number = 24): string {
   }
   return ret
 }
+
+export function randomStringWithTimeStamp(len: number = 24): string {
+  const stamp = Date.now().toString()
+  return randomString(Math.max(0, len - stamp.length)) + stamp
+}
