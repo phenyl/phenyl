@@ -4,6 +4,7 @@ import type {
   UpdateOperation,
 } from 'mongolike-operations'
 import type { Id } from './id.js.flow' // string
+import type { ProEntity } from './entity.js.flow'
 
 type EntityName = string
 
@@ -12,13 +13,13 @@ export type InsertCommand = SingleInsertCommand | MultiInsertCommand
 
 export type SingleInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
-  value: Object, // "documents" key in MongoDB reference
+  value: ProEntity, // "documents" key in MongoDB reference
   ordered?: boolean,
 |}
 
 export type MultiInsertCommand = {|
   entityName: EntityName, // "insert" key in MongoDB reference
-  values: Array<Object>, // "documents" key in MongoDB reference
+  values: Array<ProEntity>, // "documents" key in MongoDB reference
   ordered?: boolean,
 |}
 

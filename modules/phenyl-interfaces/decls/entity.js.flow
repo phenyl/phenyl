@@ -3,4 +3,6 @@ import type { Id } from './id.js.flow'
 
 export type Entity = $Subtype<{ id: Id }>
 
-export type PreEntity<T: Entity> = $Subtype<T | $Diff<T, Entity>>
+export type PreEntity<T: Entity> = T | $Subtype<$Diff<T, {| id: Id |}>>
+
+export type ProEntity = PreEntity<{ id: Id }>

@@ -2,7 +2,7 @@
 import type { Id } from './id.js.flow'
 import type { PreEntity } from './entity.js.flow'
 
-export interface Session {
+export type Session = {
   id: Id,
   ttl: number,
   entityName: string,
