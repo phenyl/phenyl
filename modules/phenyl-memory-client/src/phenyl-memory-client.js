@@ -1,9 +1,5 @@
 // @flow
 import {
-  PhenylStateFinder,
-  PhenylStateUpdater,
-} from 'phenyl-state/jsnext'
-import {
   mergeUpdateOperations,
   normalizeUpdateOperation,
 } from 'oad-utils/jsnext'
@@ -14,6 +10,7 @@ import {
   randomStringWithTimeStamp,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
+import PhenylMemoryClientEssence from './phenyl-memory-client-essence.js'
 
 import type {
   Entity,
@@ -50,17 +47,22 @@ type MemoryClientParams = {
 }
 
 export default class PhenylMemoryClient implements EntityClient {
-  entityState: EntityState
+  essence: PhenylMemoryClientEssence
+
+  get entityState(): EntityState {
+    return this.essence.entityState
+  }
 
   constructor(params: MemoryClientParams = {}) {
-    this.entityState = params.entityState ||  { pool: {} }
+    const entityState = params.entityState ||  { pool: {} }
+    this.essence = new PhenylMemoryClientEssence(entityState)
   }
 
   /**
    *
    */
   async find(query: WhereQuery): Promise<QueryResult> {
-    const entities = PhenylStateFinder.find(this.entityState, query)
+    const entities = await this.essence.find(query)
     return Versioning.createQueryResult(entities)
   }
 
@@ -68,13 +70,7 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async findOne(query: WhereQuery): Promise<SingleQueryResult> {
-    const entity = PhenylStateFinder.findOne(this.entityState, query)
-    if (entity == null) {
-      throw new PhenylResponseError(
-        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
+    const entity = await this.essence.findOne(query)
     return Versioning.createSingleQueryResult(entity)
   }
 
@@ -82,38 +78,16 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async get(query: IdQuery): Promise<SingleQueryResult> {
-    try {
-      const entity = PhenylStateFinder.get(this.entityState, query)
-      return Versioning.createSingleQueryResult(entity)
-    }
-    catch (e) {
-      if (e.constructor.name === 'Error') { // Error from entityState
-        throw new PhenylResponseError(
-          `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${query.id}"`,
-          'NotFound'
-        )
-      }
-      throw createErrorResult(e)
-    }
+    const entity = await this.essence.get(query)
+    return Versioning.createSingleQueryResult(entity)
   }
 
   /**
    *
    */
   async getByIds(query: IdsQuery): Promise<QueryResult> {
-    try {
-      const entities = PhenylStateFinder.getByIds(this.entityState, query)
-      return Versioning.createQueryResult(entities)
-    }
-    catch (e) {
-      if (e.constructor.name === 'Error') { // Error from entityState
-        throw new PhenylResponseError(
-          `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(', ')}"`, // TODO: prevent from showing existing ids
-          'NotFound',
-        )
-      }
-      throw createErrorResult(e)
-    }
+    const entities = await this.essence.getByIds(query)
+    return Versioning.createQueryResult(entities)
   }
 
   /**
@@ -121,7 +95,7 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async pull(query: PullQuery): Promise<PullQueryResult> {
     const { versionId, entityName, id } = query
-    const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    const entity = await this.essence.get({ entityName, id })
     return Versioning.createPullQueryResult(entity, versionId)
   }
 
@@ -146,27 +120,18 @@ export default class PhenylMemoryClient implements EntityClient {
       ? value
       : assign(value, { id: randomStringWithTimeStamp() })
     const valueWithMeta = Versioning.attachMetaInfoToNewEntity(newValue)
-    const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
-    this.entityState = assign(this.entityState, operation)
-    return Versioning.createGetCommandResult(valueWithMeta)
+    const entity = await this.essence.insertAndGet({ entityName, value: valueWithMeta })
+    return Versioning.createGetCommandResult(entity)
   }
 
   /**
    *
    */
   async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResult> {
-    const { entityName, values} = command
-    const valuesWithMeta = []
-    for (const value of values) {
-      const newValue = value.id
-        ? value
-        : assign(value, { id: randomStringWithTimeStamp() })
-      const valueWithMeta = Versioning.attachMetaInfoToNewEntity(newValue)
-      const operation = PhenylStateUpdater.$register(this.entityState, entityName, valueWithMeta)
-      this.entityState = assign(this.entityState, operation)
-      valuesWithMeta.push(newValue)
-    }
-    return Versioning.createMultiValuesCommandResult(valuesWithMeta)
+    const { entityName, values } = command
+    const valuesWithMeta = values.map(value => Versioning.attachMetaInfoToNewEntity(value))
+    const entities = await this.essence.insertAndGetMulti({ entityName, values: valuesWithMeta })
+    return Versioning.createMultiValuesCommandResult(entities)
   }
 
   /**
@@ -189,9 +154,7 @@ export default class PhenylMemoryClient implements EntityClient {
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResult> {
     const { entityName, id } = command
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
-    const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
-    this.entityState = assign(this.entityState, operation)
-    const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    const entity = await this.essence.updateAndGet(metaInfoAttachedCommand)
     return Versioning.createGetCommandResult(entity)
   }
 
@@ -200,14 +163,9 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResult> {
     const { entityName, where } = command
-    // TODO Performance issue: find() runs twice for just getting N
-    const values = PhenylStateFinder.find(this.entityState, { entityName, where })
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
-    const ids = values.map(value => value.id)
-    const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
-    this.entityState = assign(this.entityState, operation)
-    const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-    return Versioning.createMultiValuesCommandResult(updatedValues)
+    const entities = await this.essence.updateAndFetch(metaInfoAttachedCommand)
+    return Versioning.createMultiValuesCommandResult(entities)
   }
 
   /**
@@ -215,11 +173,9 @@ export default class PhenylMemoryClient implements EntityClient {
    */
   async push(command: PushCommand): Promise<PushCommandResult> {
     const { entityName, id, versionId, operations } = command
-    const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    const entity = await this.essence.get({ entityName, id })
     const operation = Versioning.mergeUpdateOperations(...operations)
-    const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
-    this.entityState = assign(this.entityState, retargetedOperation)
-    const updatedEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    const updatedEntity = await this.essence.updateAndGet({ entityName, id, operation })
     return Versioning.createPushCommandResult(entity, updatedEntity, versionId)
   }
 
@@ -227,11 +183,6 @@ export default class PhenylMemoryClient implements EntityClient {
    *
    */
   async delete(command: DeleteCommand): Promise<CommandResult> {
-    const { entityName } = command
-    // TODO Performance issue: find() runs twice for just getting N
-    const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1
-    const operation = PhenylStateUpdater.$delete(this.entityState, command)
-    this.entityState = assign(this.entityState, operation)
-    return { ok: 1, n }
+    return { ok: 1, n: await this.essence.delete(command) }
   }
 }

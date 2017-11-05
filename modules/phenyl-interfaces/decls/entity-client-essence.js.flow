@@ -1,0 +1,35 @@
+// @flow
+import type {
+  Entity
+} from './entity.js.flow'
+
+import type {
+  IdQuery,
+  IdsQuery,
+  WhereQuery,
+} from './query.js.flow'
+
+import type {
+  IdUpdateCommand,
+  InsertCommand,
+  MultiInsertCommand,
+  MultiUpdateCommand,
+  SingleInsertCommand,
+  UpdateCommand,
+  DeleteCommand,
+} from './command.js.flow'
+
+
+export interface EntityClientEssence {
+  find(query: WhereQuery): Promise<Array<Entity>>,
+  findOne(query: WhereQuery): Promise<Entity>,
+  get(query: IdQuery): Promise<Entity>,
+  getByIds(query: IdsQuery): Promise<Array<Entity>>,
+  insert(command: InsertCommand): Promise<number>,
+  insertAndGet(command: SingleInsertCommand): Promise<Entity>,
+  insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>>,
+  update(command: UpdateCommand): Promise<number>,
+  updateAndGet(command: IdUpdateCommand): Promise<Entity>,
+  updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>>,
+  delete(command: DeleteCommand): Promise<number>,
+}
