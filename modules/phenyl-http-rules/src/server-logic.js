@@ -1,4 +1,5 @@
 // @flow
+/*eslint-env node*/
 
 import { isApiRequest } from './encode-request.js'
 import decodeRequest from './decode-request.js'
@@ -12,9 +13,6 @@ import type {
   CustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
-  HttpMethod,
-  RequestData,
-  ResponseData,
   PathModifier,
   PhenylRunner,
   ServerParams,
@@ -112,7 +110,7 @@ export default class ServerLogic {
  * Default value of ServerLogic#handleCustomRequest().
  * Return 404 response.
  */
-async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: CoreClient): Promise<EncodedHttpResponse> {
+async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: CoreClient): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
   const { path } = encodedHttpRequest
   const body = `Not Found.\nThe requested URL "${path}" is not found on this server.`
   return createPlainTextResponse(body, 404)

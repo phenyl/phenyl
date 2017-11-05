@@ -1,6 +1,4 @@
 // @flow
-import promisify from 'es6-promisify'
-
 import {
   createErrorResult,
 } from 'phenyl-utils/jsnext'

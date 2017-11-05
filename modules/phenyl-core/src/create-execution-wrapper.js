@@ -1,6 +1,5 @@
 // @flow
 import type {
-  AuthorizationHandler,
   CoreExecution,
   ExecutionWrapper,
   FunctionalGroup,
@@ -17,7 +16,7 @@ function assertWrapExecution(fn: any, name: string, methodName: string) {
  *
  */
 export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
-  const { users, nonUsers, customQueries, customCommands } = fg
+  const { users, nonUsers } = fg
   return async function executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution) :Promise<ResponseData> {
     const { method } = reqData
     switch (reqData.method) {

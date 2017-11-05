@@ -1,22 +1,15 @@
 // @flow
 import {
-  mergeUpdateOperations,
-  normalizeUpdateOperation,
-} from 'oad-utils/jsnext'
-import {
   Versioning,
 } from './versioning.js'
 
 import type {
-  Entity,
   EntityClient,
   EntityClientEssence,
-  EntityState,
   CommandResult,
   DeleteCommand,
   MultiValuesCommandResult,
   GetCommandResult,
-  Id,
   IdQuery,
   IdsQuery,
   InsertCommand,
@@ -26,16 +19,12 @@ import type {
   PullQueryResult,
   PushCommand,
   PushCommandResult,
-  RequestData,
-  ResponseData,
   QueryResult,
-  QueryStringParams,
   SingleQueryResult,
   UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
-  UpdateOperation,
 } from 'phenyl-interfaces'
 
 export class AbstractEntityClient implements EntityClient {
@@ -132,7 +121,6 @@ export class AbstractEntityClient implements EntityClient {
    *
    */
   async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResult> {
-    const { entityName, id } = command
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entity = await this.essence.updateAndGet(metaInfoAttachedCommand)
     return Versioning.createGetCommandResult(entity)
@@ -142,7 +130,6 @@ export class AbstractEntityClient implements EntityClient {
    *
    */
   async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResult> {
-    const { entityName, where } = command
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entities = await this.essence.updateAndFetch(metaInfoAttachedCommand)
     return Versioning.createMultiValuesCommandResult(entities)

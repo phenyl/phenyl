@@ -21,8 +21,6 @@ import type {
   MinOperator,
   MulOperator,
   PopOperator,
-  PushModifier,
-  QueryCondition,
   RegularAddToSetOperator,
   RegularPullOperator,
   RegularPushOperator,
@@ -32,8 +30,6 @@ import type {
   RestoreOperator,
   SetOperator,
   UnsetOperator,
-  UpdateOperation,
-  FindOperation,
 } from 'mongolike-operations'
 
 /**
@@ -434,8 +430,7 @@ export default class PowerAssign {
     // $FlowIssue(return-T)
     return revKeys.reduce((newValue, key, i) =>
       // $FlowIssue(reduce-first-argument-type)
-      Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue })
-    , value)
+      Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue }), value)
   }
 }
 

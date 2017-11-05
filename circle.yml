@@ -25,4 +25,5 @@ jobs:
           command: mongod --dbpath /tmp/mongo
           background: true
       - run: npm run build
+      - run: npm run chk
       - run: npm test

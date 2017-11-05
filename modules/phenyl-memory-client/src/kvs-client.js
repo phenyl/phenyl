@@ -52,7 +52,6 @@ export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
     if (id == null || this.pool[id] == null) {
       return false
     }
-    console.log(this.pool)
     this.pool = assignWithRestoration(this.pool, { $unset: { [id]: '' } })
     return true
   }

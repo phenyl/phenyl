@@ -9,10 +9,10 @@ export function assertValidRequestData(rd: any): void {
   }
   const { method, sessionId } = rd
   if (sessionId != null && typeof sessionId !== 'string') {
-    throw new Error(`RequestData.sessionId must be null or string.`)
+    throw new Error('RequestData.sessionId must be null or string.')
   }
   if (!method) {
-    throw new Error(`RequestData must have "method" property.`)
+    throw new Error('RequestData must have "method" property.')
   }
 
   try {
@@ -48,7 +48,7 @@ export function assertValidRequestData(rd: any): void {
       case 'logout':
         return assertValidLogoutCommand(rd.payload)
       default:
-        throw new Error(`Invalid method name.`)
+        throw new Error('Invalid method name.')
     }
   }
   catch (e) {
@@ -96,7 +96,7 @@ export function assertValidIdsQuery(q: any): void {
   if (!Array.isArray(ids)) {
     throw new Error(`IdsQuery.ids must be an array. "${typeof ids}" given.`)
   }
-  assertNonEmptyString(ids[0], `IdsQuery.ids must be a non-empty array.`)
+  assertNonEmptyString(ids[0], 'IdsQuery.ids must be a non-empty array.')
 }
 
 /**
@@ -112,7 +112,7 @@ export function assertValidInsertCommand(com: any): void {
 
   if (value != null) {
     if (typeof value !== 'object') {
-      throw new Error(`InsertCommand.value must be an object.`)
+      throw new Error('InsertCommand.value must be an object.')
     }
     return
   }
@@ -123,7 +123,7 @@ export function assertValidInsertCommand(com: any): void {
     }
 
     if (typeof values[0] !== 'object') {
-      throw new Error(`InsertCommand.values must be an non-empty array<Object>.`)
+      throw new Error('InsertCommand.values must be an non-empty array<Object>.')
     }
     return
   }
@@ -255,7 +255,7 @@ export function assertValidLogoutCommand(com: any): void {
     throw new Error(`LogoutCommand must be an object. ${typeof com} given.`)
   }
 
-  const { sessionId, entityName } = com
+  const { entityName } = com
   assertValidEntityName(entityName, 'LogoutCommand')
 }
 

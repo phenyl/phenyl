@@ -16,17 +16,11 @@ import type {
   EntityClientEssence,
   EntityState,
   DeleteCommand,
-  Id,
   IdQuery,
   IdsQuery,
   InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
-  PullQuery,
-  PushCommand,
-  RequestData,
-  ResponseData,
-  QueryStringParams,
   UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
@@ -146,7 +140,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
   async update(command: UpdateCommand): Promise<number> {
     if (command.id != null) {
       // $FlowIssue(this-is-IdUpdateCommand)
-      const result = await this.updateAndGet((command: IdUpdateCommand))
+      const result = await this.updateAndGet((command: IdUpdateCommand)) // eslint-disable-line no-unused-vars
       return 1
     }
     // $FlowIssue(this-is-MultiUpdateCommand)

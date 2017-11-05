@@ -202,8 +202,7 @@ describe('assign', () => {
       name: { first: 'Shin', last: 'Suzuki' }
     }
     assert.throws(() =>
-      assign(obj, { $rename: { 'categories[1]': '3' } })
-    , /cannot be applied to array field/)
+      assign(obj, { $rename: { 'categories[1]': '3' } }), /cannot be applied to array field/)
   })
 
   context('with class instance', () => {

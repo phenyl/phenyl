@@ -6,7 +6,6 @@ import {
 import type {
   RegularUpdateOperation,
   UpdateOperator,
-  UpdateOperation,
   DocumentPath,
 } from 'mongolike-operations'
 
@@ -18,7 +17,7 @@ export function retargetToProp(docPath: DocumentPath, _operation: Object): Regul
 
   for (const operatorName of operatorNames) {
     const operator: UpdateOperator = operation[operatorName]
-      // $FlowIssue(newOps-can-have-property-of-operatorName)
+    // $FlowIssue(newOps-can-have-property-of-operatorName)
     newOps[operatorName] = {}
     Object.keys(operator).forEach(originalDocPath => {
       const newDocPath = [docPath, originalDocPath].join('.')

@@ -25,8 +25,6 @@ import type {
   LogoutCommandResult,
   RequestData,
   ResponseData,
-  HttpClientParams,
-  ClientPathModifier,
   QueryResult,
   SingleQueryResult,
   UpdateCommand,
@@ -52,7 +50,7 @@ export class PhenylCoreClient implements CoreClient {
   /**
    * @abstract
    */
-  async handleRequestData(reqData: RequestData): Promise<ResponseData> {
+  async handleRequestData(reqData: RequestData): Promise<ResponseData> { // eslint-disable-line no-unused-vars
     throw new Error('No implementation')
   }
 

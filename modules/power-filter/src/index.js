@@ -136,7 +136,7 @@ export default class PowerFilter {
           if (condition.$all == null) throw new Error('$all is not found') // for flow
           if (!Array.isArray(leftOperand)) return false
           return condition.$all.every(val =>
-            leftOperand.some(elem => deepEqual(elem))
+            leftOperand.some(elem => deepEqual(elem, val))
           )
 
         case '$elemMatch':

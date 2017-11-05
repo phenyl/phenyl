@@ -11,7 +11,9 @@
     "bump:major": "babel-node tools/cli.js bump:major",
     "bump:minor": "babel-node tools/cli.js bump:minor",
     "bump:patch": "babel-node tools/cli.js bump:patch",
-    "flow": "flow"
+    "flow": "flow",
+    "chk": "npm run lint && flow",
+    "lint": "eslint --quiet modules/*/*"
   },
   "repository": {
     "type": "git",
@@ -25,11 +27,14 @@
   "homepage": "https://github.com/shinout/phenyl#readme",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.0.1",
     "babel-plugin-transform-strip-jsnext": "^2.0.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "babel-register": "^6.26.0",
     "chalk": "^2.3.0",
+    "eslint": "^4.10.0",
+    "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.52.0",
     "shelljs": "^0.7.8"
   }

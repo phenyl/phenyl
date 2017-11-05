@@ -35,7 +35,7 @@ export function createErrorResult(error: $Supertype<Error | ErrorResult | string
   return responseError
 }
 
-function guessErrorType(error: Error): ErrorResultType {
+function guessErrorType(error: Error): ErrorResultType { // eslint-disable-line no-unused-vars
   if (error.constructor.name === 'Error') {
     return 'BadRequest'
   }

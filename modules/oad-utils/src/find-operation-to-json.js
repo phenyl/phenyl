@@ -12,8 +12,6 @@ import {
  *
  */
 export function findOperationToJSON(where: Object): FindOperation {
-  let modifiedOperation = where
-
   return visitFindOperation(where, {
     queryCondition(condition: QueryCondition) {
       return queryConditionToJSON(condition)

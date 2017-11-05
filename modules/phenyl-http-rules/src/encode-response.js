@@ -19,5 +19,5 @@ export default function encodeResponse(responseData: ResponseData): EncodedHttpR
 }
 
 function byteLength(str: string): number {
-  return encodeURIComponent(str).replace(/%../g, "x").length
+  return encodeURIComponent(str).replace(/%../g, 'x').length
 }

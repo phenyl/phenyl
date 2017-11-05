@@ -1,10 +1,8 @@
 // @flow
 import type {
   ValidationHandler,
-  ExecutionWrapper,
   FunctionalGroup,
   RequestData,
-  ResponseData,
   Session,
 } from 'phenyl-interfaces'
 

@@ -2,7 +2,6 @@
 import type {
   ErrorResult,
   ResponseData,
-  RequestMethodName,
 } from 'phenyl-interfaces'
 
 export default function getStatusCode(resData: ResponseData): number {

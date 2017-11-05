@@ -97,7 +97,6 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
  */
 function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   const {
-    headers,
     path,
     body
   } = request
@@ -260,16 +259,16 @@ export function decodeSessionId(request: EncodedHttpRequest): ?Id {
 }
 
 /**
- *
- */
- function parsePath(path: string): { entityName: string, methodName: ?string } {
-   const prefix = path.slice(0, 5)
-   if (prefix !== '/api/') {
-     throw new Error(`Invalid request path: "${path}". Paths must start with "/api/" prefix.`)
-   }
-   const strippedPaths = path.slice(5).split('/')
-   if (strippedPaths.length >= 3) {
-     throw new Error(`Invalid request path: "${path}". Paths depth must not be greater than 3.`) // this error comments consider prefix /api/
-   }
-   return { entityName: strippedPaths[0], methodName: strippedPaths[1] }
- }
+*
+*/
+function parsePath(path: string): { entityName: string, methodName: ?string } {
+  const prefix = path.slice(0, 5)
+  if (prefix !== '/api/') {
+    throw new Error(`Invalid request path: "${path}". Paths must start with "/api/" prefix.`)
+  }
+  const strippedPaths = path.slice(5).split('/')
+  if (strippedPaths.length >= 3) {
+    throw new Error(`Invalid request path: "${path}". Paths depth must not be greater than 3.`) // this error comments consider prefix /api/
+  }
+  return { entityName: strippedPaths[0], methodName: strippedPaths[1] }
+}

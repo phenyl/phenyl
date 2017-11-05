@@ -4,7 +4,6 @@ import {
 } from './normalize-query-condition.js'
 
 import type {
-  DocumentPath,
   FindOperation,
   QueryCondition,
   SimpleFindOperation,

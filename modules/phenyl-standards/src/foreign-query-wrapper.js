@@ -20,7 +20,6 @@ import type {
   Session,
   CoreExecution,
   ResponseData,
-  DocumentPath,
   EntitiesById,
   EntityClient,
 } from 'phenyl-interfaces'
@@ -42,7 +41,7 @@ export default class ForeignQueryWrapper {
   /**
    *
    */
-  async validation(reqData: RequestData, session: ?Session): Promise<void> {
+  async validation(reqData: RequestData, session: ?Session): Promise<void> { // eslint-disable-line no-unused-vars
     return switchByRequestMethod(reqData, {
       async find(query: ForeignWhereQuery) {
         assertValidForeignQuery(query.foreign, 'ForeignWhereQuery')
@@ -56,7 +55,7 @@ export default class ForeignQueryWrapper {
       async getByIds(query: ForeignIdsQuery) {
         assertValidForeignQuery(query.foreign, 'ForeignIdsQuery')
       },
-      async handleDefault(reqData, session) {
+      async handleDefault(reqData, session) { // eslint-disable-line no-unused-vars
         return
       },
     })
@@ -66,7 +65,6 @@ export default class ForeignQueryWrapper {
    *
    */
   async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
-    const { entityClient } = this
     const resData = await execution(reqData, session)
 
     return await switchByRequestMethod(reqData, {
@@ -94,7 +92,7 @@ export default class ForeignQueryWrapper {
         return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
       },
 
-      handleDefault: async (reqData, session) => {
+      handleDefault: async (reqData, session) => { // eslint-disable-line no-unused-vars
         return resData
       },
     })

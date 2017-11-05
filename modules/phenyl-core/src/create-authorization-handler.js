@@ -1,10 +1,8 @@
 // @flow
 import type {
   AuthorizationHandler,
-  ExecutionWrapper,
   FunctionalGroup,
   RequestData,
-  ResponseData,
   Session,
 } from 'phenyl-interfaces'
 
