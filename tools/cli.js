@@ -59,6 +59,7 @@ class CLI {
       console.log(chalk.cyan(`\n[${name}] start clean`))
       shell.cd(`modules/${name}`)
       shell.rm('-rf', 'node_modules dist')
+      shell.rm('-f', 'package-lock.json')
       shell.cd('../../')
       console.log(chalk.green(`[${name}] ✓ clean done`))
     })
