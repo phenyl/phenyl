@@ -154,6 +154,15 @@ export class OkClient {
   /**
    *
    */
+  async push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult> {
+    const result = await this.client.push(command, sessionId)
+    if (!result.ok) throw this.createError(result)
+    return result
+  }
+
+  /**
+   *
+   */
   async delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult> {
     const result = await this.client.delete(command, sessionId)
     if (!result.ok) throw this.createError(result)
