@@ -442,7 +442,12 @@ export default class PowerAssign {
 /**
  *
  */
-export function assign(obj: Object, uOp: Object): Object {
+export function assign(obj: Object, uOp: Object | Array<Object>): Object {
+  if (Array.isArray(uOp)) {
+    return uOp.reduce((ret, _uOp) => {
+      return PowerAssign.assign(ret, _uOp)
+    }, obj)
+  }
   return PowerAssign.assign(obj, normalizeUpdateOperation(uOp))
 }
 
