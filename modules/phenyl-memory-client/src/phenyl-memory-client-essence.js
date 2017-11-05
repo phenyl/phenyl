@@ -37,7 +37,7 @@ type MemoryClientParams = {
   entityState?: EntityState,
 }
 
-export default class PhenylMemoryClient implements EntityClientEssence {
+export default class PhenylMemoryClientEssence implements EntityClientEssence {
   entityState: EntityState
 
   constructor(params: MemoryClientParams = {}) {
