@@ -1,6 +1,6 @@
 // @flow
 
-import { describe, it, context } from 'kocha'
+import { describe, it } from 'kocha'
 import assert from 'power-assert'
 import { filter } from '../src/index.js'
 

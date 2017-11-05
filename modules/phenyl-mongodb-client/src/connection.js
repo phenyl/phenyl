@@ -76,8 +76,7 @@ function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
   return function(where?: Object = {}, params?: FindChainParams = {}): Promise<any> {
     const findChain = find(where)
     const newFindChain = Object.keys(params).reduce((chain, name) =>
-      chain[name](params[name])
-    , findChain)
+      chain[name](params[name]), findChain)
     return promisify(newFindChain.toArray, newFindChain)()
   }
 }

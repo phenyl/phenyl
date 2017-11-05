@@ -17,12 +17,12 @@ export default class StandardEntityDefinition implements EntityDefinition {
     this.authorizationSetting = authorizationSetting
   }
 
-  async authorization(reqData: RequestData, session: ?Session): Promise<boolean> {
+  async authorization(reqData: RequestData, session: ?Session): Promise<boolean> { // eslint-disable-line no-unused-vars
     // TODO
     return false
   }
 
-  async validation(reqData: RequestData, session: ?Session): Promise<void> {
+  async validation(reqData: RequestData, session: ?Session): Promise<void> { // eslint-disable-line no-unused-vars
   }
 
   async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {

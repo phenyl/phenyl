@@ -32,12 +32,12 @@ export async function noOperationHandler() {
  */
 export async function noHandler(commandOrQuery: LoginCommand | CustomCommand | CustomQuery) {
   if (commandOrQuery.credentials != null) {
-    throw new Error(`No Login Handler is registered.`)
+    throw new Error('No Login Handler is registered.')
   }
   if (commandOrQuery.name != null) {
-    throw new Error(`No Custom Handler is registered.`)
+    throw new Error('No Custom Handler is registered.')
   }
-  throw new Error(`No Handler is registered to the given request.`)
+  throw new Error('No Handler is registered to the given request.')
 }
 
 /**

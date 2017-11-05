@@ -9,7 +9,6 @@ import createExecutionWrapper from './create-execution-wrapper.js'
 import PhenylCoreDirectClient from './direct-client.js'
 import {
   passThroughHandler,
-  noOperationHandler,
   noHandler,
   simpleExecutionWrapper
 } from './default-handlers.js'

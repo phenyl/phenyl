@@ -1,18 +1,9 @@
 // @flow
 import type {
-  EntityDefinition,
-  RequestData,
-  Session,
   ResponseData,
-  CoreExecution,
 } from 'phenyl-interfaces'
 
-import type {
-  EncryptFunction,
-} from '../decls/index.js.flow'
-
-
-export function removePasswordFromResponseData(resData: ResponseData, passwordPropName: string): ResponseData {
+export function removePasswordFromResponseData(resData: ResponseData, passwordPropName: string): ResponseData { // eslint-disable-line no-unused-vars
   // TODO
   return resData
 }

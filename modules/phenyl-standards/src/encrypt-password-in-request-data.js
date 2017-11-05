@@ -1,10 +1,6 @@
 // @flow
 import type {
-  EntityDefinition,
   RequestData,
-  Session,
-  ResponseData,
-  CoreExecution,
   DocumentPath,
 } from 'phenyl-interfaces'
 
@@ -18,8 +14,6 @@ import { assign } from 'power-assign'
 
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
-  let reqDataWithEncryptedPass
-
   switch (reqData.method) {
     case 'insert':
     case 'insertAndGet':

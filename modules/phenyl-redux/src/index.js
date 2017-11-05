@@ -1,9 +1,7 @@
 // @flow
 import {
-  PhenylState,
-  PhenylStateFinder,
   PhenylStateUpdater,
- } from 'phenyl-state/jsnext'
+} from 'phenyl-state/jsnext'
 import type {
   DeleteAction,
   DeleteCommand,

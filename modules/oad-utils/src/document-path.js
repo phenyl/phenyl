@@ -9,8 +9,8 @@ import type {
  *
  */
 export function parseDocumentPath(docPath: DocumentPath): Array<string | number> {
-  return docPath.split(/[.\[]/).map(
-      attribute => attribute.charAt(attribute.length - 1) === ']' ? parseInt(attribute.slice(0, -1)) : attribute
+  return docPath.split(/[.[]/).map(
+    attribute => attribute.charAt(attribute.length - 1) === ']' ? parseInt(attribute.slice(0, -1)) : attribute
   )
 }
 
@@ -19,8 +19,7 @@ export function parseDocumentPath(docPath: DocumentPath): Array<string | number>
  */
 export function createDocumentPath(...attributes: Array<string | number>): DocumentPath {
   const joined = attributes.reduce((docPath, attr) =>
-    typeof attr === 'string' ? `${docPath}.${attr}` : `${docPath}[${attr.toString()}]`
-  , '')
+    typeof attr === 'string' ? `${docPath}.${attr}` : `${docPath}[${attr.toString()}]`, '')
   return (joined.charAt(0) === '.') ? joined.slice(1) : joined
 }
 

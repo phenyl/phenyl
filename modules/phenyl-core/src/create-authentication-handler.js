@@ -1,7 +1,6 @@
 // @flow
 import type {
   LoginCommand,
-  LoginCommandResult,
   AuthenticationHandler,
   AuthenticationResult,
   Session,

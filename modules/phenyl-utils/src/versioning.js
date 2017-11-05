@@ -11,12 +11,10 @@ import {
 import type {
   Entity,
   EntityMetaInfo,
-  EntityVersion,
   EntityWithMetaInfo,
   GetCommandResult,
   Id,
   MultiValuesCommandResult,
-  PreEntity,
   PullQueryResult,
   PushCommandResult,
   QueryResult,
@@ -162,7 +160,7 @@ export class Versioning {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       // $FlowIssue(has-own-prop)
-      const metaInfo: MetaInfo = entity._PhenylMeta
+      const metaInfo: EntityMetaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 1].id
     }
     catch (e) {
@@ -192,7 +190,7 @@ export class Versioning {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       // $FlowIssue(has-own-prop)
-      const metaInfo: MetaInfo = entity._PhenylMeta
+      const metaInfo: EntityMetaInfo = entity._PhenylMeta
       let found = false
       let idx = 0
       for (const version of metaInfo.versions) {

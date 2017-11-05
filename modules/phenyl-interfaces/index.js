@@ -209,7 +209,7 @@ export type {
   EntityClient,
   EntityClientEssence,
   EntityDefinition,
-  EntityDefinitions
+  EntityDefinitions,
   EntityMetaInfo,
   EntityPool,
   EntityState,

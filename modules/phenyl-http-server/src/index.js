@@ -1,4 +1,6 @@
 // @flow
+/*eslint-env node*/
+
 import url from 'url'
 import {
   ServerLogic,
@@ -9,7 +11,6 @@ import type {
   ServerResponse,
 } from 'http'
 import type {
-  EncodedHttpRequest,
   EncodedHttpResponse,
   HttpMethod,
   ServerParams,

@@ -5,7 +5,6 @@ import {
 
 import type {
   EncodedHttpRequest,
-  Id,
   QueryStringParams,
   RequestData,
 } from 'phenyl-interfaces'
@@ -178,7 +177,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
       if (reqData.method) {
         throw new Error(`Invalid request method: "${reqData.method}"`)
       }
-      throw new Error(`Request method not given in RequestData.`)
+      throw new Error('Request method not given in RequestData.')
   }
 }
 

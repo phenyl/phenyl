@@ -49,7 +49,7 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult> {
+  async authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 

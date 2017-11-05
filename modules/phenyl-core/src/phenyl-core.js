@@ -13,7 +13,6 @@ import {
 import PhenylCoreDirectClient from './direct-client.js'
 
 import type {
-  Id,
   RequestData,
   ResponseData,
   ClientPool,
@@ -98,7 +97,7 @@ export default class PhenylCore implements PhenylRunner {
     }
   }
 
- /**
+  /**
    * @public
    * Create PhenylCoreDirectClient of this instance.
    */
@@ -180,7 +179,7 @@ export default class PhenylCore implements PhenylRunner {
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> {
+  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
     const { sessionId } = logoutCommand
     const result = await this.clients.sessionClient.delete(sessionId)
     // sessionId not found
