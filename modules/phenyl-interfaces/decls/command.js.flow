@@ -40,6 +40,13 @@ export type MultiUpdateCommand = {|
   ordered?: boolean,
 |}
 
+export type PushCommand = {|
+  entityName: EntityName,
+  id: Id,
+  operations: Array<UpdateOperation>,
+  versionId: Id,
+|}
+
 // see https://docs.mongodb.com/manual/reference/command/delete/
 export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
 

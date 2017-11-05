@@ -1,6 +1,10 @@
 // @flow
 
-import type { Restorable } from 'mongolike-operations'
+import type {
+  Restorable,
+  UpdateOperation,
+} from 'mongolike-operations'
+import type { Id } from './id.js.flow'
 import type { Session } from './session.js.flow'
 import type { Entity } from './entity.js.flow'
 import type { ErrorResult } from './error-result.js.flow'
@@ -8,22 +12,34 @@ import type { ErrorResult } from './error-result.js.flow'
 export type CommandResult = {
   ok: 1,
   n: number,
+  versionId?: ?Id,
+  versionsById?: { [entityId: Id]: Id },
 }
 export type CommandResultOrError = CommandResult | ErrorResult
 
 export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
-  values: Array<Entity>
+  values: Array<Entity>,
+  versionsById: { [entityId: Id]: Id },
 }
 export type MultiValuesCommandResultOrError = MultiValuesCommandResult | ErrorResult
 
-export type GetCommandResult = {
+export type GetCommandResult = {|
   ok: 1,
-  n: number,
-  value: Entity
-}
+  n: number, // TODO necessary?
+  value: Entity,
+  versionId: ?Id,
+|}
 export type GetCommandResultOrError = GetCommandResult | ErrorResult
+
+export type PushCommandResult = {|
+  ok: 1,
+  n: number, // TODO necessary?
+  operations: Array<UpdateOperation>,
+  versionId: ?Id,
+|} | GetCommandResult
+export type PushCommandResultOrError = PushCommandResult | ErrorResult
 
 export type CustomCommandResult = {
   ok: 1,

@@ -30,6 +30,8 @@ import type {
   LoginCommandResultOrError,
   LogoutCommandResult,
   LogoutCommandResultOrError,
+  PushCommandResult,
+  PushCommandResultOrError,
 } from './decls/command-result.js.flow'
 import type {
   CustomCommand,
@@ -41,6 +43,7 @@ import type {
   LogoutCommand,
   MultiDeleteCommand,
   MultiInsertCommand,
+  PushCommand,
   SingleInsertCommand,
   UpdateCommand,
   MultiUpdateCommand,
@@ -105,6 +108,8 @@ import type { PhenylRunner } from './decls/phenyl-runner.js.flow'
 import type {
   CustomQueryResult,
   CustomQueryResultOrError,
+  PullQueryResult,
+  PullQueryResultOrError,
   QueryResult,
   QueryResultOrError,
   SingleQueryResult,
@@ -114,6 +119,7 @@ import type {
   CustomQuery,
   IdQuery,
   IdsQuery,
+  PullQuery,
   WhereQuery,
 } from './decls/query.js.flow'
 
@@ -270,6 +276,12 @@ export type {
   PhenylRunner,
   PreEntity,
   PreSession,
+  PullQuery,
+  PullQueryResult,
+  PullQueryResultOrError,
+  PushCommand,
+  PushCommandResult,
+  PushCommandResultOrError,
   QueryResult,
   QueryResultOrError,
   QueryStringParams,

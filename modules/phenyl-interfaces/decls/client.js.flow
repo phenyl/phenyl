@@ -7,6 +7,7 @@ import type {
   IdQuery,
   IdsQuery,
   CustomQuery,
+  PullQuery,
 } from './query.js.flow'
 import type { KvsClient } from './kvs-client.js.flow'
 import type {
@@ -17,6 +18,7 @@ import type {
   CustomQueryResultOrError,
   SingleQueryResultOrError,
   QueryResultOrError,
+  PullQueryResultOrError,
 } from './query-result.js.flow'
 import type {
   CommandResultOrError,
@@ -25,6 +27,7 @@ import type {
   MultiValuesCommandResultOrError,
   LoginCommandResultOrError,
   LogoutCommandResultOrError,
+  PushCommandResultOrError,
 } from './command-result.js.flow'
 import type {
   InsertCommand,
@@ -37,6 +40,7 @@ import type {
   CustomCommand,
   LoginCommand,
   LogoutCommand,
+  PushCommand,
 } from './command.js.flow'
 
 export interface EntityClient {
@@ -44,6 +48,7 @@ export interface EntityClient {
   findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
   get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
   getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResultOrError>,
+  pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResultOrError>,
 
   insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
   insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
@@ -52,6 +57,7 @@ export interface EntityClient {
   update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
   updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
   updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError>,
+  push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResultOrError>,
 
   delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
 }

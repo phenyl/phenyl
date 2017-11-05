@@ -24,6 +24,12 @@ export interface IdsQuery {
   ids: Array<Id>
 }
 
+export interface PullQuery {
+  entityName: string,
+  id: Id,
+  versionId: Id,
+}
+
 export interface CustomQuery {
   name: string, // custom query name
   params?: Object,

@@ -6,5 +6,5 @@ export type ErrorResult = {
   ok: 0,
   type: ErrorResultType,
   message: string,
-  appendix?: string,
+  stack?: string,
 }
