@@ -24,9 +24,11 @@ export class PhenylResponseError extends Error implements ErrorResult {
   }
 }
 
-export function createErrorResult(error: Error, type?: ErrorResultType): ErrorResult {
+export function createErrorResult(error: $Supertype<Error | ErrorResult>, _type?: ErrorResultType): PhenylResponseError {
+  // $FlowIssue(error.type-will-be-ErrorResultType)
+  const type: ErrorResultType = (error.type != null) ? error.type : _type
   const responseError = new PhenylResponseError(error.message, type)
-  responseError.stack = error.stack
+  if (error.stack) responseError.stack = error.stack
   return responseError
 }
 

@@ -1,6 +1,9 @@
 // @flow
 
 import powerCrypt from 'power-crypt/jsnext'
+import {
+  PhenylResponseError,
+} from 'phenyl-utils/jsnext'
 
 import StandardEntityDefinition from './standard-entity-definition.js'
 import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
@@ -52,37 +55,20 @@ export default class StandardUserDefinition extends StandardEntityDefinition imp
 
     const account = credentials[accountPropName]
     const password = credentials[passwordPropName]
-    const result = await this.entityClient.findOne({
-      entityName,
-      where: {
-        [accountPropName]: account,
-        [passwordPropName]: this.encrypt(password),
-      },
-    })
-
-    // findOne failed
-    if (!result.ok) {
-      // NGAuthenticationResult
-      return {
-        ok: 0,
-        error: new Error(result.message),
-        resultType: 'Unauthorized',
-      }
+    try {
+      const result = await this.entityClient.findOne({
+        entityName,
+        where: {
+          [accountPropName]: account,
+          [passwordPropName]: this.encrypt(password),
+        },
+      })
+      const user = result.value
+      const preSession = { ttl, entityName, userId: user.id }
+      return { ok: 1, preSession, user }
     }
-
-    // findOne succeeded
-    const user = result.value
-    const preSession = {
-      ttl,
-      entityName,
-      userId: user.id,
-    }
-
-    // OKAuthenticationResult
-    return {
-      ok: 1,
-      preSession,
-      user,
+    catch (e) {
+      throw new PhenylResponseError(e.message, 'Unauthorized')
     }
   }
 

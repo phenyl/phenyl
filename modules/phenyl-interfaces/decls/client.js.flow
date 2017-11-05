@@ -15,19 +15,19 @@ import type {
   PreSession,
 } from './session.js.flow'
 import type {
-  CustomQueryResultOrError,
-  SingleQueryResultOrError,
-  QueryResultOrError,
-  PullQueryResultOrError,
+  CustomQueryResult,
+  SingleQueryResult,
+  QueryResult,
+  PullQueryResult,
 } from './query-result.js.flow'
 import type {
-  CommandResultOrError,
-  CustomCommandResultOrError,
-  GetCommandResultOrError,
-  MultiValuesCommandResultOrError,
-  LoginCommandResultOrError,
-  LogoutCommandResultOrError,
-  PushCommandResultOrError,
+  CommandResult,
+  CustomCommandResult,
+  GetCommandResult,
+  MultiValuesCommandResult,
+  LoginCommandResult,
+  LogoutCommandResult,
+  PushCommandResult,
 } from './command-result.js.flow'
 import type {
   InsertCommand,
@@ -44,32 +44,32 @@ import type {
 } from './command.js.flow'
 
 export interface EntityClient {
-  find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResultOrError>,
-  findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
-  get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResultOrError>,
-  getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResultOrError>,
-  pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResultOrError>,
+  find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResult>,
+  findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResult>,
+  get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResult>,
+  getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResult>,
+  pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult>,
 
-  insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
-  insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
-  insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError>,
+  insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResult>,
+  insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResult>,
+  insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
 
-  update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
-  updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResultOrError>,
-  updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResultOrError>,
-  push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResultOrError>,
+  update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResult>,
+  updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResult>,
+  updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
+  push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>,
 
-  delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResultOrError>,
+  delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult>,
 }
 
 export interface CustomClient {
-  runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResultOrError>,
-  runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResultOrError>,
+  runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResult>,
+  runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResult>,
 }
 
 export interface AuthClient {
-  login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResultOrError>,
-  logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResultOrError>,
+  login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResult>,
+  logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResult>,
 }
 
 export type CoreClient = EntityClient & CustomClient & AuthClient

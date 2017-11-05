@@ -2,7 +2,7 @@
 
 export type ErrorResultType = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound' | 'InternalServer'
 
-export type ErrorResult = {
+export interface ErrorResult {
   ok: 0,
   type: ErrorResultType,
   message: string,

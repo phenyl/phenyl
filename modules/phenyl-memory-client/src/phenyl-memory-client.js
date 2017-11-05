@@ -8,6 +8,7 @@ import {
   normalizeUpdateOperation,
 } from 'oad-utils/jsnext'
 import {
+  PhenylResponseError,
   createErrorResult,
   Versioning,
   randomStringWithTimeStamp,
@@ -18,10 +19,10 @@ import type {
   Entity,
   EntityClient,
   EntityState,
-  CommandResultOrError,
+  CommandResult,
   DeleteCommand,
-  MultiValuesCommandResultOrError,
-  GetCommandResultOrError,
+  MultiValuesCommandResult,
+  GetCommandResult,
   Id,
   IdQuery,
   IdsQuery,
@@ -29,14 +30,14 @@ import type {
   SingleInsertCommand,
   MultiInsertCommand,
   PullQuery,
-  PullQueryResultOrError,
+  PullQueryResult,
   PushCommand,
-  PushCommandResultOrError,
+  PushCommandResult,
   RequestData,
   ResponseData,
-  QueryResultOrError,
+  QueryResult,
   QueryStringParams,
-  SingleQueryResultOrError,
+  SingleQueryResult,
   UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
@@ -58,80 +59,67 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async find(query: WhereQuery): Promise<QueryResultOrError> {
-    try {
-      const entities = PhenylStateFinder.find(this.entityState, query)
-      return Versioning.createQueryResult(entities)
-    }
-    catch (e) {
-      return createErrorResult(e)
-    }
+  async find(query: WhereQuery): Promise<QueryResult> {
+    const entities = PhenylStateFinder.find(this.entityState, query)
+    return Versioning.createQueryResult(entities)
   }
 
   /**
    *
    */
-  async findOne(query: WhereQuery): Promise<SingleQueryResultOrError> {
-    try {
-      const entity = PhenylStateFinder.findOne(this.entityState, query)
-      if (entity == null) {
-        return {
-          ok: 0,
-          type: 'NotFound',
-          message: '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
-        }
-      }
-      return Versioning.createSingleQueryResult(entity)
+  async findOne(query: WhereQuery): Promise<SingleQueryResult> {
+    const entity = PhenylStateFinder.findOne(this.entityState, query)
+    if (entity == null) {
+      throw new PhenylResponseError(
+        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
+        'NotFound'
+      )
     }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    return Versioning.createSingleQueryResult(entity)
   }
 
   /**
    *
    */
-  async get(query: IdQuery): Promise<SingleQueryResultOrError> {
+  async get(query: IdQuery): Promise<SingleQueryResult> {
     try {
       const entity = PhenylStateFinder.get(this.entityState, query)
       return Versioning.createSingleQueryResult(entity)
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
-        return {
-          ok: 0,
-          type: 'NotFound',
-          message: `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${query.id}"`,
-        }
+        throw new PhenylResponseError(
+          `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${query.id}"`,
+          'NotFound'
+        )
       }
-      return createErrorResult(e)
+      throw createErrorResult(e)
     }
   }
 
   /**
    *
    */
-  async getByIds(query: IdsQuery): Promise<QueryResultOrError> {
+  async getByIds(query: IdsQuery): Promise<QueryResult> {
     try {
       const entities = PhenylStateFinder.getByIds(this.entityState, query)
       return Versioning.createQueryResult(entities)
     }
     catch (e) {
       if (e.constructor.name === 'Error') { // Error from entityState
-        return {
-          ok: 0,
-          type: 'NotFound',
-          message: `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(', ')}"`, // TODO: prevent from showing existing ids
-        }
+        throw new PhenylResponseError(
+          `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(', ')}"`, // TODO: prevent from showing existing ids
+          'NotFound',
+        )
       }
-      return createErrorResult(e)
+      throw createErrorResult(e)
     }
   }
 
   /**
    *
    */
-  async pull(query: PullQuery): Promise<PullQueryResultOrError> {
+  async pull(query: PullQuery): Promise<PullQueryResult> {
     const { versionId, entityName, id } = query
     const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
     return Versioning.createPullQueryResult(entity, versionId)
@@ -140,23 +128,19 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async insert(command: InsertCommand): Promise<CommandResultOrError> {
+  async insert(command: InsertCommand): Promise<CommandResult> {
     if (command.values) {
       const result = await this.insertAndGetMulti(command)
-      return result.ok
-        ? { ok: 1, n: result.n, versionsById: result.versionsById }
-        : result
+      return { ok: 1, n: result.n, versionsById: result.versionsById }
     }
     const result = await this.insertAndGet(command)
-    return result.ok
-      ? { ok: 1, n: 1, versionId: result.versionId }
-      : result
+    return { ok: 1, n: 1, versionId: result.versionId }
   }
 
   /**
    *
    */
-  async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResultOrError> {
+  async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResult> {
     const { entityName, value } = command
     const newValue = value.id
       ? value
@@ -170,7 +154,7 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResultOrError> {
+  async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResult> {
     const { entityName, values} = command
     const valuesWithMeta = []
     for (const value of values) {
@@ -188,93 +172,66 @@ export default class PhenylMemoryClient implements EntityClient {
   /**
    *
    */
-  async update(command: UpdateCommand): Promise<CommandResultOrError> {
-    try {
-      if (command.id != null) {
-        // $FlowIssue(this-is-IdUpdateCommand)
-        const result = await this.updateAndGet((command: IdUpdateCommand))
-        if (!result.ok) return result
-        return { ok: 1, n: 1, versionId: result.versionId }
-      }
-      // $FlowIssue(this-is-MultiUpdateCommand)
-      const result = await this.updateAndFetch((command: MultiUpdateCommand))
-      if (!result.ok) return result
-      return { ok: 1, n: result.n, versionsById: result.versionsById }
+  async update(command: UpdateCommand): Promise<CommandResult> {
+    if (command.id != null) {
+      // $FlowIssue(this-is-IdUpdateCommand)
+      const result = await this.updateAndGet((command: IdUpdateCommand))
+      return { ok: 1, n: 1, versionId: result.versionId }
     }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    // $FlowIssue(this-is-MultiUpdateCommand)
+    const result = await this.updateAndFetch((command: MultiUpdateCommand))
+    return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
 
   /**
    *
    */
-  async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResultOrError> {
+  async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResult> {
     const { entityName, id } = command
-    try {
-      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
-      const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
-      this.entityState = assign(this.entityState, operation)
-      const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      return Versioning.createGetCommandResult(entity)
-    }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
+    const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
+    this.entityState = assign(this.entityState, operation)
+    const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    return Versioning.createGetCommandResult(entity)
   }
 
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResultOrError> {
+  async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResult> {
     const { entityName, where } = command
-    try {
-      // TODO Performance issue: find() runs twice for just getting N
-      const values = PhenylStateFinder.find(this.entityState, { entityName, where })
-      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
-      const ids = values.map(value => value.id)
-      const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
-      this.entityState = assign(this.entityState, operation)
-      const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-      return Versioning.createMultiValuesCommandResult(updatedValues)
-    }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    // TODO Performance issue: find() runs twice for just getting N
+    const values = PhenylStateFinder.find(this.entityState, { entityName, where })
+    const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
+    const ids = values.map(value => value.id)
+    const operation = PhenylStateUpdater.$update(this.entityState, metaInfoAttachedCommand)
+    this.entityState = assign(this.entityState, operation)
+    const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
+    return Versioning.createMultiValuesCommandResult(updatedValues)
   }
 
   /**
    *
    */
-  async push(command: PushCommand): Promise<PushCommandResultOrError> {
+  async push(command: PushCommand): Promise<PushCommandResult> {
     const { entityName, id, versionId, operations } = command
-    try {
-      const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      const operation = Versioning.mergeUpdateOperations(...operations)
-      const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
-      this.entityState = assign(this.entityState, retargetedOperation)
-      const updatedEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
-      return Versioning.createPushCommandResult(entity, updatedEntity, versionId)
-    }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    const entity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    const operation = Versioning.mergeUpdateOperations(...operations)
+    const retargetedOperation = PhenylStateUpdater.$update(this.entityState, { entityName, id, operation })
+    this.entityState = assign(this.entityState, retargetedOperation)
+    const updatedEntity = PhenylStateFinder.get(this.entityState, { entityName, id })
+    return Versioning.createPushCommandResult(entity, updatedEntity, versionId)
   }
 
   /**
    *
    */
-  async delete(command: DeleteCommand): Promise<CommandResultOrError> {
+  async delete(command: DeleteCommand): Promise<CommandResult> {
     const { entityName } = command
-    try {
-      // TODO Performance issue: find() runs twice for just getting N
-      const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1
-      const operation = PhenylStateUpdater.$delete(this.entityState, command)
-      this.entityState = assign(this.entityState, operation)
-      return { ok: 1, n }
-    }
-    catch (e) {
-      return createErrorResult(e)
-    }
+    // TODO Performance issue: find() runs twice for just getting N
+    const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1
+    const operation = PhenylStateUpdater.$delete(this.entityState, command)
+    this.entityState = assign(this.entityState, operation)
+    return { ok: 1, n }
   }
 }

@@ -11,21 +11,18 @@ export type CustomQueryResult = {
   ok: 1,
   result: any
 }
-export type CustomQueryResultOrError = CustomQueryResult | ErrorResult
 
 export type QueryResult = {|
   ok: 1,
   values: Array<Restorable>,
   versionsById: { [entityId: Id]: Id },
 |}
-export type QueryResultOrError = QueryResult | ErrorResult
 
 export type SingleQueryResult = {|
   ok: 1,
   value: Restorable,
   versionId: ?Id,
 |}
-export type SingleQueryResultOrError = SingleQueryResult | ErrorResult
 
 export type PullQueryResult = {|
   ok: 1,
@@ -33,5 +30,3 @@ export type PullQueryResult = {|
   operations: Array<UpdateOperation>,
   versionId: ?Id,
 |} | SingleQueryResult
-
-export type PullQueryResultOrError = PullQueryResult | ErrorResult

@@ -26,9 +26,9 @@ import type {
   AuthenticationHandler,
   ExecutionWrapper,
   LoginCommand,
-  LoginCommandResultOrError,
+  LoginCommandResult,
   LogoutCommand,
-  LogoutCommandResultOrError,
+  LogoutCommandResult,
 } from 'phenyl-interfaces'
 
 type PhenylCoreParams = {
@@ -113,66 +113,51 @@ export default class PhenylCore implements PhenylRunner {
     const { entityClient } = this.clients
 
     switch (reqData.method) {
-      case 'find': {
-        const payload = await entityClient.find(reqData.payload)
-        return payload.ok ? { type: 'find', payload } : { type: 'error', payload }
-      }
-      case 'findOne': {
-        const payload = await entityClient.findOne(reqData.payload)
-        return payload.ok ? { type: 'findOne', payload } : { type: 'error', payload }
-      }
-      case 'get': {
-        const payload = await entityClient.get(reqData.payload)
-        return payload.ok ? { type: 'get', payload } : { type: 'error', payload }
-      }
-      case 'getByIds': {
-        const payload = await entityClient.getByIds(reqData.payload)
-        return payload.ok ? { type: 'getByIds', payload } : { type: 'error', payload }
-      }
-      case 'insert': {
-        const payload = await entityClient.insert(reqData.payload)
-        return payload.ok ? { type: 'insert', payload } : { type: 'error', payload }
-      }
-      case 'insertAndGet': {
-        const payload = await entityClient.insertAndGet(reqData.payload)
-        return payload.ok ? { type: 'insertAndGet', payload } : { type: 'error', payload }
-      }
-      case 'insertAndGetMulti': {
-        const payload = await entityClient.insertAndGetMulti(reqData.payload)
-        return payload.ok ? { type: 'insertAndGetMulti', payload } : { type: 'error', payload }
-      }
-      case 'update': {
-        const payload = await entityClient.update(reqData.payload)
-        return payload.ok ? { type: 'update', payload } : { type: 'error', payload }
-      }
-      case 'updateAndGet': {
-        const payload = await entityClient.updateAndGet(reqData.payload)
-        return payload.ok ? { type: 'updateAndGet', payload } : { type: 'error', payload }
-      }
-      case 'updateAndFetch': {
-        const payload = await entityClient.updateAndFetch(reqData.payload)
-        return payload.ok ? { type: 'updateAndFetch', payload } : { type: 'error', payload }
-      }
-      case 'delete': {
-        const payload = await entityClient.delete(reqData.payload)
-        return payload.ok ? { type: 'delete', payload } : { type: 'error', payload }
-      }
-      case 'runCustomQuery': {
-        const payload = await this.customQueryHandler(reqData.payload, session)
-        return payload.ok ? { type: 'runCustomQuery', payload } : { type: 'error', payload }
-      }
-      case 'runCustomCommand': {
-        const payload = await this.customCommandHandler(reqData.payload, session)
-        return payload.ok ? { type: 'runCustomCommand', payload } : { type: 'error', payload }
-      }
-      case 'login': {
-        const payload = await this.login(reqData.payload, session)
-        return payload.ok ? { type: 'login', payload } : { type: 'error', payload }
-      }
-      case 'logout': {
-        const payload = await this.logout(reqData.payload, session)
-        return payload.ok ? { type: 'logout', payload } : { type: 'error', payload }
-      }
+      case 'find':
+        return { type: 'find', payload: await entityClient.find(reqData.payload) }
+
+      case 'findOne':
+        return { type: 'findOne', payload: await entityClient.findOne(reqData.payload) }
+
+      case 'get':
+        return { type: 'get', payload: await entityClient.get(reqData.payload) }
+
+      case 'getByIds':
+        return { type: 'getByIds', payload: await entityClient.getByIds(reqData.payload) }
+
+      case 'insert':
+        return { type: 'insert', payload: await entityClient.insert(reqData.payload) }
+
+      case 'insertAndGet':
+        return { type: 'insertAndGet', payload: await entityClient.insertAndGet(reqData.payload) }
+
+      case 'insertAndGetMulti':
+        return { type: 'insertAndGetMulti', payload: await entityClient.insertAndGetMulti(reqData.payload) }
+
+      case 'update':
+        return { type: 'update', payload: await entityClient.update(reqData.payload) }
+
+      case 'updateAndGet':
+        return { type: 'updateAndGet', payload: await entityClient.updateAndGet(reqData.payload) }
+
+      case 'updateAndFetch':
+        return { type: 'updateAndFetch', payload: await entityClient.updateAndFetch(reqData.payload) }
+
+      case 'delete':
+        return { type: 'delete', payload: await entityClient.delete(reqData.payload) }
+
+      case 'runCustomQuery':
+        return { type: 'runCustomQuery', payload: await this.customQueryHandler(reqData.payload, session) }
+
+      case 'runCustomCommand':
+        return { type: 'runCustomCommand', payload: await this.customCommandHandler(reqData.payload, session) }
+
+      case 'login':
+        return { type: 'login', payload: await this.login(reqData.payload, session) }
+
+      case 'logout':
+        return { type: 'logout', payload: await this.logout(reqData.payload, session) }
+
       default: {
         return { type: 'error', payload: createErrorResult(new Error('Invalid method name.'), 'NotFound') }
       }
@@ -182,42 +167,26 @@ export default class PhenylCore implements PhenylRunner {
   /**
    * create Session
    */
-  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResultOrError> {
-    try {
-      const result = await this.authenticationHandler(loginCommand, session)
-
-      // login failed
-      if (!result.ok) {
-        return createErrorResult(result.error, result.resultType)
-      }
-
-      const newSession = await this.clients.sessionClient.create(result.preSession)
-      return {
-        ok: 1,
-        user: result.user,
-        session: newSession
-      }
-    }
-    catch (e) {
-      return createErrorResult(e)
+  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult> {
+    const result = await this.authenticationHandler(loginCommand, session)
+    const newSession = await this.clients.sessionClient.create(result.preSession)
+    return {
+      ok: 1,
+      user: result.user,
+      session: newSession
     }
   }
 
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResultOrError> {
+  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> {
     const { sessionId } = logoutCommand
-    try {
-      const result = await this.clients.sessionClient.delete(sessionId)
-      // sessionId not found
-      if (!result) {
-        return createErrorResult(new Error('sessionId not found'), 'BadRequest')
-      }
-      return { ok: 1 }
+    const result = await this.clients.sessionClient.delete(sessionId)
+    // sessionId not found
+    if (!result) {
+      throw createErrorResult(new Error('sessionId not found'), 'BadRequest')
     }
-    catch (e) {
-        return createErrorResult(e)
-    }
+    return { ok: 1 }
   }
 }

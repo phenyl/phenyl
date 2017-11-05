@@ -109,9 +109,6 @@ export default class ForeignQueryWrapper {
     try {
       const foreignIds = entities.map(entity => getNestedValue(entity, documentPath))
       const result = await this.entityClient.getByIds({ ids: foreignIds, entityName })
-      if (!result.ok) {
-        throw new Error(result.message)
-      }
       const entitiesById = {}
       for (const entity of result.values) {
         entitiesById[entity.id] = entity
@@ -133,9 +130,6 @@ export default class ForeignQueryWrapper {
     try {
       const foreignId = getNestedValue(entity, documentPath)
       const result = await this.entityClient.get({ id: foreignId, entityName })
-      if (!result.ok) {
-        throw new Error(result.message)
-      }
       return result.value
     }
     catch (e) {

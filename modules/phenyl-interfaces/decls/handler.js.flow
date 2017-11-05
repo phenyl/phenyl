@@ -9,19 +9,11 @@ import type { ErrorResultType } from './error-result.js.flow'
 import type { CustomCommandResult } from './command-result.js.flow'
 import type { Entity } from './entity.js.flow'
 
-export type OKAuthenticationResult = {|
+export type AuthenticationResult = {|
   ok: 1,
   preSession: PreSession,
   user: ?Entity,
 |}
-
-export type NGAuthenticationResult = {|
-  ok: 0,
-  error: Error,
-  resultType: ErrorResultType,
-|}
-
-export type AuthenticationResult = OKAuthenticationResult | NGAuthenticationResult
 
 export type AuthorizationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
 export type ValidationHandler = (reqData: RequestData, session: ?Session) => Promise<void>
