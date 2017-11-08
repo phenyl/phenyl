@@ -97,7 +97,7 @@ import type {
 } from './decls/http-server.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
-import type { PhenylRunner } from './decls/phenyl-runner.js.flow'
+import type { RestApiHandler } from './decls/rest-api-handler.js.flow'
 
 import type {
   CustomQueryResult,
@@ -269,7 +269,7 @@ export type {
   MultiValuesCommandResult,
   PathModifier,
   PhenylAction,
-  PhenylRunner,
+  RestApiHandler,
   PreEntity,
   PreSession,
   PullQuery,

@@ -29,7 +29,7 @@ type Options = {
  *
  *   // In server
  *   const { modifyPathInServer } = createCustomPathModifiers(['user_get-by-country', 'user_register-by-code'])
- *   const server = new PhenylHttpServer(http.createServer(), { runner: phenylCore, modifyPath: modifyPathInServer })
+ *   const server = new PhenylHttpServer(http.createServer(), { restApiHandler: phenylCore, modifyPath: modifyPathInServer })
  *
  * As these returned functions are just plain functions, you can combine with other modifiers.
  *   // In client

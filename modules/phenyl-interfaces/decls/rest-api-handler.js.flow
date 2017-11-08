@@ -6,10 +6,8 @@ import type {
   CustomClient,
   AuthClient,
 } from './client.js.flow'
-import type { Id } from './id.js.flow'
 
-
-export interface PhenylRunner {
-  run(reqData: RequestData): Promise<ResponseData>,
+export interface RestApiHandler {
+  handleRequestData(reqData: RequestData): Promise<ResponseData>,
   createDirectClient(): EntityClient & CustomClient & AuthClient
 }

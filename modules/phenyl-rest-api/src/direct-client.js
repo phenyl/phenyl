@@ -4,7 +4,7 @@ import {
 } from 'phenyl-utils/jsnext'
 
 import type {
-  PhenylRunner,
+  RestApiHandler,
   RequestData,
   ResponseData,
 } from 'phenyl-interfaces'
@@ -33,11 +33,11 @@ export default class PhenylRestApiDirectClient extends PhenylRestApiClient {
   /**
    * expects PhenylRestApi
    */
-  runner: PhenylRunner
+  restApiHandler: RestApiHandler
 
-  constructor(runner: PhenylRunner) {
+  constructor(restApiHandler: RestApiHandler) {
     super()
-    this.runner = runner
+    this.restApiHandler = restApiHandler
   }
 
   /**
@@ -45,6 +45,6 @@ export default class PhenylRestApiDirectClient extends PhenylRestApiClient {
    * Access to PhenylRestApi directly.
    */
   async handleRequestData(reqData: RequestData): Promise<ResponseData> {
-    return this.runner.run(reqData)
+    return this.restApiHandler.handleRequestData(reqData)
   }
 }

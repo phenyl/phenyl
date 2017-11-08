@@ -14,7 +14,7 @@ import type {
   EncodedHttpRequest,
   EncodedHttpResponse,
   PathModifier,
-  PhenylRunner,
+  RestApiHandler,
   ServerParams,
 } from 'phenyl-interfaces'
 
@@ -26,7 +26,7 @@ export default class ServerLogic {
    * Instance containing API logic invoked via run().
    * PhenylRestApi instance is expected.
    */
-  runner: PhenylRunner
+  restApiHandler: RestApiHandler
   /**
    * (path: string) => string
    * Real server path to regular path.
@@ -48,14 +48,14 @@ export default class ServerLogic {
   customRequestHandler: CustomRequestHandler
 
   constructor(params: ServerParams) {
-    this.runner = params.runner
+    this.restApiHandler = params.restApiHandler
     this.modifyPath = params.modifyPath || (path => path)
     this.customRequestHandler = params.customRequestHandler || notFoundHandler
   }
 
   /**
    * Handle request to get response.
-   * If modified path starts with "/api/", invoke PhenylRunner#run().
+   * If modified path starts with "/api/", invoke RestApiHandler#run().
    * Otherwise, invoke registered customRequestHandler.
    */
   async handleRequest(encodedHttpRequest: EncodedHttpRequest): Promise<EncodedHttpResponse> {
@@ -69,7 +69,7 @@ export default class ServerLogic {
 
   /**
    * @private
-   * Invoke PhenylRunner#run().
+   * Invoke RestApiHandler#run().
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
     let responseData
@@ -77,7 +77,7 @@ export default class ServerLogic {
       // 1. Decoding Request
       const requestData = decodeRequest(encodedHttpRequest)
       // 2. Invoking PhenylRestApi
-      responseData = await this.runner.run(requestData)
+      responseData = await this.restApiHandler.handleRequestData(requestData)
     }
     catch (err) {
       responseData = { type: 'error', payload: createErrorResult(err) }
@@ -93,7 +93,7 @@ export default class ServerLogic {
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
-      const restApiClient = this.runner.createDirectClient()
+      const restApiClient = this.restApiHandler.createDirectClient()
       const customResponse = await this.customRequestHandler(encodedHttpRequest, restApiClient)
       return customResponse
     }

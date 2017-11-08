@@ -7,11 +7,11 @@ import type {
   RestApiClient
 } from './client.js.flow'
 import type {
-  PhenylRunner
-} from './phenyl-runner.js.flow'
+  RestApiHandler
+} from './rest-api-handler.js.flow'
 
 export type ServerParams = {
-  runner: PhenylRunner,
+  restApiHandler: RestApiHandler,
   modifyPath?: PathModifier,
   customRequestHandler?: CustomRequestHandler
 }

@@ -16,7 +16,7 @@ import type {
   RequestData,
   ResponseData,
   ClientPool,
-  PhenylRunner,
+  RestApiHandler,
   Session,
   AuthorizationHandler,
   ValidationHandler,
@@ -43,7 +43,7 @@ type PhenylRestApiParams = {
 /**
  *
  */
-export default class PhenylRestApi implements PhenylRunner {
+export default class PhenylRestApi implements RestApiHandler {
   clients: ClientPool
   authorizationHandler: AuthorizationHandler
   validationHandler: ValidationHandler
@@ -65,7 +65,7 @@ export default class PhenylRestApi implements PhenylRunner {
   /**
    * @public
    */
-  async run(reqData: RequestData): Promise<ResponseData> {
+  async handleRequestData(reqData: RequestData): Promise<ResponseData> {
     try {
       // 0. Request data validation
       assertValidRequestData(reqData)
