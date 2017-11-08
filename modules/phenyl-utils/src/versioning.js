@@ -72,6 +72,7 @@ export class Versioning {
       ok: 1,
       n: 1,
       entity: this.stripMeta(entity),
+      prevVersionId: this.getPrevVersionId(entity),
       versionId: this.getVersionId(entity),
     }
   }
@@ -85,6 +86,7 @@ export class Versioning {
       ok: 1,
       n: entities.length,
       entities: entities.map(this.stripMeta),
+      prevVersionsById: this.getPrevVersionIds(entities),
       versionsById: this.getVersionIds(entities),
     }
   }
@@ -95,11 +97,12 @@ export class Versioning {
    */
   static createPushCommandResult(entity: EntityWithMetaInfo, updatedEntity: EntityWithMetaInfo, versionId: Id): PushCommandResult {
     const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
+    const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
     if (localUncommittedOperations != null) {
-      return { ok: 1, n: 1, operations: localUncommittedOperations, versionId: latestVersionId }
+      return { ok: 1, n: 1, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId }
     }
-    return { ok: 1, n: 1, entity: updatedEntity, versionId: latestVersionId }
+    return { ok: 1, n: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId }
   }
 
   /**
@@ -170,12 +173,42 @@ export class Versioning {
 
   /**
    * @private
+   * Extract previous version id from entity with meta info.
+   */
+  static getPrevVersionId(entity: EntityWithMetaInfo): ?Id {
+    if (!entity.hasOwnProperty('_PhenylMeta')) return null
+    try {
+      const metaInfo: EntityMetaInfo = entity._PhenylMeta
+      return metaInfo.versions[metaInfo.versions.length - 2].id
+    }
+    catch (e) {
+      // No metaInfo? It's OK
+      return null
+    }
+  }
+
+
+  /**
+   * @private
    * Extract current version ids from entities with meta info.
    */
   static getVersionIds(entities: Array<EntityWithMetaInfo>): { [entityId: Id]: Id } {
     const versionsById = {}
     entities.forEach(entity => {
       const versionId = this.getVersionId(entity)
+      if (versionId) versionsById[entity.id] = versionId
+    })
+    return versionsById
+  }
+
+  /**
+   * @private
+   * Extract previous version ids from entities with meta info.
+   */
+  static getPrevVersionIds(entities: Array<EntityWithMetaInfo>): { [entityId: Id]: Id } {
+    const versionsById = {}
+    entities.forEach(entity => {
+      const versionId = this.getPrevVersionId(entity)
       if (versionId) versionsById[entity.id] = versionId
     })
     return versionsById

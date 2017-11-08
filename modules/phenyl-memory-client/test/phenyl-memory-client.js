@@ -195,6 +195,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
       const { versions } = client.entityState.pool.user.foo._PhenylMeta
       assert(versions.length === 2)
       assert(versions[1].id === result.versionId)
+      assert(versions[0].id === result.prevVersionId)
       const { entity } = await client.get({ entityName, id })
       assert(entity.name === 'John')
       assert.deepEqual(entity.hobbies, ['guitar', 'jogging'])
@@ -210,6 +211,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
       assert(result.n === 2)
       // $FlowIssue(versionsById-exists)
       assert(result.versionsById.user2 && result.versionsById.user2 === result.versionsById.user3)
+      assert(result.prevVersionsById.user2 && result.prevVersionsById.user2 !== result.prevVersionsById.user3)
     })
   })
 

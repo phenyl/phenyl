@@ -6,12 +6,13 @@ import type {
 import type { Id } from './id.js.flow'
 import type { Session } from './session.js.flow'
 import type { Entity } from './entity.js.flow'
-import type { ErrorResult } from './error-result.js.flow'
 
 export type CommandResult = {
   ok: 1,
   n: number,
   versionId?: ?Id,
+  prevVersionId?: ?Id,
+  prevVersionsById?: { [entityId: Id]: Id },
   versionsById?: { [entityId: Id]: Id },
 }
 
@@ -19,6 +20,7 @@ export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
   entities: Array<Entity>,
+  prevVersionsById: { [entityId: Id]: Id },
   versionsById: { [entityId: Id]: Id },
 }
 
@@ -26,6 +28,7 @@ export type GetCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
   entity: Entity,
+  prevVersionId: ?Id,
   versionId: ?Id,
 |}
 
@@ -33,6 +36,7 @@ export type PushCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
   operations: Array<UpdateOperation>,
+  prevVersionId: ?Id,
   versionId: ?Id,
 |} | GetCommandResult
 

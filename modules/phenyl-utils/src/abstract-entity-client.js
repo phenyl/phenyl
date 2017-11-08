@@ -110,11 +110,11 @@ export class AbstractEntityClient implements EntityClient {
     if (command.id != null) {
       // $FlowIssue(this-is-IdUpdateCommand)
       const result = await this.updateAndGet((command: IdUpdateCommand))
-      return { ok: 1, n: 1, versionId: result.versionId }
+      return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
     }
     // $FlowIssue(this-is-MultiUpdateCommand)
     const result = await this.updateAndFetch((command: MultiUpdateCommand))
-    return { ok: 1, n: result.n, versionsById: result.versionsById }
+    return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
 
   /**
