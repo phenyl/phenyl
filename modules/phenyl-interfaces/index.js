@@ -12,7 +12,7 @@ import type {
 import type {
   AuthClient,
   ClientPool,
-  CoreClient,
+  RestApiClient,
   CustomClient,
   EntityClient,
   SessionClient,
@@ -189,7 +189,7 @@ export type {
   ClientPathModifier,
   ClientPool,
   CommandResult,
-  CoreClient,
+  RestApiClient,
   CoreExecution,
   CustomClient,
   CustomCommand,

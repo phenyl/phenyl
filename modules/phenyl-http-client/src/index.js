@@ -5,7 +5,7 @@ import {
   decodeResponse,
 } from 'phenyl-http-rules/jsnext'
 import {
-  PhenylCoreClient,
+  PhenylRestApiClient,
 } from 'phenyl-utils/jsnext'
 const { fetch } = fp()
 
@@ -18,13 +18,13 @@ import type {
 } from 'phenyl-interfaces'
 
 /**
- * Client to access to PhenylCore on server.
+ * Client to access to PhenylRestApi on server.
  *
  * (Query | Command) + sessionId => RequestData => [HttpServer] => ResponseData => (QueryResult | CommandResult | Error)
  *                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                                             handleRequestData()
- * @see PhenylCoreClient in module 'phenyl-utils' for all interfaces.
- * Roughly, this implements CoreClient = (EntityClient, CustomClient and AuthClient).
+ * @see PhenylRestApiClient in module 'phenyl-utils' for all interfaces.
+ * Roughly, this implements RestApiClient = (EntityClient, CustomClient and AuthClient).
  * EntityClient:
  *   find | findOne | get | getByIds | pull
  *   insert | insertAndGet | insertAndGetMulti
@@ -37,7 +37,7 @@ import type {
  * AuthClient:
  *   login | logout
  */
-export default class PhenylHttpClient extends PhenylCoreClient {
+export default class PhenylHttpClient extends PhenylRestApiClient {
   /**
    * Base URL without "/api".
    *  No slash at the last.
@@ -60,7 +60,7 @@ export default class PhenylHttpClient extends PhenylCoreClient {
 
   /**
    * @override
-   * Access to PhenylCore on server and get ResponseData.
+   * Access to PhenylRestApi on server and get ResponseData.
    */
   async handleRequestData(reqData: RequestData): Promise<ResponseData> {
     const {

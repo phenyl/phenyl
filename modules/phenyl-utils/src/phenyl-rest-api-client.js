@@ -4,7 +4,7 @@ import {
 } from './create-error-result.js'
 
 import type {
-  CoreClient,
+  RestApiClient,
   CommandResult,
   CustomQuery,
   CustomQueryResult,
@@ -39,17 +39,17 @@ import type {
 
 /**
  * @abstract
- * Client to access to PhenylCore.
+ * Client to access to PhenylRestApi.
  *
  * (Query | Command) + sessionId => RequestData => ResponseData => (QueryResult | CommandResult | Error)
  *                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                                     This part is abstract.
  *
  * Child classes must implements handleRequestData(reqData: RequestData) => Promise<ResponseData>
- * For example, PhenylHttpClient is the child and its "handleRequestData()" is to access to PhenylCore via HttpServer.
- * Also, PhenylCoreDirectClient is the direct client which contains PhenylCore instance.
+ * For example, PhenylHttpClient is the child and its "handleRequestData()" is to access to PhenylRestApi via HttpServer.
+ * Also, PhenylRestApiDirectClient is the direct client which contains PhenylRestApi instance.
  */
-export class PhenylCoreClient implements CoreClient {
+export class PhenylRestApiClient implements RestApiClient {
 
   /**
    * @abstract

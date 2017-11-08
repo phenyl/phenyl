@@ -10,7 +10,7 @@ import {
   noHandler,
   simpleExecutionWrapper
 } from './default-handlers.js'
-import PhenylCoreDirectClient from './direct-client.js'
+import PhenylRestApiDirectClient from './direct-client.js'
 
 import type {
   RequestData,
@@ -30,7 +30,7 @@ import type {
   LogoutCommandResult,
 } from 'phenyl-interfaces'
 
-type PhenylCoreParams = {
+type PhenylRestApiParams = {
   clients: ClientPool,
   authorizationHandler?: AuthorizationHandler,
   validationHandler?: ValidationHandler,
@@ -43,7 +43,7 @@ type PhenylCoreParams = {
 /**
  *
  */
-export default class PhenylCore implements PhenylRunner {
+export default class PhenylRestApi implements PhenylRunner {
   clients: ClientPool
   authorizationHandler: AuthorizationHandler
   validationHandler: ValidationHandler
@@ -52,7 +52,7 @@ export default class PhenylCore implements PhenylRunner {
   authenticationHandler: AuthenticationHandler
   executionWrapper: ExecutionWrapper
 
-  constructor(params: PhenylCoreParams) {
+  constructor(params: PhenylRestApiParams) {
     this.clients = params.clients
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
     this.validationHandler = params.validationHandler || noOperationHandler
@@ -99,10 +99,10 @@ export default class PhenylCore implements PhenylRunner {
 
   /**
    * @public
-   * Create PhenylCoreDirectClient of this instance.
+   * Create PhenylRestApiDirectClient of this instance.
    */
-  createDirectClient(): PhenylCoreDirectClient {
-    return new PhenylCoreDirectClient(this)
+  createDirectClient(): PhenylRestApiDirectClient {
+    return new PhenylRestApiDirectClient(this)
   }
 
   /**

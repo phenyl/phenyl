@@ -9,7 +9,7 @@ import {
 } from 'phenyl-utils/jsnext'
 
 import type {
-  CoreClient,
+  RestApiClient,
   CustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
@@ -24,7 +24,7 @@ import type {
 export default class ServerLogic {
   /**
    * Instance containing API logic invoked via run().
-   * PhenylCore instance is expected.
+   * PhenylRestApi instance is expected.
    */
   runner: PhenylRunner
   /**
@@ -43,7 +43,7 @@ export default class ServerLogic {
    * Intended Use: Web page. Don't use this function as API.
    * Example: Rich API explorer like swagger.
    *
-   * The second argument "coreClient" is a client to access directly to PhenylCore (bypass HTTP).
+   * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
    */
   customRequestHandler: CustomRequestHandler
 
@@ -76,7 +76,7 @@ export default class ServerLogic {
     try {
       // 1. Decoding Request
       const requestData = decodeRequest(encodedHttpRequest)
-      // 2. Invoking PhenylCore
+      // 2. Invoking PhenylRestApi
       responseData = await this.runner.run(requestData)
     }
     catch (err) {
@@ -93,8 +93,8 @@ export default class ServerLogic {
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
-      const coreClient = this.runner.createDirectClient()
-      const customResponse = await this.customRequestHandler(encodedHttpRequest, coreClient)
+      const restApiClient = this.runner.createDirectClient()
+      const customResponse = await this.customRequestHandler(encodedHttpRequest, restApiClient)
       return customResponse
     }
     // TODO: Show error in development environment.
@@ -110,7 +110,7 @@ export default class ServerLogic {
  * Default value of ServerLogic#handleCustomRequest().
  * Return 404 response.
  */
-async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: CoreClient): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
+async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: RestApiClient): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
   const { path } = encodedHttpRequest
   const body = `Not Found.\nThe requested URL "${path}" is not found on this server.`
   return createPlainTextResponse(body, 404)

@@ -1,6 +1,6 @@
 // @flow
 import {
-  PhenylCoreClient,
+  PhenylRestApiClient,
 } from 'phenyl-utils/jsnext'
 
 import type {
@@ -10,13 +10,13 @@ import type {
 } from 'phenyl-interfaces'
 
 /**
- * Client to access to PhenylCore directly.
+ * Client to access to PhenylRestApi directly.
  *
- * (Query | Command) + sessionId => RequestData => [PhenylCore] => ResponseData => (QueryResult | CommandResult | Error)
+ * (Query | Command) + sessionId => RequestData => [PhenylRestApi] => ResponseData => (QueryResult | CommandResult | Error)
  *                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
  *                                             handleRequestData()
- * @see PhenylCoreClient in module 'phenyl-utils' for all interfaces.
- * Roughly, this implements CoreClient = (EntityClient, CustomClient and AuthClient).
+ * @see PhenylRestApiClient in module 'phenyl-utils' for all interfaces.
+ * Roughly, this implements RestApiClient = (EntityClient, CustomClient and AuthClient).
  * EntityClient:
  *   find | findOne | get | getByIds | pull
  *   insert | insertAndGet | insertAndGetMulti
@@ -29,9 +29,9 @@ import type {
  * AuthClient:
  *   login | logout
  */
-export default class PhenylCoreDirectClient extends PhenylCoreClient {
+export default class PhenylRestApiDirectClient extends PhenylRestApiClient {
   /**
-   * expects PhenylCore
+   * expects PhenylRestApi
    */
   runner: PhenylRunner
 
@@ -42,7 +42,7 @@ export default class PhenylCoreDirectClient extends PhenylCoreClient {
 
   /**
    * @override
-   * Access to PhenylCore directly.
+   * Access to PhenylRestApi directly.
    */
   async handleRequestData(reqData: RequestData): Promise<ResponseData> {
     return this.runner.run(reqData)

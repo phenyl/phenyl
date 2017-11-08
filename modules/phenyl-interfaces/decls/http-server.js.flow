@@ -4,7 +4,7 @@ import type {
   EncodedHttpResponse
 } from './http.js.flow'
 import type {
-  CoreClient
+  RestApiClient
 } from './client.js.flow'
 import type {
   PhenylRunner
@@ -34,6 +34,6 @@ export type PathModifier = (path: string) => string
  * Intended Use: Web page. Don't use this function as API.
  * Example: Rich API explorer like swagger.
  *
- * The second argument "coreClient" is a client to access directly to PhenylCore (bypass HTTP).
+ * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
  */
-export type CustomRequestHandler = (encodedHttpRequest: EncodedHttpRequest, coreClient: CoreClient) => Promise<EncodedHttpResponse>
+export type CustomRequestHandler = (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient) => Promise<EncodedHttpResponse>
