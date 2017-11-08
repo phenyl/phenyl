@@ -20,6 +20,10 @@ export type OrFindOperation = {|
   $or: Array<FindOperation>,
 |}
 
+/**
+ * ISSUE:
+ * https://github.com/facebook/flow/issues/2892
+ */
 export type FindOperation =
   SimpleFindOperation |
   AndFindOperation |
