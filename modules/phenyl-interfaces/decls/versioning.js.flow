@@ -1,6 +1,6 @@
 // @flow
+import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
-import type { Entity } from './entity.js.flow'
 
 export type EntityVersion = {
   id: Id,
@@ -16,3 +16,11 @@ export type EntityWithMetaInfo = $Subtype<{
   id: Id,
   _PhenylMeta?: EntityMetaInfo
 }>
+
+export type VersionDiff = {
+  entityName: string,
+  id: Id,
+  prevVersionId: Id,
+  versionId: Id,
+  operation: UpdateOperation,
+}
