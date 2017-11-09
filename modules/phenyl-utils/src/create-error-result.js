@@ -30,7 +30,7 @@ export function createErrorResult(error: $Supertype<Error | ErrorResult | string
   }
   // $FlowIssue(error.type-will-be-ErrorResultType)
   const type: ErrorResultType = (error.type != null) ? error.type : _type
-  const responseError = createErrorResult(error.message, type)
+  const responseError = new PhenylResponseError(error.message, type)
   if (error.stack) responseError.stack = error.stack
   return responseError
 }
