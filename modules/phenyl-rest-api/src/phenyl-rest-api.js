@@ -10,7 +10,6 @@ import {
   noHandler,
   simpleExecutionWrapper
 } from './default-handlers.js'
-import PhenylRestApiDirectClient from './direct-client.js'
 
 import type {
   RequestData,
@@ -95,14 +94,6 @@ export default class PhenylRestApi implements RestApiHandler {
     catch (e) {
       return { type: 'error', payload: createErrorResult(e) }
     }
-  }
-
-  /**
-   * @public
-   * Create PhenylRestApiDirectClient of this instance.
-   */
-  createDirectClient(): PhenylRestApiDirectClient {
-    return new PhenylRestApiDirectClient(this)
   }
 
   /**

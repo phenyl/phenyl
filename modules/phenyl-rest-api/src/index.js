@@ -6,7 +6,6 @@ import createCustomQueryHandler from './create-custom-query-handler.js'
 import createCustomCommandHandler from './create-custom-command-handler.js'
 import createAuthenticationHandler from './create-authentication-handler.js'
 import createExecutionWrapper from './create-execution-wrapper.js'
-import PhenylRestApiDirectClient from './direct-client.js'
 import {
   passThroughHandler,
   noHandler,
@@ -21,7 +20,6 @@ export {
   createExecutionWrapper,
   createAuthenticationHandler,
   createValidationHandler,
-  PhenylRestApiDirectClient,
   passThroughHandler,
   noHandler,
   simpleExecutionWrapper,

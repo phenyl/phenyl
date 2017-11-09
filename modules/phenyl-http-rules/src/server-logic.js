@@ -6,6 +6,7 @@ import decodeRequest from './decode-request.js'
 import encodeResponse from './encode-response.js'
 import {
   createErrorResult,
+  PhenylRestApiDirectClient,
 } from 'phenyl-utils/jsnext'
 
 import type {
@@ -93,7 +94,7 @@ export default class ServerLogic {
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
-      const restApiClient = this.restApiHandler.createDirectClient()
+      const restApiClient = new PhenylRestApiDirectClient(this.restApiHandler)
       const customResponse = await this.customRequestHandler(encodedHttpRequest, restApiClient)
       return customResponse
     }

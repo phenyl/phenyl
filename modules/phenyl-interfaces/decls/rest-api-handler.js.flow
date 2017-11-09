@@ -1,13 +1,7 @@
 // @flow
 import type { RequestData } from './request-data.js.flow'
 import type { ResponseData } from './response-data.js.flow'
-import type {
-  EntityClient,
-  CustomClient,
-  AuthClient,
-} from './client.js.flow'
 
 export interface RestApiHandler {
   handleRequestData(reqData: RequestData): Promise<ResponseData>,
-  createDirectClient(): EntityClient & CustomClient & AuthClient
 }

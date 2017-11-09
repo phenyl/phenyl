@@ -12,7 +12,6 @@ import type {
 import type { KvsClient } from './kvs-client.js.flow'
 import type {
   Session,
-  PreSession,
 } from './session.js.flow'
 import type {
   CustomQueryResult,
@@ -42,6 +41,7 @@ import type {
   LogoutCommand,
   PushCommand,
 } from './command.js.flow'
+import type { RestApiHandler } from './rest-api-handler.js.flow'
 
 export interface EntityClient {
   find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResult>,
@@ -72,7 +72,7 @@ export interface AuthClient {
   logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResult>,
 }
 
-export type RestApiClient = EntityClient & CustomClient & AuthClient
+export type RestApiClient = EntityClient & CustomClient & AuthClient & RestApiHandler
 
 export type SessionClient = KvsClient<Session>
 
