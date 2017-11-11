@@ -4,7 +4,6 @@ import assert from 'power-assert'
 import { it, describe, before, after } from 'kocha'
 import PhenylMongoDbClient from '../src/mongodb-client.js'
 import { connect } from '../src/connection.js'
-import { assign } from 'power-assign/jsnext'
 
 let mongoDBClient
 
@@ -67,7 +66,8 @@ describe('PhenylMongoDbClient', () => {
         value: user1,
       })
 
-      assert.deepEqual(result, { ok: 1, n: 1 })
+      assert(result.ok === 1)
+      assert(result.n === 1)
     })
 
     it('inserts entities with multi insert command', async () => {
@@ -95,13 +95,14 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it('does not return entities when condition does not match', async () => {
-      const result = await mongoDBClient.find({
-        entityName: 'user',
-        where: { 'name.first': 'naomi' },
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.find({
+          entityName: 'user',
+          where: { 'name.first': 'naomi' },
+        })
+      } catch (error) {
+        assert(error.type === 'NotFound')
+      }
     })
   })
 
@@ -117,13 +118,14 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it('does not return any entity when condition does not match', async () => {
-      const result = await mongoDBClient.findOne({
-        entityName: 'user',
-        where: { id: 'hogehoge' },
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        const result = await mongoDBClient.findOne({
+          entityName: 'user',
+          where: { id: 'hogehoge' },
+        })
+      } catch (error) {
+        assert(error.type === 'NotFound')
+      }
     })
   })
 
@@ -139,13 +141,14 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it('does not return any entity when condition does not matches', async () => {
-      const result = await mongoDBClient.get({
-        entityName: 'user',
-        id: 'hogehoge',
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.get({
+          entityName: 'user',
+          id: 'hogehoge',
+        })
+      } catch (error) {
+        assert(error.type === 'NotFound')
+      }
     })
   })
 
@@ -159,13 +162,14 @@ describe('PhenylMongoDbClient', () => {
       assert.deepEqual(result.entities, [user1, user2])
     })
     it('does not return any entities when condition does not matche', async () => {
-      const result = await mongoDBClient.getByIds({
-        entityName: 'user',
-        ids: ['hoge', 'fuga'],
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.getByIds({
+          entityName: 'user',
+          ids: ['hoge', 'fuga'],
+        })
+      } catch (error) {
+        assert(error.type === 'NotFound')
+      }
     })
   })
 
@@ -235,14 +239,16 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it ('does not update any entity when condition does not match', async () => {
-      const result = await mongoDBClient.update({
-        entityName: 'user',
-        where: { id: 'hogehoge' },
-        operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.update({
+          entityName: 'user',
+          where: { id: 'hogehoge' },
+          operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
+        })
+        throw new Error('this must not be called')
+      } catch (error) {
+        assert(error.type === 'NotFound')
+      }
     })
   })
 
@@ -260,14 +266,17 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it ('does not update and get any entity when condition does not match', async () => {
-      const result = await mongoDBClient.updateAndGet({
-        entityName: 'user',
-        id: 'hoge',
-        operation: { $set: { 'favorites.movie': { title: 'shin godzilla' }}},
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.updateAndGet({
+          entityName: 'user',
+          id: 'hoge',
+          operation: { $set: { 'favorites.movie': { title: 'shin godzilla' }}},
+        })
+        throw new Error('this must not be called')
+      } catch (error) {
+        assert(error.type === 'NotFound')
+        assert(error.message === '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.')
+      }
     })
   })
 
@@ -287,14 +296,17 @@ describe('PhenylMongoDbClient', () => {
     })
 
     it ('does not update and fetch any entities when condition does not match', async () => {
-      const result = await mongoDBClient.updateAndFetch({
-        entityName: 'user',
-        where: { id: 'hoge' },
-        operation: { $set: { 'favorites.book': { author: 'Abe Kobo' }}},
-      })
-
-      assert(result.ok === 0)
-      assert(result.type === 'NotFound')
+      try {
+        await mongoDBClient.updateAndFetch({
+          entityName: 'user',
+          where: { id: 'hoge' },
+          operation: { $set: { 'favorites.book': { author: 'Abe Kobo' }}},
+        })
+        throw new Error('this must not be called')
+      } catch (error) {
+        assert(error.type === 'NotFound')
+        assert(error.message === '"PhenylMongodbClient#updateAndFetch()" failed. Could not find any entity with the given query.')
+      }
     })
   })
 
@@ -309,12 +321,16 @@ describe('PhenylMongoDbClient', () => {
       assert(result.ok === 1)
       assert(result.n === 1)
 
-      const deletedResult = await mongoDBClient.get({
-        entityName: 'user',
-        id,
-      })
-
-      assert(deletedResult.entity == null)
+      try {
+        await mongoDBClient.get({
+          entityName: 'user',
+          id,
+        })
+        throw new Error('this must not be called')
+      } catch (error) {
+        assert(error.type === 'NotFound')
+        assert(error.message === '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.')
+      }
     })
 
     it ('deletes entities with multi delete command', async () => {
@@ -327,12 +343,16 @@ describe('PhenylMongoDbClient', () => {
       assert(result.ok === 1)
       assert(result.n === 4)
 
-      const deletedResult = await mongoDBClient.find({
-        entityName: 'user',
-        where,
-      })
-      assert(deletedResult.ok === 0)
-      assert(deletedResult.type === 'NotFound')
+      try {
+        await mongoDBClient.find({
+          entityName: 'user',
+          where,
+        })
+        throw new Error('this must not be called')
+      } catch (error) {
+        assert(error.type === 'NotFound')
+        assert(error.message === '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.')
+      }
     })
   })
 })

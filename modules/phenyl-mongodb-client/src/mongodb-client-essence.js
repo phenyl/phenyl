@@ -14,17 +14,15 @@ import type {
   InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   DeleteCommand,
   FindOperation,
-  Restorable,
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
 
-function setIdTo_id(where: FindOperation): FindOperation {
+function setIdTo_idInWhere(where: FindOperation): FindOperation {
   return visitFindOperation(where, {
     simpleFindOperation: (simpleFindOperation) => {
       return assign(simpleFindOperation, { $rename: { id: '_id' } })
@@ -32,8 +30,12 @@ function setIdTo_id(where: FindOperation): FindOperation {
   })
 }
 
-function set_idToId(restorable: Restorable): Entity {
-  return assign(restorable, { $rename: { _id: 'id' } })
+function setIdTo_idInEntity(entity: Entity): Entity {
+  return assign(entity, { $rename: { id: '_id' } })
+}
+
+function set_idToIdInEntity(entity: Entity): Entity {
+  return assign(entity, { $rename: { _id: 'id' } })
 }
 
 export default class PhenylMongoDbClientEssence implements EntityClientEssence {
@@ -50,27 +52,27 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     if (skip) options.skip = skip
     if (limit) options.limit = limit
 
-    const result = await coll.find(setIdTo_id(where), options)
+    const result = await coll.find(setIdTo_idInWhere(where), options)
     if (result.length === 0) {
       throw createErrorResult(
         '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
     }
-    return result.map(set_idToId)
+    return result.map(set_idToIdInEntity)
   }
 
   async findOne(query: WhereQuery): Promise<Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find(setIdTo_id(where), { limit: 1 })
+    const result = await coll.find(setIdTo_idInWhere(where), { limit: 1 })
     if (result.length === 0) {
       throw createErrorResult(
         '"PhenylMongodbClient#findOne()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
     }
-    return set_idToId(result[0])
+    return set_idToIdInEntity(result[0])
   }
 
   async get(query: IdQuery): Promise<Entity> {
@@ -83,7 +85,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
         'NotFound'
       )
     }
-    return set_idToId(result[0])
+    return set_idToIdInEntity(result[0])
   }
 
   async getByIds(query: IdsQuery): Promise<Array<Entity>> {
@@ -96,7 +98,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
         'NotFound',
       )
     }
-    return result.map(set_idToId)
+    return result.map(set_idToIdInEntity)
   }
 
   async insert(command: InsertCommand): Promise<number> {
@@ -104,10 +106,10 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const coll = this.conn.collection(entityName)
     let result
     if (command.value) {
-      result = await coll.insertOne(command.value)
+      result = await coll.insertOne(setIdTo_idInEntity(command.value))
     }
     else {
-      result = await coll.insertMany(command.values)
+      result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
     }
     return result.insertedCount
   }
@@ -115,7 +117,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
   async insertAndGet(command: SingleInsertCommand): Promise<Entity> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.insertOne(command.value)
+    const result = await coll.insertOne(setIdTo_idInEntity(command.value))
     // TODO transactional operation needed
     return this.get({ entityName, id: result.insertedId })
   }
@@ -124,31 +126,9 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
 
-    const result = await coll.insertMany(command.values)
+    const result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
     // TODO: transactional operation needed
     return this.getByIds({ entityName, ids: result.insertedIds })
-  }
-
-  async update(command: UpdateCommand): Promise<number> {
-    const { entityName, operation } = command
-    const coll = this.conn.collection(entityName)
-    let result
-
-    if (command.id) {
-      result = await coll.updateOne({ _id: command.id }, operation)
-    }
-    if (command.where) {
-      result = await coll.updateMany(setIdTo_id(command.where), operation)
-    }
-    // $FlowIssue(matchedCount-exists)
-    const { matchedCount } = result
-    if (matchedCount === 0) {
-      throw createErrorResult(
-        '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
-        'NotFound',
-      )
-    }
-    return matchedCount
   }
 
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
@@ -169,7 +149,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateMany(setIdTo_id(where), operation)
+    const result = await coll.updateMany(setIdTo_idInWhere(where), operation)
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createErrorResult(
@@ -178,7 +158,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
       )
     }
     // FIXME: the result may be different from updated entities.
-    return this.find({ entityName, where: setIdTo_id(where) })
+    return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }
 
   async delete(command: DeleteCommand): Promise<number> {
@@ -189,7 +169,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
       result = await coll.deleteOne({ _id: command.id })
     }
     else if (command.where) {
-      result = await coll.deleteMany(setIdTo_id(command.where))
+      result = await coll.deleteMany(setIdTo_idInWhere(command.where))
     }
     // $FlowIssue(deleteCount-exists)
     const { deletedCount } = result
