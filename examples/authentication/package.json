@@ -1,0 +1,24 @@
+{
+  "name": "phenyl-example-authentication",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "../../node_modules/.bin/babel-node src/index.js"
+  },
+  "devDependencies": {
+    "phenyl-interfaces": "*"
+  },
+  "dependencies": {
+    "oad-utils": "*",
+    "phenyl-http-client": "*",
+    "phenyl-http-server": "*",
+    "phenyl-memory-client": "*",
+    "phenyl-rest-api": "*",
+    "phenyl-standards": "*",
+    "power-assert": "^1.4.4"
+  },
+  "author": "",
+  "license": "ISC"
+}
