@@ -4,7 +4,7 @@ import type {
   RequestData,
   Session,
   ResponseData,
-  CoreExecution,
+  RestApiExecution,
 } from 'phenyl-interfaces'
 
 type AuthorizationSetting = {
@@ -25,7 +25,7 @@ export class StandardEntityDefinition implements EntityDefinition {
   async validation(reqData: RequestData, session: ?Session): Promise<void> { // eslint-disable-line no-unused-vars
   }
 
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
     return execution(reqData, session)
   }
 }

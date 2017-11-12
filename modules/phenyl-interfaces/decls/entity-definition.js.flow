@@ -3,12 +3,12 @@
 import type { Session } from './session.js.flow'
 import type { RequestData } from './request-data.js.flow'
 import type { ResponseData } from './response-data.js.flow'
-import type { CoreExecution } from './handler.js.flow'
+import type { RestApiExecution } from './handler.js.flow'
 
 export interface EntityDefinition {
   authorization(reqData: RequestData, session: ?Session): Promise<boolean>, // AuthorizationHandler
   validation(reqData: RequestData, session: ?Session): Promise<void>, // ValidationHandler
-  wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData>, // ExecutionWrapper
+  wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData>, // ExecutionWrapper
 }
 
 export type EntityDefinitions = { [entityName: string]: EntityDefinition }

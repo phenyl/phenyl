@@ -18,7 +18,7 @@ import type {
   AuthenticationResult,
   RequestData,
   ResponseData,
-  CoreExecution,
+  RestApiExecution,
 } from 'phenyl-interfaces'
 
 import type {
@@ -73,7 +73,7 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
     }
   }
 
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
     const resData = await execution(newReqData, session)
     const newResData = removePasswordFromResponseData(resData, this.passwordPropName)

@@ -18,7 +18,7 @@ import type {
   ForeignQueryParams,
   RequestData,
   Session,
-  CoreExecution,
+  RestApiExecution,
   ResponseData,
   EntitiesById,
   EntityClient,
@@ -64,7 +64,7 @@ export class ForeignQueryWrapper {
   /**
    *
    */
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: CoreExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
     const resData = await execution(reqData, session)
 
     return await switchByRequestMethod(reqData, {

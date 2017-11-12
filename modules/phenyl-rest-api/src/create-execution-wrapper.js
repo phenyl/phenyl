@@ -1,6 +1,6 @@
 // @flow
 import type {
-  CoreExecution,
+  RestApiExecution,
   ExecutionWrapper,
   FunctionalGroup,
   RequestData,
@@ -17,7 +17,7 @@ function assertWrapExecution(fn: any, name: string, methodName: string) {
  */
 export function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
   const { users, nonUsers } = fg
-  return async function executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution) :Promise<ResponseData> {
+  return async function executionWrapper(reqData: RequestData, session: ?Session, execution: RestApiExecution) :Promise<ResponseData> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':
