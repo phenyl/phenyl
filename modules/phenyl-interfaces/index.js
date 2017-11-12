@@ -179,7 +179,25 @@ import type {
   EntityMetaInfo,
   EntityVersion,
   EntityWithMetaInfo,
+  SubscriptionRequest,
+  SubscriptionResult,
+  VersionDiff,
+  VersionDiffListener,
+  VersionDiffPublisher,
+  VersionDiffSubscriber,
 } from './decls/versioning.js.flow'
+
+import type {
+  WebSocketClientMessage,
+  WebSocketClientRequestDataMessage,
+  WebSocketClientSubscriptionRequestMessage,
+  WebSocketServerErrorMessage,
+  WebSocketServerMessage,
+  WebSocketServerParams,
+  WebSocketServerResponseDataMessage,
+  WebSocketServerSubscriptionResultMessage,
+  WebSocketServerVersionDiffMessage,
+} from './decls/websocket.js.flow'
 
 export type {
   AuthorizationHandler,
@@ -297,6 +315,8 @@ export type {
   SetAction,
   SingleInsertCommand,
   SingleQueryResult,
+  SubscriptionRequest,
+  SubscriptionResult,
   UpdateAction,
   UpdateAndFetchRequestData,
   UpdateAndFetchResponseData,
@@ -308,5 +328,18 @@ export type {
   UserDefinition,
   UserDefinitions,
   ValidationHandler,
+  VersionDiff,
+  VersionDiffListener,
+  VersionDiffPublisher,
+  VersionDiffSubscriber,
+  WebSocketClientMessage,
+  WebSocketClientRequestDataMessage,
+  WebSocketClientSubscriptionRequestMessage,
+  WebSocketServerErrorMessage,
+  WebSocketServerMessage,
+  WebSocketServerParams,
+  WebSocketServerResponseDataMessage,
+  WebSocketServerSubscriptionResultMessage,
+  WebSocketServerVersionDiffMessage,
   WhereQuery,
 }
