@@ -1,0 +1,64 @@
+// @flow
+import type {
+  RequestData
+} from './request-data.js.flow'
+
+import type {
+  ResponseData
+} from './response-data.js.flow'
+
+import type {
+  ErrorResult
+} from './error-result.js.flow'
+
+import type {
+  VersionDiff,
+  VersionDiffSubscriber,
+  SubscriptionRequest,
+  SubscriptionResult,
+} from './versioning.js.flow'
+
+import type {
+  ServerParams
+} from './http-server.js.flow'
+
+export type WebSocketClientMessage = WebSocketClientRequestDataMessage | WebSocketClientSubscriptionRequestMessage
+
+export type WebSocketClientRequestDataMessage = {|
+  reqData: RequestData,
+  tag: string,
+|}
+
+export type WebSocketClientSubscriptionRequestMessage = {|
+  subscription: SubscriptionRequest,
+  tag: string,
+|}
+
+export type WebSocketServerMessage =
+  WebSocketServerResponseDataMessage |
+  WebSocketServerVersionDiffMessage |
+  WebSocketServerSubscriptionResultMessage |
+  WebSocketServerErrorMessage
+
+export type WebSocketServerResponseDataMessage = {|
+  resData: ResponseData,
+  tag: string,
+|}
+
+export type WebSocketServerVersionDiffMessage = {|
+  versionDiff: VersionDiff,
+|}
+
+export type WebSocketServerSubscriptionResultMessage = {|
+  subscriptionResult: SubscriptionResult,
+  tag: string,
+|}
+
+export type WebSocketServerErrorMessage = {|
+  error: ErrorResult,
+  tag: ?string,
+|}
+
+export type WebSocketServerParams = ServerParams & {
+  versionDiffSubscriber?: VersionDiffSubscriber
+}
