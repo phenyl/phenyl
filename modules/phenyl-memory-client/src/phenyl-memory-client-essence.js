@@ -1,4 +1,5 @@
 // @flow
+
 import {
   PhenylStateFinder,
   PhenylStateUpdater,
@@ -42,7 +43,14 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
    *
    */
   async find(query: WhereQuery): Promise<Array<Entity>> {
-    return PhenylStateFinder.find(this.entityState, query)
+    const entity = PhenylStateFinder.find(this.entityState, query)
+    if (entity.length === 0) {
+      throw createErrorResult(
+        '"PhenylMemoryClient#find()" failed. Could not find any entity with the given query.',
+        'NotFound'
+      )
+    }
+    return entity
   }
 
   /**
@@ -153,9 +161,16 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
    */
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id } = command
-    const operation = PhenylStateUpdater.$update(this.entityState, command)
-    this.entityState = assign(this.entityState, operation)
-    return PhenylStateFinder.get(this.entityState, { entityName, id })
+    try {
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
+      return PhenylStateFinder.get(this.entityState, { entityName, id })
+    } catch (error) {
+      throw createErrorResult(
+        '"PhenylMemoryClient#updateAndGet()" failed. Could not find any entity with the given query.',
+        'NotFound'
+      )
+    }
   }
 
   /**
@@ -166,10 +181,17 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     // TODO Performance issue: find() runs twice for just getting N
     const values = PhenylStateFinder.find(this.entityState, { entityName, where })
     const ids = values.map(value => value.id)
-    const operation = PhenylStateUpdater.$update(this.entityState, command)
-    this.entityState = assign(this.entityState, operation)
-    const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-    return updatedValues
+    try {
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
+      const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
+      return updatedValues
+    } catch (error) {
+      throw createErrorResult(
+        '"PhenylMemoryClient#updateAndFetch()" failed. Could not find any entity with the given query.',
+        'NotFound'
+      )
+    }
   }
 
   /**

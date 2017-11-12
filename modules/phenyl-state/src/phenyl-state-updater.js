@@ -99,6 +99,9 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    */
   static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
     const { id, entityName, operation } = command
+    if (!PhenylStateFinder.has(state, { entityName, id })) {
+      throw new Error('Could not find any entity to update.')
+    }
     const docPath = ['pool', entityName, id].join('.')
     return retargetToProp(docPath, operation)
   }
@@ -108,7 +111,11 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    */
   static $updateByWhereCondition(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
     const { where, entityName, operation } = command
+
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
+    if (targetEntities.length === 0) {
+      throw new Error('Could not find any entity to update.')
+    }
     const operationList = targetEntities.map(targetEntity => {
       const docPath = ['pool', entityName, targetEntity.id].join('.')
       return retargetToProp(docPath, operation)

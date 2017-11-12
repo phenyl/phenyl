@@ -274,7 +274,6 @@ export const assertEntityClient = (
           throw new Error('this must not be called')
         } catch (error) {
           assert(error.type === 'NotFound')
-          assert(error.message === '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.')
         }
       })
     })
@@ -304,7 +303,6 @@ export const assertEntityClient = (
           throw new Error('this must not be called')
         } catch (error) {
           assert(error.type === 'NotFound')
-          assert(error.message === '"PhenylMongodbClient#updateAndFetch()" failed. Could not find any entity with the given query.')
         }
       })
     })
@@ -328,7 +326,6 @@ export const assertEntityClient = (
           throw new Error('this must not be called')
         } catch (error) {
           assert(error.type === 'NotFound')
-          assert(error.message === '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.')
         }
       })
 
@@ -350,7 +347,6 @@ export const assertEntityClient = (
           throw new Error('this must not be called')
         } catch (error) {
           assert(error.type === 'NotFound')
-          assert(error.message === '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.')
         }
       })
     })

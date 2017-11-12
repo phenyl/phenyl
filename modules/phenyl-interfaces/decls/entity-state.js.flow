@@ -30,6 +30,7 @@ export interface EntityStateFinder {
   findOne(query: WhereQuery): ?Entity,
   get(query: IdQuery): Entity,
   getByIds(query: IdsQuery): Array<Entity>,
+  has(query: IdQuery): boolean,
 }
 
 export interface EntityStateUpdater {

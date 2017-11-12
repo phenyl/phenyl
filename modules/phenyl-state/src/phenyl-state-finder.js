@@ -58,6 +58,13 @@ export default class PhenylStateFinder implements EntityStateFinder {
     return this.constructor.getAll(this.state, entityName)
   }
 
+  /**
+   *
+   */
+  has(query: idQuery): boolean {
+    return this.constructor.has(this.state, query)
+  }
+
 
   /**
    *
@@ -115,5 +122,17 @@ export default class PhenylStateFinder implements EntityStateFinder {
     const { ids, entityName } = query
     // TODO: handle error
     return ids.map(id => this.get(state, { entityName, id }))
+  }
+
+  /**
+   *
+   */
+  static has(state: EntityState, query: IdQuery): boolean {
+    try {
+      PhenylStateFinder.get(state, query)
+    } catch (error) {
+      return false
+    }
+    return true
   }
 }
