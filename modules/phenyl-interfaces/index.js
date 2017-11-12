@@ -181,6 +181,12 @@ import type {
   EntityWithMetaInfo,
 } from './decls/versioning.js.flow'
 
+import {
+  assertEntityClient
+} from './test-cases'
+
+export { assertEntityClient }
+
 export type {
   AuthorizationHandler,
   AuthenticationHandler,
@@ -310,3 +316,4 @@ export type {
   ValidationHandler,
   WhereQuery,
 }
+

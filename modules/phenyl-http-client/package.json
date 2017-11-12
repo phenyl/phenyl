@@ -4,10 +4,18 @@
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js --color always"
+  },
   "devDependencies": {
-    "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "http": "0.0.0",
+    "kocha": "^1.8.0",
+    "phenyl-core": "*",
+    "phenyl-http-server": "*",
+    "phenyl-interfaces": "*",
+    "phenyl-memory-client": "*",
+    "power-assert": "^1.4.4"
   },
   "author": "",
   "license": "ISC",
