@@ -3,7 +3,7 @@
 import kocha from 'kocha'
 import PhenylMongoDbClient from '../src/mongodb-client.js'
 import { connect } from '../src/connection.js'
-import { assertEntityClient } from 'phenyl-interfaces'
+import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
 let mongoDBClient
 const { describe, it, before } = kocha

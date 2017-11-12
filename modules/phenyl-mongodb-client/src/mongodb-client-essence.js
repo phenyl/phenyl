@@ -53,26 +53,14 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     if (limit) options.limit = limit
 
     const result = await coll.find(setIdTo_idInWhere(where), options)
-    if (result.length === 0) {
-      throw createErrorResult(
-        '"PhenylMongodbClient#find()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
     return result.map(set_idToIdInEntity)
   }
 
-  async findOne(query: WhereQuery): Promise<Entity> {
+  async findOne(query: WhereQuery): Promise<?Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
     const result = await coll.find(setIdTo_idInWhere(where), { limit: 1 })
-    if (result.length === 0) {
-      throw createErrorResult(
-        '"PhenylMongodbClient#findOne()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
-    return set_idToIdInEntity(result[0])
+    return set_idToIdInEntity(result[0] || null)
   }
 
   async get(query: IdQuery): Promise<Entity> {
@@ -151,12 +139,6 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     const coll = this.conn.collection(entityName)
     const result = await coll.updateMany(setIdTo_idInWhere(where), operation)
     const { matchedCount } = result
-    if (matchedCount === 0) {
-      throw createErrorResult(
-        '"PhenylMongodbClient#updateAndFetch()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }

@@ -94,14 +94,11 @@ export const assertEntityClient = (
       })
 
       it('does not return entities when condition does not match', async () => {
-        try {
-          await entityClient.find({
-            entityName: 'user',
-            where: { 'name.first': 'naomi' },
-          })
-        } catch (error) {
-          assert(error.type === 'NotFound')
-        }
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: { 'name.first': 'naomi' },
+        })
+        assert(result.length === 0)
       })
     })
 
@@ -116,15 +113,13 @@ export const assertEntityClient = (
         assert(result.entity.id === user1.id )
       })
 
-      it('does not return any entity when condition does not match', async () => {
-        try {
-          await entityClient.findOne({
-            entityName: 'user',
-            where: { id: 'hogehoge' },
-          })
-        } catch (error) {
-          assert(error.type === 'NotFound')
-        }
+      it('returns null when condition does not match', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: { id: 'hogehoge' },
+        })
+
+        assert(result === null)
       })
     })
 
@@ -294,16 +289,13 @@ export const assertEntityClient = (
       })
 
       it ('does not update and fetch any entities when condition does not match', async () => {
-        try {
-          await entityClient.updateAndFetch({
-            entityName: 'user',
-            where: { id: 'hoge' },
-            operation: { $set: { 'favorites.book': { author: 'Abe Kobo' }}},
-          })
-          throw new Error('this must not be called')
-        } catch (error) {
-          assert(error.type === 'NotFound')
-        }
+        const result = await entityClient.updateAndFetch({
+          entityName: 'user',
+          where: { id: 'hoge' },
+          operation: { $set: { 'favorites.book': { author: 'Abe Kobo' }}},
+        })
+
+        assert(result.length === 0)
       })
     })
 
