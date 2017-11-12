@@ -61,7 +61,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  has(query: idQuery): boolean {
+  has(query: IdQuery): boolean {
     return this.constructor.has(this.state, query)
   }
 
