@@ -11,6 +11,10 @@ import {
   simpleExecutionWrapper
 } from './default-handlers.js'
 
+import {
+  createVersionDiff,
+} from './create-version-diff.js'
+
 import type {
   RequestData,
   ResponseData,
@@ -27,6 +31,7 @@ import type {
   LoginCommandResult,
   LogoutCommand,
   LogoutCommandResult,
+  VersionDiffPublisher,
 } from 'phenyl-interfaces'
 
 type PhenylRestApiParams = {
@@ -37,6 +42,7 @@ type PhenylRestApiParams = {
   customCommandHandler?: CustomCommandHandler,
   authenticationHandler?: AuthenticationHandler,
   executionWrapper?: ExecutionWrapper,
+  versionDiffPublisher?: VersionDiffPublisher,
 }
 
 /**
@@ -50,6 +56,7 @@ export default class PhenylRestApi implements RestApiHandler {
   customCommandHandler: CustomCommandHandler
   authenticationHandler: AuthenticationHandler
   executionWrapper: ExecutionWrapper
+  versionDiffPublisher: ?VersionDiffPublisher
 
   constructor(params: PhenylRestApiParams) {
     this.clients = params.clients
@@ -59,6 +66,7 @@ export default class PhenylRestApi implements RestApiHandler {
     this.customCommandHandler = params.customCommandHandler || noHandler
     this.authenticationHandler = params.authenticationHandler || noHandler
     this.executionWrapper = params.executionWrapper || simpleExecutionWrapper
+    this.versionDiffPublisher = params.versionDiffPublisher
   }
 
   /**
@@ -89,6 +97,10 @@ export default class PhenylRestApi implements RestApiHandler {
 
       // 4. Execution
       const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
+
+      // 5. Publish VersionDiff (Side-Effect)
+      this.publishVersionDiff(reqData, resData)
+
       return resData
     }
     catch (e) {
@@ -170,6 +182,18 @@ export default class PhenylRestApi implements RestApiHandler {
       ok: 1,
       user: result.user,
       session: newSession
+    }
+  }
+
+  /**
+   * Publish entity version diffs.
+   */
+  publishVersionDiff(reqData: RequestData, resData: ResponseData) {
+    const { versionDiffPublisher } = this
+    if (versionDiffPublisher == null) return
+    const versionDiffs = createVersionDiff(reqData, resData)
+    for (const versionDiff of versionDiffs) {
+      versionDiffPublisher.publishVersionDiff(versionDiff)
     }
   }
 

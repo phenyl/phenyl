@@ -141,9 +141,9 @@ export class AbstractEntityClient implements EntityClient {
   async push(command: PushCommand): Promise<PushCommandResult> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.essence.get({ entityName, id })
-    const operation = Versioning.mergeUpdateOperations(...operations)
-    const updatedEntity = await this.essence.updateAndGet({ entityName, id, operation })
-    return Versioning.createPushCommandResult(entity, updatedEntity, versionId)
+    const newOperation = Versioning.mergeUpdateOperations(...operations)
+    const updatedEntity = await this.essence.updateAndGet({ entityName, id, operation: newOperation })
+    return Versioning.createPushCommandResult(entity, updatedEntity, versionId, newOperation)
   }
 
   /**

@@ -1,3 +1,4 @@
 // @flow
 // this file exports pre-transpiled sources of ./src
-export * from './src/index.js'
+import Module from './src/index.js'
+export default Module
