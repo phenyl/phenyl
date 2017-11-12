@@ -19,11 +19,14 @@ class PatientDefinition extends StandardUserDefinition {
       entityClient: memoryClient,
       accountPropName: 'email',
       passwordPropName: 'password',
-      ttl: 60 * 60 * 24 * 7
+      ttl: 24 * 3600
     })
   }
-  async authorization(reqData): Promise<boolean> {
+  async authorization(reqData, session): Promise<boolean> {
     if (['insert', 'insertAndGet', 'insertAndFetch', 'login', 'logout'].includes(reqData.method)) return true
+    console.log(session, reqData.payload)
+    // $FlowIssue(reqData.payload-has-id)
+    if (['updateAndGet'].includes(reqData.method)) return session != null && session.userId === reqData.payload.id
     return false
   }
 }
@@ -59,6 +62,12 @@ async function main() {
     }
   })
   console.log(logined)
+  const updated = await client.updateAndGet({
+    entityName: 'patient',
+    id: inserted.entity.id,
+    operation: { $set: { password: 'shin1234' } }
+  }, logined.session.id)
+  console.log(updated)
 }
 
 main().catch(e => console.log(e))

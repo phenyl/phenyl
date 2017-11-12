@@ -64,7 +64,8 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
         },
       })
       const user = result.entity
-      const preSession = { ttl, entityName, userId: user.id }
+      const expiredAt = new Date(Date.now() + ttl * 1000).toISOString()
+      const preSession = { expiredAt, entityName, userId: user.id }
       return { ok: 1, preSession, user }
     }
     catch (e) {

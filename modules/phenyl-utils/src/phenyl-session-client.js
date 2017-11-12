@@ -29,7 +29,12 @@ export class PhenylSessionClient implements SessionClient {
       return null
     }
     try {
-      return this.essence.get({ entityName: '_PhenylSession', id })
+      const session = await this.essence.get({ entityName: '_PhenylSession', id })
+      if (new Date(session.expiredAt).getTime() <= Date.now()) {
+        this.delete(id) // Run asynchronously
+        return null
+      }
+      return session
     }
     catch (e) {
       // TODO: Check error message.
