@@ -19,8 +19,8 @@ import type {
 } from './versioning.js.flow'
 
 import type {
-  ServerParams
-} from './http-server.js.flow'
+  RestApiHandler
+} from './rest-api-handler.js.flow'
 
 export type WebSocketClientMessage = WebSocketClientRequestDataMessage | WebSocketClientSubscriptionRequestMessage
 
@@ -59,6 +59,7 @@ export type WebSocketServerErrorMessage = {|
   tag: ?string,
 |}
 
-export type WebSocketServerParams = ServerParams & {
+export type WebSocketServerParams = {
+  restApiHandler: RestApiHandler,
   versionDiffSubscriber?: VersionDiffSubscriber
 }
