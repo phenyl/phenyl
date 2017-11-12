@@ -13,7 +13,7 @@ import {
 
 import {
   createVersionDiff,
-} from './version-diff.js'
+} from './create-version-diff.js'
 
 import type {
   RequestData,
