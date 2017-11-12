@@ -13,6 +13,7 @@
     "phenyl-http-server": "*",
     "phenyl-interfaces": "*",
     "phenyl-memory-client": "*",
+    "phenyl-rest-api": "*",
     "power-assert": "^1.4.4"
   },
   "author": "",
