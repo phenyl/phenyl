@@ -95,14 +95,14 @@ export class Versioning {
    * @public
    * Create PushCommandResult from entity, updated entity and local versionId.
    */
-  static createPushCommandResult(entity: EntityWithMetaInfo, updatedEntity: EntityWithMetaInfo, versionId: Id): PushCommandResult {
+  static createPushCommandResult(entity: EntityWithMetaInfo, updatedEntity: EntityWithMetaInfo, versionId: Id, newOperation: UpdateOperation): PushCommandResult {
     const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
     const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
     if (localUncommittedOperations != null) {
-      return { ok: 1, n: 1, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId }
+      return { ok: 1, n: 1, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId, newOperation }
     }
-    return { ok: 1, n: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId }
+    return { ok: 1, n: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId, newOperation }
   }
 
   /**
