@@ -11,7 +11,8 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "oad-utils": "*"
+    "oad-utils": "*",
+    "power-assign": "*"
   },
   "author": "",
   "license": "ISC"
