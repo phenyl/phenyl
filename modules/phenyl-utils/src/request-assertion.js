@@ -192,6 +192,9 @@ export function assertValidPushCommand(com: any): void {
   if (!Array.isArray(operations)) {
     throw new Error(`PushCommand.operations must be an array. "${typeof operations}" given.`)
   }
+  if (operations.length === 0) {
+    throw new Error('PushCommand.operations must be a non-empty array. Empty array is given.')
+  }
   operations.forEach(assertValidUpdateOperation)
 }
 

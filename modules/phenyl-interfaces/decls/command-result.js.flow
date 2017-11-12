@@ -38,6 +38,7 @@ export type PushCommandResult = {|
   operations: Array<UpdateOperation>,
   prevVersionId: ?Id,
   versionId: ?Id,
+  newOperation: UpdateOperation,
 |} | GetCommandResult
 
 export type CustomCommandResult = {
