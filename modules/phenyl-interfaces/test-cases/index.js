@@ -49,10 +49,10 @@ const user7 = {
 
 export const assertEntityClient = (
   entityClient: EntityClient,
-  describe: any,
-  it: any,
-  after: any
+  kocha: any,
 ) => {
+  const { describe, it, after } = kocha
+
   describe('assertEntityClient', () => {
     after(async () => {
       entityClient.delete({ entityName: 'user', where: {} })

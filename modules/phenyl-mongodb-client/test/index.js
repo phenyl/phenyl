@@ -1,11 +1,12 @@
 // @flow
 
-import { it, describe, before, after } from 'kocha'
+import kocha from 'kocha'
 import PhenylMongoDbClient from '../src/mongodb-client.js'
 import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces'
 
 let mongoDBClient
+const { describe, it, before } = kocha
 
 describe('PhenylMongoDbClient', () => {
   before(async () => {
@@ -14,6 +15,6 @@ describe('PhenylMongoDbClient', () => {
   })
 
   it('assertEntityClient', () => {
-    assertEntityClient(mongoDBClient, describe, it, after)
+    assertEntityClient(mongoDBClient, kocha)
   })
 })

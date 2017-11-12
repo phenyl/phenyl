@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import kocha from 'kocha'
 import PhenylHttpClient from '../src'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 import PhenylHttpServer from 'phenyl-http-server/jsnext.js'
@@ -17,4 +17,4 @@ const server = new PhenylHttpServer(createServer(), { restApiHandler })
 server.listen(8080)
 
 const client = new PhenylHttpClient({ url: 'http://localhost:8080' })
-assertEntityClient(client, describe, it)
+assertEntityClient(client, kocha)
