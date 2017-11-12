@@ -7,10 +7,14 @@ import {
   createErrorResult
 } from 'phenyl-utils/jsnext'
 
+import WebSocketClientInfo from './client-info.js'
+
 import type {
   RestApiHandler,
-  RequestData,
-  ServerParams,
+  WebSocketClientMessage,
+  WebSocketServerParams,
+  SubscriptionResult,
+  VersionDiff,
 } from 'phenyl-interfaces'
 
 /**
@@ -21,29 +25,58 @@ export default class PhenylWebSocketServer {
    * Instance of the result: require('http').createServer()
    */
   server: net$Server
-  /**
-   * WebSocketServer (https://github.com/websockets/ws/blob/master/lib/WebSocketServer.js)
-   */
-  wss: WebSocket.Server
+
   restApiHandler: RestApiHandler
 
-  constructor(server: net$Server, params: ServerParams) {
+  clients: Array<WebSocketClientInfo>
+
+  constructor(server: net$Server, params: WebSocketServerParams) {
     this.server = server
-    this.wss = new WebSocket.Server({ server })
     this.restApiHandler = params.restApiHandler
-    this.wss.on('connection', (ws: WebSocket) => {
-      ws.on('message', (message: string) => this.onMessage(message, ws))
+    this.clients = []
+
+    const wss = new WebSocket.Server({ server })
+    wss.on('connection', (ws: WebSocket) => {
+      const clientInfo = new WebSocketClientInfo(ws)
+      this.clients.push(clientInfo)
+      ws.addEventListener('message', (evt: Event) => this.onMessage(evt.data || '', clientInfo))
     })
+    if (params.versionDiffSubscriber) {
+      params.versionDiffSubscriber.subscribeVersionDiff((versionDiff: VersionDiff) => {
+        const { entityName, id } = versionDiff
+        this.clients
+          .filter(client => client.isSubscribed(entityName, id))
+          .forEach(client => client.send({ versionDiff }))
+      })
+    }
   }
 
-  async onMessage(message: string, ws: WebSocket) {
+  /**
+   *
+   */
+  async onMessage(message: any, clientInfo: WebSocketClientInfo) {
+    let tag
     try {
-      const reqData: RequestData = JSON.parse(message)
-      const resData = await this.restApiHandler.handleRequestData(reqData)
-      ws.send(JSON.stringify(resData))
+      const clientMessage: WebSocketClientMessage = JSON.parse(message)
+      const { tag } = clientMessage
+      if (clientMessage.reqData != null) {
+        const resData = await this.restApiHandler.handleRequestData(clientMessage.reqData)
+        return clientInfo.send({ tag, resData })
+      }
+      else if (clientMessage.subscription != null) {
+        const { payload, sessionId } = clientMessage.subscription
+        const getRequestData = { method: 'get', payload, sessionId }
+        const getResult = await this.restApiHandler.handleRequestData(getRequestData)
+        const result = (getResult.type !== 'error')
+        const subscriptionResult: SubscriptionResult = { entityName: payload.entityName, id: payload.id, result } // TODO: set ttl.
+        if (result) {
+          clientInfo.addSubscription(payload.entityName, payload.id) // TODO set ttl.
+        }
+        return clientInfo.send({ tag, subscriptionResult })
+      }
     }
     catch (e) {
-      ws.send(JSON.stringify(createErrorResult(e)))
+      return clientInfo.send({ tag, error: createErrorResult(e) })
     }
   }
 

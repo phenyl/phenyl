@@ -57,22 +57,31 @@ type WebSocketOptions = {
   ca?: string | Array<string> | Buffer | Array<Buffer>,
 }
 
-declare class WebSocket extends events$EventEmitter {
+declare class WebSocket extends EventTarget {
   static Server: Class<WebSocketServer>,
-  constructor(address: string, protocols?: string | Array<string>, options?: WebSocketOptions): void,
+  static CONNECTING: 0,
+  static OPEN: 1,
+  static CLOSING: 2,
+  static CLOSED: 3,
+  constructor(url: string, protocols?: string | Array<string>, options?: WebSocketOptions): void,
   +CONNECTING: 0,
   +OPEN: 1,
   +CLOSING: 2,
   +CLOSED: 3,
   +bufferedAmount: number,
   binaryType: string,
-  pause(): void,
-  resume(): void,
-  close(code: number, data: string): void,
-  ping(data?: Data, mask?: boolean, failSilently?: boolean): void,
-  pong(data?: Data, mask?: boolean, failSilently?: boolean): void,
-  send(data: Data, options?: Object | Function, cb?: Function): void,
-  terminate(): void,
+  protocol: string,
+  readyState: number,
+  bufferedAmount: number,
+  onopen: (ev: Event) => any,
+  extensions: string,
+  onmessage: (ev: MessageEvent) => any,
+  onclose: (ev: CloseEvent) => any,
+  onerror: (ev: Event) => any,
+  binaryType: string,
+  url: string,
+  close(code?: number, reason?: string): void,
+  send(data: Data): void,
 }
 
 declare module 'ws' {
