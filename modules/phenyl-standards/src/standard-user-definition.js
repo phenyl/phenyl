@@ -5,7 +5,7 @@ import {
   createErrorResult,
 } from 'phenyl-utils/jsnext'
 
-import StandardEntityDefinition from './standard-entity-definition.js'
+import { StandardEntityDefinition } from './standard-entity-definition.js'
 import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
 import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
 
@@ -33,7 +33,7 @@ export type StandardUserDefinitionParams = {
   ttl?: number,
 }
 
-export default class StandardUserDefinition extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+export class StandardUserDefinition extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
   entityClient: EntityClient
   encrypt: EncryptFunction
   accountPropName: string

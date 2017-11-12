@@ -10,7 +10,7 @@ import type {
 type AuthorizationSetting = {
 }
 
-export default class StandardEntityDefinition implements EntityDefinition {
+export class StandardEntityDefinition implements EntityDefinition {
   authorizationSetting: AuthorizationSetting
 
   constructor(authorizationSetting: AuthorizationSetting) {

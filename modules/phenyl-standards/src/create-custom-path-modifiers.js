@@ -40,7 +40,7 @@ type Options = {
  *   }})
  *
  */
-export default function createCustomPathModifiers(customNames: Array<string>, options?: Options = {}): PathModifiers {
+export function createCustomPathModifiers(customNames: Array<string>, options?: Options = {}): PathModifiers {
   const from = options.from || '_'
   const to = options.to || '/'
   const originalToModified = {}

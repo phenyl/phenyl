@@ -31,7 +31,7 @@ import type {
  * wrapExecution: ExecutionWrapper
  * validation: ValidationHandler
  */
-export default class ForeignQueryWrapper {
+export class ForeignQueryWrapper {
   entityClient: EntityClient
 
   constructor(entityClient: EntityClient) {
