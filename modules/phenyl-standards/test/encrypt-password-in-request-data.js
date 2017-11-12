@@ -81,8 +81,9 @@ describe('encryptPasswordInRequestData', function () {
     const expectedRequestData = {
       method: 'update',
       payload: {
+        id: 'foo',
         entityName: 'user',
-        operators: {
+        operation: {
           $set: { password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' },
           $inc: { friends: 3 },
         },

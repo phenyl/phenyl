@@ -8,9 +8,9 @@ import type {
   EncryptFunction,
 } from '../decls/index.js.flow'
 
-import { getNestedValue } from 'phenyl-utils'
+import { getNestedValue } from 'oad-utils/jsnext'
 
-import { assign } from 'power-assign'
+import { assign } from 'power-assign/jsnext'
 
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
@@ -49,24 +49,24 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
     case 'updateAndGet':
     case 'updateAndFetch': {
 
-      const operators = reqData.payload.operation
+      const { operation } = reqData.payload
 
-      let operatorsWithEncryptedPass = operators
+      let operationWithEncryptedPass = operation
 
-      Object.keys(operators).forEach(key => {
-        const password = getNestedValue(operators[key], passwordPropName)
+      Object.keys(operation).forEach(key => {
+        const password = getNestedValue(operation[key], passwordPropName)
 
         if (password) {
-          operatorsWithEncryptedPass = assign(operatorsWithEncryptedPass, { $set: { [`${key}.${passwordPropName}`]: encrypt(password) } })
+          operationWithEncryptedPass = assign(operationWithEncryptedPass, { $set: { [`${key}.${passwordPropName}`]: encrypt(password) } })
         }
       })
 
-      return assign(reqData, { $set: { 'payload.operators': operatorsWithEncryptedPass }})
+      return assign(reqData, { $set: { 'payload.operation': operationWithEncryptedPass }})
     }
     case 'push':
       // TODO Implement to encrypt password in push command
       return reqData
-      
+
     default:
       return reqData
   }
