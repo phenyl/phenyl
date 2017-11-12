@@ -10,7 +10,7 @@ import type {
 /**
  *
  */
-export default function createAuthenticationHandler(userEntityDefinitions: UserDefinitions): AuthenticationHandler {
+export function createAuthenticationHandler(userEntityDefinitions: UserDefinitions): AuthenticationHandler {
   return async function authenticationHandler(loginCommand: LoginCommand, session: ?Session) :Promise<AuthenticationResult> {
     const { entityName } = loginCommand
     const definition = userEntityDefinitions[entityName]

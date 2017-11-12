@@ -78,6 +78,7 @@ import type {
   CustomQueryHandler,
   ExecutionWrapper,
   ValidationHandler,
+  HandlerParams,
 } from './decls/handler.js.flow'
 import type {
   EncodedHttpRequest,
@@ -256,6 +257,7 @@ export type {
   GetCommandResult,
   GetRequestData,
   GetResponseData,
+  HandlerParams,
   HttpClientParams,
   HttpMethod,
   Id,

@@ -5,7 +5,6 @@ import type { PreSession, Session } from './session.js.flow'
 import type { CustomQuery } from './query.js.flow'
 import type { CustomQueryResult } from './query-result.js.flow'
 import type { LoginCommand, CustomCommand } from './command.js.flow'
-import type { ErrorResultType } from './error-result.js.flow'
 import type { CustomCommandResult } from './command-result.js.flow'
 import type { Entity } from './entity.js.flow'
 
@@ -22,3 +21,12 @@ export type CoreExecution = (reqData: RequestData, session: ?Session) => Promise
 export type ExecutionWrapper = (reqData: RequestData, session: ?Session, execution: CoreExecution) => Promise<ResponseData>
 export type CustomQueryHandler = (query: CustomQuery, session: ?Session) => Promise<CustomQueryResult>
 export type CustomCommandHandler = (command: CustomCommand, session: ?Session) => Promise<CustomCommandResult>
+
+export type HandlerParams = {
+  authorizationHandler: AuthorizationHandler,
+  validationHandler: ValidationHandler,
+  authenticationHandler: AuthenticationHandler,
+  executionWrapper: ExecutionWrapper,
+  customQueryHandler: CustomQueryHandler,
+  customCommandHandler: CustomCommandHandler,
+}

@@ -4,12 +4,7 @@ import type { EntityDefinition } from './entity-definition'
 import type { Session } from './session.js.flow'
 import type {
   LoginCommand,
-  LogoutCommand,
 } from './command.js.flow'
-import type {
-  LoginCommandResult,
-  LogoutCommandResult,
-} from './command-result.js.flow'
 import type {
   AuthenticationResult
 } from './handler.js.flow'

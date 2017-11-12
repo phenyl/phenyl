@@ -15,7 +15,7 @@ function assertWrapExecution(fn: any, name: string, methodName: string) {
 /**
  *
  */
-export default function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
+export function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
   const { users, nonUsers } = fg
   return async function executionWrapper(reqData: RequestData, session: ?Session, execution: CoreExecution) :Promise<ResponseData> {
     const { method } = reqData

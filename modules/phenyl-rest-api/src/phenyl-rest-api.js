@@ -12,12 +12,17 @@ import {
 } from './default-handlers.js'
 
 import {
+  createParamsByFunctionalGroup,
+} from './create-params-by-functional-group.js'
+
+import {
   createVersionDiff,
 } from './create-version-diff.js'
 
 import type {
   RequestData,
   ResponseData,
+  FunctionalGroup,
   EntityClient,
   SessionClient,
   RestApiHandler,
@@ -35,7 +40,7 @@ import type {
   VersionDiffPublisher,
 } from 'phenyl-interfaces'
 
-type PhenylRestApiParams = {
+export type PhenylRestApiParams = {
   client: EntityClient,
   sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
@@ -50,7 +55,7 @@ type PhenylRestApiParams = {
 /**
  *
  */
-export default class PhenylRestApi implements RestApiHandler {
+export class PhenylRestApi implements RestApiHandler {
   client: EntityClient
   sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
@@ -71,6 +76,21 @@ export default class PhenylRestApi implements RestApiHandler {
     this.authenticationHandler = params.authenticationHandler || noHandler
     this.executionWrapper = params.executionWrapper || simpleExecutionWrapper
     this.versionDiffPublisher = params.versionDiffPublisher
+  }
+
+  /**
+   * Create instance from FunctionalGroup.
+   * "client" params must be set in 2nd argument.
+   *
+   * @example
+   *   const restApiHandler = PhenylRestApi.createFromFunctionalGroup({
+   *     customQueries: {}, customCommands: {}, users: {}, nonUsers: {}
+   *   }, { client: new PhenylMemoryClient() })
+   */
+  static createFromFunctionalGroup(fg: FunctionalGroup, params: PhenylRestApiParams): PhenylRestApi {
+    const fgParams = createParamsByFunctionalGroup(fg)
+    const newParams = Object.assign({}, params, fgParams)
+    return new PhenylRestApi(newParams)
   }
 
   /**

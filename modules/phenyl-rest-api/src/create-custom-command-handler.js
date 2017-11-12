@@ -10,7 +10,7 @@ import type {
 /**
  *
  */
-export default function createCustomCommandHandler(commandDefinitions: CustomCommandDefinitions): CustomCommandHandler {
+export function createCustomCommandHandler(commandDefinitions: CustomCommandDefinitions): CustomCommandHandler {
   return function customCommandHandler(command: CustomCommand, session: ?Session): Promise<CustomCommandResult> {
     const { name } = command
     const definition = commandDefinitions[name]

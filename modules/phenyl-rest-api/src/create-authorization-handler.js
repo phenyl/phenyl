@@ -13,7 +13,7 @@ function assertAuthorizationFunction(fn: any, name: string, methodName: string) 
 /**
  *
  */
-export default function createAuthorizationHandler(fg: FunctionalGroup): AuthorizationHandler {
+export function createAuthorizationHandler(fg: FunctionalGroup): AuthorizationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
   return async function authorizationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
     const { method } = reqData

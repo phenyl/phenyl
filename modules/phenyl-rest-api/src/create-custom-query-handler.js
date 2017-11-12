@@ -10,7 +10,7 @@ import type {
 /**
  *
  */
-export default function createCustomQueryHandler(queryDefinitions: CustomQueryDefinitions): CustomQueryHandler {
+export function createCustomQueryHandler(queryDefinitions: CustomQueryDefinitions): CustomQueryHandler {
   return function customQueryHandler(query: CustomQuery, session: ?Session): Promise<CustomQueryResult> {
     const { name } = query
     const definition = queryDefinitions[name]
