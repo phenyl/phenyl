@@ -60,6 +60,8 @@ export interface EntityClient {
   push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>,
 
   delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult>,
+
+  createSessionClient(): SessionClient
 }
 
 export interface CustomClient {
@@ -75,8 +77,3 @@ export interface AuthClient {
 export type RestApiClient = EntityClient & CustomClient & AuthClient & RestApiHandler
 
 export type SessionClient = KvsClient<Session>
-
-export interface ClientPool {
-  entityClient: EntityClient,
-  sessionClient: SessionClient,
-}

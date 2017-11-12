@@ -18,7 +18,8 @@ import {
 import type {
   RequestData,
   ResponseData,
-  ClientPool,
+  EntityClient,
+  SessionClient,
   RestApiHandler,
   Session,
   AuthorizationHandler,
@@ -35,7 +36,8 @@ import type {
 } from 'phenyl-interfaces'
 
 type PhenylRestApiParams = {
-  clients: ClientPool,
+  client: EntityClient,
+  sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
   validationHandler?: ValidationHandler,
   customQueryHandler?: CustomQueryHandler,
@@ -49,7 +51,8 @@ type PhenylRestApiParams = {
  *
  */
 export default class PhenylRestApi implements RestApiHandler {
-  clients: ClientPool
+  client: EntityClient
+  sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
   validationHandler: ValidationHandler
   customQueryHandler: CustomQueryHandler
@@ -59,7 +62,8 @@ export default class PhenylRestApi implements RestApiHandler {
   versionDiffPublisher: ?VersionDiffPublisher
 
   constructor(params: PhenylRestApiParams) {
-    this.clients = params.clients
+    this.client = params.client
+    this.sessionClient = params.sessionClient || this.createSessionClient()
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
     this.validationHandler = params.validationHandler || noOperationHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
@@ -78,7 +82,7 @@ export default class PhenylRestApi implements RestApiHandler {
       assertValidRequestData(reqData)
 
       // 1. Get session information
-      const session = await this.clients.sessionClient.get(reqData.sessionId)
+      const session = await this.sessionClient.get(reqData.sessionId)
 
       // 2. Authorization
       const isAccessible = await this.authorizationHandler(reqData, session)
@@ -112,47 +116,45 @@ export default class PhenylRestApi implements RestApiHandler {
    *
    */
   async execute(reqData: RequestData, session: ?Session): Promise<ResponseData> {
-    const { entityClient } = this.clients
-
     switch (reqData.method) {
       case 'find':
-        return { type: 'find', payload: await entityClient.find(reqData.payload) }
+        return { type: 'find', payload: await this.client.find(reqData.payload) }
 
       case 'findOne':
-        return { type: 'findOne', payload: await entityClient.findOne(reqData.payload) }
+        return { type: 'findOne', payload: await this.client.findOne(reqData.payload) }
 
       case 'get':
-        return { type: 'get', payload: await entityClient.get(reqData.payload) }
+        return { type: 'get', payload: await this.client.get(reqData.payload) }
 
       case 'getByIds':
-        return { type: 'getByIds', payload: await entityClient.getByIds(reqData.payload) }
+        return { type: 'getByIds', payload: await this.client.getByIds(reqData.payload) }
 
       case 'pull':
-        return { type: 'pull', payload: await entityClient.pull(reqData.payload) }
+        return { type: 'pull', payload: await this.client.pull(reqData.payload) }
 
       case 'insert':
-        return { type: 'insert', payload: await entityClient.insert(reqData.payload) }
+        return { type: 'insert', payload: await this.client.insert(reqData.payload) }
 
       case 'insertAndGet':
-        return { type: 'insertAndGet', payload: await entityClient.insertAndGet(reqData.payload) }
+        return { type: 'insertAndGet', payload: await this.client.insertAndGet(reqData.payload) }
 
       case 'insertAndGetMulti':
-        return { type: 'insertAndGetMulti', payload: await entityClient.insertAndGetMulti(reqData.payload) }
+        return { type: 'insertAndGetMulti', payload: await this.client.insertAndGetMulti(reqData.payload) }
 
       case 'update':
-        return { type: 'update', payload: await entityClient.update(reqData.payload) }
+        return { type: 'update', payload: await this.client.update(reqData.payload) }
 
       case 'updateAndGet':
-        return { type: 'updateAndGet', payload: await entityClient.updateAndGet(reqData.payload) }
+        return { type: 'updateAndGet', payload: await this.client.updateAndGet(reqData.payload) }
 
       case 'updateAndFetch':
-        return { type: 'updateAndFetch', payload: await entityClient.updateAndFetch(reqData.payload) }
+        return { type: 'updateAndFetch', payload: await this.client.updateAndFetch(reqData.payload) }
 
       case 'push':
-        return { type: 'push', payload: await entityClient.push(reqData.payload) }
+        return { type: 'push', payload: await this.client.push(reqData.payload) }
 
       case 'delete':
-        return { type: 'delete', payload: await entityClient.delete(reqData.payload) }
+        return { type: 'delete', payload: await this.client.delete(reqData.payload) }
 
       case 'runCustomQuery':
         return { type: 'runCustomQuery', payload: await this.customQueryHandler(reqData.payload, session) }
@@ -177,7 +179,7 @@ export default class PhenylRestApi implements RestApiHandler {
    */
   async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult> {
     const result = await this.authenticationHandler(loginCommand, session)
-    const newSession = await this.clients.sessionClient.create(result.preSession)
+    const newSession = await this.sessionClient.create(result.preSession)
     return {
       ok: 1,
       user: result.user,
@@ -202,11 +204,23 @@ export default class PhenylRestApi implements RestApiHandler {
    */
   async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
     const { sessionId } = logoutCommand
-    const result = await this.clients.sessionClient.delete(sessionId)
+    const result = await this.sessionClient.delete(sessionId)
     // sessionId not found
     if (!result) {
       throw createErrorResult('sessionId not found', 'BadRequest')
     }
     return { ok: 1 }
+  }
+
+  /**
+   * @private
+   */
+  createSessionClient(): SessionClient {
+    try {
+      return this.client.createSessionClient()
+    }
+    catch (e) {
+      throw new Error('"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.')
+    }
   }
 }

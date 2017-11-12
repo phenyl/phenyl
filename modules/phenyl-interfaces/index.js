@@ -11,7 +11,6 @@ import type {
 
 import type {
   AuthClient,
-  ClientPool,
   RestApiClient,
   CustomClient,
   EntityClient,
@@ -205,7 +204,6 @@ export type {
   AuthenticationResult,
   AuthClient,
   ClientPathModifier,
-  ClientPool,
   CommandResult,
   RestApiClient,
   CoreExecution,

@@ -30,6 +30,7 @@ import type {
   RequestData,
   ResponseData,
   QueryResult,
+  SessionClient,
   SingleQueryResult,
   UpdateCommand,
   IdUpdateCommand,
@@ -225,5 +226,13 @@ export class PhenylRestApiClient implements RestApiClient {
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'logout') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   * Create session client.
+   * RestApiClient cannot create SessionClient.
+   */
+  createSessionClient(): SessionClient {
+    throw new Error('Cannot create SessionClient from RestApiClient.')
   }
 }

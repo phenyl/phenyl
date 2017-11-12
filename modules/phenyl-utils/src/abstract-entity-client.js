@@ -3,6 +3,10 @@ import {
   Versioning,
 } from './versioning.js'
 
+import {
+  PhenylSessionClient
+} from './phenyl-session-client.js'
+
 import type {
   EntityClient,
   EntityClientEssence,
@@ -20,6 +24,7 @@ import type {
   PushCommand,
   PushCommandResult,
   QueryResult,
+  SessionClient,
   SingleQueryResult,
   UpdateCommand,
   IdUpdateCommand,
@@ -151,5 +156,12 @@ export class AbstractEntityClient implements EntityClient {
    */
   async delete(command: DeleteCommand): Promise<CommandResult> {
     return { ok: 1, n: await this.essence.delete(command) }
+  }
+
+  /**
+   *
+   */
+  createSessionClient(): SessionClient {
+    return new PhenylSessionClient(this.essence)
   }
 }
