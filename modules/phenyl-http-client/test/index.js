@@ -6,13 +6,11 @@ import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import { createServer } from 'http'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import PhenylMemoryClient, { MemorySessionClient } from 'phenyl-memory-client/jsnext'
+import PhenylMemoryClient from 'phenyl-memory-client/jsnext'
 
-
-const sessionClient = new MemorySessionClient()
 const entityClient = new PhenylMemoryClient()
 
-const restApiHandler = new PhenylRestApi({ clients: { entityClient, sessionClient } })
+const restApiHandler = new PhenylRestApi({ client: entityClient })
 const server = new PhenylHttpServer(createServer(), { restApiHandler })
 server.listen(8080)
 
