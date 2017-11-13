@@ -11,23 +11,40 @@ export type PackageJSON = {
   dependencies: ?{ [moduleName: string]: Version },
   devDependencies: ?{ [moduleName: string]: Version },
 }
+type PackageJSONsByName = { [moduleName: string]: PackageJSON }
 
 type PhenylModulesByName = { [moduleName: string]: PhenylModule }
 
 export default class PhenylModuleGraph {
   modulesByName: PhenylModulesByName
+  exampleModulesByName: PhenylModulesByName
   sortedModuleNames: Array<string>
 
-  constructor(rootPackageJson: PackageJSON, packageJsonsByName: { [moduleName: string]: PackageJSON }) {
+  constructor(rootPath: string, rootPackageJson: PackageJSON, packageJsonsByName: PackageJSONsByName, examplePackageJsonsByName: PackageJSONsByName) {
     const moduleNames = Object.keys(packageJsonsByName)
 
     this.modulesByName = {}
+    this.exampleModulesByName = {}
+
     moduleNames.forEach(moduleName => {
       const packageJson = packageJsonsByName[moduleName]
       const dependedModuleNames = getDependedModuleNames(moduleName, packageJsonsByName)
-      this.modulesByName[moduleName] = createPhenylModule(packageJson, moduleNames, dependedModuleNames, rootPackageJson)
+      this.modulesByName[moduleName] = createPhenylModule(moduleName, rootPath + '/modules', packageJson, moduleNames, dependedModuleNames, rootPackageJson)
     })
     this.sortedModuleNames = topologicalSort(this.modulesByName)
+
+    Object.keys(examplePackageJsonsByName).forEach(moduleName => {
+      const packageJson = examplePackageJsonsByName[moduleName]
+      this.exampleModulesByName[moduleName] = createPhenylExampleModule(moduleName, rootPath + '/examples', packageJson, moduleNames, rootPackageJson)
+    })
+  }
+
+  get exampleModules(): Array<PhenylModule> {
+    return Object.keys(this.exampleModulesByName).map(name => this.exampleModulesByName[name])
+  }
+
+  get phenylModules(): Array<PhenylModule> {
+    return this.sortedModuleNames.map(name => this.modulesByName[name])
   }
 
   bumpVersion(moduleName: string, bumpType: BumpType): PhenylModulesByName {
@@ -50,7 +67,7 @@ export default class PhenylModuleGraph {
 /**
  * Factory of PhenylModule
  */
-function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<string>, dependedModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
+function createPhenylModule(dirname: string, modulesPath: string, packageJson: PackageJSON, phenylModuleNames: Array<string>, dependedModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
   const dependencies = packageJson.dependencies || {}
   const devDependencies = packageJson.devDependencies || {}
   // $FlowIssue(devDependencies-exists)
@@ -58,6 +75,8 @@ function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<s
 
   const params = {
     name: packageJson.name,
+    dirname,
+    modulesPath,
     version: packageJson.version,
     scripts: packageJson.scripts,
     dependingModuleNames: phenylModuleNames.filter(moduleName => dependencies[moduleName] || devDependencies[moduleName]),
@@ -66,6 +85,29 @@ function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<s
   }
   return new PhenylModule(params)
 }
+
+/**
+ * Factory of PhenylExampleModule
+ */
+function createPhenylExampleModule(dirname: string, modulesPath: string, packageJson: PackageJSON, phenylModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
+  const dependencies = packageJson.dependencies || {}
+  const devDependencies = packageJson.devDependencies || {}
+  // $FlowIssue(devDependencies-exists)
+  const commonModuleNames = Object.keys(devDependencies).filter(name => rootPackageJson.devDependencies[name] != null)
+
+  const params = {
+    name: packageJson.name,
+    dirname,
+    modulesPath,
+    version: packageJson.version,
+    scripts: packageJson.scripts,
+    dependingModuleNames: phenylModuleNames.filter(moduleName => dependencies[moduleName] || devDependencies[moduleName]),
+    dependedModuleNames: [],
+    commonModuleNames,
+  }
+  return new PhenylModule(params)
+}
+
 /**
  * TopologicalSort of phenyl modules by dependencies
  */

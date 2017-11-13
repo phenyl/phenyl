@@ -16,8 +16,7 @@
     "phenyl-http-server": "*",
     "phenyl-memory-client": "*",
     "phenyl-rest-api": "*",
-    "phenyl-standards": "*",
-    "power-assert": "^1.4.4"
+    "phenyl-standards": "*"
   },
   "author": "",
   "license": "ISC"
