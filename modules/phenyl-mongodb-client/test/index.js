@@ -2,6 +2,7 @@
 
 import kocha from 'kocha'
 import PhenylMongoDbClient from '../src/mongodb-client.js'
+import assert from 'power-assert'
 import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
@@ -10,4 +11,4 @@ async function createMongoDBClient() {
   return new PhenylMongoDbClient(mongoDBConnection)
 }
 
-assertEntityClient(createMongoDBClient(), kocha)
+assertEntityClient(createMongoDBClient(), kocha, assert)
