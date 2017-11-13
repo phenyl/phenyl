@@ -43,14 +43,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
    *
    */
   async find(query: WhereQuery): Promise<Array<Entity>> {
-    const entity = PhenylStateFinder.find(this.entityState, query)
-    if (entity.length === 0) {
-      throw createErrorResult(
-        '"PhenylMemoryClient#find()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
-    return entity
+    return PhenylStateFinder.find(this.entityState, query)
   }
 
   /**
@@ -60,7 +53,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     const entity = PhenylStateFinder.findOne(this.entityState, query)
     if (entity == null) {
       throw createErrorResult(
-        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
+        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query',
         'NotFound'
       )
     }
@@ -181,17 +174,10 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     // TODO Performance issue: find() runs twice for just getting N
     const values = PhenylStateFinder.find(this.entityState, { entityName, where })
     const ids = values.map(value => value.id)
-    try {
-      const operation = PhenylStateUpdater.$update(this.entityState, command)
-      this.entityState = assign(this.entityState, operation)
-      const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
-      return updatedValues
-    } catch (error) {
-      throw createErrorResult(
-        '"PhenylMemoryClient#updateAndFetch()" failed. Could not find any entity with the given query.',
-        'NotFound'
-      )
-    }
+    const operation = PhenylStateUpdater.$update(this.entityState, command)
+    this.entityState = assign(this.entityState, operation)
+    const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
+    return updatedValues
   }
 
   /**

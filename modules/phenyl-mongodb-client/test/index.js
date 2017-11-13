@@ -5,16 +5,9 @@ import PhenylMongoDbClient from '../src/mongodb-client.js'
 import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
-let mongoDBClient
-const { describe, it, before } = kocha
+async function createMongoDBClient() {
+  const mongoDBConnection = await connect('mongodb://localhost:27017')
+  return new PhenylMongoDbClient(mongoDBConnection)
+}
 
-describe('PhenylMongoDbClient', () => {
-  before(async () => {
-    const mongoDBConnection = await connect('mongodb://localhost:27017')
-    mongoDBClient = new PhenylMongoDbClient(mongoDBConnection)
-  })
-
-  it('assertEntityClient', () => {
-    assertEntityClient(mongoDBClient, kocha)
-  })
-})
+assertEntityClient(createMongoDBClient(), kocha)

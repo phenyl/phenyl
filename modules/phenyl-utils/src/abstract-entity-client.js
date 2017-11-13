@@ -43,6 +43,9 @@ export class AbstractEntityClient implements EntityClient {
    */
   async findOne(query: WhereQuery): Promise<SingleQueryResult> {
     const entity = await this.essence.findOne(query)
+    if (entity == null) {
+      throw new Error('findOne() cannot find result.')
+    }
     return Versioning.createSingleQueryResult(entity)
   }
 

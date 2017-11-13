@@ -113,9 +113,6 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
     const { where, entityName, operation } = command
 
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
-    if (targetEntities.length === 0) {
-      throw new Error('Could not find any entity to update.')
-    }
     const operationList = targetEntities.map(targetEntity => {
       const docPath = ['pool', entityName, targetEntity.id].join('.')
       return retargetToProp(docPath, operation)

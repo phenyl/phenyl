@@ -47,11 +47,17 @@ const user7 = {
   age: 47,
 }
 
+let entityClient
+
 export const assertEntityClient = (
-  entityClient: EntityClient,
+  entityClientPromise: EntityClient | Promise<EntityClient>,
   kocha: any,
 ) => {
-  const { describe, it, after } = kocha
+  const { describe, it, after, before } = kocha
+
+  before(async () => {
+    entityClient = await entityClientPromise
+  })
 
   describe('assertEntityClient', () => {
     after(async () => {
@@ -98,7 +104,8 @@ export const assertEntityClient = (
           entityName: 'user',
           where: { 'name.first': 'naomi' },
         })
-        assert(result.length === 0)
+
+        assert(result.entities.length === 0)
       })
     })
 
@@ -114,12 +121,14 @@ export const assertEntityClient = (
       })
 
       it('returns null when condition does not match', async () => {
-        const result = await entityClient.findOne({
-          entityName: 'user',
-          where: { id: 'hogehoge' },
-        })
-
-        assert(result === null)
+        try {
+          await entityClient.findOne({
+            entityName: 'user',
+            where: { id: 'hogehoge' },
+          })
+        } catch (error) {
+          assert(error.type === 'NotFound')
+        }
       })
     })
 
@@ -233,16 +242,12 @@ export const assertEntityClient = (
       })
 
       it ('does not update any entity when condition does not match', async () => {
-        try {
-          await entityClient.update({
-            entityName: 'user',
-            where: { id: 'hogehoge' },
-            operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
-          })
-          throw new Error('this must not be called')
-        } catch (error) {
-          assert(error.type === 'NotFound')
-        }
+        const result = await entityClient.update({
+          entityName: 'user',
+          where: { id: 'hogehoge' },
+          operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
+        })
+        assert(result.n === 0)
       })
     })
 
@@ -295,7 +300,7 @@ export const assertEntityClient = (
           operation: { $set: { 'favorites.book': { author: 'Abe Kobo' }}},
         })
 
-        assert(result.length === 0)
+        assert(result.entities.length === 0)
       })
     })
 
@@ -331,15 +336,12 @@ export const assertEntityClient = (
         assert(result.ok === 1)
         assert(result.n === 4)
 
-        try {
-          await entityClient.find({
-            entityName: 'user',
-            where,
-          })
-          throw new Error('this must not be called')
-        } catch (error) {
-          assert(error.type === 'NotFound')
-        }
+        const result2 = await entityClient.find({
+          entityName: 'user',
+          where,
+        })
+
+        assert(result2.entities.length === 0)
       })
     })
   })

@@ -21,7 +21,7 @@ import type {
 
 export interface EntityClientEssence {
   find(query: WhereQuery): Promise<Array<Entity>>,
-  findOne(query: WhereQuery): Promise<?Entity>,
+  findOne(query: WhereQuery): Promise<Entity>,
   get(query: IdQuery): Promise<Entity>,
   getByIds(query: IdsQuery): Promise<Array<Entity>>,
   insert(command: InsertCommand): Promise<number>,
