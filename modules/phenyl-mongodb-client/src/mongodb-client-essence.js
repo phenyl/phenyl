@@ -56,10 +56,13 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     return result.map(set_idToIdInEntity)
   }
 
-  async findOne(query: WhereQuery): Promise<?Entity> {
+  async findOne(query: WhereQuery): Promise<Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
     const result = await coll.find(setIdTo_idInWhere(where), { limit: 1 })
+    if (result.length === 0) {
+      throw createErrorResult('findOne()', 'NotFound')
+    }
     return set_idToIdInEntity(result[0] || null)
   }
 
@@ -137,8 +140,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateMany(setIdTo_idInWhere(where), operation)
-    const { matchedCount } = result
+    await coll.updateMany(setIdTo_idInWhere(where), operation)
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }
