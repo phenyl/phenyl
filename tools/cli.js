@@ -117,23 +117,24 @@ class CLI {
       dependingModuleNames.forEach(dependingModuleName => {
         shell.mkdir('-p', `${modulePath}/node_modules`)
         shell.cd(`${modulePath}/node_modules`)
-        shell.ln('-s', `../../${dependingModuleName}`, `${dependingModuleName}`)
+        shell.ln('-sf', `../../${dependingModuleName}`, `${dependingModuleName}`)
         shell.cd(rootPath)
       })
 
       commonModuleNames.forEach(commonModuleName => {
         shell.mkdir('-p', `${modulePath}/node_modules`)
         shell.cd(`${modulePath}/node_modules`)
-        shell.ln('-s', `../../../node_modules/${commonModuleName}`, `${commonModuleName}`)
+        shell.ln('-sf', `../../../node_modules/${commonModuleName}`, `${commonModuleName}`)
         shell.cd(rootPath)
       })
 
       shell.mkdir('-p', `${modulePath}/node_modules/.bin`)
       shell.cd(`${modulePath}/node_modules/.bin`)
-      shell.ln('-s', '../../../../node_modules/.bin/kocha', 'kocha')
+      shell.ln('-sf', '../../../../node_modules/.bin/kocha', 'kocha')
 
       shell.cd(modulePath)
       shell.exec('npm install --color always --loglevel=error')
+      shell.rm('-f', `${modulePath}/package-lock.json`)
       shell.cd(rootPath)
       console.log(chalk.green(`[${name}] ✓ install done.\n`))
     })
