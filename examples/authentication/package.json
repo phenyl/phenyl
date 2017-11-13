@@ -19,6 +19,7 @@
     "phenyl-standards": "*",
     "power-assert": "^1.4.4"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/examples/authentication",
+  "license": "Apache License 2.0"
 }

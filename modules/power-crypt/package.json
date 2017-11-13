@@ -8,8 +8,9 @@
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/power-crypt",
+  "license": "Apache License 2.0",
   "dependencies": {
     "sha.js": "^2.4.8"
   }

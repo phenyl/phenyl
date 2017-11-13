@@ -12,6 +12,7 @@
     "kocha": "^1.8.0",
     "power-assert": "^1.4.4"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-interfaces",
+  "license": "Apache License 2.0"
 }

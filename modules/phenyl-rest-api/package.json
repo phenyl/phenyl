@@ -10,6 +10,7 @@
     "phenyl-interfaces": "*",
     "phenyl-utils": "*"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-rest-api",
+  "license": "Apache License 2.0"
 }

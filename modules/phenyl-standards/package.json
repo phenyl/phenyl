@@ -19,6 +19,7 @@
     "power-assign": "*",
     "power-crypt": "*"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-standards",
+  "license": "Apache License 2.0"
 }

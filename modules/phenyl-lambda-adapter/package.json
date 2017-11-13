@@ -12,6 +12,6 @@
   "dependencies": {
     "phenyl-http-rules": "*"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "license": "Apache License 2.0"
 }
