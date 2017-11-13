@@ -1,4 +1,4 @@
-# Phenyl [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=svg)](https://circleci.com/gh/phenyl-js/phenyl)
+# Phenyl [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl-js/phenyl)
 
 Phenyl is a mBaaS(mobile backend as a service) for React Native and web apps.
 Written in pure JavaScript, extensible.

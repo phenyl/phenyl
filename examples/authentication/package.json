@@ -16,8 +16,7 @@
     "phenyl-http-server": "*",
     "phenyl-memory-client": "*",
     "phenyl-rest-api": "*",
-    "phenyl-standards": "*",
-    "power-assert": "^1.4.4"
+    "phenyl-standards": "*"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/examples/authentication",

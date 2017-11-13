@@ -3,7 +3,6 @@
 import type {
   EntityClient
 } from '../index.js'
-import assert from 'power-assert'
 
 const user1 = {
   id: 'user1',
@@ -52,6 +51,7 @@ let entityClient
 export const assertEntityClient = (
   entityClientPromise: EntityClient | Promise<EntityClient>,
   kocha: any,
+  assert: Function,
 ) => {
   const { describe, it, after, before } = kocha
 
