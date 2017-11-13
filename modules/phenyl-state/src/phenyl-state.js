@@ -85,4 +85,11 @@ export default class PhenylState implements EntityState, EntityStateFinder, Enti
   $delete(command: DeleteCommand): UpdateOperation {
     return PhenylStateUpdater.$delete(this, command)
   }
+
+  /**
+   *
+   */
+  has(query: IdQuery): boolean {
+    return PhenylStateFinder.has(this, query)
+  }
 }

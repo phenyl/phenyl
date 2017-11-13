@@ -1,4 +1,5 @@
 // @flow
+
 import {
   PhenylStateFinder,
   PhenylStateUpdater,
@@ -52,7 +53,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     const entity = PhenylStateFinder.findOne(this.entityState, query)
     if (entity == null) {
       throw createErrorResult(
-        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query.',
+        '"PhenylMemoryClient#findOne()" failed. Could not find any entity with the given query',
         'NotFound'
       )
     }
@@ -153,9 +154,16 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
    */
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id } = command
-    const operation = PhenylStateUpdater.$update(this.entityState, command)
-    this.entityState = assign(this.entityState, operation)
-    return PhenylStateFinder.get(this.entityState, { entityName, id })
+    try {
+      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      this.entityState = assign(this.entityState, operation)
+      return PhenylStateFinder.get(this.entityState, { entityName, id })
+    } catch (error) {
+      throw createErrorResult(
+        '"PhenylMemoryClient#updateAndGet()" failed. Could not find any entity with the given query.',
+        'NotFound'
+      )
+    }
   }
 
   /**

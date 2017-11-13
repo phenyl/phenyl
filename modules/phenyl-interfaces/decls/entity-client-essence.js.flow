@@ -15,7 +15,6 @@ import type {
   MultiInsertCommand,
   MultiUpdateCommand,
   SingleInsertCommand,
-  UpdateCommand,
   DeleteCommand,
 } from './command.js.flow'
 
@@ -28,7 +27,6 @@ export interface EntityClientEssence {
   insert(command: InsertCommand): Promise<number>,
   insertAndGet(command: SingleInsertCommand): Promise<Entity>,
   insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>>,
-  update(command: UpdateCommand): Promise<number>,
   updateAndGet(command: IdUpdateCommand): Promise<Entity>,
   updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>>,
   delete(command: DeleteCommand): Promise<number>,

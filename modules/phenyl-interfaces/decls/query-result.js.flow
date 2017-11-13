@@ -3,7 +3,6 @@
 import type {
   UpdateOperation,
 } from 'mongolike-operations'
-import type { ErrorResult } from './error-result.js.flow'
 import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
 
