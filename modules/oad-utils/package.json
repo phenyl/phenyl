@@ -13,8 +13,9 @@
     "mongolike-operations": "*",
     "power-assert": "^1.4.4"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/oad-utils",
+  "license": "Apache License 2.0",
   "dependencies": {
     "deepmerge": "^2.0.0"
   }

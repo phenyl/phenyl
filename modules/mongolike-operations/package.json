@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "MongoDB-like Operations (both query and Update)",
   "main": "index.js",
-  "author": "",
-  "license": "ISC"
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/mongolike-operations",
+  "license": "Apache License 2.0"
 }

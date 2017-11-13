@@ -19,8 +19,8 @@
     "type": "git",
     "url": "git+https://github.com/shinout/phenyl.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "license": "Apache License 2.0",
   "bugs": {
     "url": "https://github.com/shinout/phenyl/issues"
   },
