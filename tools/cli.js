@@ -1,20 +1,26 @@
+/* eslint-env node */
+/* eslint-disable no-console */
+
+import pth from 'path'
 import shell from 'shelljs'
 import chalk from 'chalk'
 import fs from 'fs'
 import PhenylModuleGraph from './lib/phenyl-module-graph.js'
 import type { BumpType } from './lib/phenyl-module-graph'
 
+const rootPath = pth.dirname(__dirname)
+const modulesPath = rootPath + '/modules'
 
 class CLI {
   constructor() {
-    const path = __dirname + '/../modules'
-    const moduleNames = fs.readdirSync(path).filter(moduleName => fs.statSync(path + '/' + moduleName).isDirectory())
+    const rootPackageJson = require(rootPath + '/package.json')
+    const moduleNames = fs.readdirSync(modulesPath).filter(moduleName => fs.statSync(modulesPath + '/' + moduleName).isDirectory())
     const packageJsonsByName = {}
     moduleNames.forEach(moduleName => {
       // $FlowIssue(load-package.json)
-      packageJsonsByName[moduleName] = require(`${path}/${moduleName}/package.json`)
+      packageJsonsByName[moduleName] = require(`${modulesPath}/${moduleName}/package.json`)
     })
-    this.graph = new PhenylModuleGraph(packageJsonsByName)
+    this.graph = new PhenylModuleGraph(rootPackageJson, packageJsonsByName)
   }
 
   bump(moduleName: string, bumpType: BumpType) {
@@ -26,7 +32,7 @@ class CLI {
       const oldVersion = packagejson.version
       const newVersion = phenylModule.version
       packagejson.version = newVersion
-      fs.writeFileSync(path, JSON.stringify(packagejson, null, '  '), 'utf-8')
+      fs.writeFileSync(pathToModule + '/package.json', JSON.stringify(packagejson, null, '  '), 'utf-8')
 
       if (bumpType === 'patch') {
         this.commitAndTag(oldVersion, newVersion, moduleName, pathToModule)
@@ -57,10 +63,8 @@ class CLI {
   clean() {
     this.graph.sortedModuleNames.forEach(name => {
       console.log(chalk.cyan(`\n[${name}] start clean`))
-      shell.cd(`modules/${name}`)
-      shell.rm('-rf', 'node_modules dist')
-      shell.rm('-f', 'package-lock.json')
-      shell.cd('../../')
+      const modulePath = `${modulesPath}/${name}`
+      shell.rm('-rf', `${modulePath}/node_modules`, `${modulePath}/dist`, `${modulePath}/package-lock.json`)
       console.log(chalk.green(`[${name}] ✓ clean done`))
     })
   }
@@ -74,11 +78,11 @@ class CLI {
       const { scripts } = modulesByName[name]
 
       if (scripts && Object.keys(scripts).includes('test')) {
-        shell.cd(`modules/${name}`)
+        shell.cd(`${modulesPath}/${name}`)
         if (shell.exec('npm test --color always').code !== 0) {
           failedModules.push(name)
         }
-        shell.cd('../../')
+        shell.cd(rootPath)
       }
       else {
         shell.echo(`no test specified in ${name}`)
@@ -106,19 +110,31 @@ class CLI {
   load() {
     const { modulesByName } = this.graph
     this.graph.sortedModuleNames.forEach(name => {
+      const modulePath = `${modulesPath}/${name}`
       console.log(chalk.cyan(`[${name}] start install.`))
 
-      const { dependingModuleNames } = modulesByName[name]
+      const { dependingModuleNames, commonModuleNames } = modulesByName[name]
       dependingModuleNames.forEach(dependingModuleName => {
-        shell.mkdir('-p', `modules/${name}/node_modules`)
-        shell.cd(`modules/${name}/node_modules`)
+        shell.mkdir('-p', `${modulePath}/node_modules`)
+        shell.cd(`${modulePath}/node_modules`)
         shell.ln('-s', `../../${dependingModuleName}`, `${dependingModuleName}`)
-        shell.cd('../../../')
+        shell.cd(rootPath)
       })
 
-      shell.cd(`modules/${name}`)
+      commonModuleNames.forEach(commonModuleName => {
+        shell.mkdir('-p', `${modulePath}/node_modules`)
+        shell.cd(`${modulePath}/node_modules`)
+        shell.ln('-s', `../../../node_modules/${commonModuleName}`, `${commonModuleName}`)
+        shell.cd(rootPath)
+      })
+
+      shell.mkdir('-p', `${modulePath}/node_modules/.bin`)
+      shell.cd(`${modulePath}/node_modules/.bin`)
+      shell.ln('-s', '../../../../node_modules/.bin/kocha', 'kocha')
+
+      shell.cd(modulePath)
       shell.exec('npm install --color always --loglevel=error')
-      shell.cd('../../')
+      shell.cd(rootPath)
       console.log(chalk.green(`[${name}] ✓ install done.\n`))
     })
   }

@@ -1,9 +1,6 @@
 // @flow
-const shell = require('shelljs')
-
 import type {
   Version,
-  PackageJSON,
 } from './phenyl-module-graph.js'
 
 type PhenylModuleParams = {
@@ -12,6 +9,7 @@ type PhenylModuleParams = {
   scripts: ?{ [scriptName: string]: string },
   dependingModuleNames: Array<string>,
   dependedModuleNames: Array<string>,
+  commonModuleNames: Array<string>,
 }
 
 
@@ -21,6 +19,7 @@ export default class PhenylModule {
   scripts: { [scriptName: string]: string }
   dependingModuleNames: Array<string>
   dependedModuleNames: Array<string>
+  commonModuleNames: Array<string>
 
   constructor(params: PhenylModuleParams) {
     this.name = params.name
@@ -28,5 +27,6 @@ export default class PhenylModule {
     this.scripts = params.scripts || {}
     this.dependingModuleNames = params.dependingModuleNames
     this.dependedModuleNames = params.dependedModuleNames
+    this.commonModuleNames = params.commonModuleNames
   }
 }

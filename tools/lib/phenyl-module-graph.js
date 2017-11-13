@@ -18,14 +18,14 @@ export default class PhenylModuleGraph {
   modulesByName: PhenylModulesByName
   sortedModuleNames: Array<string>
 
-  constructor(packageJsonsByName: { [moduleName: string]: PackageJSON }) {
+  constructor(rootPackageJson: PackageJSON, packageJsonsByName: { [moduleName: string]: PackageJSON }) {
     const moduleNames = Object.keys(packageJsonsByName)
 
     this.modulesByName = {}
     moduleNames.forEach(moduleName => {
       const packageJson = packageJsonsByName[moduleName]
       const dependedModuleNames = getDependedModuleNames(moduleName, packageJsonsByName)
-      this.modulesByName[moduleName] = createPhenylModule(packageJson, moduleNames, dependedModuleNames)
+      this.modulesByName[moduleName] = createPhenylModule(packageJson, moduleNames, dependedModuleNames, rootPackageJson)
     })
     this.sortedModuleNames = topologicalSort(this.modulesByName)
   }
@@ -50,9 +50,11 @@ export default class PhenylModuleGraph {
 /**
  * Factory of PhenylModule
  */
-function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<string>, dependedModuleNames: Array<string>): PhenylModule {
+function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<string>, dependedModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
   const dependencies = packageJson.dependencies || {}
   const devDependencies = packageJson.devDependencies || {}
+  // $FlowIssue(devDependencies-exists)
+  const commonModuleNames = Object.keys(devDependencies).filter(name => rootPackageJson.devDependencies[name] != null)
 
   const params = {
     name: packageJson.name,
@@ -60,6 +62,7 @@ function createPhenylModule(packageJson: PackageJSON, phenylModuleNames: Array<s
     scripts: packageJson.scripts,
     dependingModuleNames: phenylModuleNames.filter(moduleName => dependencies[moduleName] || devDependencies[moduleName]),
     dependedModuleNames,
+    commonModuleNames,
   }
   return new PhenylModule(params)
 }
