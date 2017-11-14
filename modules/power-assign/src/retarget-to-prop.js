@@ -5,11 +5,16 @@ import {
 
 import type {
   RegularUpdateOperation,
+  SetOperator,
+  UpdateOperation,
   UpdateOperator,
   DocumentPath,
 } from 'mongolike-operations'
 
-export function retargetToProp(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
+/**
+ * Retarget the given UpdateOperation to the given docPath.
+ */
+export function retargetToProp(docPath: DocumentPath, _operation: SetOperator | UpdateOperation): RegularUpdateOperation {
 
   const operation = normalizeUpdateOperation(_operation)
   const newOps: UpdateOperator = {}
@@ -28,7 +33,7 @@ export function retargetToProp(docPath: DocumentPath, _operation: Object): Regul
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: Object): RegularUpdateOperation {
+export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: SetOperator | UpdateOperation): RegularUpdateOperation {
   const operation = retargetToProp(docPath, _operation)
 
   const $restore = operation.$restore || {}

@@ -147,31 +147,31 @@ describe('assign', () => {
   })
 
   it('addToSet', () => {
-    const obj = { categories: ['fashion', 'news', 'cooking-recipies'] }
+    const obj = { categories: ['fashion', 'news', 'cooking-recipes'] }
     const newObj = assign(obj, { $addToSet: { categories: { $each: ['news', 'sports'] }}})
-    assert.deepEqual(newObj.categories, ['fashion', 'news', 'cooking-recipies', 'sports'])
+    assert.deepEqual(newObj.categories, ['fashion', 'news', 'cooking-recipes', 'sports'])
   })
 
-  it('pop with 1', () => {
-    const obj = { categories: ['fashion', 'news', 'cooking-recipies'] }
+  it('pop an array with 1', () => {
+    const obj = { categories: ['fashion', 'news', 'cooking-recipes'] }
     const newObj = assign(obj, { $pop: { categories: 1 }})
     assert.deepEqual(newObj.categories, ['fashion', 'news'])
   })
 
-  it('pop with -1', () => {
-    const obj = { categories: ['fashion', 'news', 'cooking-recipies'] }
+  it('shift an array with -1', () => {
+    const obj = { categories: ['fashion', 'news', 'cooking-recipes'] }
     const newObj = assign(obj, { $pop: { categories: -1 }})
-    assert.deepEqual(newObj.categories, ['news', 'cooking-recipies'])
+    assert.deepEqual(newObj.categories, ['news', 'cooking-recipes'])
   })
 
   it('remove props by $unset operator', () => {
     const obj = {
-      categories: ['fashion', 'news', 'cooking-recipies'],
+      categories: ['fashion', 'news', 'cooking-recipes'],
       name: { first: 'Shin', last: 'Suzuki' }
     }
     const newObj = assign(obj, { $unset: { 'categories[1]': '', 'name.last': '' } })
     assert.deepEqual(newObj, {
-      categories: ['fashion', null, 'cooking-recipies'],
+      categories: ['fashion', null, 'cooking-recipes'],
       name: { first: 'Shin' }
     })
   })
@@ -198,7 +198,7 @@ describe('assign', () => {
 
   it('cannot rename array props by $rename operator', () => {
     const obj = {
-      categories: ['fashion', 'news', 'cooking-recipies'],
+      categories: ['fashion', 'news', 'cooking-recipes'],
       name: { first: 'Shin', last: 'Suzuki' }
     }
     assert.throws(() =>

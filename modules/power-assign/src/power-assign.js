@@ -30,6 +30,7 @@ import type {
   RestoreOperator,
   SetOperator,
   UnsetOperator,
+  UpdateOperation,
 } from 'mongolike-operations'
 
 /**
@@ -435,9 +436,10 @@ export default class PowerAssign {
 }
 
 /**
- *
+ * @public
+ * Assign new values to object following the given operation(s).
  */
-export function assign(obj: Object, uOp: Object | Array<Object>): Object {
+export function assign(obj: Object, uOp: SetOperator | UpdateOperation | Array<SetOperator | UpdateOperation>): Object {
   if (Array.isArray(uOp)) {
     return uOp.reduce((ret, _uOp) => {
       return PowerAssign.assign(ret, _uOp)
@@ -447,9 +449,9 @@ export function assign(obj: Object, uOp: Object | Array<Object>): Object {
 }
 
 /**
- *
+ * Assign new values to the property of the obj located at the given documentPath following the given operation.
  */
-export function assignToProp(obj: Object, docPath: DocumentPath, uOp: Object): Object {
+export function assignToProp(obj: Object, docPath: DocumentPath, uOp: SetOperator | UpdateOperation): Object {
   const modifiedOps = retargetToProp(docPath, uOp)
   return assign(obj, modifiedOps)
 }
@@ -457,7 +459,7 @@ export function assignToProp(obj: Object, docPath: DocumentPath, uOp: Object): O
 /**
  *
  */
-export function assignWithRestoration<T: Restorable>(obj: T, uOp: Object): T {
+export function assignWithRestoration<T: Restorable>(obj: T, uOp: SetOperator | UpdateOperation): T {
   const updatedObj = assign(obj, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
@@ -466,7 +468,7 @@ export function assignWithRestoration<T: Restorable>(obj: T, uOp: Object): T {
 /**
  *
  */
-export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, uOp: Object): T {
+export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, uOp: SetOperator | UpdateOperation): T {
   const updatedObj = assignToProp(obj, docPath, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
