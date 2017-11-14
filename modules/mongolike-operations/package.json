@@ -1,6 +1,6 @@
 {
   "name": "mongolike-operations",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "MongoDB-like Operations (both query and Update)",
   "main": "index.js",
   "author": "Shin Suzuki <shinout310@gmail.com>",

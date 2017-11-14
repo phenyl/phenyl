@@ -1,14 +1,14 @@
 {
   "name": "phenyl-rest-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*",
-    "phenyl-utils": "*"
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-utils": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-rest-api",

@@ -1,6 +1,6 @@
 {
   "name": "power-assign",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -12,12 +12,12 @@
   "license": "Apache License 2.0",
   "devDependencies": {
     "kocha": "^1.8.0",
-    "mongolike-operations": "*",
+    "mongolike-operations": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "oad-utils": "*",
-    "power-filter": "*"
+    "oad-utils": "~0.1.0",
+    "power-filter": "~0.1.0"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "phenyl-mongodb-client",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "jsnext:main": "./jsnext.js",
@@ -11,16 +11,16 @@
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
     "power-assert": "^1.4.4",
-    "phenyl-interfaces": "*"
+    "phenyl-interfaces": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-mongodb-client",
   "license": "Apache License 2.0",
   "dependencies": {
     "es6-promisify": "^5.0.0",
-    "phenyl-utils": "*",
-    "power-assign": "*",
-    "oad-utils": "*",
+    "phenyl-utils": "~0.1.0",
+    "power-assign": "~0.1.0",
+    "oad-utils": "~0.1.0",
     "mongodb": "^2.2.31"
   }
 }

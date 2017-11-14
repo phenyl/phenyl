@@ -1,13 +1,13 @@
 {
   "name": "phenyl-async-storage-client",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "phenyl-interfaces": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "license": "Apache License 2.0"

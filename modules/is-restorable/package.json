@@ -1,6 +1,6 @@
 {
   "name": "is-restorable",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -10,7 +10,7 @@
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "mongolike-operations": "*"
+    "mongolike-operations": "~0.1.0"
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0"

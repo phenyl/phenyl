@@ -1,19 +1,19 @@
 {
   "name": "phenyl-redux",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "*"
+    "phenyl-interfaces": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache License 2.0",
   "dependencies": {
-    "power-assign": "*",
-    "phenyl-state": "*"
+    "power-assign": "~0.1.0",
+    "phenyl-state": "~0.1.0"
   }
 }

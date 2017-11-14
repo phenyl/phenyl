@@ -1,6 +1,6 @@
 {
   "name": "phenyl-dynamodb-client",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
