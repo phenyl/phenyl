@@ -21,6 +21,7 @@ export type OrFindOperation = {|
 |}
 
 /**
+ * Operation to find values in large JSON.
  * ISSUE:
  * https://github.com/facebook/flow/issues/2892
  */

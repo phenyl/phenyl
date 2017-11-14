@@ -345,7 +345,7 @@ assert.deepEqual(newObj.categories, ['news', 'cooking-recipes'])
 An operator to remove elements in array matching the given condition.
 For all condition definitions, see [mongolike-operations/find-operation.js.flow](https://github.com/phenyl-js/phenyl/blob/master/modules/mongolike-operations/decls/query-condition.js.flow).
 
-They are almost compatible with [MongoDB Query Operators](https://docs.mongodb.com/manual/reference/operator/query/).
+They are almost compatible with [MongoDB's Query Operators](https://docs.mongodb.com/manual/reference/operator/query/).
 
 ```js
 type PullOperator = { [field: DocumentPath]: QueryCondition | EqCondition }
