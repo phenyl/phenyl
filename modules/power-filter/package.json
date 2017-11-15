@@ -1,7 +1,7 @@
 {
   "name": "power-filter",
   "version": "0.1.0",
-  "description": "",
+  "description": "Filter objects in array by MongoDB-like FindOperation.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "devDependencies": {
