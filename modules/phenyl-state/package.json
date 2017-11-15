@@ -8,7 +8,7 @@
     "test": "kocha --require babel-register test/*.js --color always"
   },
   "dependencies": {
-    "power-assign": "~0.1.0",
+    "power-assign": "~0.1.1",
     "power-filter": "~0.1.0",
     "oad-utils": "~0.1.0"
   },

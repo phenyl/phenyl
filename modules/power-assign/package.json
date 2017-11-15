@@ -1,6 +1,6 @@
 {
   "name": "power-assign",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Empowered Object.assign() in JavaScript available in whole JavaScript environment.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
