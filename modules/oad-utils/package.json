@@ -1,7 +1,7 @@
 {
   "name": "oad-utils",
   "version": "0.1.0",
-  "description": "Utility libraries for OAD: Operations As Data",
+  "description": "Collection of utility functions for OAD: Operations As Data.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
