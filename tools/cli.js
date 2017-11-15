@@ -29,11 +29,6 @@ class CLI {
       const newVersion = phenylModule.version
       packagejson.version = newVersion
       fs.writeFileSync(pathToModule + '/package.json', JSON.stringify(packagejson, null, '  '), 'utf-8')
-
-      if (bumpType === 'patch') {
-        this.commitAndTag(oldVersion, newVersion, moduleName, pathToModule)
-        this.publish(`v${newVersion}`)
-      }
     })
   }
 
