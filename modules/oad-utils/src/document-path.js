@@ -6,7 +6,8 @@ import type {
 } from 'mongolike-operations'
 
 /**
- *
+ * @public
+ * Parse DocumentPath into an array of property names.
  */
 export function parseDocumentPath(docPath: DocumentPath): Array<string | number> {
   return docPath.split(/[.[]/).map(
@@ -15,7 +16,7 @@ export function parseDocumentPath(docPath: DocumentPath): Array<string | number>
 }
 
 /**
- *
+ * Create DocumentPath from arguments.
  */
 export function createDocumentPath(...attributes: Array<string | number>): DocumentPath {
   const joined = attributes.reduce((docPath, attr) =>

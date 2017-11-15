@@ -1,8 +1,8 @@
 # mongolike-operations [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl-js/phenyl)
 Define [Flow](https://flowtype.org) interfaces of MongoDB-like operations used in [Phenyl](https://github.com/phenyl-js/phenyl) modules.
 
-## OAD: Operation As Data
-Operation As Data(OAD) is the concept of handling large JSON data that all the data operations (update/find) should be written as JSON format (≒ plain object).
+## OAD: Operations As Data
+**Operations As Data(OAD)** is the concept of handling large JSON data that all the data operations (update/find) should be written as JSON format (≒ plain object).
 This `mongolike-operations` defines these Operation type.
 
 

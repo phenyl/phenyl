@@ -25,17 +25,18 @@ assert(newObj.bar.baz === 'xyz') // assigned nested value
 npm install power-assign
 ```
 
-## Using type with flow
+## Using types with flow
+For [Flow](https://flowtype.org) annotations, just use `/jsnext` entrypoint.
+
 ```js
 import { assign } from 'power-assign/jsnext'
 ```
-Just adding `/jsnext` enables us to access [Flow](https://flowtype.org) type annotations.
 
 All the interfaces are defined in the depending module [mongolike-operations](https://github.com/phenyl-js/phenyl/tree/master/modules/mongolike-operations).
 
 # Concept
-## OAD: Operation As Data
-Operation As Data(OAD) is the concept of handling large JSON data that all the data operations (update/find) should be written as JSON format (≒ plain object).
+## OAD: Operations As Data
+**Operations As Data(OAD)** is the concept of handling large JSON data that all the data operations (update/find) should be written as JSON format (≒ plain object).
 This power-assign handles UpdateOperation as data.
 
 The previous example is also written as below.
@@ -255,6 +256,48 @@ The same arguments as `assignToProp()` but it also restores the original object.
 
 ## retargetToPropWithRestoration()
 The same arguments as `retargetToProp()` but it also restores the original object.
+
+## toJSON()
+Convert UpdateOperation to Restorable JSON format.
+
+```js
+import { toJSON } from 'power-assign'
+class Name {
+  constructor(params) {
+    this.first = params.first
+    this.last = params.last
+  }
+}
+
+const person = { name: new Name({ first: 'Shin', last: 'Suzuki' }) }
+const op = { $restore: { name: Name }, $set: { 'name.first': 'Shun' } }
+assert.deepEqual(JSON.parse(JSON.stringify(op)).$restore.name, {}) // classes re converted to {} over serialization
+assert.deepEqual(JSON.parse(JSON.stringify(toJSON(op))).$restore.name, '')
+```
+
+## mergeOperations()
+**[Experimental]** Merge UpdateOperations into one UpdateOperation.
+
+```js
+import { mergeOperations } from 'power-assign'
+const merged = mergeOperations(
+  { $set: { foo: 123 } },
+  { $inc: { count: 1 } }
+)
+assert.deepEqual(merged, {
+  $set: { foo: 123 },
+  $inc: { count: 1 }
+})
+```
+
+## normalizeOperation()
+Convert SetOperator to normalized operation.
+
+```js
+import { normalizeOperation } from 'power-assign'
+const op = { 'baz.biz': 3 })
+assert.deepEqual(normalizeOperation(op), { $set: { 'baz.biz': 3 } })
+```
 
 ## Update Operators
 Almost the same as **[MongoDB's Update Operators](https://docs.mongodb.com/manual/reference/operator/update/)**.

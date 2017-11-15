@@ -14,6 +14,10 @@ export type FindOperationVisitor = {
   queryCondition?: (condition: QueryCondition) => QueryCondition,
 }
 
+/**
+ * @public
+ * Modify FindOperation by passing visitor functions.
+ */
 export function visitFindOperation(where: Object, visitor: FindOperationVisitor): FindOperation {
   if (where.$and != null) {
     // $FlowIssue(this-is-not-SimpleFindOperation)
@@ -32,6 +36,9 @@ export function visitFindOperation(where: Object, visitor: FindOperationVisitor)
   return visitSimpleFindOperation(where, visitor)
 }
 
+/**
+ * @private
+ */
 function visitSimpleFindOperation(_where: SimpleFindOperation, visitor: FindOperationVisitor): SimpleFindOperation {
   const where = visitor.simpleFindOperation ? visitor.simpleFindOperation(_where) : _where
   const queryConditionVisitor = visitor.queryCondition
