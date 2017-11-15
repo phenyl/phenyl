@@ -4,6 +4,9 @@
   "description": "Filter objects in array by MongoDB-like FindOperation.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js --color always"
+  },
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
