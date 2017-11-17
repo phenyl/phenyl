@@ -1,0 +1,27 @@
+{
+  "name": "phenyl-api-explorer",
+  "version": "0.1.0",
+  "description": "Automatically renders API explorer pages like swagger",
+  "main": "./dist/index.js",
+  "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "start": "babel-node examples/index.js",
+    "test": "kocha --require babel-register test/*.js --color always"
+  },
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-api-explorer",
+  "license": "Apache License 2.0",
+  "devDependencies": {
+    "kocha": "^1.8.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "phenyl-http-server": "file:../phenyl-http-server",
+    "phenyl-lambda-adapter": "file:../phenyl-lambda-adapter",
+    "phenyl-rest-api": "file:../phenyl-rest-api",
+    "phenyl-http-client": "file:../phenyl-http-client",
+    "phenyl-memory-client": "file:../phenyl-memory-client",
+    "phenyl-standards": "file:../phenyl-standards"
+  },
+  "dependencies": {}
+}
