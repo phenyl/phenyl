@@ -70,7 +70,7 @@ assert.deepEqual(obj.arr, ['value1', 'value2'])
 ## Phenyl Family
 power-assign is one of **Phenyl Family**.
 [Phenyl](https://github.com/phenyl-js/phenyl) is a JavaScript Server/Client framework for State Synchronization over Environment(SSoE).
-UpdateOperation is the key to synchronize large JSON over environment. Thus power-assign plays an the essential role in Phenyl.
+UpdateOperation is the key to synchronize large JSON over environment. Thus power-assign plays one of the essential roles in Phenyl.
 
 # API Documentation
 ## Definitions
@@ -208,7 +208,7 @@ Restorable is a characteristic of JavaScript class instances which meets the fol
 ```js
 const jsonStr = JSON.stringify(instance)
 const plain = JSON.parse(jsonStr)
-const newInstance = new TheClass(instance)
+const newInstance = new TheClass(plain)
 
 assert.deepEqual(newInstance, instance)
 ```
@@ -316,7 +316,7 @@ An operator to set values.
 
 ```js
 const value = assign({ a: 'foo', b: 100 } , { $set: { a: 'bar', b: 101 } })
-assert(value.a === 'foo')
+assert(value.a === 'bar')
 assert(value.b === 101)
 ```
 
@@ -347,7 +347,7 @@ assert(value.b === 101)
 An operator to multiply number values.
 
 ```js
-const value = assign({ a: 10, b: 100 } , { $inc: { a: 2, b: 0 } })
+const value = assign({ a: 10, b: 100 } , { $mul: { a: 2, b: 0 } })
 assert(value.a === 20)
 assert(value.b === 0)
 ```
@@ -356,14 +356,14 @@ assert(value.b === 0)
 An operator to add element(s) to array values when the same value(s) doesn't exist.
 
 ```js
-const value = assign({ arr: [{ a: 1 }, { a: 88 }] } , { $addToSet: { a: 3 } })
+const value = assign({ arr: [{ a: 1 }, { a: 88 }] } , { $addToSet: { arr: { a: 3 } } })
 assert.deepEqual(value.arr, [{ a: 1 }, { a: 88 }, { a: 3 }])
 ```
 
 `$each` modifier can be available like MongoDB.
 
 ```js
-const value = assign({ arr: [{ a: 1 }, { a: 88 }] } , { $addToSet: { $each: [{ a : 1}, { a: 3 }, { a: 5 } ]} })
+const value = assign({ arr: [{ a: 1 }, { a: 88 }] } , { $addToSet: { arr: { $each: [{ a : 1}, { a: 3 }, { a: 5 } ]} } })
 assert.deepEqual(value.arr, [{ a: 1 }, { a: 88 }, { a: 3 }, { a: 5 }])
 ```
 
@@ -587,7 +587,7 @@ const user = new User({
 })
 const newUser = assign(user, {
   $inc: { 'age.value': 1 },
-  $set: { id: 'user001', 'name.first': 'Shinji', name2: { first: 'Shinzo', last: 'Sasaki' }, },
+  $set: { id: 'user001', 'name.first': 'Shinji', name2: { first: 'Shinzo', last: 'Sasaki' } },
   $restore: { name: '', name2: Name, age: Age },
 })
 
