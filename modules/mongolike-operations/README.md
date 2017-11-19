@@ -99,7 +99,7 @@ Restorable is a characteristic of JavaScript class instances which meets the fol
 ```js
 const jsonStr = JSON.stringify(instance)
 const plain = JSON.parse(jsonStr)
-const newInstance = new TheClass(instance)
+const newInstance = new TheClass(plain)
 
 assert.deepEqual(newInstance, instance)
 ```
