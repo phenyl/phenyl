@@ -65,8 +65,8 @@ export const assertEntityClient = (
     })
 
     describe('insert', () => {
-      it('inserts an entity with single insert command', async () => {
-        const result = await entityClient.insert({
+      it('inserts an entity with insertOne command', async () => {
+        const result = await entityClient.insertOne({
           entityName: 'user',
           value: user1,
         })
@@ -75,8 +75,8 @@ export const assertEntityClient = (
         assert(result.n === 1)
       })
 
-      it('inserts entities with multi insert command', async () => {
-        const result = await entityClient.insert({
+      it('inserts entities with insertMulti command', async () => {
+        const result = await entityClient.insertMulti({
           entityName: 'user',
           values: [ user2, user3, user4 ],
         })

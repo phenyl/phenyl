@@ -19,7 +19,6 @@ import type {
   DeleteCommand,
   IdQuery,
   IdsQuery,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   UpdateCommand,
@@ -99,13 +98,17 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
   /**
    *
    */
-  async insert(command: InsertCommand): Promise<number> {
-    if (command.values) {
-      const entities = await this.insertAndGetMulti(command)
-      return entities.length
-    }
+  async insertOne(command: SingleInsertCommand): Promise<number> {
     await this.insertAndGet(command)
     return 1
+  }
+
+  /**
+   *
+   */
+  async insertMulti(command: MultiInsertCommand): Promise<number> {
+    const entities = await this.insertAndGetMulti(command)
+    return entities.length
   }
 
   /**

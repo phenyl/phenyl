@@ -11,7 +11,6 @@ import type {
   IdQuery,
   IdsQuery,
   WhereQuery,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   IdUpdateCommand,
@@ -92,16 +91,17 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
     return result.map(set_idToIdInEntity)
   }
 
-  async insert(command: InsertCommand): Promise<number> {
+  async insertOne(command: SingleInsertCommand): Promise<number> {
+    const { entityName, value } = command
+    const coll = this.conn.collection(entityName)
+    const result = await coll.insertOne(setIdTo_idInEntity(value))
+    return result.insertedCount
+  }
+
+  async insertMulti(command: MultiInsertCommand): Promise<number> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
-    let result
-    if (command.value) {
-      result = await coll.insertOne(setIdTo_idInEntity(command.value))
-    }
-    else {
-      result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
-    }
+    const result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
     return result.insertedCount
   }
 

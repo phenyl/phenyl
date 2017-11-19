@@ -16,7 +16,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      await client.insert({ entityName, values: users })
+      await client.insertMulti({ entityName, values: users })
     })
 
     it('returns versionsById', async () => {
@@ -34,7 +34,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      await client.insert({ entityName, values: users })
+      await client.insertMulti({ entityName, values: users })
     })
 
     it('returns versionId', async () => {
@@ -50,7 +50,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      await client.insert({ entityName, values: users })
+      await client.insertMulti({ entityName, values: users })
     })
 
     it('returns versionId', async () => {
@@ -66,7 +66,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      await client.insert({ entityName, values: users })
+      await client.insertMulti({ entityName, values: users })
     })
 
     it('returns versionsById', async () => {
@@ -86,7 +86,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      firstVersionId = (await client.insert({ entityName: 'user', value: user })).versionId
+      firstVersionId = (await client.insertOne({ entityName: 'user', value: user })).versionId
     })
     it('returns operation diffs', async () => {
       const operation = { $inc: { age: 1 }, $push: { hobbies: 'tennis' } }
@@ -113,7 +113,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     before(async() => {
       client = new PhenylMemoryClient()
-      firstVersionId = (await client.insert({ entityName, value: user })).versionId
+      firstVersionId = (await client.insertOne({ entityName, value: user })).versionId
       versionIds.push(firstVersionId)
 
       for (const i of range(110, 1)) {
@@ -172,7 +172,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
   describe('insert', () => {
     it('attaches meta info', async () => {
       const client = new PhenylMemoryClient()
-      const result = await client.insert({ entityName: 'user', value: { id: 'foo', name: 'bar' } })
+      const result = await client.insertOne({ entityName: 'user', value: { id: 'foo', name: 'bar' } })
       if (result.versionId == null) throw new Error('result.versionId should exist.')
       assert(client.entityState.pool.user.foo._PhenylMeta.versions, [ { id: result.versionId, op: '' }])
     })
@@ -186,7 +186,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     beforeEach(async() => {
       client = new PhenylMemoryClient()
-      await client.insert({ entityName: 'user', value: user })
+      await client.insertOne({ entityName: 'user', value: user })
     })
 
     it('pushs version info to meta info of the updated entity', async () => {
@@ -204,7 +204,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     it('pushs version info to meta info of all the updated entities', async () => {
       const user2 = { id: 'user2', name: 'U2', age: 63, hobbies: [] }
       const user3 = { id: 'user3', name: 'U3', age: 11, hobbies: [] }
-      await client.insert({ entityName, values: [user2, user3] })
+      await client.insertMulti({ entityName, values: [user2, user3] })
 
       const operation = { $inc: { age: 1 } }
       const result = await client.update({ operation, entityName, where: { id: { $regex: /^user/ } } })
@@ -226,7 +226,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     beforeEach(async() => {
       client = new PhenylMemoryClient()
       // $FlowIssue(versionId-is-string)
-      versionId = (await client.insert({ entityName: 'user', value: user })).versionId
+      versionId = (await client.insertOne({ entityName: 'user', value: user })).versionId
     })
 
     it('pushs operations to current entity', async () => {

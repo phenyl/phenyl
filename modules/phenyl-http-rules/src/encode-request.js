@@ -63,13 +63,14 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         qsParams: createQsParams(data)
       }
 
-    case 'insert':
+    case 'insertOne':
+    case 'insertMulti':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
         headers,
-        path: addPrefix(`/${data.entityName}/insert`),
+        path: addPrefix(`/${data.entityName}/${reqData.method}`),
         body: createBody(data)
       }
 

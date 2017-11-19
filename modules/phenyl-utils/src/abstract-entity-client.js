@@ -16,7 +16,6 @@ import type {
   GetCommandResult,
   IdQuery,
   IdsQuery,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   PullQuery,
@@ -79,13 +78,17 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async insert(command: InsertCommand): Promise<CommandResult> {
-    if (command.values) {
-      const result = await this.insertAndGetMulti(command)
-      return { ok: 1, n: result.n, versionsById: result.versionsById }
-    }
+  async insertOne(command: SingleInsertCommand): Promise<CommandResult> {
     const result = await this.insertAndGet(command)
     return { ok: 1, n: 1, versionId: result.versionId }
+  }
+
+  /**
+   *
+   */
+  async insertMulti(command: MultiInsertCommand): Promise<CommandResult> {
+    const result = await this.insertAndGetMulti(command)
+    return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
 
   /**
