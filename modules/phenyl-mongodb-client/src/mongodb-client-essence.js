@@ -125,7 +125,7 @@ export default class PhenylMongoDbClientEssence implements EntityClientEssence {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateById({ _id: id }, operation)
+    const result = await coll.updateOne({ _id: id }, operation)
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createErrorResult(

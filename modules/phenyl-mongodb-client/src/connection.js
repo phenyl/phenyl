@@ -58,7 +58,7 @@ function promisifyCollection(coll: Object): MongoDbCollection {
     find: promisifyFindChain(coll.find.bind(coll)),
     insertOne: promisify(coll.insertOne, coll),
     insertMany: promisify(coll.insertMany, coll),
-    updateById: promisify(coll.updateById, coll),
+    updateOne: promisify(coll.updateOne, coll),
     updateMany: promisify(coll.updateMany, coll),
     deleteOne: promisify(coll.deleteOne, coll),
     deleteMany: promisify(coll.deleteMany, coll),
