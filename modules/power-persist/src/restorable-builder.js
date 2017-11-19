@@ -3,8 +3,7 @@ import type {
   Restorable,
   DocumentPath,
 } from 'phenyl-interfaces'
-import PowerAssign from 'power-assign/jsnext'
-import { getNestedValue } from 'phenyl-utils/jsnext'
+import { assign } from 'power-assign/jsnext'
 
 type PlainRestorableBuilder = {
   metaInfo: { ids: Array<string>, maxDepth: number },
@@ -14,6 +13,7 @@ type PlainRestorableBuilder = {
 export default class RestorableBuilder {
   metaInfo: { ids: Array<string>, maxDepth: number }
   valuesByKeys: { [key: string]: string }
+  keyValueArray: Array<Array<string>>
 
   constructor(plain: PlainRestorableBuilder) {
     this.valuesByKeys = plain.valuesByKeys
@@ -53,7 +53,7 @@ export default class RestorableBuilder {
       }
     }
 
-    PowerAssign.assign(restored, this.valuesByKeys[keyPathArr])
+    assign(restored, this.valuesByKeys[keyPathArr])
 
     delete this.valuesByKeys[key]
   }
@@ -85,7 +85,7 @@ export default class RestorableBuilder {
         }
       })
     })
-    console.log(value)
+    console.log(value) // eslint-disable-line no-console
     return value
   }
 

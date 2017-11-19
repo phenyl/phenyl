@@ -1,5 +1,9 @@
 // @flow
 
+/**
+ * Compatible with AsyncStorage
+ * (http://facebook.github.io/react-native/releases/0.49/docs/asyncstorage.html#asyncstorage)
+ */
 export interface StringStorage {
   getItem(key: string): Promise<?string>,
   setItem(key: string, value: string): Promise<void>,
@@ -9,4 +13,3 @@ export interface StringStorage {
   multiRemove(keys: Array<string>): Promise<void>,
   multiGet(keys: Array<string>): Promise<?Array<Array<string>>>,
 }
-

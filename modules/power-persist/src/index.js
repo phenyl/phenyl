@@ -1,16 +1,25 @@
 // @flow
 import StringMapBuilder from './string-map-builder.js'
-import type { Restorable } from 'phenyl-interfaces'
+import type {
+  Restorable,
+  UpdateOperation
+} from 'phenyl-interfaces'
 import type { StringStorage } from '../decls/string-storage.js.flow'
 import RestorableBuilder from './restorable-builder.js'
 
-export default class PowerStringStorage {
+export default class PowerPersist {
   storage: StringStorage
 
   constructor(storage: StringStorage) {
     this.storage = storage
   }
 
+  /**
+   * @public
+   * Register an object to key-value storage.
+   * For each termination node (≒value), key is DocumentPath of the value.
+   * maxDepth is the maximum length of the DocumentPath. default = 3.
+   */
   async register(obj: Restorable, nameSpace: string, maxDepth?: number): Promise<boolean> {
     const builder = new StringMapBuilder({
       target: obj,
@@ -30,6 +39,19 @@ export default class PowerStringStorage {
     return true
   }
 
+  /**
+   * @public
+   * Update the registered object with the given UpdateOperation.
+   */
+  async update(operation: UpdateOperation): Promise<boolean> {
+    // TODO
+    return true
+  }
+
+  /**
+   * @public
+   * Clear all the registered objects.
+   */
   async clear(): Promise<boolean> {
     const allKeys = await this.storage.getAllKeys()
     try {
@@ -40,6 +62,10 @@ export default class PowerStringStorage {
     return true
   }
 
+  /**
+   * @public
+   * Restore whole the stored object from the storage.
+   */
   async restore(nameSpace: string): Promise<Restorable> {
     const metaInfoStr = await this.storage.getItem(nameSpace)
     const metaInfo = JSON.parse(metaInfoStr)
@@ -56,9 +82,5 @@ export default class PowerStringStorage {
 
     const restorable = restorableBuilder.build()
     return restorable
-  }
-
-  assign(ops): Promise<boolean> {
-
   }
 }

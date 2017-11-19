@@ -17,9 +17,10 @@ const largeObj = {
 
 (async () => {
   const persisted = new PowerPersist(AsyncStorage)
-  await persisted.register(largeObj)
-  await persisted.update({ 'foo.bar.baz[0]': 3 } }) // This doesn't do JSON.parse() / JSON.stringify() of largeObj.
-  const restored = await persisted.restore()
+  const nameSpace = 'sample'
+  await persisted.register(largeObj, nameSpace)
+  await persisted.update(nameSpace, { 'foo.bar.baz[0]': 3 } }) // This doesn't do JSON.parse() / JSON.stringify() of largeObj.
+  const restored = await persisted.restore(nameSpace)
 
   assert.deepEqual(restored, {
     foo: {

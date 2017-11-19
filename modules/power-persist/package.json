@@ -1,5 +1,5 @@
 {
-  "name": "power-string-storage",
+  "name": "power-persist",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
