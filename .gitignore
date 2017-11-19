@@ -1,8 +1,10 @@
 node_modules
 package-lock.json
 dist
+tmp
 
 *.log
 
 .idea
 .DS_Store
+
