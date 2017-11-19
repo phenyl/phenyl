@@ -209,6 +209,7 @@ export class PhenylRestApi implements RestApiHandler {
     return {
       ok: 1,
       user: result.user,
+      versionId: result.versionId,
       session: newSession
     }
   }

@@ -57,6 +57,7 @@ export type GetCommandResult = {|
 export type PushCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
+  hasEntity: 0,
   operations: Array<UpdateOperation>,
   newOperation: UpdateOperation,
   versionId: Id,
@@ -64,6 +65,7 @@ export type PushCommandResult = {|
 |} | {|
   ok: 1,
   n: number, // TODO necessary?
+  hasEntity: 1,
   entity: Entity,
   versionId: Id,
   prevVersionId: ?Id,
@@ -79,6 +81,7 @@ export type LoginCommandResult = {
   ok: 1,
   session: Session,
   user: ?Entity,
+  versionId: ?Id,
 }
 
 export type LogoutCommandResult = {
