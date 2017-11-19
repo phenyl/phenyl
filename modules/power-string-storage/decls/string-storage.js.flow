@@ -7,4 +7,6 @@ export interface StringStorage {
   getAllKeys(): Promise<Array<string>>,
   multiSet(keyValuePairs: Array<Array<string>>): Promise<void>,
   multiRemove(keys: Array<string>): Promise<void>,
+  multiGet(keys: Array<string>): Promise<?Array<Array<string>>>,
 }
+

@@ -28,7 +28,7 @@ export default class StringMapBuilder {
     arr.forEach(item => {
       const id = ++lastInsertId
       ids.push(id)
-      const nextKey = [currentKey, id].join('.')
+      const nextKey = currentKey + `[$${id}]`
       const itemValues = this.explore(item, nextDepth, nextKey)
       Object.assign(values, itemValues)
     }, this)
@@ -66,7 +66,8 @@ export default class StringMapBuilder {
   }
 
   build(): StringMap {
-    const stringMap = {[this.nameSpace]: JSON.stringify({ maxDepth: this.maxDepth })}
-    return Object.assign(stringMap, this.explore(this.target, 0, this.nameSpace))
+    const stringMap = this.explore(this.target, 0, this.nameSpace)
+    const ids = Object.keys(stringMap)
+    return Object.assign(stringMap, {[this.nameSpace]: JSON.stringify({ maxDepth: this.maxDepth, ids })})
   }
 }
