@@ -20,10 +20,6 @@ jobs:
             - modules/*/node_modules
             - vendor/apt
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: mkdir /tmp/mongo
-      - run:
-          command: mongod --dbpath /tmp/mongo
-          background: true
       - run: npm run build
       - run: npm run chk
       - run: npm test

@@ -7,8 +7,13 @@ import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
 async function createMongoDBClient() {
-  const mongoDBConnection = await connect('mongodb://localhost:27017')
-  return new PhenylMongoDbClient(mongoDBConnection)
+  try {
+    const mongoDBConnection = await connect('mongodb://localhost:27017')
+    return new PhenylMongoDbClient(mongoDBConnection)
+  }
+  catch (e) {
+    throw new Error('Test was skipped as connection to mongodb failed.')
+  }
 }
 
 assertEntityClient(createMongoDBClient(), kocha, assert)
