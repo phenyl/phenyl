@@ -14,7 +14,8 @@ import type {
 } from './query.js.flow'
 
 import type {
-  UpdateCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
   DeleteCommand,
 } from './command.js.flow'
 
@@ -35,6 +36,7 @@ export interface EntityStateFinder {
 
 export interface EntityStateUpdater {
   $register(entityName: string, ...entities: Array<Entity>): UpdateOperation,
-  $update(command: UpdateCommand): UpdateOperation,
+  $updateById(command: IdUpdateCommand): UpdateOperation,
+  $updateMulti(command: MultiUpdateCommand): UpdateOperation,
   $delete(command: DeleteCommand): UpdateOperation,
 }

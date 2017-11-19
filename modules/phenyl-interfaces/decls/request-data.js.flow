@@ -16,7 +16,6 @@ import type {
   LoginCommand,
   LogoutCommand,
   PushCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   CustomCommand,
@@ -28,10 +27,11 @@ export type RequestMethodName =
   'get' |
   'getByIds' |
   'pull' |
-  'insert' |
+  'insertOne' |
   'insertAndGet' |
   'insertAndGetMulti' |
-  'update' |
+  'updateById' |
+  'updateMulti' |
   'updateAndGet' |
   'updateAndFetch' |
   'push' |
@@ -51,7 +51,8 @@ export type RequestData =
   InsertMultiRequestData |
   InsertAndGetRequestData |
   InsertAndGetMultiRequestData |
-  UpdateRequestData |
+  UpdateOneRequestData |
+  UpdateMultiRequestData |
   UpdateAndGetRequestData |
   UpdateAndFetchRequestData |
   PushRequestData |
@@ -115,9 +116,15 @@ export type InsertAndGetMultiRequestData = {|
   sessionId?: ?Id,
 |}
 
-export type UpdateRequestData = {|
-  method: 'update',
-  +payload: UpdateCommand,
+export type UpdateOneRequestData = {|
+  method: 'updateById',
+  +payload: IdUpdateCommand,
+  sessionId?: ?Id,
+|}
+
+export type UpdateMultiRequestData = {|
+  method: 'updateMulti',
+  +payload: MultiUpdateCommand,
   sessionId?: ?Id,
 |}
 

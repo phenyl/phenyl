@@ -46,7 +46,8 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
         return reqData
       }
     }
-    case 'update':
+    case 'updateById':
+    case 'updateMulti':
     case 'updateAndGet':
     case 'updateAndFetch': {
 

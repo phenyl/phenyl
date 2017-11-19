@@ -21,7 +21,6 @@ import type {
   IdsQuery,
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
@@ -141,13 +140,15 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
   /**
    *
    */
-  async update(command: UpdateCommand): Promise<number> {
-    if (command.id != null) {
-      // $FlowIssue(this-is-IdUpdateCommand)
-      const result = await this.updateAndGet((command: IdUpdateCommand)) // eslint-disable-line no-unused-vars
-      return 1
-    }
-    // $FlowIssue(this-is-MultiUpdateCommand)
+  async updateById(command: IdUpdateCommand): Promise<number> {
+    const result = await this.updateAndGet((command: IdUpdateCommand)) // eslint-disable-line no-unused-vars
+    return 1
+  }
+
+  /**
+   *
+   */
+  async updateMulti(command: MultiUpdateCommand): Promise<number> {
     const entities = await this.updateAndFetch((command: MultiUpdateCommand))
     return entities.length
   }
@@ -158,7 +159,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id } = command
     try {
-      const operation = PhenylStateUpdater.$update(this.entityState, command)
+      const operation = PhenylStateUpdater.$updateById(this.entityState, command)
       this.entityState = assign(this.entityState, operation)
       return PhenylStateFinder.get(this.entityState, { entityName, id })
     } catch (error) {
@@ -177,7 +178,7 @@ export default class PhenylMemoryClientEssence implements EntityClientEssence {
     // TODO Performance issue: find() runs twice for just getting N
     const values = PhenylStateFinder.find(this.entityState, { entityName, where })
     const ids = values.map(value => value.id)
-    const operation = PhenylStateUpdater.$update(this.entityState, command)
+    const operation = PhenylStateUpdater.$updateMulti(this.entityState, command)
     this.entityState = assign(this.entityState, operation)
     const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
     return updatedValues

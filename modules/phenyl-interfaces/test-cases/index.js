@@ -202,9 +202,9 @@ export const assertEntityClient = (
       })
     })
 
-    describe('update', () => {
-      it ('updates an entity with id update command', async () => {
-        const result = await entityClient.update({
+    describe('updateById', () => {
+      it ('updates an entity with updateById command', async () => {
+        const result = await entityClient.updateById({
           entityName: 'user',
           id: user1.id,
           operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
@@ -220,9 +220,11 @@ export const assertEntityClient = (
 
         assert(result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
       })
+    })
 
-      it ('updates entities with multi update command', async () => {
-        const result = await entityClient.update({
+    describe('updateMulti', () => {
+      it ('updates entities with updateMulti command', async () => {
+        const result = await entityClient.updateMulti({
           entityName: 'user',
           where: { 'name.last': 'Tanaka' },
           operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},
@@ -242,7 +244,7 @@ export const assertEntityClient = (
       })
 
       it ('does not update any entity when condition does not match', async () => {
-        const result = await entityClient.update({
+        const result = await entityClient.updateMulti({
           entityName: 'user',
           where: { id: 'hogehoge' },
           operation: { $set: { 'favorites.music': { singer: 'Tatsuro Yamashita' }}},

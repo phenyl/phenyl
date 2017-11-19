@@ -35,12 +35,14 @@ export function assertValidRequestData(rd: any): void {
         return assertValidSingleInsertCommand(rd.payload)
       case 'insertAndGetMulti':
         return assertValidMultiInsertCommand(rd.payload)
-      case 'update':
-        return assertValidUpdateCommand(rd.payload)
+      case 'updateById':
+        return assertValidIdUpdateCommand(rd.payload)
+      case 'updateMulti':
+        return assertValidMultiUpdateCommand(rd.payload)
       case 'updateAndGet':
-        return assertValidUpdateCommand(rd.payload)
+        return assertValidIdUpdateCommand(rd.payload)
       case 'updateAndFetch':
-        return assertValidUpdateCommand(rd.payload)
+        return assertValidMultiUpdateCommand(rd.payload)
       case 'push':
         return assertValidPushCommand(rd.payload)
       case 'delete':
@@ -167,27 +169,31 @@ export function assertValidMultiInsertCommand(com: any): void {
 /**
  *
  */
-export function assertValidUpdateCommand(com: any): void {
+export function assertValidIdUpdateCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`IdUpdateCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { entityName, operation, id } = com
+  assertNonEmptyString(id, `IdUpdateCommand.id must be a non-empty string. "${id}" given.`)
+  assertValidEntityName(entityName, 'IdUpdateCommand')
+  assertValidUpdateOperation(operation)
+}
+
+/**
+ *
+ */
+export function assertValidMultiUpdateCommand(com: any): void {
   if (typeof com !== 'object' || com === null) {
     throw new Error(`UpdateCommand must be an object. ${typeof com} given.`)
   }
 
-  const { entityName, operation, id, where } = com
-  assertValidEntityName(entityName, 'UpdateCommand')
+  const { entityName, operation, where } = com
+  if (typeof where !== 'object') {
+    throw new Error(`MultiUpdateCommand.where must be an object. "${where}" given.`)
+  }
+  assertValidEntityName(entityName, 'MultiUpdateCommand')
   assertValidUpdateOperation(operation)
-
-  if (id != null) {
-    assertNonEmptyString(id, `UpdateCommand.id must be a non-empty string. "${id}" given.`)
-    return
-  }
-
-  if (where != null) {
-    if (typeof where !== 'object') {
-      throw new Error(`UpdateCommand.where must be an object. "${where}" given.`)
-    }
-    return
-  }
-  throw new Error('UpdateCommand must have key "id" or "where". Neither given.')
 }
 
 /**

@@ -94,13 +94,23 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         body: createBody(data)
       }
 
-    case 'update':
+    case 'updateById':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
         headers,
-        path: addPrefix(`/${data.entityName}/update`),
+        path: addPrefix(`/${data.entityName}/updateById`),
+        body: createBody(data)
+      }
+
+    case 'updateMulti':
+      data = reqData.payload
+      headers['Content-Type'] = 'application/json'
+      return {
+        method: 'PUT',
+        headers,
+        path: addPrefix(`/${data.entityName}/updateMulti`),
         body: createBody(data)
       }
 

@@ -142,7 +142,7 @@ describe('POST request', () => {
 })
 
 describe('PUT request', () => {
-  it('when no methodName is given and payload.operation exists, regarded as "update"', () => {
+  it('when no methodName is given and payload.operation exists, regarded as "updateById"', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ id: 'john', operation: { $set: { firstName: 'John' } } }),
@@ -153,14 +153,14 @@ describe('PUT request', () => {
       method: 'PUT'
     }
     const reqData = decodeRequest(request)
-    assert(reqData.method === 'update')
+    assert(reqData.method === 'updateById')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
     // $FlowIssue(payload.id-exists)
     assert(reqData.payload.id === 'john')
   })
 
-  it('when methodName is none of update, updateAndGet, updateAndFetch or push, regarded as IdUpdateCommand', () => {
+  it('when methodName is none of updateById, updateMulti, updateAndGet, updateAndFetch or push, regarded as IdUpdateCommand', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ operation: { $set: { firstName: 'John' } } }),
@@ -171,12 +171,12 @@ describe('PUT request', () => {
       method: 'PUT'
     }
     const reqData = decodeRequest(request)
-    assert(reqData.method === 'update')
+    assert(reqData.method === 'updateById')
     // $FlowIssue(payload.id-exists)
     assert(reqData.payload.id === 'john')
   })
 
-  it('when methodName is none of update, updateAndGet, updateAndFetch or push and no operation is given in body, Error is thrown', () => {
+  it('when methodName is none of updateById, updateMulti, updateAndGet, updateAndFetch or push and no operation is given in body, Error is thrown', () => {
     const request = {
       headers: {},
       body: JSON.stringify({ params: { firstName: 'John' } }),

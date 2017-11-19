@@ -1,14 +1,15 @@
 // @flow
 import type {
   DeleteCommand,
+  Entity,
   EntityPool,
   EntityState,
   EntityStateFinder,
   EntityStateUpdater,
   IdQuery,
+  IdUpdateCommand,
   IdsQuery,
-  Entity,
-  UpdateCommand,
+  MultiUpdateCommand,
   UpdateOperation,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -68,8 +69,15 @@ export default class PhenylState implements EntityState, EntityStateFinder, Enti
   /**
    *
    */
-  $update(command: UpdateCommand): UpdateOperation {
-    return PhenylStateUpdater.$update(this, command)
+  $updateById(command: IdUpdateCommand): UpdateOperation {
+    return PhenylStateUpdater.$updateById(this, command)
+  }
+
+  /**
+   *
+   */
+  $updateMulti(command: MultiUpdateCommand): UpdateOperation {
+    return PhenylStateUpdater.$updateMulti(this, command)
   }
 
   /**

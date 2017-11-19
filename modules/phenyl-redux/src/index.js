@@ -10,8 +10,6 @@ import type {
   RegisterAction,
   Entity,
   SetAction,
-  UpdateAction,
-  UpdateCommand,
 } from 'phenyl-interfaces'
 
 import {
@@ -33,11 +31,6 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
     case 'phenyl/$register': {
       const { entityName, entities } = action.payload
       const operation = PhenylStateUpdater.$register(state, entityName, ...entities)
-      return assign(state, operation)
-    }
-
-    case 'phenyl/$update': {
-      const operation = PhenylStateUpdater.$update(state, action.payload)
       return assign(state, operation)
     }
 
@@ -65,13 +58,6 @@ export function $register(entityName: string, ...entities: Array<Entity>): Regis
       entityName,
       entities
     }
-  }
-}
-
-export function $update(command: UpdateCommand): UpdateAction {
-  return {
-    type: 'phenyl/$update',
-    payload: command
   }
 }
 
