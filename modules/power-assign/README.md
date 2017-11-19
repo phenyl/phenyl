@@ -107,7 +107,7 @@ Assign new values to object following the given operation(s).
 ```js
 assign(
   obj: Object,
-  uOp: SetOperator | UpdateOperation | Array<SetOperator | UpdateOperation>
+  ...uOps: Array<SetOperator | UpdateOperation>
 ): Object
 ```
 
@@ -124,10 +124,16 @@ assert(obj.foo === newObj.foo) // unchanged values are shallowly copied
 assert(obj.baz !== newObj.baz) // changed values are not copied
 ```
 
-#### uOp
-**UpdateOperation**, **SetOperator** or Array of these.
+#### uOps (variable arguments)
+**UpdateOperation**, **SetOperator**.
 SetOperator is just a key-value pairs object.
-When array is given, all the operations are fulfilled to the obj.
+
+All the operations are fulfilled in order.
+```js
+assign(obj, operation1)
+// operations are applied in order: 1, 2, 3...
+assign(obj, operation1, operation1, operation2, operation3, ...)
+```
 
 ## assignToProp()
 Assign new values to the property of the obj located at the given documentPath following the given operation.
