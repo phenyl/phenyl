@@ -31,7 +31,7 @@ describe('filter', () => {
         assert.deepEqual(items, ['notebook'])
       })
 
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { tags: 'red' })
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
@@ -39,7 +39,7 @@ describe('filter', () => {
     })
 
     describe('$ne', () => {
-      it('find all if the array field does not contain any element', () => {
+      it('find if the array field does not contain any element', () => {
         const filtered = filter(data, { tags: { '$ne': 'red' }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
@@ -47,7 +47,7 @@ describe('filter', () => {
     })
 
     describe('$gt', () => {
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { dim_cm: { '$gt': 21 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['planner'])
@@ -55,7 +55,7 @@ describe('filter', () => {
     })
 
     describe('$gte', () => {
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { dim_cm: { '$gte': 21 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
@@ -63,7 +63,7 @@ describe('filter', () => {
     })
 
     describe('$lt', () => {
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { dim_cm: { '$lt': 14 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
@@ -71,7 +71,7 @@ describe('filter', () => {
     })
 
     describe('$lte', () => {
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { dim_cm: { '$lte': 14 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'postcard'])
@@ -79,18 +79,28 @@ describe('filter', () => {
     })
 
     describe('$in', () => {
-      it('find all if the array field contains at least one element', () => {
+      it('find if the array field contains at least one element', () => {
         const filtered = filter(data, { tags: { '$in': ['red'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
       })
+
+      it('find nothing if $in is []', () => {
+        const filtered = filter(data, { tags: { '$in': [] }})
+        assert(filtered.length === 0)
+      })
     })
 
     describe('$nin', () => {
-      it('find all if the array field does not contain any element', () => {
+      it('find if the array field does not contain any element', () => {
         const filtered = filter(data, { tags: { '$nin': ['red'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
+      })
+
+      it('find all if $nin is []', () => {
+        const filtered = filter(data, { tags: { '$nin': [] }})
+        assert(filtered.length === data.length)
       })
     })
   })

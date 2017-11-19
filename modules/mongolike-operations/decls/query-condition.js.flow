@@ -50,10 +50,21 @@ export interface QueryCondition {
   // $comment: // No implementation
 }
 
+export type ComparisonQueryOperatorName = '$eq' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin'
+export type LogicalQueryOperatorName = '$not'
+export type ElementQueryOperatorName = '$exists' | '$type'
+export type EvaluationQueryOperatorName = '$mod' | '$regex' | '$options' | '$text' | '$where'
+export type GeospatialQueryOperatorName = '$geoIntersects' | '$geoWithin' | '$near' | '$nearSphere'
+export type ArrayOperatorName = '$all' | '$elemMatch' | '$size'
+export type BitwiseQueryOperatorName = '$bitsAllClear' | '$bitsAllSet' | '$bitsAnyClear' | '$bitsAnySet'
 export type QueryOperatorName =
-  '$eq' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$exists' | '$type' | '$mod' | '$regex' |
-  '$options' | '$text' | '$where' | '$geoIntersects' | '$geoWithin' | '$near' | '$nearSphere' | '$all' |
-  '$elemMatch' | '$size' | '$bitsAllClear' | '$bitsAllSet' | '$bitsAnyClear' | '$bitsAnySet'
+  | ComparisonQueryOperatorName
+  | LogicalQueryOperatorName
+  | ElementQueryOperatorName
+  | EvaluationQueryOperatorName
+  | GeospatialQueryOperatorName
+  | ArrayOperatorName
+  | BitwiseQueryOperatorName
 
 export type BSONTypeNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | -1 | 127
 export type BSONTypeString =
