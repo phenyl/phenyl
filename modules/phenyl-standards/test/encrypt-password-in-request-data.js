@@ -19,9 +19,9 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, requestData)
   })
 
-  it ('encrypts password if password is in request data with insert method', function () {
+  it ('encrypts password if password is in request data with insertOne method', function () {
     const requestData = {
-      method: 'insert',
+      method: 'insertOne',
       payload: {
         entityName: 'user',
         value: { password: 'test1234' },
@@ -31,7 +31,7 @@ describe('encryptPasswordInRequestData', function () {
     const encryptedRequestData = encryptPasswordInRequestData(requestData, 'password', powerCrypt)
 
     const expectedRequestData = {
-      method: 'insert',
+      method: 'insertOne',
       payload: {
         entityName: 'user',
         value: { password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' },
@@ -41,9 +41,9 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, expectedRequestData)
   })
 
-  it ('encrypts password if password is in request data with insert method', function () {
+  it ('encrypts password if password is in request data with insertMulti method', function () {
     const requestData = {
-      method: 'insert',
+      method: 'insertMulti',
       payload: {
         entityName: 'user',
         values: [{ password: 'test1234' }, { name: 'user1' }],
@@ -53,7 +53,7 @@ describe('encryptPasswordInRequestData', function () {
     const encryptedRequestData = encryptPasswordInRequestData(requestData, 'password', powerCrypt)
 
     const expectedRequestData = {
-      method: 'insert',
+      method: 'insertMulti',
       payload: {
         entityName: 'user',
         values: [{ password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' }, { name: 'user1' }],

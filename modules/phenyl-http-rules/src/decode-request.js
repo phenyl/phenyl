@@ -111,9 +111,12 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
 
   // CustomCommand or InsertCommand
   if (!methodName) {
-    // InsertCommand
-    if (payload.value || payload.values) {
-      methodName = 'insert'
+    // SingleInsertCommand
+    if (payload.value) {
+      methodName = 'insertOne'
+    }
+    else if (payload.values) {
+      methodName = 'insertMulti'
     }
     // CustomCommand
     else {
@@ -131,7 +134,8 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   switch (methodName) {
     case 'login':
     case 'logout':
-    case 'insert':
+    case 'insertOne':
+    case 'insertMulti':
     case 'insertAndGet':
     case 'insertAndGetMulti': {
       if (payload.entityName && payload.entityName !== entityName) {

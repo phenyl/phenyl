@@ -11,7 +11,6 @@ import type {
 } from './query.js.flow'
 import type {
   DeleteCommand,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   LoginCommand,
@@ -48,7 +47,8 @@ export type RequestData =
   GetRequestData |
   GetByIdsRequestData |
   PullRequestData |
-  InsertRequestData |
+  InsertOneRequestData |
+  InsertMultiRequestData |
   InsertAndGetRequestData |
   InsertAndGetMultiRequestData |
   UpdateRequestData |
@@ -91,9 +91,15 @@ export type PullRequestData = {|
   sessionId?: ?Id,
 |}
 
-export type InsertRequestData = {|
-  method: 'insert',
-  +payload: InsertCommand,
+export type InsertOneRequestData = {|
+  method: 'insertOne',
+  +payload: SingleInsertCommand,
+  sessionId?: ?Id,
+|}
+
+export type InsertMultiRequestData = {|
+  method: 'insertMulti',
+  +payload: MultiInsertCommand,
   sessionId?: ?Id,
 |}
 

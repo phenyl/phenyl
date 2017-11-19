@@ -16,7 +16,6 @@ import type {
   Id,
   IdQuery,
   IdsQuery,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   LoginCommand,
@@ -112,10 +111,20 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResult> {
-    const reqData = { method: 'insert', payload: command, sessionId }
+  async insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<CommandResult> {
+    const reqData = { method: 'insertOne', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insert') return resData.payload
+    if (resData.type === 'insertOne') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   *
+   */
+  async insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<CommandResult> {
+    const reqData = { method: 'insertMulti', payload: command, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'insertMulti') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 

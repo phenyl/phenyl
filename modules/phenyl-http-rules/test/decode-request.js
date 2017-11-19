@@ -95,18 +95,34 @@ describe('GET request', () => {
 })
 
 describe('POST request', () => {
-  it('when no methodName is given and payload.value or payload.values exists, regarded as "isnert"', () => {
+  it('when no methodName is given and payload.value exists, regarded as "isnertOne"', () => {
     const request = {
       headers: {},
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
-      body: JSON.stringify({ values : { firstName: 'John' } }),
+      body: JSON.stringify({ value: { firstName: 'John' } }),
       path: '/api/user',
       method: 'POST'
     }
     const reqData = decodeRequest(request)
-    assert(reqData.method === 'insert')
+    assert(reqData.method === 'insertOne')
+    // $FlowIssue(payload.entityName-exists)
+    assert(reqData.payload.entityName === 'user')
+  })
+
+  it('when no methodName is given and payload.values exists, regarded as "isnertMulti"', () => {
+    const request = {
+      headers: {},
+      qsParams: {
+        sessionId: 'sessionId-in-querystring',
+      },
+      body: JSON.stringify({ values: [{ firstName: 'John' }] }),
+      path: '/api/user',
+      method: 'POST'
+    }
+    const reqData = decodeRequest(request)
+    assert(reqData.method === 'insertMulti')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
   })

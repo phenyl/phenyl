@@ -26,7 +26,8 @@ export type ResponseData =
   GetResponseData |
   GetByIdsResponseData |
   PullResponseData |
-  InsertResponseData |
+  InsertOneResponseData |
+  InsertMultiResponseData |
   InsertAndGetResponseData |
   InsertAndGetMultiResponseData |
   UpdateResponseData |
@@ -65,8 +66,13 @@ export type PullResponseData = {|
   +payload: PullQueryResult,
 |}
 
-export type InsertResponseData = {|
-  type: 'insert',
+export type InsertOneResponseData = {|
+  type: 'insertOne',
+  +payload: CommandResult,
+|}
+
+export type InsertMultiResponseData = {|
+  type: 'insertMulti',
   +payload: CommandResult,
 |}
 

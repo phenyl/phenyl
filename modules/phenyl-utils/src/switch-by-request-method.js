@@ -21,8 +21,11 @@ export async function switchByRequestMethod<T>(reqData: RequestData, funcs: Requ
     case 'pull':
       return funcs.pull ? await funcs.pull(reqData.payload) : await funcs.handleDefault(reqData)
 
-    case 'insert':
-      return funcs.insert ? await funcs.insert(reqData.payload) : await funcs.handleDefault(reqData)
+    case 'insertOne':
+      return funcs.insertOne ? await funcs.insertOne(reqData.payload) : await funcs.handleDefault(reqData)
+
+    case 'insertMulti':
+      return funcs.insertMulti ? await funcs.insertMulti(reqData.payload) : await funcs.handleDefault(reqData)
 
     case 'insertAndGet':
       return funcs.insertAndGet ? await funcs.insertAndGet(reqData.payload) : await funcs.handleDefault(reqData)

@@ -23,7 +23,8 @@ export function createAuthorizationHandler(fg: FunctionalGroup): AuthorizationHa
       case 'get':
       case 'getByIds':
       case 'pull':
-      case 'insert':
+      case 'insertOne':
+      case 'insertMulti':
       case 'insertAndGet':
       case 'insertAndGetMulti':
       case 'update':
