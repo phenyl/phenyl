@@ -5,9 +5,9 @@
   "main": "index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "pretest": "type mongod && mkdir -p test/tmp/mongodb && mongod --dbpath test/tmp/mongodb &",
+    "pretest": "type mongod && mkdir -p test/tmp/mongodb && mongod --dbpath test/tmp/mongodb > /dev/null &",
     "test": "kocha --require babel-register test/*.js --color always",
-    "posttest": "pkill -x mongod"
+    "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
   "devDependencies": {
     "babel-register": "^6.24.1",

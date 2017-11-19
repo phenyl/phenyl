@@ -56,12 +56,19 @@ export const assertEntityClient = (
   const { describe, it, after, before } = kocha
 
   before(async () => {
-    entityClient = await entityClientPromise
+    try {
+      entityClient = await entityClientPromise
+    }
+    catch (e) {
+      console.log(e.message) // eslint-disable-line no-console
+    }
   })
 
-  describe('assertEntityClient', () => {
+  entityClient ? describe : describe.skip('assertEntityClient', () => {
     after(async () => {
-      entityClient.delete({ entityName: 'user', where: {} })
+      if (entityClient) {
+        entityClient.delete({ entityName: 'user', where: {} })
+      }
     })
 
     describe('insert', () => {
