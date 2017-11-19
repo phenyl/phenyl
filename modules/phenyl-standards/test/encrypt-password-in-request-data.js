@@ -65,7 +65,7 @@ describe('encryptPasswordInRequestData', function () {
 
   it ('encrypts password if password is in request data with update method', function () {
     const requestData = {
-      method: 'update',
+      method: 'updateById',
       payload: {
         id: 'foo',
         entityName: 'user',
@@ -79,7 +79,7 @@ describe('encryptPasswordInRequestData', function () {
     const encryptedRequestData = encryptPasswordInRequestData(requestData, 'password', powerCrypt)
 
     const expectedRequestData = {
-      method: 'update',
+      method: 'updateById',
       payload: {
         id: 'foo',
         entityName: 'user',

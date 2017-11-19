@@ -47,7 +47,8 @@ export function visitEntitiesInResponseData(resData: ResponseData, visitor: Enti
 
     case 'insertOne':
     case 'insertMulti':
-    case 'update':
+    case 'updateById':
+    case 'updateMulti':
     case 'delete':
     case 'logout': {
       return resData

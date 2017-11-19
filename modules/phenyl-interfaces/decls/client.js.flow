@@ -31,7 +31,6 @@ import type {
 import type {
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   DeleteCommand,
@@ -39,7 +38,7 @@ import type {
   LoginCommand,
   LogoutCommand,
   PushCommand,
-} from './command.js.flow'
+} from './command.js.flow' 
 import type { RestApiHandler } from './rest-api-handler.js.flow'
 
 export interface EntityClient {
@@ -54,7 +53,8 @@ export interface EntityClient {
   insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResult>,
   insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
 
-  update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResult>,
+  updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<CommandResult>,
+  updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<CommandResult>,
   updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResult>,
   updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
   push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>,

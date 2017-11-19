@@ -90,7 +90,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     })
     it('returns operation diffs', async () => {
       const operation = { $inc: { age: 1 }, $push: { hobbies: 'tennis' } }
-      const currentVersionId = (await client.update({ id, operation, entityName })).versionId
+      const currentVersionId = (await client.updateById({ id, operation, entityName })).versionId
       // $FlowIssue(firstVersionId-is-string)
       const { operations, versionId } = await client.pull({ id, entityName, versionId: firstVersionId })
       assert(operations.length === 1 && versionId === currentVersionId)
@@ -118,7 +118,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
       for (const i of range(110, 1)) {
         const operation = { $inc: { age: 1 }, $push: { hobbies: `hobby${i}` } }
-        versionIds.push((await client.update({ id, operation, entityName })).versionId)
+        versionIds.push((await client.updateById({ id, operation, entityName })).versionId)
 
         // Picking up version 20
         if (versionIds.length === 20) {
@@ -191,7 +191,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
     it('pushs version info to meta info of the updated entity', async () => {
       const operation = { $set: { name: 'John' }, $push: { hobbies: 'jogging' } }
-      const result = await client.update({ id, operation, entityName })
+      const result = await client.updateById({ id, operation, entityName })
       const { versions } = client.entityState.pool.user.foo._PhenylMeta
       assert(versions.length === 2)
       assert(versions[1].id === result.versionId)
@@ -207,7 +207,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
       await client.insertMulti({ entityName, values: [user2, user3] })
 
       const operation = { $inc: { age: 1 } }
-      const result = await client.update({ operation, entityName, where: { id: { $regex: /^user/ } } })
+      const result = await client.updateMulti({ operation, entityName, where: { id: { $regex: /^user/ } } })
       assert(result.n === 2)
       // $FlowIssue(versionsById-exists)
       assert(result.versionsById.user2 && result.versionsById.user2 === result.versionsById.user3)

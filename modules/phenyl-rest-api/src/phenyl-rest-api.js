@@ -164,8 +164,11 @@ export class PhenylRestApi implements RestApiHandler {
       case 'insertAndGetMulti':
         return { type: 'insertAndGetMulti', payload: await this.client.insertAndGetMulti(reqData.payload) }
 
-      case 'update':
-        return { type: 'update', payload: await this.client.update(reqData.payload) }
+      case 'updateById':
+        return { type: 'updateById', payload: await this.client.updateById(reqData.payload) }
+
+      case 'updateMulti':
+        return { type: 'updateMulti', payload: await this.client.updateMulti(reqData.payload) }
 
       case 'updateAndGet':
         return { type: 'updateAndGet', payload: await this.client.updateAndGet(reqData.payload) }

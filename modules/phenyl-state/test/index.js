@@ -68,7 +68,7 @@ describe('$update', () => {
       pool: { user: { '1': new User({ id: '1', name: 'Shin' }) } },
     })
 
-    const operation = state.$update({
+    const operation = state.$updateById({
       entityName: 'user',
       id: '1',
       operation: { $set: { name: 'Shinji' }}

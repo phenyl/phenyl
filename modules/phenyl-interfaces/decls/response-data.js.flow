@@ -30,7 +30,8 @@ export type ResponseData =
   InsertMultiResponseData |
   InsertAndGetResponseData |
   InsertAndGetMultiResponseData |
-  UpdateResponseData |
+  UpdateOneResponseData |
+  UpdateMultiResponseData |
   UpdateAndGetResponseData |
   UpdateAndFetchResponseData |
   PushResponseData |
@@ -86,8 +87,13 @@ export type InsertAndGetMultiResponseData = {|
   +payload: MultiValuesCommandResult,
 |}
 
-export type UpdateResponseData = {|
-  type: 'update',
+export type UpdateOneResponseData = {|
+  type: 'updateById',
+  +payload: CommandResult,
+|}
+
+export type UpdateMultiResponseData = {|
+  type: 'updateMulti',
   +payload: CommandResult,
 |}
 

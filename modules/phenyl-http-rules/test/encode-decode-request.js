@@ -162,11 +162,31 @@ describe('Check encode/decode deep equality: ', () => {
     assert(decodedReqData.sessionId === 'foobar')
   })
 
-  it('update', () => {
+  it('updateById', () => {
     const reqData = {
-      method: 'update',
+      method: 'updateById',
       payload: {
         id: 'tokyo',
+        entityName: 'hospital',
+        operation: {
+          $set: {
+            tel: 'dummy'
+          }
+        }
+      },
+      sessionId: 'foobar'
+    }
+    const encodedHttpRequest = encodeRequest(reqData)
+    const decodedReqData = decodeRequest(encodedHttpRequest)
+    assert.deepEqual(decodedReqData, reqData)
+    assert(decodedReqData.sessionId === 'foobar')
+  })
+
+  it('updateMulti', () => {
+    const reqData = {
+      method: 'updateMulti',
+      payload: {
+        where: { id: 'tokyo' },
         entityName: 'hospital',
         operation: {
           $set: {

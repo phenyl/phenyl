@@ -25,7 +25,6 @@ import type {
   QueryResult,
   SessionClient,
   SingleQueryResult,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
@@ -114,13 +113,15 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async update(command: UpdateCommand): Promise<CommandResult> {
-    if (command.id != null) {
-      // $FlowIssue(this-is-IdUpdateCommand)
-      const result = await this.updateAndGet((command: IdUpdateCommand))
-      return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
-    }
-    // $FlowIssue(this-is-MultiUpdateCommand)
+  async updateById(command: IdUpdateCommand): Promise<CommandResult> {
+    const result = await this.updateAndGet((command: IdUpdateCommand))
+    return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
+  }
+
+  /**
+   *
+   */
+  async updateMulti(command: MultiUpdateCommand): Promise<CommandResult> {
     const result = await this.updateAndFetch((command: MultiUpdateCommand))
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }

@@ -13,7 +13,6 @@ import type {
 import type {
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   DeleteCommand,
@@ -35,7 +34,8 @@ export type RequestDataHandlers<T> = {
   insertMulti?: (command: MultiInsertCommand) => Promise<T>,
   insertAndGet?: (command: SingleInsertCommand) => Promise<T>,
   insertAndGetMulti?: (command: MultiInsertCommand) => Promise<T>,
-  update?: (command: UpdateCommand) => Promise<T>,
+  updateById?: (command: IdUpdateCommand) => Promise<T>,
+  updateMulti?: (command: MultiUpdateCommand) => Promise<T>,
   updateAndGet?: (command: IdUpdateCommand) => Promise<T>,
   updateAndFetch?: (command: MultiUpdateCommand) => Promise<T>,
   push?: (command: PushCommand) => Promise<T>,

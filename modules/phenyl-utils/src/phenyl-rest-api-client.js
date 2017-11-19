@@ -31,7 +31,6 @@ import type {
   QueryResult,
   SessionClient,
   SingleQueryResult,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
@@ -151,10 +150,20 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
-    const reqData = { method: 'update', payload: command, sessionId }
+  async updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
+    const reqData = { method: 'updateById', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'update') return resData.payload
+    if (resData.type === 'updateById') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   *
+   */
+  async updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
+    const reqData = { method: 'updateMulti', payload: command, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'updateMulti') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 

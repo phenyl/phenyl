@@ -14,7 +14,6 @@ import type {
   MultiUpdateCommand,
   MultiDeleteCommand,
   Entity,
-  UpdateCommand,
   UpdateOperation,
 } from 'phenyl-interfaces'
 
@@ -35,13 +34,6 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  $update(command: UpdateCommand): UpdateOperation {
-    return this.constructor.$update(this.state, command)
-  }
-
-  /**
-   *
-   */
   $updateById(command: IdUpdateCommand): UpdateOperation {
     return this.constructor.$updateById(this.state, command)
   }
@@ -49,8 +41,8 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  $updateByWhereCondition(command: MultiUpdateCommand): UpdateOperation {
-    return this.constructor.$updateByWhereCondition(this.state, command)
+  $updateMulti(command: MultiUpdateCommand): UpdateOperation {
+    return this.constructor.$updateMulti(this.state, command)
   }
 
   /**
@@ -87,16 +79,6 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $update(state: EntityState, command: UpdateCommand): UpdateOperation {
-    if (command.where) {
-      return this.$updateByWhereCondition(state, command)
-    }
-    return this.$updateById(state, command)
-  }
-
-  /**
-   *
-   */
   static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
     const { id, entityName, operation } = command
     if (!PhenylStateFinder.has(state, { entityName, id })) {
@@ -109,7 +91,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $updateByWhereCondition(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
+  static $updateMulti(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
     const { where, entityName, operation } = command
 
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
