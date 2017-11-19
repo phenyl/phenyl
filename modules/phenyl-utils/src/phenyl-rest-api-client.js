@@ -5,19 +5,22 @@ import {
 
 import type {
   RestApiClient,
-  CommandResult,
   CustomQuery,
   CustomQueryResult,
   CustomCommand,
   CustomCommandResult,
   DeleteCommand,
+  DeleteCommandResult,
   MultiValuesCommandResult,
   GetCommandResult,
   Id,
   IdQuery,
   IdsQuery,
-  SingleInsertCommand,
+  IdUpdateCommand,
+  IdUpdateCommandResult,
   MultiInsertCommand,
+  MultiInsertCommandResult,
+  MultiUpdateCommandResult,
   LoginCommand,
   LoginCommandResult,
   LogoutCommand,
@@ -30,8 +33,9 @@ import type {
   ResponseData,
   QueryResult,
   SessionClient,
+  SingleInsertCommand,
+  SingleInsertCommandResult,
   SingleQueryResult,
-  IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -110,7 +114,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<SingleInsertCommandResult> {
     const reqData = { method: 'insertOne', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertOne') return resData.payload
@@ -120,7 +124,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiInsertCommandResult> {
     const reqData = { method: 'insertMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertMulti') return resData.payload
@@ -150,7 +154,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<IdUpdateCommandResult> {
     const reqData = { method: 'updateById', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateById') return resData.payload
@@ -160,7 +164,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiUpdateCommandResult> {
     const reqData = { method: 'updateMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateMulti') return resData.payload
@@ -199,7 +203,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult> {
     const reqData = { method: 'delete', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'delete') return resData.payload

@@ -10,14 +10,18 @@ import {
 import type {
   EntityClient,
   EntityClientEssence,
-  CommandResult,
   DeleteCommand,
+  DeleteCommandResult,
+  MultiInsertCommand,
+  MultiInsertCommandResult,
+  MultiUpdateCommand,
+  MultiUpdateCommandResult,
   MultiValuesCommandResult,
   GetCommandResult,
   IdQuery,
   IdsQuery,
-  SingleInsertCommand,
-  MultiInsertCommand,
+  IdUpdateCommand,
+  IdUpdateCommandResult,
   PullQuery,
   PullQueryResult,
   PushCommand,
@@ -25,8 +29,8 @@ import type {
   QueryResult,
   SessionClient,
   SingleQueryResult,
-  IdUpdateCommand,
-  MultiUpdateCommand,
+  SingleInsertCommand,
+  SingleInsertCommandResult,
   WhereQuery,
 } from 'phenyl-interfaces'
 
@@ -77,7 +81,7 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand): Promise<CommandResult> {
+  async insertOne(command: SingleInsertCommand): Promise<SingleInsertCommandResult> {
     const result = await this.insertAndGet(command)
     return { ok: 1, n: 1, versionId: result.versionId }
   }
@@ -85,7 +89,7 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand): Promise<CommandResult> {
+  async insertMulti(command: MultiInsertCommand): Promise<MultiInsertCommandResult> {
     const result = await this.insertAndGetMulti(command)
     return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
@@ -113,7 +117,7 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async updateById(command: IdUpdateCommand): Promise<CommandResult> {
+  async updateById(command: IdUpdateCommand): Promise<IdUpdateCommandResult> {
     const result = await this.updateAndGet((command: IdUpdateCommand))
     return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
@@ -121,7 +125,7 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand): Promise<CommandResult> {
+  async updateMulti(command: MultiUpdateCommand): Promise<MultiUpdateCommandResult> {
     const result = await this.updateAndFetch((command: MultiUpdateCommand))
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
@@ -158,7 +162,7 @@ export class AbstractEntityClient implements EntityClient {
   /**
    *
    */
-  async delete(command: DeleteCommand): Promise<CommandResult> {
+  async delete(command: DeleteCommand): Promise<DeleteCommandResult> {
     return { ok: 1, n: await this.essence.delete(command) }
   }
 

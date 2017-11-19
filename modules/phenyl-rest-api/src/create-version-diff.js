@@ -5,8 +5,8 @@ import type {
   ResponseData,
   VersionDiff,
   IdUpdateCommand,
+  IdUpdateCommandResult,
   MultiUpdateCommand,
-  CommandResult,
   GetCommandResult,
   PushCommand,
   PushCommandResult,
@@ -58,7 +58,7 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
   }
 }
 
-function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: CommandResult | GetCommandResult): ?VersionDiff {
+function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: IdUpdateCommandResult | GetCommandResult): ?VersionDiff {
   const { versionId, prevVersionId } = result
   if (versionId && prevVersionId) {
     const { entityName, id, operation } = command

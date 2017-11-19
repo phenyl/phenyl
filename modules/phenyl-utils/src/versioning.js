@@ -58,7 +58,7 @@ export class Versioning {
   static createPullQueryResult(entity: EntityWithMetaInfo, versionId: Id): PullQueryResult {
     const operations = this.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
-      return { ok: 1, entity: this.stripMeta(entity), versionId: null }
+      return { ok: 1, entity: this.stripMeta(entity), versionId: this.getVersionId(entity) }
     }
     return { ok: 1, pulled: 1, operations, versionId: this.getVersionId(entity) }
   }
@@ -159,15 +159,13 @@ export class Versioning {
    * @private
    * Extract current version id from entity with meta info.
    */
-  static getVersionId(entity: EntityWithMetaInfo): ?Id {
-    if (!entity.hasOwnProperty('_PhenylMeta')) return null
+  static getVersionId(entity: EntityWithMetaInfo): Id {
     try {
-      const metaInfo: EntityMetaInfo = entity._PhenylMeta
+      const metaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 1].id
     }
     catch (e) {
-      // No metaInfo? It's OK
-      return null
+      throw new Error(`Cannot get versionId from entity. Id: "${entity.id}"`)
     }
   }
 
@@ -176,13 +174,11 @@ export class Versioning {
    * Extract previous version id from entity with meta info.
    */
   static getPrevVersionId(entity: EntityWithMetaInfo): ?Id {
-    if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 2].id
     }
     catch (e) {
-      // No metaInfo? It's OK
       return null
     }
   }
