@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "oad-utils": "~0.1.0",
-    "power-assign": "~0.1.1",
+    "power-assign": "~0.2.0",
     "phenyl-state": "~0.1.0",
     "phenyl-utils": "~0.1.0"
   },
