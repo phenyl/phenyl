@@ -7,13 +7,35 @@ import type { Id } from './id.js.flow'
 import type { Session } from './session.js.flow'
 import type { Entity } from './entity.js.flow'
 
-export type CommandResult = {
+export type DeleteCommandResult = {
   ok: 1,
   n: number,
-  versionId?: ?Id,
-  prevVersionId?: ?Id,
-  prevVersionsById?: { [entityId: Id]: Id },
-  versionsById?: { [entityId: Id]: Id },
+}
+
+export type SingleInsertCommandResult = {
+  ok: 1,
+  n: number,
+  versionId: ?Id,
+}
+
+export type MultiInsertCommandResult = {
+  ok: 1,
+  n: number,
+  versionsById: { [entityId: Id]: Id },
+}
+
+export type IdUpdateCommandResult = {
+  ok: 1,
+  n: number,
+  versionId: ?Id,
+  prevVersionId: ?Id,
+}
+
+export type MultiUpdateCommandResult = {
+  ok: 1,
+  n: number,
+  versionsById: { [entityId: Id]: Id },
+  prevVersionsById: { [entityId: Id]: Id },
 }
 
 export type MultiValuesCommandResult = {
