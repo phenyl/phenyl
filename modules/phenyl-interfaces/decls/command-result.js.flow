@@ -15,7 +15,7 @@ export type DeleteCommandResult = {
 export type SingleInsertCommandResult = {
   ok: 1,
   n: number,
-  versionId: ?Id,
+  versionId: Id,
 }
 
 export type MultiInsertCommandResult = {
@@ -27,7 +27,7 @@ export type MultiInsertCommandResult = {
 export type IdUpdateCommandResult = {
   ok: 1,
   n: number,
-  versionId: ?Id,
+  versionId: Id,
   prevVersionId: ?Id,
 }
 
@@ -42,31 +42,31 @@ export type MultiValuesCommandResult = {
   ok: 1,
   n: number,
   entities: Array<Entity>,
-  prevVersionsById: { [entityId: Id]: Id },
   versionsById: { [entityId: Id]: Id },
+  prevVersionsById: { [entityId: Id]: Id },
 }
 
 export type GetCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
   entity: Entity,
+  versionId: Id,
   prevVersionId: ?Id,
-  versionId: ?Id,
 |}
 
 export type PushCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
   operations: Array<UpdateOperation>,
-  prevVersionId: ?Id,
-  versionId: ?Id,
   newOperation: UpdateOperation,
+  versionId: Id,
+  prevVersionId: ?Id,
 |} | {|
   ok: 1,
   n: number, // TODO necessary?
   entity: Entity,
+  versionId: Id,
   prevVersionId: ?Id,
-  versionId: ?Id,
   newOperation: UpdateOperation,
 |}
 

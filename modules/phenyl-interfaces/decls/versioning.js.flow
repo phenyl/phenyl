@@ -12,10 +12,10 @@ export type EntityMetaInfo = {
 }
 
 
-export type EntityWithMetaInfo = $Subtype<{
+export type EntityWithMetaInfo = {
   id: Id,
-  _PhenylMeta?: EntityMetaInfo
-}>
+  _PhenylMeta: EntityMetaInfo
+}
 
 export type VersionDiff = {|
   entityName: string,
