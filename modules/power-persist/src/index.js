@@ -7,8 +7,13 @@ import type {
 import type { StringStorage } from '../decls/string-storage.js.flow'
 import RestorableBuilder from './restorable-builder.js'
 
+type ObjectSkeleton = Object
+
 export default class PowerPersist {
   storage: StringStorage
+  skeletons: {
+    [nameSpace: string]: ObjectSkeleton
+  }
 
   constructor(storage: StringStorage) {
     this.storage = storage

@@ -7,6 +7,7 @@ import StringMapBuilder from '../src/string-map-builder'
 describe('StringMapBuilder', function () {
   it ('returns string map from Restorable', async function () {
     const user = {
+      xx: [{ foo: 1 }],
       name: {
         first: 'Naomi',
         last: 'Campbell',
@@ -29,6 +30,19 @@ describe('StringMapBuilder', function () {
           }
         ]
       },
+    }
+    const expectedSkeleton = {
+      xx: [
+        { foo: 1 },
+      ]
+      name: {
+        first: 1,
+        last: 1,
+      },
+      favorites: {
+        music: 2,
+        movie: 2,
+      }
     }
     const builder = new StringMapBuilder({
       target: user,
