@@ -3,8 +3,6 @@ import {
   PhenylStateUpdater,
 } from 'phenyl-state/jsnext'
 import type {
-  DeleteAction,
-  DeleteCommand,
   EntityState,
   PhenylAction,
   RegisterAction,
@@ -25,17 +23,17 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
   }
 
   switch (action.type) {
-    case 'phenyl/$set':
+    case 'phenyl/set':
       return action.payload
 
-    case 'phenyl/$register': {
+    case 'phenyl/register': {
       const { entityName, entities } = action.payload
-      const operation = PhenylStateUpdater.$register(state, entityName, ...entities)
+      const operation = PhenylStateUpdater.register(state, entityName, ...entities)
       return assign(state, operation)
     }
 
-    case 'phenyl/$delete': {
-      const operation = PhenylStateUpdater.$delete(state, action.payload)
+    case 'phenyl/delete': {
+      const operation = PhenylStateUpdater.delete(state, action.payload)
       return assign(state, operation)
     }
     default: {
@@ -44,26 +42,19 @@ export default function phenylReducer(state: ?EntityState, action: PhenylAction)
   }
 }
 
-export function $set(state: EntityState): SetAction {
+export function set(state: EntityState): SetAction {
   return {
-    type: 'phenyl/$set',
+    type: 'phenyl/set',
     payload: state
   }
 }
 
-export function $register(entityName: string, ...entities: Array<Entity>): RegisterAction {
+export function register(entityName: string, ...entities: Array<Entity>): RegisterAction {
   return {
-    type: 'phenyl/$register',
+    type: 'phenyl/register',
     payload: {
       entityName,
       entities
     }
-  }
-}
-
-export function $delete(command: DeleteCommand): DeleteAction {
-  return {
-    type: 'phenyl/$delete',
-    payload: command
   }
 }

@@ -69,29 +69,29 @@ export default class PhenylState implements EntityState, EntityStateFinder, Enti
   /**
    *
    */
-  $updateById(command: IdUpdateCommand): UpdateOperation {
-    return PhenylStateUpdater.$updateById(this, command)
+  updateById(command: IdUpdateCommand): UpdateOperation {
+    return PhenylStateUpdater.updateById(this, command)
   }
 
   /**
    *
    */
-  $updateMulti(command: MultiUpdateCommand): UpdateOperation {
-    return PhenylStateUpdater.$updateMulti(this, command)
+  updateMulti(command: MultiUpdateCommand): UpdateOperation {
+    return PhenylStateUpdater.updateMulti(this, command)
   }
 
   /**
    *
    */
-  $register(entityName: string, ...pool: Array<Entity>): UpdateOperation {
-    return PhenylStateUpdater.$register(this, entityName, ...pool)
+  register(entityName: string, ...pool: Array<Entity>): UpdateOperation {
+    return PhenylStateUpdater.register(this, entityName, ...pool)
   }
 
   /**
    *
    */
-  $delete(command: DeleteCommand): UpdateOperation {
-    return PhenylStateUpdater.$delete(this, command)
+  delete(command: DeleteCommand): UpdateOperation {
+    return PhenylStateUpdater.delete(this, command)
   }
 
   /**

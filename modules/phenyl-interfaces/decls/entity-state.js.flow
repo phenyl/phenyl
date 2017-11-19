@@ -35,8 +35,8 @@ export interface EntityStateFinder {
 }
 
 export interface EntityStateUpdater {
-  $register(entityName: string, ...entities: Array<Entity>): UpdateOperation,
-  $updateById(command: IdUpdateCommand): UpdateOperation,
-  $updateMulti(command: MultiUpdateCommand): UpdateOperation,
-  $delete(command: DeleteCommand): UpdateOperation,
+  register(entityName: string, ...entities: Array<Entity>): UpdateOperation,
+  updateById(command: IdUpdateCommand): UpdateOperation,
+  updateMulti(command: MultiUpdateCommand): UpdateOperation,
+  delete(command: DeleteCommand): UpdateOperation,
 }

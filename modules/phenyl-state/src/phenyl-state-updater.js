@@ -34,15 +34,15 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  $updateById(command: IdUpdateCommand): UpdateOperation {
-    return this.constructor.$updateById(this.state, command)
+  updateById(command: IdUpdateCommand): UpdateOperation {
+    return this.constructor.updateById(this.state, command)
   }
 
   /**
    *
    */
-  $updateMulti(command: MultiUpdateCommand): UpdateOperation {
-    return this.constructor.$updateMulti(this.state, command)
+  updateMulti(command: MultiUpdateCommand): UpdateOperation {
+    return this.constructor.updateMulti(this.state, command)
   }
 
   /**
@@ -51,35 +51,35 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  $register(entityName: string, ...entities: Array<Entity>): UpdateOperation {
-    return this.constructor.$register(this.state, entityName, ...entities)
+  register(entityName: string, ...entities: Array<Entity>): UpdateOperation {
+    return this.constructor.register(this.state, entityName, ...entities)
   }
 
   /**
    *
    */
-  $delete(command: DeleteCommand): UpdateOperation {
-    return this.constructor.$delete(this.state, command)
+  delete(command: DeleteCommand): UpdateOperation {
+    return this.constructor.delete(this.state, command)
   }
 
   /**
    *
    */
-  $deleteById(command: IdDeleteCommand): UpdateOperation {
-    return this.constructor.$deleteById(this.state, command)
+  deleteById(command: IdDeleteCommand): UpdateOperation {
+    return this.constructor.deleteById(this.state, command)
   }
 
   /**
    *
    */
-  $deleteByFindOperation(command: MultiDeleteCommand): UpdateOperation {
-    return this.constructor.$deleteByFindOperation(this.state, command)
+  deleteByFindOperation(command: MultiDeleteCommand): UpdateOperation {
+    return this.constructor.deleteByFindOperation(this.state, command)
   }
 
   /**
    *
    */
-  static $updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
+  static updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
     const { id, entityName, operation } = command
     if (!PhenylStateFinder.has(state, { entityName, id })) {
       throw new Error('Could not find any entity to update.')
@@ -91,7 +91,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $updateMulti(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
+  static updateMulti(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
     const { where, entityName, operation } = command
 
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
@@ -108,7 +108,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static $register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
+  static register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
     const operationList = entities.map(entity => {
       const docPath = ['pool', entityName, entity.id].join('.')
       return  { $set: { [docPath]: entity } }
@@ -119,17 +119,17 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $delete(state: EntityState, command: DeleteCommand): UpdateOperation {
+  static delete(state: EntityState, command: DeleteCommand): UpdateOperation {
     if (command.where) {
-      return this.$deleteByFindOperation(state, command)
+      return this.deleteByFindOperation(state, command)
     }
-    return this.$deleteById(state, command)
+    return this.deleteById(state, command)
   }
 
   /**
    *
    */
-  static $deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperation {
+  static deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperation {
     const { id, entityName } = command
     const docPath = ['pool', entityName, id].join('.')
     return { $unset: {[docPath]: '' } }
@@ -138,7 +138,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static $deleteByFindOperation(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
+  static deleteByFindOperation(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
     const { where, entityName } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const $unset = {}
