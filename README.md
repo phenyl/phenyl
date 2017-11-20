@@ -30,7 +30,7 @@ TBD
 - [phenyl-mongodb](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb):
 - [phenyl-dynamodb-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-dynamodb-client):
 - [phenyl-lambda-adapter](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-lambda-adapter):
-- [phenyl-memory-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-client):
+- [phenyl-memory-db](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-db):
 
 ## ClientSide Libraries
 - [phenyl-http-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client):

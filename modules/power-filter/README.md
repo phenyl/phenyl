@@ -56,7 +56,7 @@ const filtered = filter(objs, {
 ## Phenyl Family
 power-filter is one of **Phenyl Family**.
 [Phenyl](https://github.com/phenyl-js/phenyl) is a JavaScript Server/Client framework for State Synchronization over Environment(SSoE).
-FindOperation is used to fetch entities from the large JSON. In Phenyl framework `power-filter` is used for searching entities in local state and in mock server ([phenyl-memory-client](https://github.com/phenyl-js/phenyl/tree/master/phenyl-memory-client)).
+FindOperation is used to fetch entities from the large JSON. In Phenyl framework `power-filter` is used for searching entities in local state and in mock server ([phenyl-memory-db](https://github.com/phenyl-js/phenyl/tree/master/phenyl-memory-db)).
 
 # API Documentation
 ## Definitions
