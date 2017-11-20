@@ -26,10 +26,17 @@ type InstallationEntity = {
   deviceToken: string,
 }
 
+type Payload = {
+  type?: string,
+  body: string,
+  sound?: string,
+  alert?: string,
+}
+
 type NotificationCommandParams = {
   userId: Id,
   entityName: string,
-  payload: Object,
+  payload: Payload,
 }
 
 export class StandardInstallationDefinition implements EntityDefinition {
@@ -48,10 +55,18 @@ export class StandardInstallationDefinition implements EntityDefinition {
   async validation(reqData: RequestData, session: ?Session): Promise<void> {
     switchByRequestMethod(reqData, {
       async insertOne(payload) {
+        console.log('こりぴねすううう')
         // $FlowIssue(pre-installation)
         const preInstallation: PreEntity<InstallationEntity> = payload.value
         const where = { userId: preInstallation.userId }
         this.client.findOne({ entityName: this.name, where })
+      },
+
+      async delete(payload) {
+        // $FlowIssue(pre-installation)
+        const preInstallation: PreEntity<InstallationEntity> = payload.value
+        const { id } = preInstallation
+        this.client.delete({ entityName: this.name, id })
       },
 
       async handleDefault(reqData) {
@@ -88,8 +103,8 @@ export class NotificationCommand implements CustomCommandDefinition {
   async execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult> {
     // $FlowIssue(params-exists)
     const params: NotificationCommandParams = command.params
-    const { entityName, userId } = params
-    const where = { entityName, userId }
+    const { userId } = params
+    const where = { userId }
     const installationResult = await this.client.findOne({ entityName: this.installationEntityName, where })
     const installation: InstallationEntity = installationResult.entity
 
@@ -99,6 +114,4 @@ export class NotificationCommand implements CustomCommandDefinition {
       ok: 1
     }
   }
-
-
 }

@@ -11,7 +11,12 @@
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
     "phenyl-interfaces": "~0.1.0",
-    "power-assert": "^1.4.4"
+    "power-assert": "^1.4.4",
+    "phenyl-mongodb-client": "*",
+    "phenyl-rest-api": "*",
+    "phenyl-http-client": "*",
+    "phenyl-http-server": "*",
+    "phenyl-memory-client": "*"
   },
   "dependencies": {
     "oad-utils": "~0.1.0",
