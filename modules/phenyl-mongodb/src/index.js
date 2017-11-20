@@ -1,4 +1,3 @@
 // @flow
-import PhenylMongoDbClient from './mongodb-client.js'
 export { connect } from './connection.js'
-export default PhenylMongoDbClient
+export { createEntityClient, PhenylMongoDbClient } from './mongodb-client.js'

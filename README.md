@@ -58,9 +58,11 @@ TBD
 // @flow
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import { PhenylMongoDbClient, MongoDbSessionClient } from 'phenyl-mongodb/jsnext'
+import { connect, createEntityClient } from 'phenyl-mongodb/jsnext'
 
-const client = new PhenylMongoDbClient('mongodb://localhost:12345')
+const connection = await connect('mongodb://localhost:12345')
+
+const client = createEntityClient(connection)
 const phenylRestApi = new PhenylRestApi({ client })
 const server = new PhenylHttpServer(http.createServer(), { restApiHandler: phenylRestApi })
 server.listen(8080)
