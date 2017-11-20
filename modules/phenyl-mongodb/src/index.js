@@ -1,3 +1,4 @@
 // @flow
 export { connect } from './connection.js'
-export { createEntityClient, PhenylMongoDbClient } from './mongodb-client.js'
+export { createEntityClient, PhenylMongoDbEntityClient } from './create-entity-client.js'
+export { PhenylMongoDbClient } from './mongodb-client.js'

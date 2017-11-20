@@ -1,7 +1,7 @@
 // @flow
 
 import kocha from 'kocha'
-import { createEntityClient } from '../src/mongodb-client.js'
+import { createEntityClient } from '../src/create-entity-client.js'
 import assert from 'power-assert'
 import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
