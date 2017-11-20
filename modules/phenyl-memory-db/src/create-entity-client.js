@@ -20,14 +20,14 @@ export function createEntityClient(params: MemoryClientParams = {}): PhenylMemor
 export class PhenylMemoryDbEntityClient extends AbstractEntityClient {
 
   get entityState(): EntityState {
-    // $FlowIssue(essence-is-instanceof-PhenylMemoryClientEssence)
-    return this.essence.entityState
+    // $FlowIssue(dbClient-is-instanceof-PhenylMemoryDbClient)
+    return this.dbClient.entityState
   }
 
   constructor(params: MemoryClientParams = {}) {
     super()
     const entityState = params.entityState ||  { pool: {} }
-    this.essence = new PhenylMemoryDbClient(entityState)
+    this.dbClient = new PhenylMemoryDbClient(entityState)
   }
 
   toJSON(): { entityState: EntityState } {

@@ -11,6 +11,6 @@ export class PhenylMongoDbEntityClient extends AbstractEntityClient {
 
   constructor(conn: MongoDbConnection) {
     super()
-    this.essence = new PhenylMongoDbClient(conn)
+    this.dbClient = new PhenylMongoDbClient(conn)
   }
 }

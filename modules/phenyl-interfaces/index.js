@@ -58,8 +58,8 @@ import type {
   EntityStateUpdater,
 } from './decls/entity-state.js.flow'
 import type {
-  EntityClientEssence,
-} from './decls/entity-client-essence.js.flow'
+  DbClient,
+} from './decls/db-client.js.flow'
 import type {
   Entity,
   PreEntity,
@@ -233,7 +233,7 @@ export type {
   EntitiesById,
   Entity,
   EntityClient,
-  EntityClientEssence,
+  DbClient,
   EntityDefinition,
   EntityDefinitions,
   EntityMetaInfo,
