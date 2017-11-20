@@ -53,7 +53,7 @@ export type BitOperator = {
  * { $rename: { "name.first": "fname" } }
  *
  * See that the value doesn't contain "name".
- * When this operator is passed to MongoDB via phenyl-mongodb-client,
+ * When this operator is passed to MongoDB via phenyl-mongodb,
  * new field names will be automatically corrected to fit the MongoDB's spec.
  */
 export type RenameOperator = {
