@@ -6,7 +6,7 @@ import {
 
 import {
   randomStringWithTimeStamp
-} from './random-string.js'
+} from 'phenyl-utils/jsnext'
 
 import type {
   Entity,

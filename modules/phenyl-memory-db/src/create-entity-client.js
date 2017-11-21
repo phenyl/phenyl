@@ -1,7 +1,7 @@
 // @flow
 import {
-  AbstractEntityClient,
-} from 'phenyl-utils/jsnext'
+  PhenylEntityClient,
+} from 'phenyl-central-state/jsnext'
 
 import { PhenylMemoryDbClient } from './phenyl-memory-db-client.js'
 
@@ -17,7 +17,7 @@ export function createEntityClient(params: MemoryClientParams = {}): PhenylMemor
   return new PhenylMemoryDbEntityClient(params)
 }
 
-export class PhenylMemoryDbEntityClient extends AbstractEntityClient {
+export class PhenylMemoryDbEntityClient extends PhenylEntityClient {
 
   get entityState(): EntityState {
     // $FlowIssue(dbClient-is-instanceof-PhenylMemoryDbClient)

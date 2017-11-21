@@ -5,7 +5,7 @@ import {
 
 import {
   PhenylSessionClient
-} from './phenyl-session-client.js'
+} from './session-client.js'
 
 import type {
   EntityClient,
@@ -34,7 +34,7 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-export class AbstractEntityClient implements EntityClient {
+export class PhenylEntityClient implements EntityClient {
   dbClient: DbClient
 
   /**
