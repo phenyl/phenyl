@@ -31,14 +31,14 @@ export function createServerError(error: $Supertype<Error | ServerError | string
   if (typeof error === 'string') {
     return createServerError(new Error(error), _type)
   }
-  // $FlowIssue(error.type-will-be-ServerErrorType)
-  const type: ServerErrorType = (error.type != null) ? error.type : _type
+  // $FlowIssue(type-is-compatible)
+  const type: ServerErrorType = error.type || _type || guessServerErrorType(error)
   const responseError = new PhenylServerError(error.message, type)
   if (error.stack) responseError.stack = error.stack
   return responseError
 }
 
-function guessErrorType(error: Error): ServerErrorType { // eslint-disable-line no-unused-vars
+function guessServerErrorType(error: Error): ServerErrorType { // eslint-disable-line no-unused-vars
   if (error.constructor.name === 'Error') {
     return 'BadRequest'
   }
