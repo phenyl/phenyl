@@ -1,7 +1,7 @@
 // @flow
 import {
-  AbstractEntityClient,
-} from 'phenyl-utils/jsnext'
+  PhenylEntityClient,
+} from 'phenyl-central-state/jsnext'
 
 import { PhenylMemoryDbClient } from './phenyl-memory-db-client.js'
 
@@ -9,25 +9,27 @@ import type {
   EntityState,
 } from 'phenyl-interfaces'
 
-type MemoryClientParams = {
-  entityState?: EntityState,
-}
+import type { PhenylEntityClientOptions } from 'phenyl-central-state/jsnext'
 
-export function createEntityClient(params: MemoryClientParams = {}): PhenylMemoryDbEntityClient {
+export type MemoryClientOptions = {
+  entityState?: EntityState,
+} & PhenylEntityClientOptions
+
+export function createEntityClient(params: MemoryClientOptions = {}): PhenylMemoryDbEntityClient {
   return new PhenylMemoryDbEntityClient(params)
 }
 
-export class PhenylMemoryDbEntityClient extends AbstractEntityClient {
+export class PhenylMemoryDbEntityClient extends PhenylEntityClient {
 
   get entityState(): EntityState {
     // $FlowIssue(dbClient-is-instanceof-PhenylMemoryDbClient)
     return this.dbClient.entityState
   }
 
-  constructor(params: MemoryClientParams = {}) {
-    super()
-    const entityState = params.entityState ||  { pool: {} }
-    this.dbClient = new PhenylMemoryDbClient(entityState)
+  constructor(options: MemoryClientOptions = {}) {
+    const entityState = options.entityState ||  { pool: {} }
+    const dbClient = new PhenylMemoryDbClient(entityState)
+    super(dbClient, options)
   }
 
   toJSON(): { entityState: EntityState } {

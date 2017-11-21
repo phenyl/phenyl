@@ -21,6 +21,7 @@
     "es6-promisify": "^5.0.0",
     "mongodb": "^2.2.33",
     "oad-utils": "~0.1.0",
+    "phenyl-central-state": "~0.1.0",
     "phenyl-utils": "~0.1.0",
     "power-assign": "~0.2.0"
   }

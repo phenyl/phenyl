@@ -1,6 +1,11 @@
 // @flow
 import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
+import type { Entity } from './entity.js.flow'
+
+import type {
+  PushCommand
+} from './command.js.flow'
 
 export type EntityVersion = {
   id: Id,
@@ -57,3 +62,11 @@ export interface VersionDiffSubscriber {
 export interface VersionDiffPublisher {
   publishVersionDiff(versionDiff: VersionDiff): any
 }
+
+/**
+ * Validate PushCommand in PhenylEntityClient.
+ */
+export type PushValidation = (
+  command: PushCommand,
+  entity: Entity,
+  masterOperations: ?Array<UpdateOperation>) => void
