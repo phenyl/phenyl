@@ -5,7 +5,7 @@ import {
 
 import type {
   Id,
-  EntityClientEssence,
+  DbClient,
   PreSession,
   Session,
   SessionClient,
@@ -15,10 +15,10 @@ import type {
  *
  */
 export class PhenylSessionClient implements SessionClient {
-  essence: EntityClientEssence
+  dbClient: DbClient
 
-  constructor(essence: EntityClientEssence) {
-    this.essence = essence
+  constructor(dbClient: DbClient) {
+    this.dbClient = dbClient
   }
 
   /**
@@ -29,7 +29,7 @@ export class PhenylSessionClient implements SessionClient {
       return null
     }
     try {
-      const session = await this.essence.get({ entityName: '_PhenylSession', id })
+      const session = await this.dbClient.get({ entityName: '_PhenylSession', id })
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
         this.delete(id) // Run asynchronously
         return null
@@ -57,7 +57,7 @@ export class PhenylSessionClient implements SessionClient {
    *
    */
   async set(value: Session): Promise<Session> {
-    return this.essence.insertAndGet({ entityName: '_PhenylSession', value })
+    return this.dbClient.insertAndGet({ entityName: '_PhenylSession', value })
   }
 
   /**
@@ -67,7 +67,7 @@ export class PhenylSessionClient implements SessionClient {
     if (id == null) {
       return false
     }
-    await this.essence.delete({ entityName: '_PhenylSession', id })
+    await this.dbClient.delete({ entityName: '_PhenylSession', id })
     return true
   }
 }

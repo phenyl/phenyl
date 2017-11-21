@@ -11,13 +11,17 @@ import type {
 } from './query-result.js.flow'
 
 import type {
-  CommandResult,
-  GetCommandResult,
-  MultiValuesCommandResult,
   CustomCommandResult,
+  DeleteCommandResult,
+  GetCommandResult,
+  IdUpdateCommandResult,
   LoginCommandResult,
   LogoutCommandResult,
+  MultiInsertCommandResult,
+  MultiUpdateCommandResult,
+  MultiValuesCommandResult,
   PushCommandResult,
+  SingleInsertCommandResult,
 } from './command-result.js.flow'
 
 export type ResponseData =
@@ -26,10 +30,12 @@ export type ResponseData =
   GetResponseData |
   GetByIdsResponseData |
   PullResponseData |
-  InsertResponseData |
+  InsertOneResponseData |
+  InsertMultiResponseData |
   InsertAndGetResponseData |
   InsertAndGetMultiResponseData |
-  UpdateResponseData |
+  UpdateOneResponseData |
+  UpdateMultiResponseData |
   UpdateAndGetResponseData |
   UpdateAndFetchResponseData |
   PushResponseData |
@@ -65,9 +71,14 @@ export type PullResponseData = {|
   +payload: PullQueryResult,
 |}
 
-export type InsertResponseData = {|
-  type: 'insert',
-  +payload: CommandResult,
+export type InsertOneResponseData = {|
+  type: 'insertOne',
+  +payload: SingleInsertCommandResult,
+|}
+
+export type InsertMultiResponseData = {|
+  type: 'insertMulti',
+  +payload: MultiInsertCommandResult,
 |}
 
 export type InsertAndGetResponseData = {|
@@ -80,9 +91,14 @@ export type InsertAndGetMultiResponseData = {|
   +payload: MultiValuesCommandResult,
 |}
 
-export type UpdateResponseData = {|
-  type: 'update',
-  +payload: CommandResult,
+export type UpdateOneResponseData = {|
+  type: 'updateById',
+  +payload: IdUpdateCommandResult,
+|}
+
+export type UpdateMultiResponseData = {|
+  type: 'updateMulti',
+  +payload: MultiUpdateCommandResult,
 |}
 
 export type UpdateAndGetResponseData = {|
@@ -102,7 +118,7 @@ export type PushResponseData = {|
 
 export type DeleteResponseData = {|
   type: 'delete',
-  +payload: CommandResult,
+  +payload: DeleteCommandResult,
 |}
 
 export type RunCustomQueryResponseData = {|

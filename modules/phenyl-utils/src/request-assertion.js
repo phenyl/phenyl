@@ -27,18 +27,22 @@ export function assertValidRequestData(rd: any): void {
         return assertValidIdsQuery(rd.payload)
       case 'pull':
         return assertValidPullQuery(rd.payload)
-      case 'insert':
-        return assertValidInsertCommand(rd.payload)
+      case 'insertOne':
+        return assertValidSingleInsertCommand(rd.payload)
+      case 'insertMulti':
+        return assertValidMultiInsertCommand(rd.payload)
       case 'insertAndGet':
-        return assertValidInsertCommand(rd.payload)
+        return assertValidSingleInsertCommand(rd.payload)
       case 'insertAndGetMulti':
-        return assertValidInsertCommand(rd.payload)
-      case 'update':
-        return assertValidUpdateCommand(rd.payload)
+        return assertValidMultiInsertCommand(rd.payload)
+      case 'updateById':
+        return assertValidIdUpdateCommand(rd.payload)
+      case 'updateMulti':
+        return assertValidMultiUpdateCommand(rd.payload)
       case 'updateAndGet':
-        return assertValidUpdateCommand(rd.payload)
+        return assertValidIdUpdateCommand(rd.payload)
       case 'updateAndFetch':
-        return assertValidUpdateCommand(rd.payload)
+        return assertValidMultiUpdateCommand(rd.payload)
       case 'push':
         return assertValidPushCommand(rd.payload)
       case 'delete':
@@ -121,59 +125,75 @@ export function assertValidPullQuery(q: any): void {
 /**
  *
  */
-export function assertValidInsertCommand(com: any): void {
+export function assertValidSingleInsertCommand(com: any): void {
   if (typeof com !== 'object' || com === null) {
-    throw new Error(`InsertCommand must be an object. ${typeof com} given.`)
+    throw new Error(`SingleInsertCommand must be an object. ${typeof com} given.`)
   }
 
-  const { entityName, value, values } = com
-  assertValidEntityName(entityName, 'InsertCommand')
+  const { entityName, value } = com
+  assertValidEntityName(entityName, 'SingleInsertCommand')
 
-  if (value != null) {
-    if (typeof value !== 'object') {
-      throw new Error('InsertCommand.value must be an object.')
-    }
-    return
+  if (value == null) {
+    throw new Error('SingleInsertCommand must have key "value".')
   }
 
-  if (values != null) {
-    if (!Array.isArray(values)) {
-      throw new Error(`InsertCommand.values must be an array. "${typeof values}" given.`)
-    }
-
-    if (typeof values[0] !== 'object') {
-      throw new Error('InsertCommand.values must be an non-empty array<Object>.')
-    }
-    return
+  if (typeof value !== 'object') {
+    throw new Error('SingleInsertCommand.value must be an object.')
   }
-
-  throw new Error('InsertCommand must have key "value" or "values". Neither given.')
 }
 
 /**
  *
  */
-export function assertValidUpdateCommand(com: any): void {
+export function assertValidMultiInsertCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`MultiInsertCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { entityName, values } = com
+  assertValidEntityName(entityName, 'MultiInsertCommand')
+
+  if (values == null) {
+    throw new Error('MultiInsertCommand must have key "values".')
+  }
+
+  if (!Array.isArray(values)) {
+    throw new Error(`MultiInsertCommand.values must be an array. "${typeof values}" given.`)
+  }
+
+  if (typeof values[0] !== 'object') {
+    throw new Error('MultiInsertCommand.values must be an non-empty array<Object>.')
+  }
+}
+
+/**
+ *
+ */
+export function assertValidIdUpdateCommand(com: any): void {
+  if (typeof com !== 'object' || com === null) {
+    throw new Error(`IdUpdateCommand must be an object. ${typeof com} given.`)
+  }
+
+  const { entityName, operation, id } = com
+  assertNonEmptyString(id, `IdUpdateCommand.id must be a non-empty string. "${id}" given.`)
+  assertValidEntityName(entityName, 'IdUpdateCommand')
+  assertValidUpdateOperation(operation)
+}
+
+/**
+ *
+ */
+export function assertValidMultiUpdateCommand(com: any): void {
   if (typeof com !== 'object' || com === null) {
     throw new Error(`UpdateCommand must be an object. ${typeof com} given.`)
   }
 
-  const { entityName, operation, id, where } = com
-  assertValidEntityName(entityName, 'UpdateCommand')
+  const { entityName, operation, where } = com
+  if (typeof where !== 'object') {
+    throw new Error(`MultiUpdateCommand.where must be an object. "${where}" given.`)
+  }
+  assertValidEntityName(entityName, 'MultiUpdateCommand')
   assertValidUpdateOperation(operation)
-
-  if (id != null) {
-    assertNonEmptyString(id, `UpdateCommand.id must be a non-empty string. "${id}" given.`)
-    return
-  }
-
-  if (where != null) {
-    if (typeof where !== 'object') {
-      throw new Error(`UpdateCommand.where must be an object. "${where}" given.`)
-    }
-    return
-  }
-  throw new Error('UpdateCommand must have key "id" or "where". Neither given.')
 }
 
 /**

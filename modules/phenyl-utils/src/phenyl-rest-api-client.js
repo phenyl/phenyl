@@ -5,20 +5,22 @@ import {
 
 import type {
   RestApiClient,
-  CommandResult,
   CustomQuery,
   CustomQueryResult,
   CustomCommand,
   CustomCommandResult,
   DeleteCommand,
+  DeleteCommandResult,
   MultiValuesCommandResult,
   GetCommandResult,
   Id,
   IdQuery,
   IdsQuery,
-  InsertCommand,
-  SingleInsertCommand,
+  IdUpdateCommand,
+  IdUpdateCommandResult,
   MultiInsertCommand,
+  MultiInsertCommandResult,
+  MultiUpdateCommandResult,
   LoginCommand,
   LoginCommandResult,
   LogoutCommand,
@@ -31,9 +33,9 @@ import type {
   ResponseData,
   QueryResult,
   SessionClient,
+  SingleInsertCommand,
+  SingleInsertCommandResult,
   SingleQueryResult,
-  UpdateCommand,
-  IdUpdateCommand,
   MultiUpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -112,10 +114,20 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResult> {
-    const reqData = { method: 'insert', payload: command, sessionId }
+  async insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<SingleInsertCommandResult> {
+    const reqData = { method: 'insertOne', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insert') return resData.payload
+    if (resData.type === 'insertOne') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   *
+   */
+  async insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiInsertCommandResult> {
+    const reqData = { method: 'insertMulti', payload: command, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'insertMulti') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
@@ -142,10 +154,20 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResult> {
-    const reqData = { method: 'update', payload: command, sessionId }
+  async updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<IdUpdateCommandResult> {
+    const reqData = { method: 'updateById', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'update') return resData.payload
+    if (resData.type === 'updateById') return resData.payload
+    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+  }
+
+  /**
+   *
+   */
+  async updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiUpdateCommandResult> {
+    const reqData = { method: 'updateMulti', payload: command, sessionId }
+    const resData = await this.handleRequestData(reqData)
+    if (resData.type === 'updateMulti') return resData.payload
     throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
@@ -181,7 +203,7 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult> {
+  async delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult> {
     const reqData = { method: 'delete', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'delete') return resData.payload

@@ -7,7 +7,7 @@ Collection of utility functions for **OAD: Operations As Data**.
 This `oad-utils` provides utility functions for handling OAD.
 
 ## Phenyl Family
-`mongolike-operation` is one of **Phenyl Family**.
+`oad-utils` is one of **Phenyl Family**.
 [Phenyl](https://github.com/phenyl-js/phenyl) is a JavaScript Server/Client framework for State Synchronization over Environment(SSoE).
 
 ## Installation
@@ -72,7 +72,7 @@ Restorable is a characteristic of JavaScript class instances which meets the fol
 ```js
 const jsonStr = JSON.stringify(instance)
 const plain = JSON.parse(jsonStr)
-const newInstance = new TheClass(instance)
+const newInstance = new TheClass(plain)
 
 assert.deepEqual(newInstance, instance)
 ```

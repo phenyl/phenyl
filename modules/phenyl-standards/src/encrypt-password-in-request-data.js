@@ -15,7 +15,8 @@ import { assign } from 'power-assign/jsnext'
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
   switch (reqData.method) {
-    case 'insert':
+    case 'insertOne':
+    case 'insertMulti':
     case 'insertAndGet':
     case 'insertAndGetMulti': {
       const { payload } = reqData
@@ -45,7 +46,8 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
         return reqData
       }
     }
-    case 'update':
+    case 'updateById':
+    case 'updateMulti':
     case 'updateAndGet':
     case 'updateAndFetch': {
 

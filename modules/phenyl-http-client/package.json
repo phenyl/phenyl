@@ -12,7 +12,7 @@
     "kocha": "^1.8.0",
     "phenyl-http-server": "~0.1.0",
     "phenyl-interfaces": "~0.1.0",
-    "phenyl-memory-client": "~0.1.0",
+    "phenyl-memory-db": "~0.1.0",
     "phenyl-rest-api": "~0.1.0",
     "power-assert": "^1.4.4"
   },

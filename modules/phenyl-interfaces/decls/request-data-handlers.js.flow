@@ -11,10 +11,8 @@ import type {
 } from './query.js.flow'
 
 import type {
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   DeleteCommand,
@@ -32,10 +30,12 @@ export type RequestDataHandlers<T> = {
   get?: (query: IdQuery) => Promise<T>,
   getByIds?: (query: IdsQuery) => Promise<T>,
   pull?: (query: PullQuery) => Promise<T>,
-  insert?: (command: InsertCommand) => Promise<T>,
+  insertOne?: (command: SingleInsertCommand) => Promise<T>,
+  insertMulti?: (command: MultiInsertCommand) => Promise<T>,
   insertAndGet?: (command: SingleInsertCommand) => Promise<T>,
   insertAndGetMulti?: (command: MultiInsertCommand) => Promise<T>,
-  update?: (command: UpdateCommand) => Promise<T>,
+  updateById?: (command: IdUpdateCommand) => Promise<T>,
+  updateMulti?: (command: MultiUpdateCommand) => Promise<T>,
   updateAndGet?: (command: IdUpdateCommand) => Promise<T>,
   updateAndFetch?: (command: MultiUpdateCommand) => Promise<T>,
   push?: (command: PushCommand) => Promise<T>,

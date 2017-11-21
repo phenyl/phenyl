@@ -13,7 +13,7 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache License 2.0",
   "dependencies": {
-    "power-assign": "~0.1.1",
+    "power-assign": "~0.2.0",
     "phenyl-state": "~0.1.0"
   }
 }

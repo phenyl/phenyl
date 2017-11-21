@@ -14,12 +14,12 @@ import type {
 } from './command.js.flow'
 
 export type SetAction = {|
-  type: 'phenyl/$set',
+  type: 'phenyl/set',
   payload: EntityState,
 |}
 
 export type RegisterAction = {|
-  type: 'phenyl/$register',
+  type: 'phenyl/register',
   payload: {|
     entityName: string,
     entities: Array<Entity>
@@ -32,7 +32,7 @@ export type UpdateAction = {|
 |}
 
 export type DeleteAction = {|
-  type: 'phenyl/$delete',
+  type: 'phenyl/delete',
   payload: DeleteCommand,
 |}
 

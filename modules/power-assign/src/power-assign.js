@@ -41,7 +41,7 @@ export default class PowerAssign {
   /**
    *
    */
-  static assign(obj: Object, uOp: RegularUpdateOperation): Object {
+  static assignUpdateOperation(obj: Object, uOp: RegularUpdateOperation): Object {
     let updatedObj: Object = obj
     const operatorNames = Object.keys(uOp)
 
@@ -439,13 +439,10 @@ export default class PowerAssign {
  * @public
  * Assign new values to object following the given operation(s).
  */
-export function assign(obj: Object, uOp: SetOperator | UpdateOperation | Array<SetOperator | UpdateOperation>): Object {
-  if (Array.isArray(uOp)) {
-    return uOp.reduce((ret, _uOp) => {
-      return PowerAssign.assign(ret, _uOp)
-    }, obj)
-  }
-  return PowerAssign.assign(obj, normalizeUpdateOperation(uOp))
+export function assign(obj: Object, ...uOps: Array<SetOperator | UpdateOperation>): Object {
+  return uOps.reduce((ret, uOp) => {
+    return PowerAssign.assignUpdateOperation(ret, normalizeUpdateOperation(uOp))
+  }, obj)
 }
 
 /**

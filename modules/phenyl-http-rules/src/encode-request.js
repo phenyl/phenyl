@@ -63,13 +63,14 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         qsParams: createQsParams(data)
       }
 
-    case 'insert':
+    case 'insertOne':
+    case 'insertMulti':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'POST',
         headers,
-        path: addPrefix(`/${data.entityName}/insert`),
+        path: addPrefix(`/${data.entityName}/${reqData.method}`),
         body: createBody(data)
       }
 
@@ -93,13 +94,23 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         body: createBody(data)
       }
 
-    case 'update':
+    case 'updateById':
       data = reqData.payload
       headers['Content-Type'] = 'application/json'
       return {
         method: 'PUT',
         headers,
-        path: addPrefix(`/${data.entityName}/update`),
+        path: addPrefix(`/${data.entityName}/updateById`),
+        body: createBody(data)
+      }
+
+    case 'updateMulti':
+      data = reqData.payload
+      headers['Content-Type'] = 'application/json'
+      return {
+        method: 'PUT',
+        headers,
+        path: addPrefix(`/${data.entityName}/updateMulti`),
         body: createBody(data)
       }
 

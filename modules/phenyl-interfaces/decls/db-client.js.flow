@@ -11,7 +11,6 @@ import type {
 
 import type {
   IdUpdateCommand,
-  InsertCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
   SingleInsertCommand,
@@ -19,12 +18,13 @@ import type {
 } from './command.js.flow'
 
 
-export interface EntityClientEssence {
+export interface DbClient {
   find(query: WhereQuery): Promise<Array<Entity>>,
   findOne(query: WhereQuery): Promise<Entity>,
   get(query: IdQuery): Promise<Entity>,
   getByIds(query: IdsQuery): Promise<Array<Entity>>,
-  insert(command: InsertCommand): Promise<number>,
+  insertOne(command: SingleInsertCommand): Promise<number>,
+  insertMulti(command: MultiInsertCommand): Promise<number>,
   insertAndGet(command: SingleInsertCommand): Promise<Entity>,
   insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>>,
   updateAndGet(command: IdUpdateCommand): Promise<Entity>,

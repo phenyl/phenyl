@@ -5,8 +5,8 @@ import type {
   ResponseData,
   VersionDiff,
   IdUpdateCommand,
+  IdUpdateCommandResult,
   MultiUpdateCommand,
-  CommandResult,
   GetCommandResult,
   PushCommand,
   PushCommandResult,
@@ -20,24 +20,18 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
   if (resData.type === 'error') return []
 
   switch (reqData.method) {
-    case 'update': {
-      if (reqData.payload.id != null) {
-        // $FlowIssue(reqData.payload-is-IdUpdateCommand)
-        const payload: IdUpdateCommand = reqData.payload
-        // $FlowIssue(resData.payload-is-CommandResult)
-        const result: CommandResult = resData.payload
-        const versionDiff = createVersionDiffByIdUpdateCommand(payload, result)
-        return versionDiff ? [versionDiff] : []
-      }
-      else if (reqData.payload.where != null) {
-        // $FlowIssue(reqData.payload-is-MultiUpdateCommand)
-        const payload: MultiUpdateCommand = reqData.payload
-        // $FlowIssue(resData.payload-is-MultiValuesCommandResult)
-        const result: MultiValuesCommandResult = resData.payload
-        // $FlowIssue(null-value-is-filtered)
-        return createVersionDiffByMultiUpdateCommand(payload, result).filter(v => v != null)
-      }
-      return []
+    case 'updateById': {
+      // $FlowIssue(resData-has-versionId)
+      const result: CommandResult = resData.payload
+      const versionDiff = createVersionDiffByIdUpdateCommand(reqData.payload, result)
+      return versionDiff ? [versionDiff] : []
+    }
+
+    case 'updateMulti': {
+      // $FlowIssue(resData.payload-is-MultiValuesCommandResult)
+      const result: MultiValuesCommandResult = resData.payload
+      // $FlowIssue(null-value-is-filtered)
+      return createVersionDiffByMultiUpdateCommand(reqData.payload, result).filter(v => v != null)
     }
 
     case 'updateAndGet': {
@@ -64,7 +58,7 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
   }
 }
 
-function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: CommandResult | GetCommandResult): ?VersionDiff {
+function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: IdUpdateCommandResult | GetCommandResult): ?VersionDiff {
   const { versionId, prevVersionId } = result
   if (versionId && prevVersionId) {
     const { entityName, id, operation } = command

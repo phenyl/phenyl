@@ -20,19 +20,21 @@ import type {
   PullQueryResult,
 } from './query-result.js.flow'
 import type {
-  CommandResult,
   CustomCommandResult,
+  DeleteCommandResult,
   GetCommandResult,
+  IdUpdateCommandResult,
+  MultiInsertCommandResult,
+  MultiUpdateCommandResult,
   MultiValuesCommandResult,
   LoginCommandResult,
   LogoutCommandResult,
   PushCommandResult,
+  SingleInsertCommandResult,
 } from './command-result.js.flow'
 import type {
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   DeleteCommand,
@@ -50,16 +52,18 @@ export interface EntityClient {
   getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResult>,
   pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult>,
 
-  insert(command: InsertCommand, sessionId?: ?Id): Promise<CommandResult>,
+  insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<SingleInsertCommandResult>,
+  insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiInsertCommandResult>,
   insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResult>,
   insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
 
-  update(command: UpdateCommand, sessionId?: ?Id): Promise<CommandResult>,
+  updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<IdUpdateCommandResult>,
+  updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiUpdateCommandResult>,
   updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResult>,
   updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
   push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>,
 
-  delete(command: DeleteCommand, sessionId?: ?Id): Promise<CommandResult>,
+  delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult>,
 
   createSessionClient(): SessionClient
 }

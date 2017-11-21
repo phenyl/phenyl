@@ -45,8 +45,10 @@ export function visitEntitiesInResponseData(resData: ResponseData, visitor: Enti
       return assign(resData, { 'payload.user': newUser })
     }
 
-    case 'insert':
-    case 'update':
+    case 'insertOne':
+    case 'insertMulti':
+    case 'updateById':
+    case 'updateMulti':
     case 'delete':
     case 'logout': {
       return resData

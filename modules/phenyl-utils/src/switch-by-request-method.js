@@ -21,8 +21,11 @@ export async function switchByRequestMethod<T>(reqData: RequestData, funcs: Requ
     case 'pull':
       return funcs.pull ? await funcs.pull(reqData.payload) : await funcs.handleDefault(reqData)
 
-    case 'insert':
-      return funcs.insert ? await funcs.insert(reqData.payload) : await funcs.handleDefault(reqData)
+    case 'insertOne':
+      return funcs.insertOne ? await funcs.insertOne(reqData.payload) : await funcs.handleDefault(reqData)
+
+    case 'insertMulti':
+      return funcs.insertMulti ? await funcs.insertMulti(reqData.payload) : await funcs.handleDefault(reqData)
 
     case 'insertAndGet':
       return funcs.insertAndGet ? await funcs.insertAndGet(reqData.payload) : await funcs.handleDefault(reqData)
@@ -30,8 +33,11 @@ export async function switchByRequestMethod<T>(reqData: RequestData, funcs: Requ
     case 'insertAndGetMulti':
       return funcs.insertAndGetMulti ? await funcs.insertAndGetMulti(reqData.payload) : await funcs.handleDefault(reqData)
 
-    case 'update':
-      return funcs.update ? await funcs.update(reqData.payload) : await funcs.handleDefault(reqData)
+    case 'updateById':
+      return funcs.updateById ? await funcs.updateById(reqData.payload) : await funcs.handleDefault(reqData)
+
+    case 'updateMulti':
+      return funcs.updateMulti ? await funcs.updateMulti(reqData.payload) : await funcs.handleDefault(reqData)
 
     case 'updateAndGet':
       return funcs.updateAndGet ? await funcs.updateAndGet(reqData.payload) : await funcs.handleDefault(reqData)

@@ -11,13 +11,11 @@ import type {
 } from './query.js.flow'
 import type {
   DeleteCommand,
-  InsertCommand,
   SingleInsertCommand,
   MultiInsertCommand,
   LoginCommand,
   LogoutCommand,
   PushCommand,
-  UpdateCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
   CustomCommand,
@@ -29,10 +27,11 @@ export type RequestMethodName =
   'get' |
   'getByIds' |
   'pull' |
-  'insert' |
+  'insertOne' |
   'insertAndGet' |
   'insertAndGetMulti' |
-  'update' |
+  'updateById' |
+  'updateMulti' |
   'updateAndGet' |
   'updateAndFetch' |
   'push' |
@@ -48,10 +47,12 @@ export type RequestData =
   GetRequestData |
   GetByIdsRequestData |
   PullRequestData |
-  InsertRequestData |
+  InsertOneRequestData |
+  InsertMultiRequestData |
   InsertAndGetRequestData |
   InsertAndGetMultiRequestData |
-  UpdateRequestData |
+  UpdateOneRequestData |
+  UpdateMultiRequestData |
   UpdateAndGetRequestData |
   UpdateAndFetchRequestData |
   PushRequestData |
@@ -91,9 +92,15 @@ export type PullRequestData = {|
   sessionId?: ?Id,
 |}
 
-export type InsertRequestData = {|
-  method: 'insert',
-  +payload: InsertCommand,
+export type InsertOneRequestData = {|
+  method: 'insertOne',
+  +payload: SingleInsertCommand,
+  sessionId?: ?Id,
+|}
+
+export type InsertMultiRequestData = {|
+  method: 'insertMulti',
+  +payload: MultiInsertCommand,
   sessionId?: ?Id,
 |}
 
@@ -109,9 +116,15 @@ export type InsertAndGetMultiRequestData = {|
   sessionId?: ?Id,
 |}
 
-export type UpdateRequestData = {|
-  method: 'update',
-  +payload: UpdateCommand,
+export type UpdateOneRequestData = {|
+  method: 'updateById',
+  +payload: IdUpdateCommand,
+  sessionId?: ?Id,
+|}
+
+export type UpdateMultiRequestData = {|
+  method: 'updateMulti',
+  +payload: MultiUpdateCommand,
   sessionId?: ?Id,
 |}
 

@@ -68,7 +68,7 @@ describe('$update', () => {
       pool: { user: { '1': new User({ id: '1', name: 'Shin' }) } },
     })
 
-    const operation = state.$update({
+    const operation = state.updateById({
       entityName: 'user',
       id: '1',
       operation: { $set: { name: 'Shinji' }}
@@ -88,7 +88,7 @@ describe('$update', () => {
   })
 })
 
-describe('$delete', () => {
+describe('delete', () => {
   it('returns UpdateOperation to delete pool', () => {
     const state = new PhenylState({
       pool: { user: {
@@ -97,7 +97,7 @@ describe('$delete', () => {
         '3': { id: '3', name: 'Jenkins' },
       } },
     })
-    const operation = state.$delete({
+    const operation = state.delete({
       entityName: 'user',
       where: { name: { $regex: /in/ } }
     })
@@ -117,14 +117,14 @@ describe('$delete', () => {
   })
 })
 
-describe('$register', () => {
+describe('register', () => {
   it('returns UpdateOperation to register pool', () => {
     const state = new PhenylState({
       pool: {
         user: { '1': { id: '1', name: 'Shin' } }
       },
     })
-    const operation = state.$register('book', { id: 'book01', title: 'ABC-Z' })
+    const operation = state.register('book', { id: 'book01', title: 'ABC-Z' })
     const expected = {
       $set: {
         'pool.book.book01': {

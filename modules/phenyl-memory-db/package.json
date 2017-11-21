@@ -1,5 +1,5 @@
 {
-  "name": "phenyl-memory-client",
+  "name": "phenyl-memory-db",
   "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "oad-utils": "~0.1.0",
-    "power-assign": "~0.1.1",
+    "power-assign": "~0.2.0",
     "phenyl-state": "~0.1.0",
     "phenyl-utils": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-memory-client",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-memory-db",
   "license": "Apache License 2.0"
 }
