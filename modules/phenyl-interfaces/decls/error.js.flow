@@ -1,0 +1,21 @@
+// @flow
+
+export type ServerErrorType = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound' | 'InternalServer'
+export type LocalErrorType = '' // TODO
+
+export type PhenylError = ServerError | LocalError
+
+export interface ServerError {
+  ok: 0,
+  at: 'server',
+  type: ServerErrorType,
+  message: string,
+  stack?: string,
+}
+
+export interface LocalError {
+  at: 'local',
+  type: LocalErrorType,
+  message: string,
+  stack?: string,
+}

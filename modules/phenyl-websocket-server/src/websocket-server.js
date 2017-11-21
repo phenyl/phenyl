@@ -4,7 +4,7 @@
 import WebSocket from 'ws'
 
 import {
-  createErrorResult
+  createServerError
 } from 'phenyl-utils/jsnext'
 
 import WebSocketClientInfo from './client-info.js'
@@ -76,7 +76,7 @@ export class PhenylWebSocketServer {
       }
     }
     catch (e) {
-      return clientInfo.send({ tag, error: createErrorResult(e) })
+      return clientInfo.send({ tag, error: createServerError(e) })
     }
   }
 

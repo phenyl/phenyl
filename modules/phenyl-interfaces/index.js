@@ -66,9 +66,9 @@ import type {
 } from './decls/entity.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
-  ErrorResult,
-  ErrorResultType,
-} from './decls/error-result.js.flow'
+  ServerError,
+  ServerErrorType,
+} from './decls/error.js.flow'
 
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
@@ -244,8 +244,8 @@ export type {
   EntityStateUpdater,
   EntityWithMetaInfo,
   EntityVersion,
-  ErrorResult,
-  ErrorResultType,
+  ServerError,
+  ServerErrorType,
   ExecutionWrapper,
   FindOneRequestData,
   FindOneResponseData,

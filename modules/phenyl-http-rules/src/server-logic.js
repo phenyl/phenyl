@@ -5,7 +5,7 @@ import { isApiRequest } from './encode-request.js'
 import decodeRequest from './decode-request.js'
 import encodeResponse from './encode-response.js'
 import {
-  createErrorResult,
+  createServerError,
   PhenylRestApiDirectClient,
 } from 'phenyl-utils/jsnext'
 
@@ -81,7 +81,7 @@ export default class ServerLogic {
       responseData = await this.restApiHandler.handleRequestData(requestData)
     }
     catch (err) {
-      responseData = { type: 'error', payload: createErrorResult(err) }
+      responseData = { type: 'error', payload: createServerError(err) }
     }
     // 3. Encoding Response
     return encodeResponse(responseData)

@@ -8,8 +8,8 @@ import type {
 } from './response-data.js.flow'
 
 import type {
-  ErrorResult
-} from './error-result.js.flow'
+  ServerError
+} from './error.js.flow'
 
 import type {
   VersionDiff,
@@ -55,7 +55,7 @@ export type WebSocketServerSubscriptionResultMessage = {|
 |}
 
 export type WebSocketServerErrorMessage = {|
-  error: ErrorResult,
+  error: ServerError,
   tag: ?string,
 |}
 

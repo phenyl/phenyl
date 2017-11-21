@@ -1,7 +1,7 @@
 // @flow
 import {
-  createErrorResult
-} from './create-error-result.js'
+  createServerError
+} from './create-error.js'
 
 import type {
   RestApiClient,
@@ -68,7 +68,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'find', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'find') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -78,7 +78,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'findOne', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'findOne') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -88,7 +88,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'get', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'get') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -98,7 +98,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'getByIds', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'getByIds') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -108,7 +108,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'pull', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'pull') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -118,7 +118,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'insertOne', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertOne') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -128,7 +128,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'insertMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertMulti') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -138,7 +138,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'insertAndGet', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertAndGet') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -148,7 +148,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'insertAndGetMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertAndGetMulti') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -158,7 +158,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'updateById', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateById') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -168,7 +168,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'updateMulti', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateMulti') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -178,7 +178,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'updateAndGet', payload: command, sessionId}
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateAndGet') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -188,7 +188,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'updateAndFetch', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateAndFetch') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
   /**
    *
@@ -197,7 +197,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'push', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'push') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -207,7 +207,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'delete', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'delete') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -217,7 +217,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'runCustomQuery', payload: query, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'runCustomQuery') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -227,7 +227,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'runCustomCommand', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'runCustomCommand') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -237,7 +237,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'login', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'login') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
@@ -247,7 +247,7 @@ export class PhenylRestApiClient implements RestApiClient {
     const reqData = { method: 'logout', payload: command, sessionId }
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'logout') return resData.payload
-    throw createErrorResult(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
   }
 
   /**
