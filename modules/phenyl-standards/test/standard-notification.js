@@ -142,13 +142,15 @@ describe('StandardNotification', () => {
       params: {
         userId: 'dummy',
         entityName: 'installation',
+        appId: 'dummy',
         payload: {
           type: 'talk',
-          body: 'hello',
+          contents: { en: 'hello' },
         },
       }
     }
 
     const result = await client.runCustomCommand(notificationCommand)
+    assert(result.ok === 1)
   })
 })

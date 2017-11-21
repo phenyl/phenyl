@@ -19,6 +19,7 @@
     "phenyl-memory-client": "*"
   },
   "dependencies": {
+    "node-fetch": "^1.7.3",
     "oad-utils": "~0.1.0",
     "phenyl-utils": "~0.1.0",
     "power-assign": "~0.2.0",

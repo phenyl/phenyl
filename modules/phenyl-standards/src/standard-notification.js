@@ -6,7 +6,8 @@ import {
 } from 'power-assign/jsnext'
 
 import {
-  switchByRequestMethod
+  switchByRequestMethod,
+  createErrorResult,
 } from 'phenyl-utils/jsnext'
 
 import {
@@ -40,6 +41,7 @@ type InstallationEntity = {
 }
 
 type NotificationCommandParams = {
+  appId: string,
   userId: Id,
   entityName: string,
   payload: Payload,
@@ -145,15 +147,15 @@ export class NotificationCommand implements CustomCommandDefinition {
   async execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult> {
     // $FlowIssue(params-exists)
     const params: NotificationCommandParams = command.params
-    const { userId } = params
-    const where = { userId }
-    const installationResult = await this.client.findOne({ entityName: this.installationEntityName, where })
-    const installation: InstallationEntity = installationResult.entity
+    const { appId, payload } = params
 
-    notify(installation.os, installation.deviceToken, params.payload)
+    const result = await notify(appId, payload).catch((error) => {
+      return createErrorResult(error)
+    })
 
     return {
-      ok: 1
+      ok: 1,
+      result, // TODO
     }
   }
 }
