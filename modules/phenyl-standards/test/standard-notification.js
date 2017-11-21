@@ -1,12 +1,16 @@
 // @flow
 
-import { describe, it, before, xit } from 'kocha'
+import { describe, it, before } from 'kocha'
 import assert from 'power-assert'
-import PhenylRestApi, { createCustomCommandHandler } from 'phenyl-rest-api/jsnext'
+import PhenylRestApi, {
+  createCustomCommandHandler,
+  createValidationHandler,
+  createExecutionWrapper,
+} from 'phenyl-rest-api/jsnext'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylMemoryClient from 'phenyl-memory-client/jsnext'
-import { NotificationCommand } from '../src/standard-notification.js'
+import { NotificationCommand, StandardInstallationDefinition } from '../src/standard-notification.js'
 import { createServer } from 'http'
 
 let client
@@ -17,14 +21,31 @@ describe('StandardNotification', () => {
     const entityName = 'installation'
 
     const notificationCommand = new NotificationCommand(clientForRestApi, entityName)
+    const installationDefinition = new StandardInstallationDefinition(clientForRestApi, entityName)
 
     const customCommandHandler = createCustomCommandHandler({
       notification: notificationCommand
     })
 
+    const validationHandler = createValidationHandler({
+      users: {},
+      nonUsers: { installation: installationDefinition },
+      customQueries: {},
+      customCommands: { notification: notificationCommand },
+    })
+
+    const executionWrapper = createExecutionWrapper({
+      users: {},
+      nonUsers: { installation: installationDefinition },
+      customQueries: {},
+      customCommands: { notification: notificationCommand },
+    })
+
     const restApiHandler = new PhenylRestApi({
       client: clientForRestApi,
       customCommandHandler,
+      validationHandler,
+      executionWrapper,
     })
 
     const server = new PhenylHttpServer(createServer(), { restApiHandler })
@@ -37,8 +58,7 @@ describe('StandardNotification', () => {
     const installation = {
       id: 'installation',
       userId: 'dummy',
-      entityName: 'installation',
-      os: 'iOS',
+      os: 'android',
       deviceToken: 'dummy',
     }
 
@@ -54,14 +74,13 @@ describe('StandardNotification', () => {
 
     assert(result.ok === 1)
     assert(result.entity.deviceToken === 'dummy')
-    assert(result.entity.os === 'iOS')
+    assert(result.entity.os === 'android')
   })
 
-  it('can delete installation', async () => {
+  it('can delete installation with idDeleteCommand', async () => {
     const installation = {
       id: 'installationToDelete',
       userId: 'user1',
-      entityName: 'installation',
       os: 'iOS',
       deviceToken: 'dummy',
     }
@@ -77,34 +96,44 @@ describe('StandardNotification', () => {
     })
 
     assert(result.ok === 1)
-
-    try {
-      await client.findOne({
-        entityName: 'installation',
-        where: { userId: 'user1' }
-      })
-    } catch (err) {
-      assert(err.type === 'NotFound')
-    }
+    await client.findOne({
+      entityName: 'installation',
+      where: { userId: 'user1' }
+    }).catch((error) => {
+      assert(error.type === 'NotFound')
+    })
   })
 
-  xit('throws error except insertOne and delete', async () => {
+  it('can delete installation with multiDeleteCommand', async () => {
+    const where = { os: 'iOS' }
+    const result = await client.delete({
+      entityName: 'installation',
+      where,
+    })
+
+    assert(result.ok === 1)
+    await client.findOne({
+      entityName: 'installation',
+      where,
+    }).catch((error) => {
+      assert(error.type === 'NotFound')
+    })
+  })
+
+  it('throws error except get, findOne, insertOne and delete', async () => {
     const installation = await client.get({
       entityName: 'installation',
       id: 'installation',
     })
 
     const { versionId } = installation
-
-    try {
-      await client.pull({
-        entityName: 'installation',
-        id: 'installation',
-        versionId,
-      })
-    } catch (error) {
-      console.log(error) // eslint-disable-line no-console
-    }
+    await client.pull({
+      entityName: 'installation',
+      id: 'installation',
+      versionId,
+    }).catch((error) => {
+      assert(error.type === 'BadRequest')
+    })
   })
 
   it('notifies when client runs notificationCommand(customCommand)', async () => {

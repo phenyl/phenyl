@@ -115,7 +115,7 @@ export class PhenylRestApi implements RestApiHandler {
         await this.validationHandler(reqData, session)
       }
       catch (validationError) {
-        validationError.message = `Validation Failed. ${validationError.mesage}`
+        validationError.message = `Validation Failed. ${validationError.message}`
         return { type: 'error', payload: createErrorResult(validationError, 'BadRequest') }
       }
 

@@ -1,8 +1,21 @@
 // @flow
 /* eslint-disable no-unused-vars */
+
+import {
+  assign,
+} from 'power-assign/jsnext'
+
 import {
   switchByRequestMethod
 } from 'phenyl-utils/jsnext'
+
+import {
+  notify
+} from './lib/notify.js'
+
+import type {
+  Payload
+} from './lib/notify.js'
 
 import type {
   CustomCommand,
@@ -26,13 +39,6 @@ type InstallationEntity = {
   deviceToken: string,
 }
 
-type Payload = {
-  type?: string,
-  body: string,
-  sound?: string,
-  alert?: string,
-}
-
 type NotificationCommandParams = {
   userId: Id,
   entityName: string,
@@ -53,31 +59,67 @@ export class StandardInstallationDefinition implements EntityDefinition {
   }
 
   async validation(reqData: RequestData, session: ?Session): Promise<void> {
-    switchByRequestMethod(reqData, {
-      async insertOne(payload) {
-        console.log('こりぴねすううう')
-        // $FlowIssue(pre-installation)
-        const preInstallation: PreEntity<InstallationEntity> = payload.value
-        const where = { userId: preInstallation.userId }
-        this.client.findOne({ entityName: this.name, where })
+    return switchByRequestMethod(reqData, {
+      async get(query) {
+        assertValidQuery(query)
       },
 
-      async delete(payload) {
-        // $FlowIssue(pre-installation)
-        const preInstallation: PreEntity<InstallationEntity> = payload.value
-        const { id } = preInstallation
-        this.client.delete({ entityName: this.name, id })
+      async findOne(query) {
+        assertValidQuery(query)
       },
 
-      async handleDefault(reqData) {
+      async insertOne(query) {
+        assertValidQuery(query)
+      },
+
+      async delete(query) {
+        assertValidQuery(query)
+      },
+
+      handleDefault: async (reqData) => {
         throw new Error(`Method not allowed "${reqData.method}" to the entityName "${this.name}".`)
       }
     })
-
   }
 
   async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
-    return execution(reqData, session)
+    const resData = await execution(reqData, session)
+
+    return await switchByRequestMethod(reqData, {
+      get: async (payload) => {
+        const { id } = payload
+        const result = await this.client.get({ entityName: this.name, id })
+        return assign(resData, { payload: result })
+      },
+
+      findOne: async (payload) => {
+        const { where } = payload
+        const result = await this.client.findOne({ entityName: this.name, where })
+        return assign(resData, { payload: result })
+      },
+
+      insertOne: async (payload) => {
+        const result = await this.client.insertOne({ entityName: this.name, value: payload.value })
+        return assign(resData, { payload: result })
+      },
+
+      delete: async (payload) => {
+        if (payload.id) {
+          const { id } = payload
+          const result = await this.client.delete({ entityName: this.name, id })
+          return assign(resData, { payload: result })
+        }
+        if (payload.where) {
+          const { where } = payload
+          const result = await this.client.delete({ entityName: this.name, where })
+          return assign(resData, { payload: result })
+        }
+      },
+
+      handleDefault: async (reqData, session) => { // eslint-disable-line no-unused-vars
+        throw new Error(`Method not allowed "${reqData.method}" to the entityName "${this.name}".`)
+      },
+    })
   }
 }
 
@@ -108,10 +150,18 @@ export class NotificationCommand implements CustomCommandDefinition {
     const installationResult = await this.client.findOne({ entityName: this.installationEntityName, where })
     const installation: InstallationEntity = installationResult.entity
 
-    // notify(installation.os, installation.deviceToken, params.payload)
+    notify(installation.os, installation.deviceToken, params.payload)
 
     return {
       ok: 1
     }
   }
+}
+
+/**
+ *
+ */
+function assertValidQuery(query) {
+  // TODO
+  return
 }
