@@ -1,7 +1,7 @@
 // @flow
 import { describe, it, before, beforeEach } from 'kocha'
 import assert from 'power-assert'
-import PhenylMemoryClient from '../src/phenyl-memory-client.js'
+import { createEntityClient } from '../src/create-entity-client.js'
 import { assign } from 'power-assign/jsnext'
 
 function range(n, start) {
@@ -15,7 +15,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     const users = [1, 2, 3].map(n => ({ id: `user${n}`, name: `U${n}`, num: n }))
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       await client.insertMulti({ entityName, values: users })
     })
 
@@ -33,7 +33,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     const users = [1, 2, 3].map(n => ({ id: `user${n}`, name: `U${n}`, num: n }))
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       await client.insertMulti({ entityName, values: users })
     })
 
@@ -49,7 +49,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     const users = [1, 2, 3].map(n => ({ id: `user${n}`, name: `U${n}`, num: n }))
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       await client.insertMulti({ entityName, values: users })
     })
 
@@ -65,7 +65,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     const users = [1, 2, 3].map(n => ({ id: `user${n}`, name: `U${n}`, num: n }))
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       await client.insertMulti({ entityName, values: users })
     })
 
@@ -85,7 +85,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     let firstVersionId
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       firstVersionId = (await client.insertOne({ entityName: 'user', value: user })).versionId
     })
     it('returns operation diffs', async () => {
@@ -112,7 +112,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     let localUser
 
     before(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       firstVersionId = (await client.insertOne({ entityName, value: user })).versionId
       versionIds.push(firstVersionId)
 
@@ -171,7 +171,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
 
   describe('insert', () => {
     it('attaches meta info', async () => {
-      const client = new PhenylMemoryClient()
+      const client = createEntityClient()
       const result = await client.insertOne({ entityName: 'user', value: { id: 'foo', name: 'bar' } })
       if (result.versionId == null) throw new Error('result.versionId should exist.')
       assert(client.entityState.pool.user.foo._PhenylMeta.versions, [ { id: result.versionId, op: '' }])
@@ -185,7 +185,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     const user = { id, name: 'bar', age: 30, hobbies: ['guitar'] }
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       await client.insertOne({ entityName: 'user', value: user })
     })
 
@@ -224,7 +224,7 @@ describe('PhenylMemoryClient (test about versioning)', () => {
     let versionId: string
 
     beforeEach(async() => {
-      client = new PhenylMemoryClient()
+      client = createEntityClient()
       // $FlowIssue(versionId-is-string)
       versionId = (await client.insertOne({ entityName: 'user', value: user })).versionId
     })

@@ -14,7 +14,7 @@ import { assign } from 'power-assign/jsnext'
 
 import type {
   Entity,
-  EntityClientEssence,
+  DbClient,
   EntityState,
   DeleteCommand,
   IdQuery,
@@ -30,7 +30,7 @@ type MemoryClientParams = {
   entityState?: EntityState,
 }
 
-export default class PhenylMemoryClientEssence implements EntityClientEssence {
+export class PhenylMemoryDbClient implements DbClient {
   entityState: EntityState
 
   constructor(params: MemoryClientParams = {}) {

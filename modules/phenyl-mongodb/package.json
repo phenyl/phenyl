@@ -1,5 +1,5 @@
 {
-  "name": "phenyl-mongodb-client",
+  "name": "phenyl-mongodb",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,7 @@
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-mongodb-client",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-mongodb",
   "license": "Apache License 2.0",
   "dependencies": {
     "es6-promisify": "^5.0.0",

@@ -7,7 +7,7 @@ import { visitFindOperation } from 'oad-utils/jsnext'
 
 import type {
   Entity,
-  EntityClientEssence,
+  DbClient,
   IdQuery,
   IdsQuery,
   WhereQuery,
@@ -37,7 +37,7 @@ function set_idToIdInEntity(entity: Entity): Entity {
   return assign(entity, { $rename: { _id: 'id' } })
 }
 
-export default class PhenylMongoDbClientEssence implements EntityClientEssence {
+export class PhenylMongoDbClient implements DbClient {
   conn: MongoDbConnection
 
   constructor(conn: MongoDbConnection) {

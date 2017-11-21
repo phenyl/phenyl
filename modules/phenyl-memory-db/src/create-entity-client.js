@@ -3,7 +3,7 @@ import {
   AbstractEntityClient,
 } from 'phenyl-utils/jsnext'
 
-import PhenylMemoryClientEssence from './phenyl-memory-client-essence.js'
+import { PhenylMemoryDbClient } from './phenyl-memory-db-client.js'
 
 import type {
   EntityState,
@@ -13,17 +13,21 @@ type MemoryClientParams = {
   entityState?: EntityState,
 }
 
-export default class PhenylMemoryClient extends AbstractEntityClient {
+export function createEntityClient(params: MemoryClientParams = {}): PhenylMemoryDbEntityClient {
+  return new PhenylMemoryDbEntityClient(params)
+}
+
+export class PhenylMemoryDbEntityClient extends AbstractEntityClient {
 
   get entityState(): EntityState {
-    // $FlowIssue(essence-is-instanceof-PhenylMemoryClientEssence)
-    return this.essence.entityState
+    // $FlowIssue(dbClient-is-instanceof-PhenylMemoryDbClient)
+    return this.dbClient.entityState
   }
 
   constructor(params: MemoryClientParams = {}) {
     super()
     const entityState = params.entityState ||  { pool: {} }
-    this.essence = new PhenylMemoryClientEssence(entityState)
+    this.dbClient = new PhenylMemoryDbClient(entityState)
   }
 
   toJSON(): { entityState: EntityState } {

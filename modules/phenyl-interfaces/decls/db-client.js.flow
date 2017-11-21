@@ -18,7 +18,7 @@ import type {
 } from './command.js.flow'
 
 
-export interface EntityClientEssence {
+export interface DbClient {
   find(query: WhereQuery): Promise<Array<Entity>>,
   findOne(query: WhereQuery): Promise<Entity>,
   get(query: IdQuery): Promise<Entity>,

@@ -2,8 +2,8 @@
 
 import kocha from 'kocha'
 import assert from 'power-assert'
-import PhenylMemoryClient from '../src/index.js'
+import { createEntityClient } from '../src/index.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
-const entityClient = new PhenylMemoryClient()
+const entityClient = new createEntityClient()
 assertEntityClient(entityClient, kocha, assert)

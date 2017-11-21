@@ -27,10 +27,10 @@ TBD
 - [phenyl-http-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-server): HTTP Server.
 - [phenyl-rest-api](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-rest-api):
 - [phenyl-websocket-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-server):
-- [phenyl-mongodb-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb-client):
+- [phenyl-mongodb](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb):
 - [phenyl-dynamodb-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-dynamodb-client):
 - [phenyl-lambda-adapter](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-lambda-adapter):
-- [phenyl-memory-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-client):
+- [phenyl-memory-db](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-db):
 
 ## ClientSide Libraries
 - [phenyl-http-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client):
@@ -58,9 +58,11 @@ TBD
 // @flow
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import { PhenylMongoDbClient, MongoDbSessionClient } from 'phenyl-mongodb-client/jsnext'
+import { connect, createEntityClient } from 'phenyl-mongodb/jsnext'
 
-const client = new PhenylMongoDbClient('mongodb://localhost:12345')
+const connection = await connect('mongodb://localhost:12345')
+
+const client = createEntityClient(connection)
 const phenylRestApi = new PhenylRestApi({ client })
 const server = new PhenylHttpServer(http.createServer(), { restApiHandler: phenylRestApi })
 server.listen(8080)
