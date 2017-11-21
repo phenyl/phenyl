@@ -12,11 +12,11 @@
     "kocha": "^1.8.0",
     "phenyl-interfaces": "~0.1.0",
     "power-assert": "^1.4.4",
-    "phenyl-mongodb-client": "*",
+    "phenyl-mongodb": "*",
     "phenyl-rest-api": "*",
     "phenyl-http-client": "*",
     "phenyl-http-server": "*",
-    "phenyl-memory-client": "*"
+    "phenyl-memory-db": "*"
   },
   "dependencies": {
     "node-fetch": "^1.7.3",

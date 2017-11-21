@@ -9,16 +9,15 @@ import PhenylRestApi, {
 } from 'phenyl-rest-api/jsnext'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
-import PhenylMemoryClient from 'phenyl-memory-client/jsnext'
+import { createEntityClient } from 'phenyl-memory-db/jsnext'
 import { NotificationCommand, StandardInstallationDefinition } from '../src/standard-notification.js'
 import { createServer } from 'http'
-import { keyLoader } from '../src/lib/key-loader.js'
 
 let client
 
 describe('StandardNotification', () => {
   before(() =>  {
-    const clientForRestApi = new PhenylMemoryClient()
+    const clientForRestApi = new createEntityClient()
     const entityName = 'installation'
 
     const notificationCommand = new NotificationCommand(clientForRestApi, entityName)
