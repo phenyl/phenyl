@@ -78,7 +78,9 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
       method,
       headers,
       body,
-    }).catch(e => createLocalError(e, 'NetworkFailed'))
+    }).catch(e => {
+      throw createLocalError(e, 'NetworkFailed')
+    })
 
     const encodedResponse = {
       body: await response.json(),
