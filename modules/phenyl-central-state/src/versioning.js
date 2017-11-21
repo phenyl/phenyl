@@ -143,7 +143,35 @@ export class Versioning {
   }
 
   /**
-   * @private
+   * @public
+   * Get operation diffs by the given versionId.
+   */
+  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
+    if (!entity.hasOwnProperty('_PhenylMeta')) return null
+    try {
+      const metaInfo: EntityMetaInfo = entity._PhenylMeta
+      let found = false
+      let idx = 0
+      for (const version of metaInfo.versions) {
+        if (version.id === versionId) {
+          found = true
+          break
+        }
+        idx++
+      }
+      if (!found) return null
+
+      return metaInfo.versions
+        .slice(idx + 1)
+        .map(version => JSON.parse(version.op))
+    }
+    catch (e) {
+      // Error while parsing metaInfo? It's OK
+      return null
+    }
+  }
+  /**
+   * @public
    * Strip meta info ("_PhenylMeta" property) from the given entity.
    */
   static stripMeta(entity: EntityWithMetaInfo): Entity {
@@ -210,32 +238,4 @@ export class Versioning {
     return versionsById
   }
 
-  /**
-   * @private
-   * Get operation diffs by the given versionId.
-   */
-  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
-    if (!entity.hasOwnProperty('_PhenylMeta')) return null
-    try {
-      const metaInfo: EntityMetaInfo = entity._PhenylMeta
-      let found = false
-      let idx = 0
-      for (const version of metaInfo.versions) {
-        if (version.id === versionId) {
-          found = true
-          break
-        }
-        idx++
-      }
-      if (!found) return null
-
-      return metaInfo.versions
-        .slice(idx + 1)
-        .map(version => JSON.parse(version.op))
-    }
-    catch (e) {
-      // Error while parsing metaInfo? It's OK
-      return null
-    }
-  }
 }
