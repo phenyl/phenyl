@@ -42,8 +42,7 @@ type InstallationEntity = {
 
 type NotificationCommandParams = {
   appId: string,
-  userId: Id,
-  entityName: string,
+  key: string,
   payload: Payload,
 }
 
@@ -147,9 +146,9 @@ export class NotificationCommand implements CustomCommandDefinition {
   async execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult> {
     // $FlowIssue(params-exists)
     const params: NotificationCommandParams = command.params
-    const { appId, payload } = params
+    const { appId, payload, key } = params
 
-    const result = await notify(appId, payload).catch((error) => {
+    const result = await notify(appId, key, payload).catch((error) => {
       return createErrorResult(error)
     })
 
