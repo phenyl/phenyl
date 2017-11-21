@@ -1,7 +1,7 @@
 // @flow
 import {
   assertValidRequestData,
-  createErrorResult,
+  createServerError,
 } from 'phenyl-utils/jsnext'
 
 import {
@@ -107,7 +107,7 @@ export class PhenylRestApi implements RestApiHandler {
       // 2. Authorization
       const isAccessible = await this.authorizationHandler(reqData, session)
       if (!isAccessible) {
-        return { type: 'error', payload: createErrorResult('Authorization Required.', 'Unauthorized') }
+        return { type: 'error', payload: createServerError('Authorization Required.', 'Unauthorized') }
       }
 
       // 3. Validation
@@ -116,7 +116,7 @@ export class PhenylRestApi implements RestApiHandler {
       }
       catch (validationError) {
         validationError.message = `Validation Failed. ${validationError.mesage}`
-        return { type: 'error', payload: createErrorResult(validationError, 'BadRequest') }
+        return { type: 'error', payload: createServerError(validationError, 'BadRequest') }
       }
 
       // 4. Execution
@@ -128,7 +128,7 @@ export class PhenylRestApi implements RestApiHandler {
       return resData
     }
     catch (e) {
-      return { type: 'error', payload: createErrorResult(e) }
+      return { type: 'error', payload: createServerError(e) }
     }
   }
 
@@ -195,7 +195,7 @@ export class PhenylRestApi implements RestApiHandler {
         return { type: 'logout', payload: await this.logout(reqData.payload, session) }
 
       default: {
-        return { type: 'error', payload: createErrorResult('Invalid method name.', 'NotFound') }
+        return { type: 'error', payload: createServerError('Invalid method name.', 'NotFound') }
       }
     }
   }
@@ -233,7 +233,7 @@ export class PhenylRestApi implements RestApiHandler {
     const result = await this.sessionClient.delete(sessionId)
     // sessionId not found
     if (!result) {
-      throw createErrorResult('sessionId not found', 'BadRequest')
+      throw createServerError('sessionId not found', 'BadRequest')
     }
     return { ok: 1 }
   }

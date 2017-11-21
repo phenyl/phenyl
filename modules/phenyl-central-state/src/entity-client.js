@@ -5,9 +5,10 @@ import {
 
 import {
   PhenylSessionClient
-} from './phenyl-session-client.js'
+} from './session-client.js'
 
 import type {
+  Entity,
   EntityClient,
   DbClient,
   DeleteCommand,
@@ -26,16 +27,44 @@ import type {
   PullQueryResult,
   PushCommand,
   PushCommandResult,
+  PushValidation,
   QueryResult,
   SessionClient,
   SingleQueryResult,
   SingleInsertCommand,
   SingleInsertCommandResult,
+  UpdateOperation,
   WhereQuery,
 } from 'phenyl-interfaces'
 
-export class AbstractEntityClient implements EntityClient {
+export type PhenylEntityClientOptions = {
+  validatePushCommand?: PushValidation,
+}
+
+/**
+ * Validate PushCommand only when masterOperations are found.
+ * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
+ */
+function validWhenDiffsFound(command: PushCommand, entity: Entity, masterOperations: ?Array<UpdateOperation>) {
+  if (masterOperations == null) {
+    throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
+  }
+}
+
+/**
+ * EntityClient used in PhenylRestApi.
+ * Support versioning and push/pull synchronization.
+ * Pass dbClient: DbClient which accesses to data.
+ * Optionally set merge strategy by options.validatePushCommand.
+ */
+export class PhenylEntityClient implements EntityClient {
   dbClient: DbClient
+  validatePushCommand: PushValidation
+
+  constructor(dbClient: DbClient, options: PhenylEntityClientOptions = {}) {
+    this.dbClient = dbClient
+    this.validatePushCommand = options.validatePushCommand || validWhenDiffsFound
+  }
 
   /**
    *
@@ -154,6 +183,10 @@ export class AbstractEntityClient implements EntityClient {
   async push(command: PushCommand): Promise<PushCommandResult> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.dbClient.get({ entityName, id })
+    const masterOperations = Versioning.getOperationDiffsByVersion(entity, versionId)
+
+    this.validatePushCommand(command, Versioning.stripMeta(entity), masterOperations)
+
     const newOperation = Versioning.mergeUpdateOperations(...operations)
     const updatedEntity = await this.dbClient.updateAndGet({ entityName, id, operation: newOperation })
     return Versioning.createPushCommandResult(entity, updatedEntity, versionId, newOperation)

@@ -66,9 +66,11 @@ import type {
 } from './decls/entity.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
-  ErrorResult,
-  ErrorResultType,
-} from './decls/error-result.js.flow'
+  LocalError,
+  LocalErrorType,
+  ServerError,
+  ServerErrorType,
+} from './decls/error.js.flow'
 
 import type { FunctionalGroup } from './decls/functional-group.js.flow'
 import type {
@@ -185,6 +187,7 @@ import type {
   EntityMetaInfo,
   EntityVersion,
   EntityWithMetaInfo,
+  PushValidation,
   SubscriptionRequest,
   SubscriptionResult,
   VersionDiff,
@@ -243,8 +246,8 @@ export type {
   EntityStateUpdater,
   EntityWithMetaInfo,
   EntityVersion,
-  ErrorResult,
-  ErrorResultType,
+  ServerError,
+  ServerErrorType,
   ExecutionWrapper,
   FindOneRequestData,
   FindOneResponseData,
@@ -279,6 +282,8 @@ export type {
   InsertOneRequestData,
   InsertOneResponseData,
   KvsClient,
+  LocalError,
+  LocalErrorType,
   LoginCommand,
   LoginCommandResult,
   LoginRequestData,
@@ -306,6 +311,7 @@ export type {
   PushCommandResult,
   PushRequestData,
   PushResponseData,
+  PushValidation,
   QueryResult,
   QueryStringParams,
   RequestData,
