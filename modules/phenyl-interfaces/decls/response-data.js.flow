@@ -1,7 +1,7 @@
 // @flow
 import type {
-  ErrorResult,
-} from './error-result.js.flow'
+  ServerError,
+} from './error.js.flow'
 
 import type {
   CustomQueryResult,
@@ -143,5 +143,5 @@ export type LogoutResponseData = {|
 
 export type ErrorResponseData = {|
   type: 'error',
-  +payload: ErrorResult,
+  +payload: ServerError,
 |}

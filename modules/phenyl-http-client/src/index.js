@@ -6,6 +6,7 @@ import {
 } from 'phenyl-http-rules/jsnext'
 import {
   PhenylRestApiClient,
+  createLocalError,
 } from 'phenyl-utils/jsnext'
 const { fetch } = fp()
 
@@ -77,6 +78,8 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
       method,
       headers,
       body,
+    }).catch(e => {
+      throw createLocalError(e, 'NetworkFailed')
     })
 
     const encodedResponse = {

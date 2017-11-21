@@ -1,6 +1,6 @@
 // @flow
 import {
-  createErrorResult,
+  createServerError,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
 import { visitFindOperation } from 'oad-utils/jsnext'
@@ -60,7 +60,7 @@ export class PhenylMongoDbClient implements DbClient {
     const coll = this.conn.collection(entityName)
     const result = await coll.find(setIdTo_idInWhere(where), { limit: 1 })
     if (result.length === 0) {
-      throw createErrorResult('findOne()', 'NotFound')
+      throw createServerError('findOne()', 'NotFound')
     }
     return set_idToIdInEntity(result[0] || null)
   }
@@ -70,7 +70,7 @@ export class PhenylMongoDbClient implements DbClient {
     const coll = this.conn.collection(entityName)
     const result = await coll.find({ _id: id })
     if (result.length === 0) {
-      throw createErrorResult(
+      throw createServerError(
         '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
         'NotFound'
       )
@@ -83,7 +83,7 @@ export class PhenylMongoDbClient implements DbClient {
     const coll = this.conn.collection(entityName)
     const result = await coll.find({ _id: { $in: ids } })
     if (result.length === 0) {
-      throw createErrorResult(
+      throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
         'NotFound',
       )
@@ -128,7 +128,7 @@ export class PhenylMongoDbClient implements DbClient {
     const result = await coll.updateOne({ _id: id }, operation)
     const { matchedCount } = result
     if (matchedCount === 0) {
-      throw createErrorResult(
+      throw createServerError(
         '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.',
         'NotFound'
       )

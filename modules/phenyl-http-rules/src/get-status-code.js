@@ -1,6 +1,6 @@
 // @flow
 import type {
-  ErrorResult,
+  ServerError,
   ResponseData,
 } from 'phenyl-interfaces'
 
@@ -17,7 +17,7 @@ export default function getStatusCode(resData: ResponseData): number {
   return 200
 }
 
-function getErrorStatusCode(error: ErrorResult): number {
+function getErrorStatusCode(error: ServerError): number {
   switch (error.type) {
     case 'BadRequest':
       return 400
