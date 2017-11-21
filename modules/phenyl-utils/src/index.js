@@ -1,6 +1,11 @@
 // @flow
 export * from './request-assertion.js'
-export { createServerError, PhenylServerError } from './create-error.js'
+export {
+  createServerError,
+  PhenylServerError,
+  createLocalError,
+  PhenylLocalError,
+} from './create-error.js'
 export { normalizeQueryCondition } from './normalize-query-condition.js'
 export { PhenylRestApiClient } from './phenyl-rest-api-client.js'
 export { PhenylRestApiDirectClient } from './direct-client.js'

@@ -1,7 +1,7 @@
 // @flow
 
 export type ServerErrorType = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound' | 'InternalServer'
-export type LocalErrorType = '' // TODO
+export type LocalErrorType = 'NetworkFailed' | 'InvalidData' | 'CodeProblem'
 
 export type PhenylError = ServerError | LocalError
 

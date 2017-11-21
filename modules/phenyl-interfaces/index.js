@@ -66,6 +66,8 @@ import type {
 } from './decls/entity.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
+  LocalError,
+  LocalErrorType,
   ServerError,
   ServerErrorType,
 } from './decls/error.js.flow'
@@ -280,6 +282,8 @@ export type {
   InsertOneRequestData,
   InsertOneResponseData,
   KvsClient,
+  LocalError,
+  LocalErrorType,
   LoginCommand,
   LoginCommandResult,
   LoginRequestData,
