@@ -32,11 +32,13 @@ class PatientDefinition extends StandardUserDefinition {
   }
 
   async authorization(reqData, session): Promise<boolean> {
-    if (['insert', 'insertAndGet', 'insertAndFetch', 'login', 'logout'].includes(reqData.method)) return true
-    console.log(session, reqData.payload)
-    // $FlowIssue(reqData.payload-has-id)
-    if (['updateAndGet'].includes(reqData.method)) return session != null && session.userId === reqData.payload.id
-    return false
+    const noLoginCommands = ['insertOne', 'insertAndGet', 'insertMulti', 'insertAndGetMulti', 'login']
+
+    if (noLoginCommands.includes(reqData.method)) {
+      return true
+    }
+
+    return session != null && session.userId === reqData.payload.id
   }
 }
 
