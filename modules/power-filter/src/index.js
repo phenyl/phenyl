@@ -7,6 +7,7 @@ import type {
   BSONTypeString,
   FindOperation,
   QueryCondition,
+  ComparisonQueryOperatorName,
 } from 'mongolike-operations'
 
 import {
@@ -82,10 +83,12 @@ export default class PowerFilter {
         case '$lt':
         case '$lte':
         case '$ne':
+          // $FlowIssue(Indexable-signature-not-found-in-condition)
           return this.compare(operator, leftOperand, condition[operator])
 
         case '$in':
         case '$nin':
+          // $FlowIssue(Indexable-signature-not-found-in-condition)
           return this.compareIn(operator, leftOperand, condition[operator])
 
         case '$not':
@@ -186,7 +189,7 @@ export default class PowerFilter {
   }
 }
 
-const COMPARE_FUNC = {
+const COMPARE_FUNC: { [key: ComparisonQueryOperatorName]: (any, any) => boolean } = {
   '$eq' : deepEqual,
   '$gt' : (t, c) => t > c,
   '$gte' : (t, c) => t >= c,
