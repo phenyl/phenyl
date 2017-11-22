@@ -7,7 +7,6 @@ import type {
   BSONTypeString,
   FindOperation,
   QueryCondition,
-  ComparisonQueryOperatorName,
 } from 'mongolike-operations'
 
 import {

@@ -14,6 +14,80 @@ describe('filter', () => {
     ])
   })
 
+  describe('items', () => {
+    const data = [
+      { item: 'journal', tag: 'red', dim_cm: 14 },
+      { item: 'notebook', tag: 'red', dim_cm: 21 },
+      { item: 'paper', tag: 'plain', dim_cm:  14 },
+      { item: 'planner', tag: 'red', dim_cm: 30 },
+      { item: 'postcard', tag: 'blue', dim_cm: 10 }
+    ]
+
+    describe('$eq', () => {
+      it('find equal items', () => {
+        const filtered = filter(data, {tag: 'red'})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['journal', 'notebook', 'planner'])
+      })
+    })
+
+    describe('$ne', () => {
+      it('find not equal items', () => {
+        const filtered = filter(data, {tag: {'$ne': 'red'}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['paper', 'postcard'])
+      })
+    })
+
+    describe('$gt', () => {
+      it('find items greater than condition', () => {
+        const filtered = filter(data, {dim_cm: {'$gt': 21}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['planner'])
+      })
+    })
+
+    describe('$gte', () => {
+      it('find items greater than or equal condition', () => {
+        const filtered = filter(data, {dim_cm: {'$gte': 21}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['notebook', 'planner'])
+      })
+    })
+
+    describe('$lt', () => {
+      it('find items less than condition', () => {
+        const filtered = filter(data, {dim_cm: {'$lt': 14}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['postcard'])
+      })
+    })
+
+    describe('$lte', () => {
+      it('find items less than or equal condition', () => {
+        const filtered = filter(data, {dim_cm: {'$lte': 14}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['journal', 'paper', 'postcard'])
+      })
+    })
+
+    describe('$in', () => {
+      it('find items in condition', () => {
+        const filtered = filter(data, {dim_cm: {'$in': [10, 30]}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['planner', 'postcard'])
+      })
+    })
+
+    describe('$nin', () => {
+      it('find items not in condition', () => {
+        const filtered = filter(data, {dim_cm: {'$nin': [10, 30]}})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['journal', 'notebook', 'paper'])
+      })
+    })
+  })
+
   describe('an Array for an Element', () => {
 
     const data = [
@@ -111,13 +185,13 @@ describe('filter', () => {
       })
 
       it('find array by arry in array', () => {
-        const filtered = filter(data, { tags: { '$in': [['blank', 'red']] }})
+        const filtered = filter(data, { tags: { '$nin': [['blank', 'red']] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook', 'paper', 'postcard'])
       })
 
       it('find array by arry and element', () => {
-        const filtered = filter(data, { tags: { '$in': [['blank', 'red'], 'blue'] }})
+        const filtered = filter(data, { tags: { '$nin': [['blank', 'red'], 'blue'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook', 'paper'])
       })
