@@ -7,6 +7,7 @@ import type {
   BSONTypeString,
   FindOperation,
   QueryCondition,
+  ComparisonQueryOperatorName,
 } from 'mongolike-operations'
 
 import {
@@ -77,29 +78,18 @@ export default class PowerFilter {
     return operators.every(operator => {
       switch (operator) {
         case '$eq':
-          return deepEqual(leftOperand, condition.$eq)
-
         case '$gt':
-          return leftOperand > condition.$gt
-
         case '$gte':
-          return leftOperand >= condition.$gte
+        case '$lt':
+        case '$lte':
+        case '$ne':
+          // $FlowIssue(condition-has-operator-key)
+          return this.compare(operator, leftOperand, condition[operator])
 
         case '$in':
-          return condition.$in && condition.$in.some(val => deepEqual(leftOperand, val))
-
-        case '$lt':
-          return leftOperand < condition.$lt
-
-        case '$lte':
-          return leftOperand <= condition.$lte
-
-        case '$ne':
-          return deepEqual(leftOperand, condition.$ne) === false
-
         case '$nin':
-          // TODO: confirm spec when condition.$nin is []
-          return condition.$nin && condition.$nin.every(val => deepEqual(leftOperand, val) === false)
+          // $FlowIssue(condition-has-operator-key)
+          return this.compareIn(operator, leftOperand, condition[operator])
 
         case '$not':
           if (condition.$not == null) throw new Error('$not is not found') // for flow
@@ -166,6 +156,48 @@ export default class PowerFilter {
       }
     })
   }
+
+  /**
+   * Compare values
+   * when to query an array for an element
+   * return true if the array field contains at least one matched element
+   * @see https://docs.mongodb.com/manual/tutorial/query-arrays/#query-an-array-for-an-element
+   */
+  static compareIn(operator: '$in' | '$nin', target: any, condValues: any): boolean {
+    if (!Array.isArray(condValues)) throw new Error(`${operator} needs an array`)
+    if (!Array.isArray(target)) {
+      return COMPARE_FUNC[operator](target, condValues)
+    }
+
+    const isIn = condValues.some(condValue => this.compare('$eq', target, condValue))
+    return operator === '$in' ? isIn : !isIn
+  }
+
+  static compare(operator: '$eq' | '$gt' | '$gte' | '$lt' | '$lte' | '$ne', target: any, condValue: any): boolean {
+    let compareFunc = COMPARE_FUNC[operator]
+    const isQueryArrayForAnElement = Array.isArray(target) && !Array.isArray(condValue)
+
+    if (isQueryArrayForAnElement) {
+      if (operator === '$ne') {
+        compareFunc = COMPARE_FUNC['$eq']
+        return !target.some(val => compareFunc(val, condValue))
+      }
+      return target.some(val => compareFunc(val, condValue))
+    }
+
+    return compareFunc(target, condValue)
+  }
+}
+
+const COMPARE_FUNC: { [key: ComparisonQueryOperatorName]: (any, any) => boolean } = {
+  $eq : deepEqual,
+  $gt : (t, c) => t > c,
+  $gte : (t, c) => t >= c,
+  $in : (t, c) => c.some(v => deepEqual(t, v)),
+  $lt : (t, c) => t < c,
+  $lte : (t, c) => t <= c,
+  $ne : (t, c) => !deepEqual(t, c),
+  $nin : (t, c) => !c.some(v => deepEqual(t, v)),
 }
 
 /**
