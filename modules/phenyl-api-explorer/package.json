@@ -16,12 +16,14 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
-    "phenyl-http-server": "file:../phenyl-http-server",
-    "phenyl-lambda-adapter": "file:../phenyl-lambda-adapter",
-    "phenyl-rest-api": "file:../phenyl-rest-api",
-    "phenyl-http-client": "file:../phenyl-http-client",
-    "phenyl-memory-client": "file:../phenyl-memory-client",
-    "phenyl-standards": "file:../phenyl-standards"
+    "phenyl-http-server": "~0.1.0",
+    "phenyl-lambda-adapter": "~0.1.0",
+    "phenyl-rest-api": "~0.1.0",
+    "phenyl-http-client": "~0.1.0",
+    "phenyl-memory-db": "~0.1.0",
+    "phenyl-standards": "~0.1.0s"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ect": "^0.5.9"
+  }
 }

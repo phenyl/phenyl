@@ -8,12 +8,12 @@ import type {
   RestApiClient,
 } from 'phenyl-interfaces'
 import PhenylRestApi from 'phenyl-rest-api'
-import PhenylMemoryClient from 'phenyl-memory-client'
+import { createEntityClient } from 'phenyl-memory-db'
 import { StandardUserDefinition } from 'phenyl-standards'
 import PhenylHttpServer from 'phenyl-http-server'
 import PhenylApiExplorer from '../src/PhenylApiExplorer'
 
-const memoryClient = new PhenylMemoryClient()
+const memoryClient = createEntityClient()
 
 class PatientDefinition extends StandardUserDefinition {
   constructor() {
@@ -24,6 +24,7 @@ class PatientDefinition extends StandardUserDefinition {
       ttl: 24 * 3600
     })
   }
+
   async authorization(reqData, session): Promise<boolean> {
     if (['insert', 'insertAndGet', 'insertAndFetch', 'login', 'logout'].includes(reqData.method)) return true
     console.log(session, reqData.payload)
@@ -55,4 +56,4 @@ const server = new PhenylHttpServer(http.createServer(), {
   customRequestHandler: new PhenylApiExplorer(functionalGroup, { path: '/explorer' }).handler,
 })
 
-server.listen(3000)
+server.listen(8000)

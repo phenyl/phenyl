@@ -1,6 +1,7 @@
 // @flow
 import fs from 'fs'
 import path from 'path'
+import ECT from 'ect'
 import type { FunctionalGroup } from 'phenyl-interfaces'
 
 export type ExplorerParams = {|
@@ -16,15 +17,16 @@ export default class PhenylApiExplorer {
   }
 
   async handler (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient): Promise<EncodedHttpResponse> {
-    // FIXME: コンストラクタへ
-    const explorer = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8')
+    const renderer = ECT({ root : __dirname + '/client/build' })
 
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'text/html',
       },
-      body: explorer,
+      body: renderer.render(`index.html`, {
+        functionalGroup: this.functionalGroup,
+      }),
     }
   }
 }
