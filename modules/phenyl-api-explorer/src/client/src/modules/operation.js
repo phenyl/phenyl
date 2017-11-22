@@ -7,7 +7,10 @@ const EXECUTE_FINISHED = 'operation/EXECUTE_FINISHED'
 const EXECUTE_FAILED = 'operation/EXECUTE_FAILED'
 
 const initialState = {
-
+  isFetching: false,
+  spent: -1,
+  response: null, // FIXME
+  error: null,
 }
 
 export const reducer = (state = initialState, action) => {
@@ -15,9 +18,8 @@ export const reducer = (state = initialState, action) => {
     case EXECUTE_START:
       return {
         ...state,
+        ...initialState,
         isFetching: true,
-        response: null,
-        error: null,
       }
     case EXECUTE_FINISHED:
       return {
@@ -132,10 +134,6 @@ export const execute = ({ entityName, operation, payload }) => async (dispatch) 
 
     dispatch(receiveResponse(response, new Date() - start))
   } catch (e) {
-    if (e.at) {
-      dispatch(receiveErrorResponse(e, new Date() - start))
-    } else {
-      throw e
-    }
+    dispatch(receiveErrorResponse(e, new Date() - start))
   }
 }

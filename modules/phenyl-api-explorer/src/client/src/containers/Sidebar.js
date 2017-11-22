@@ -14,10 +14,10 @@ type Props = {
 export const Sidebar = ({ version, user }: Props) => (
   <SemanticSidebar as={Menu} visible icon='labeled' vertical inverted className="fixed">
     <Information version={version} user={user} />
-    <FunctionalGroup groupName={'users'} functionalNames={(window.EntitiesDefinition || {}).users || []} />
-    <FunctionalGroup groupName={'nonUsers'} functionalNames={(window.EntitiesDefinition || {}).nonUsers || []} />
-    <FunctionalGroup groupName={'customQueries'} functionalNames={(window.EntitiesDefinition || {}).customQueries || []} />
-    <FunctionalGroup groupName={'customCommands'} functionalNames={(window.EntitiesDefinition || {}).customCommands || []} />
+    <FunctionalGroup groupName={'users'} functionalNames={EntitiesDefinition.users} />
+    <FunctionalGroup groupName={'nonUsers'} functionalNames={EntitiesDefinition.nonUsers} />
+    <FunctionalGroup groupName={'customQueries'} functionalNames={EntitiesDefinition.customQueries} />
+    <FunctionalGroup groupName={'customCommands'} functionalNames={EntitiesDefinition.customCommands} />
   </SemanticSidebar>
 )
 

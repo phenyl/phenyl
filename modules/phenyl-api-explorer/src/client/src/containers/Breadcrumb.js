@@ -4,21 +4,27 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 type Props = {
-  location: any,
+  match: any,
 }
 
-export const Breadcrumb = ({ location }) => (
+export const Breadcrumb = ({ match, ...all }) => (
   <SemanticBreadcrumb>
-    <SemanticBreadcrumb.Section link>Home</SemanticBreadcrumb.Section>
-    <SemanticBreadcrumb.Divider icon='right angle' />
-    <SemanticBreadcrumb.Section>User</SemanticBreadcrumb.Section>
-    <SemanticBreadcrumb.Divider icon='right angle' />
-    <SemanticBreadcrumb.Section active>Patient</SemanticBreadcrumb.Section>
+    {match.url.split('/').reduce((acc, path, i) => {
+      if (i === 0) {
+        return acc.concat([
+          <SemanticBreadcrumb.Section link>Home</SemanticBreadcrumb.Section>,
+        ])
+      }
+
+      return acc.concat([
+        <SemanticBreadcrumb.Divider icon='right angle' />,
+        <SemanticBreadcrumb.Section>{path}</SemanticBreadcrumb.Section>,
+      ])
+    }, [])}
   </SemanticBreadcrumb>
 )
 
 const mapStateToProps = (state): Props => ({
-  location: state.location,
 })
 
 export default withRouter(connect(mapStateToProps)(Breadcrumb))

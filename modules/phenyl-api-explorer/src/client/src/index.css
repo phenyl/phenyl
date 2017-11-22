@@ -22,7 +22,8 @@ html,body {
 .ui.sidebar .item .menu .item {
   text-align: left;
 }
-.ui.sidebar .item .header {
+.ui.sidebar .item .header,
+.ui.breadcrumb .section {
   text-transform: capitalize;
 }
 
