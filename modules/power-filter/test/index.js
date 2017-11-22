@@ -85,6 +85,18 @@ describe('filter', () => {
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
       })
 
+      it('find array by arry in array', () => {
+        const filtered = filter(data, { tags: { '$in': [['blank', 'red']] }})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['journal', 'planner'])
+      })
+
+      it('find array by arry and element', () => {
+        const filtered = filter(data, { tags: { '$in': [['blank', 'red'], 'blue'] }})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['journal', 'planner', 'postcard'])
+      })
+
       it('find nothing if $in is []', () => {
         const filtered = filter(data, { tags: { '$in': [] }})
         assert(filtered.length === 0)
@@ -96,6 +108,18 @@ describe('filter', () => {
         const filtered = filter(data, { tags: { '$nin': ['red'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
+      })
+
+      it('find array by arry in array', () => {
+        const filtered = filter(data, { tags: { '$in': [['blank', 'red']] }})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['notebook', 'paper', 'postcard'])
+      })
+
+      it('find array by arry and element', () => {
+        const filtered = filter(data, { tags: { '$in': [['blank', 'red'], 'blue'] }})
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['notebook', 'paper'])
       })
 
       it('find all if $nin is []', () => {

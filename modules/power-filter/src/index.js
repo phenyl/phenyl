@@ -80,12 +80,14 @@ export default class PowerFilter {
         case '$eq':
         case '$gt':
         case '$gte':
-        case '$in':
         case '$lt':
         case '$lte':
         case '$ne':
-        case '$nin':
           return this.compare(operator, leftOperand, condition[operator])
+
+        case '$in':
+        case '$nin':
+          return this.compareIn(operator, leftOperand, condition[operator])
 
         case '$not':
           if (condition.$not == null) throw new Error('$not is not found') // for flow
@@ -159,31 +161,29 @@ export default class PowerFilter {
    * return true if the array field contains at least one matched element
    * @see https://docs.mongodb.com/manual/tutorial/query-arrays/#query-an-array-for-an-element
    */
-  static compare(operator: ComparisonQueryOperatorName, target: any, condVal: any): boolean {
-
-    let isQueryArrayForAnElement = Array.isArray(target)
-    switch (operator) {
-      case '$in':
-      case '$nin':
-        if (!Array.isArray(condVal)) throw new Error(`${operator} needs an array`)
-        break
-      default:
-        if (Array.isArray(condVal)) isQueryArrayForAnElement = false
-        break
+  static compareIn(operator: '$in' | '$nin', target: any, condValues: any): boolean {
+    if (!Array.isArray(condValues)) throw new Error(`${operator} needs an array`)
+    if (!Array.isArray(target)) {
+      return COMPARE_FUNC[operator](target, condValues)
     }
+
+    const isIn = condValues.some(condValue => this.compare('$eq', target, condValue))
+    return operator === '$in' ? isIn : !isIn
+  }
+
+  static compare(operator: '$eq' | '$gt' | '$gte' | '$lt' | '$lte' | '$ne', target: any, condValue: any): boolean {
+    let compareFunc = COMPARE_FUNC[operator]
+    const isQueryArrayForAnElement = Array.isArray(target) && !Array.isArray(condValue)
 
     if (isQueryArrayForAnElement) {
-      switch (operator) {
-        case '$nin':
-          return !target.some(val => COMPARE_FUNC['$in'](val, condVal))
-        case '$ne':
-          return !target.some(val => COMPARE_FUNC['$eq'](val, condVal))
-        default:
-          return target.some(val => COMPARE_FUNC[operator](val, condVal))
+      if (operator === '$ne') {
+        compareFunc = COMPARE_FUNC['$eq']
+        return !target.some(val => compareFunc(val, condValue))
       }
+      return target.some(val => compareFunc(val, condValue))
     }
 
-    return COMPARE_FUNC[operator](target, condVal)
+    return compareFunc(target, condValue)
   }
 }
 
