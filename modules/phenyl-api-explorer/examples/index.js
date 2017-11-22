@@ -9,11 +9,17 @@ import type {
 } from 'phenyl-interfaces'
 import PhenylRestApi from 'phenyl-rest-api'
 import { createEntityClient } from 'phenyl-memory-db'
-import { StandardUserDefinition } from 'phenyl-standards'
+import { StandardUserDefinition, StandardEntityDefinition } from 'phenyl-standards'
 import PhenylHttpServer from 'phenyl-http-server'
 import PhenylApiExplorer from '../src/PhenylApiExplorer'
 
 const memoryClient = createEntityClient()
+
+class HospitalDefinition extends StandardEntityDefinition {
+  async authorization(reqData: RequestData, session: ?Session): Promise<boolean> { // eslint-disable-line no-unused-vars
+    return true
+  }
+}
 
 class PatientDefinition extends StandardUserDefinition {
   constructor() {
@@ -45,7 +51,7 @@ const functionalGroup = {
     patient: new PatientDefinition(),
   },
   nonUsers: {
-
+    hospital: new HospitalDefinition(),
   },
 }
 
