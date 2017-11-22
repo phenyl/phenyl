@@ -66,8 +66,11 @@ import type {
 } from './decls/entity.js.flow'
 import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
 import type {
+  ErrorLocation,
   LocalError,
   LocalErrorType,
+  PhenylError,
+  PhenylErrorType,
   ServerError,
   ServerErrorType,
 } from './decls/error.js.flow'
@@ -246,8 +249,7 @@ export type {
   EntityStateUpdater,
   EntityWithMetaInfo,
   EntityVersion,
-  ServerError,
-  ServerErrorType,
+  ErrorLocation,
   ExecutionWrapper,
   FindOneRequestData,
   FindOneResponseData,
@@ -300,6 +302,8 @@ export type {
   MultiValuesCommandResult,
   PathModifier,
   PhenylAction,
+  PhenylError,
+  PhenylErrorType,
   RestApiHandler,
   PreEntity,
   PreSession,
@@ -325,6 +329,8 @@ export type {
   RunCustomCommandResponseData,
   RunCustomQueryRequestData,
   RunCustomQueryResponseData,
+  ServerError,
+  ServerErrorType,
   ServerParams,
   Session,
   SessionClient,
