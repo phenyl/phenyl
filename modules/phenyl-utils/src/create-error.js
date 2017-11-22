@@ -32,14 +32,14 @@ const toJSONs = {
 
 const guessErrorTypes = {
   server: function guessServerErrorType(error: Error): ServerErrorType {
-    if (error.constructor.name === 'Error') {
+    if (error.constructor === Error) {
       return 'BadRequest'
     }
     return 'InternalServer'
   },
 
   local: function guessLocalErrorType(error: Error): LocalErrorType {
-    if (error.constructor.name === 'Error') {
+    if (error.constructor === Error) {
       return 'InvalidData'
     }
     return 'CodeProblem'
