@@ -83,12 +83,12 @@ export default class PowerFilter {
         case '$lt':
         case '$lte':
         case '$ne':
-          // $FlowIssue(Indexable-signature-not-found-in-condition)
+          // $FlowIssue(condition-has-operator-key)
           return this.compare(operator, leftOperand, condition[operator])
 
         case '$in':
         case '$nin':
-          // $FlowIssue(Indexable-signature-not-found-in-condition)
+          // $FlowIssue(condition-has-operator-key)
           return this.compareIn(operator, leftOperand, condition[operator])
 
         case '$not':
