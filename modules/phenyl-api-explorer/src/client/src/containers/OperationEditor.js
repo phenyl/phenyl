@@ -6,7 +6,10 @@ import { execute } from '../modules/operation'
 
 const mapStateToProps = (state) => ({
   operations: operations.map(op => op.name),
-  defaultPayload: operations[0].defaultPayload,
+  defaultPayloads: operations.reduce((acc, op) => ({
+    ...acc,
+    [op.name]: op.defaultPayload,
+  }), {}),
 })
 
 const mapDispatchToProps = (dispatch) => ({

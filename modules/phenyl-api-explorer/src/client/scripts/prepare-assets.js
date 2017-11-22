@@ -26,7 +26,14 @@ $('link[rel="stylesheet"]').each((i, el) => {
 
 // Embed extracted JavaScript
 $('script[src]').each((i, el) => {
-  const assetPath = path.join(__dirname, '..', 'build', cheerio(el).attr('src'))
+  const src = cheerio(el).attr('src')
+  // Preserve external css
+  if (/^https?/.test(src)) {
+    debug(`Preserve ${src}`)
+    return
+  }
+
+  const assetPath = path.join(__dirname, '..', 'build', src)
   const content = fs.readFileSync(assetPath, 'utf8')
   $('<script></script>').text(content).appendTo('body')
 

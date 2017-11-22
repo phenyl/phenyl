@@ -4,7 +4,7 @@ import { Form } from 'semantic-ui-react'
 type Props = {
   match: any,
   operations: Array<string>,
-  defaultPayload: string,
+  defaultPayloads: { [string]: Object },
   execute: ({ entitiName: string, operation: string, payload: any }) => any,
 }
 
@@ -20,7 +20,16 @@ class OperationEditor extends Component<Props, State> {
   }
 
   handleChangeOperation = (event, { value }) => {
-    this.setState({ operation: value })
+    if (!this.props.defaultPayloads[value]) {
+      throw new Error(`Unknown operation: ${value}`)
+    }
+
+    const payload = this.props.defaultPayloads[value]
+
+    this.setState({
+      operation: value,
+      payload: JSON.stringify(payload, null, 2),
+    })
   }
 
   handleChangePayload = (event, { value }) => {
@@ -38,11 +47,10 @@ class OperationEditor extends Component<Props, State> {
     })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { operations, defaultPayload } = this.props
 
     this.handleChangeOperation(null, { value: operations[0] })
-    this.handleChangePayload(null, { value: JSON.stringify(defaultPayload, null, 2) })
   }
 
   render () {
@@ -63,8 +71,9 @@ class OperationEditor extends Component<Props, State> {
             />
           </Form.Group>
           <Form.TextArea
+            rows={4}
             label='Payload'
-            defaultValue={JSON.stringify(defaultPayload, null, 2)}
+            value={this.state.payload}
             onChange={this.handleChangePayload}
           />
           <Form.Button

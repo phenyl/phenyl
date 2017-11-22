@@ -31,7 +31,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
+      id: '',
     },
   },
   {
@@ -42,7 +42,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      ids: [0],
+      ids: [''],
     },
   },
   {
@@ -53,8 +53,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
-      versionId: 0,
+      id: '',
+      versionId: '',
     },
   },
   {
@@ -113,11 +113,9 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
+      id: '',
       operation: {
-        $set: {
-          xxx: 0,
-        }
+        xxx: 0,
       }
     },
   },
@@ -131,9 +129,7 @@ export const operations = [
     defaultPayload: {
       where: [],
       operation: {
-        $set: {
-          xxx: 0,
-        }
+        xxx: 0,
       },
     },
   },
@@ -145,11 +141,9 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
+      id: '',
       operation: {
-        $set: {
-          xxx: 0,
-        }
+        xxx: 0,
       }
     },
   },
@@ -163,9 +157,7 @@ export const operations = [
     defaultPayload: {
       where: [],
       operation: {
-        $set: {
-          xxx: 0,
-        }
+        xxx: 0,
       },
     },
   },
@@ -177,15 +169,13 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
+      id: '',
       operations: [
         {
-          $set: {
-            xxx: 0,
-          }
+          xxx: 0,
         }
       ],
-      versionId: 0,
+      versionId: '',
     },
   },
   {
@@ -196,7 +186,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: 0,
+      id: '',
     },
   },
   {
@@ -218,7 +208,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      userId: 0,
+      userId: '',
     },
   },
 ]
