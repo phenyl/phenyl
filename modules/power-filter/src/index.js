@@ -190,14 +190,14 @@ export default class PowerFilter {
 }
 
 const COMPARE_FUNC: { [key: ComparisonQueryOperatorName]: (any, any) => boolean } = {
-  '$eq' : deepEqual,
-  '$gt' : (t, c) => t > c,
-  '$gte' : (t, c) => t >= c,
-  '$in' : (t, c) => c.some(v => deepEqual(t, v)),
-  '$lt' : (t, c) => t < c,
-  '$lte' : (t, c) => t <= c,
-  '$ne' : (t, c) => !deepEqual(t, c),
-  '$nin' : (t, c) => !c.some(v => deepEqual(t, v)),
+  $eq : deepEqual,
+  $gt : (t, c) => t > c,
+  $gte : (t, c) => t >= c,
+  $in : (t, c) => c.some(v => deepEqual(t, v)),
+  $lt : (t, c) => t < c,
+  $lte : (t, c) => t <= c,
+  $ne : (t, c) => !deepEqual(t, c),
+  $nin : (t, c) => !c.some(v => deepEqual(t, v)),
 }
 
 /**

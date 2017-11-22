@@ -25,7 +25,6 @@ describe('filter', () => {
 
     describe('$eq', () => {
       it('find equal items', () => {
-        // $FlowIssue(TODO)
         const filtered = filter(data, {tag: 'red'})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'planner'])
@@ -34,8 +33,7 @@ describe('filter', () => {
 
     describe('$ne', () => {
       it('find not equal items', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, {tag: {'$ne': 'red'}})
+        const filtered = filter(data, {tag: {$ne: 'red'}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['paper', 'postcard'])
       })
@@ -43,8 +41,7 @@ describe('filter', () => {
 
     describe('$gt', () => {
       it('find items greater than condition', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$gt': 21}})
+        const filtered = filter(data, {dim_cm: {$gt: 21}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['planner'])
       })
@@ -52,8 +49,7 @@ describe('filter', () => {
 
     describe('$gte', () => {
       it('find items greater than or equal condition', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$gte': 21}})
+        const filtered = filter(data, {dim_cm: {$gte: 21}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook', 'planner'])
       })
@@ -61,8 +57,7 @@ describe('filter', () => {
 
     describe('$lt', () => {
       it('find items less than condition', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$lt': 14}})
+        const filtered = filter(data, {dim_cm: {$lt: 14}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
       })
@@ -70,8 +65,7 @@ describe('filter', () => {
 
     describe('$lte', () => {
       it('find items less than or equal condition', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$lte': 14}})
+        const filtered = filter(data, {dim_cm: {$lte: 14}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'paper', 'postcard'])
       })
@@ -80,7 +74,7 @@ describe('filter', () => {
     describe('$in', () => {
       it('find items in condition', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$in': [10, 30]}})
+        const filtered = filter(data, {dim_cm: {$in: [10, 30]}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['planner', 'postcard'])
       })
@@ -89,7 +83,7 @@ describe('filter', () => {
     describe('$nin', () => {
       it('find items not in condition', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, {dim_cm: {'$nin': [10, 30]}})
+        const filtered = filter(data, {dim_cm: {$nin: [10, 30]}})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper'])
       })
@@ -108,14 +102,12 @@ describe('filter', () => {
 
     describe('$eq', () => {
       it('find same array', () => {
-        // $FlowIssue(TODO)
         const filtered = filter(data, { tags: ['red', 'blank'] })
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook'])
       })
 
       it('find if the array field contains at least one element', () => {
-        // $FlowIssue(TODO)
         const filtered = filter(data, { tags: 'red' })
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
@@ -124,8 +116,7 @@ describe('filter', () => {
 
     describe('$ne', () => {
       it('find if the array field does not contain any element', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$ne': 'red' }})
+        const filtered = filter(data, { tags: { $ne: 'red' }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
       })
@@ -133,8 +124,7 @@ describe('filter', () => {
 
     describe('$gt', () => {
       it('find if the array field contains at least one element', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, { dim_cm: { '$gt': 21 }})
+        const filtered = filter(data, { dim_cm: { $gt: 21 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['planner'])
       })
@@ -142,8 +132,7 @@ describe('filter', () => {
 
     describe('$gte', () => {
       it('find if the array field contains at least one element', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, { dim_cm: { '$gte': 21 }})
+        const filtered = filter(data, { dim_cm: { $gte: 21 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
       })
@@ -151,8 +140,7 @@ describe('filter', () => {
 
     describe('$lt', () => {
       it('find if the array field contains at least one element', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, { dim_cm: { '$lt': 14 }})
+        const filtered = filter(data, { dim_cm: { $lt: 14 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
       })
@@ -160,8 +148,7 @@ describe('filter', () => {
 
     describe('$lte', () => {
       it('find if the array field contains at least one element', () => {
-        // $FlowIssue(TODO)
-        const filtered = filter(data, { dim_cm: { '$lte': 14 }})
+        const filtered = filter(data, { dim_cm: { $lte: 14 }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'postcard'])
       })
@@ -170,28 +157,28 @@ describe('filter', () => {
     describe('$in', () => {
       it('find if the array field contains at least one element', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$in': ['red'] }})
+        const filtered = filter(data, { tags: { $in: ['red'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'paper', 'planner'])
       })
 
       it('find array by arry in array', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$in': [['blank', 'red']] }})
+        const filtered = filter(data, { tags: { $in: [['blank', 'red']] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'planner'])
       })
 
       it('find array by arry and element', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$in': [['blank', 'red'], 'blue'] }})
+        const filtered = filter(data, { tags: { $in: [['blank', 'red'], 'blue'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'planner', 'postcard'])
       })
 
       it('find nothing if $in is []', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$in': [] }})
+        const filtered = filter(data, { tags: { $in: [] }})
         assert(filtered.length === 0)
       })
     })
@@ -199,28 +186,28 @@ describe('filter', () => {
     describe('$nin', () => {
       it('find if the array field does not contain any element', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$nin': ['red'] }})
+        const filtered = filter(data, { tags: { $nin: ['red'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['postcard'])
       })
 
       it('find array by arry in array', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$nin': [['blank', 'red']] }})
+        const filtered = filter(data, { tags: { $nin: [['blank', 'red']] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook', 'paper', 'postcard'])
       })
 
       it('find array by arry and element', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$nin': [['blank', 'red'], 'blue'] }})
+        const filtered = filter(data, { tags: { $nin: [['blank', 'red'], 'blue'] }})
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['notebook', 'paper'])
       })
 
       it('find all if $nin is []', () => {
         // $FlowIssue(TODO)
-        const filtered = filter(data, { tags: { '$nin': [] }})
+        const filtered = filter(data, { tags: { $nin: [] }})
         assert(filtered.length === data.length)
       })
     })
