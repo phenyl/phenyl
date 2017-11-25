@@ -8,42 +8,49 @@ const user1 = {
   id: 'user1',
   name: { first: 'Shin', last: 'Tanaka' },
   age: 10,
+  hobby: ['music'],
 }
 
 const user2 = {
   id: 'user2',
   name: { first: 'Shingo', last: 'Tanaka' },
   age: 16,
+  hobby: ['football', 'music'],
 }
 
 const user3 = {
   id: 'user3',
   name: { first: 'taro', last: 'Tanaka' },
   age: 19,
+  hobby: ['baseball'],
 }
 
 const user4 = {
   id: 'user4',
   name: { first: 'jiro', last: 'Tanaka' },
   age: 31,
+  hobby: ['cooking', 'music'],
 }
 
 const user5 = {
   id: 'user5',
   name: { first: 'saburo', last: 'Tanaka' },
   age: 26,
+  hobby: ['cooking'],
 }
 
 const user6 = {
   id: 'user6',
   name: { first: 'shiro', last: 'Tanaka' },
   age: 22,
+  hobby: ['cooking'],
 }
 
 const user7 = {
   id: 'user7',
   name: { first: 'goro', last: 'Tanaka' },
   age: 47,
+  hobby: ['cooking'],
 }
 
 let entityClient
@@ -106,6 +113,15 @@ export const assertEntityClient = (
         })
 
         assert(result.entities.length === 0)
+      })
+
+      it('returns entities when array index condition matches', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: { 'hobby[1]': 'music' },
+        })
+
+        assert.deepEqual(result.entities, [user2, user4])
       })
     })
 
