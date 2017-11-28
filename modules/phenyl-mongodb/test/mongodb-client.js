@@ -23,7 +23,7 @@ describe('filterWhere', () => {
     assert.deepEqual(actual, expected)
   })
 
-  it ('replaces document path to dot notation', () => {
+  it ('converts document path to dot notation', () => {
     const input: AndFindOperation = {
       $and: [
         { 'values[0]': 'fizz' },
