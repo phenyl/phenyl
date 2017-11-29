@@ -24,11 +24,14 @@ describe('filterWhere', () => {
   })
 
   it ('converts document path to dot notation', () => {
+    // $FlowIssue(this-is-and-find-operation)
     const input: AndFindOperation = {
       $and: [
         { 'values[0]': 'fizz' },
         { 'values[1].test': 'buzz' },
-        { 'values[1234].test': 'fizzBuzz' },
+        { 'values[12].test': { $eq: 'fizzBuzz' } },
+        { 'values[123].test': { $regex: /zz/ } },
+        { 'values[1234].test': { $in: ['fizz', 'buzz'] } },
         { type: 'bar' },
       ]
     }
@@ -36,7 +39,9 @@ describe('filterWhere', () => {
       $and: [
         { 'values.0': 'fizz' },
         { 'values.1.test': 'buzz' },
-        { 'values.1234.test': 'fizzBuzz' },
+        { 'values.12.test': { $eq: 'fizzBuzz' } },
+        { 'values.123.test': { $regex: /zz/ } },
+        { 'values.1234.test': { $in: ['fizz', 'buzz'] } },
         { type: 'bar' },
       ]
     }
