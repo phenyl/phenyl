@@ -1,7 +1,5 @@
 /* global EntitiesDefinition */
 import PhenylHttpClient from 'phenyl-http-client'
-import { PhenylResponseError } from 'phenyl-utils'
-import type { PhenylError } from 'phenyl-interfaces'
 
 const LOGIN = 'user/LOGIN'
 const LOGIN_AS_ANONYMOUS = 'user/LOGIN_AS_ANONYMOUS'

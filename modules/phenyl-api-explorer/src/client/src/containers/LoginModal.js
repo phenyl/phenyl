@@ -1,7 +1,6 @@
 /* global EntitiesDefinition */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import { Message, Form, Button, Header, Icon, Modal } from 'semantic-ui-react'
 import { login, loginAsAnonymous } from '../modules/user'
 
@@ -13,7 +12,7 @@ type State = {
 
 }
 
-class LoginModal extends Component {
+class LoginModal extends Component<Props, State> {
   state = {
     entityName: '',
     accountPropName: '',

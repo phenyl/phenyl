@@ -2,7 +2,6 @@
 import React from 'react'
 import { Sidebar as SemanticSidebar, Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import Information from '../components/Sidebar/Information'
 import FunctionalGroup from '../components/Sidebar/FunctionalGroup'
 import { logout } from '../modules/user'

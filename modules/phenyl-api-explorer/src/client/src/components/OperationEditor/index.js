@@ -49,13 +49,13 @@ class OperationEditor extends Component<Props, State> {
   }
 
   componentDidMount() {
-    const { operations, defaultPayload } = this.props
+    const { operations } = this.props
 
     this.handleChangeOperation(null, { value: operations[0] })
   }
 
   render () {
-    const { operations, defaultPayload } = this.props
+    const { operations } = this.props
     return (
       <div>
         <Form>

@@ -1,5 +1,4 @@
 import PhenylHttpClient from 'phenyl-http-client'
-import { PhenylResponseError } from 'phenyl-utils'
 import type { PhenylError } from 'phenyl-interfaces'
 
 const EXECUTE_START = 'operation/EXECUTE_START'
