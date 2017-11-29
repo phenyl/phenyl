@@ -2,8 +2,8 @@
 
 import { it, describe } from 'kocha'
 import assert from 'power-assert'
-import { filterWhere } from '../src/mongodb-client'
 import type { AndFindOperation } from 'phenyl-interfaces'
+import { filterWhere } from '../src/mongodb-client.js'
 
 describe('filterWhere', () => {
   it ('renames id to _id', () => {
