@@ -1,6 +1,23 @@
-import React from 'react'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import { Provider } from 'react-redux'
+import {
+  BrowserRouter as Router,
+} from 'react-router-dom'
+import store from './modules'
 import App from './App'
+import './index.css'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+class Root extends Component {
+  render () {
+    return (
+      <Provider store={store}>
+        <Router basename='/explorer'>
+          <App />
+        </Router>
+      </Provider>
+    )
+  }
+}
+
+ReactDOM.render(<Root />, document.getElementById('root'))

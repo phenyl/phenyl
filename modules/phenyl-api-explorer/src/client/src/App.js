@@ -1,33 +1,18 @@
 import React, { Component } from 'react'
-import { Provider } from 'react-redux'
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import {
   Sidebar as SemanticSidebar,
   Segment,
   Divider,
 } from 'semantic-ui-react'
+import LoginModal from './containers/LoginModal'
 import Sidebar from './containers/Sidebar'
 import Breadcrumb from './containers/Breadcrumb'
 import OperationEditor from './containers/OperationEditor'
 import OperationResult from './containers/OperationResult'
-import store from './modules'
 import './App.css'
-
-class Root extends Component {
-  render () {
-    return (
-      <Provider store={store}>
-        <Router basename='/explorer'>
-          <App />
-        </Router>
-      </Provider>
-    )
-  }
-}
 
 class Home extends Component {
   render () {
@@ -106,6 +91,7 @@ class App extends Component {
   render() {
     return (
       <SemanticSidebar.Pushable as={Segment} className="no-border">
+        <LoginModal open={this.props.mustLogin} />
         <Sidebar />
         <SemanticSidebar.Pusher style={{ maxWidth: window.outerWidth - 260 - 20 }}>
           <Segment basic className="no-border">
@@ -124,4 +110,8 @@ class App extends Component {
   }
 }
 
-export default Root
+const mapStateToProps = (state) => ({
+  mustLogin: !state.user.anonymous && !state.user.session
+})
+
+export default withRouter(connect(mapStateToProps)(App))

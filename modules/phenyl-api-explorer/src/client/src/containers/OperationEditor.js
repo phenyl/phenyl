@@ -5,6 +5,7 @@ import { operations } from '../UIMeta'
 import { execute } from '../modules/operation'
 
 const mapStateToProps = (state) => ({
+  sessionId: state.user.session ? state.user.session.id : null,
   operations: operations.map(op => op.name),
   defaultPayloads: operations.reduce((acc, op) => ({
     ...acc,
@@ -13,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  execute ({ entityName, operation, payload }) {
+  execute ({ sessionId, entityName, operation, payload }) {
     dispatch(execute({ entityName, operation, payload }))
   },
 })

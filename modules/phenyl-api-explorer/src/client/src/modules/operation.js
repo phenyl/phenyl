@@ -56,7 +56,7 @@ export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
   error,
 })
 
-export const execute = ({ entityName, operation, payload }) => async (dispatch) => {
+export const execute = ({ sessionId, entityName, operation, payload }) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
   dispatch(startExecute())
 
@@ -65,67 +65,67 @@ export const execute = ({ entityName, operation, payload }) => async (dispatch) 
   try {
     switch (operation) {
       case 'find':
-        response = await client.find({ entityName, ...payload })
+        response = await client.find({ entityName, ...payload }, sessionId)
         break
 
       case 'findOne':
-        response = await client.findOne({ entityName, ...payload })
+        response = await client.findOne({ entityName, ...payload }, sessionId)
         break
 
       case 'get':
-        response = await client.get({ entityName, ...payload })
+        response = await client.get({ entityName, ...payload }, sessionId)
         break
 
       case 'getByIds':
-        response = await client.getByIds({ entityName, ...payload })
+        response = await client.getByIds({ entityName, ...payload }, sessionId)
         break
 
       case 'pull':
-        response = await client.pull({ entityName, ...payload })
+        response = await client.pull({ entityName, ...payload }, sessionId)
         break
 
       case 'insertOne':
-        response = await client.insertOne({ entityName, ...payload })
+        response = await client.insertOne({ entityName, ...payload }, sessionId)
         break
 
       case 'insertAndGet':
-        response = await client.insertAndGet({ entityName, ...payload })
+        response = await client.insertAndGet({ entityName, ...payload }, sessionId)
         break
 
       case 'insertAndGetMulti':
-        response = await client.insertAndGetMulti({ entityName, ...payload })
+        response = await client.insertAndGetMulti({ entityName, ...payload }, sessionId)
         break
 
       case 'updateById':
-        response = await client.updateById({ entityName, ...payload })
+        response = await client.updateById({ entityName, ...payload }, sessionId)
         break
 
       case 'updateAndGet':
-        response = await client.updateAndGet({ entityName, ...payload })
+        response = await client.updateAndGet({ entityName, ...payload }, sessionId)
         break
 
       case 'updateMulti':
-        response = await client.updateMulti({ entityName, ...payload })
+        response = await client.updateMulti({ entityName, ...payload }, sessionId)
         break
 
       case 'updateAndFetch':
-        response = await client.updateAndFetch({ entityName, ...payload })
+        response = await client.updateAndFetch({ entityName, ...payload }, sessionId)
         break
 
       case 'push':
-        response = await client.push({ entityName, ...payload })
+        response = await client.push({ entityName, ...payload }, sessionId)
         break
 
       case 'delete':
-        response = await client.delete({ entityName, ...payload })
+        response = await client.delete({ entityName, ...payload }, sessionId)
         break
 
       case 'login':
-        response = await client.login({ entityName, ...payload })
+        response = await client.login({ entityName, ...payload }, sessionId)
         break
 
       case 'logout':
-        response = await client.logout({ entityName, ...payload })
+        response = await client.logout({ entityName, ...payload }, sessionId)
         break
 
       default:

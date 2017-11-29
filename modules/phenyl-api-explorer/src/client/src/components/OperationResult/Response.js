@@ -10,8 +10,6 @@ type Props = {
 }
 
 const Response = ({ loading, expanded, response, error }: Props) => {
-  console.log({ loading, expanded, response, error })
-
   if (loading) {
     return (
       <Segment loading className='result' />
