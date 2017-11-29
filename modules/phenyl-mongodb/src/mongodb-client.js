@@ -3,7 +3,10 @@ import {
   createServerError,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
-import { visitFindOperation } from 'oad-utils/jsnext'
+import {
+  convertToDotNotationString,
+  visitFindOperation,
+} from 'oad-utils/jsnext'
 
 import type {
   Entity,
@@ -29,7 +32,7 @@ function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFind
 
 function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
-    const dstKey = srcKey.replace(/\[(\d+)]/g, (m, p) => `.${p}`)
+    const dstKey = convertToDotNotationString(srcKey)
     operation[dstKey] = simpleFindOperation[srcKey]
     return operation
   }, {})
