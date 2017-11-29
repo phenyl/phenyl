@@ -3,7 +3,10 @@ import {
   createServerError,
 } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
-import { visitFindOperation } from 'oad-utils/jsnext'
+import {
+  convertToDotNotationString,
+  visitFindOperation,
+} from 'oad-utils/jsnext'
 
 import type {
   Entity,
@@ -17,16 +20,33 @@ import type {
   MultiUpdateCommand,
   DeleteCommand,
   FindOperation,
+  SimpleFindOperation,
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
 
-function setIdTo_idInWhere(where: FindOperation): FindOperation {
-  return visitFindOperation(where, {
-    simpleFindOperation: (simpleFindOperation) => {
-      return assign(simpleFindOperation, { $rename: { id: '_id' } })
-    }
-  })
+// $FlowIssue(this-is-SimpleFindOperation)
+function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  return assign(simpleFindOperation, { $rename: { id: '_id' } })
+}
+
+function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
+    const dstKey = convertToDotNotationString(srcKey)
+    operation[dstKey] = simpleFindOperation[srcKey]
+    return operation
+  }, {})
+}
+
+function composedWhereFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  return [
+    setIdTo_idInWhere,
+    convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
+  ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
+}
+
+export function filterWhere(where: FindOperation): FindOperation {
+  return visitFindOperation(where, { simpleFindOperation: composedWhereFilters })
 }
 
 function setIdTo_idInEntity(entity: Entity): Entity {
@@ -51,14 +71,14 @@ export class PhenylMongoDbClient implements DbClient {
     if (skip) options.skip = skip
     if (limit) options.limit = limit
 
-    const result = await coll.find(setIdTo_idInWhere(where), options)
+    const result = await coll.find(filterWhere(where), options)
     return result.map(set_idToIdInEntity)
   }
 
   async findOne(query: WhereQuery): Promise<Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find(setIdTo_idInWhere(where), { limit: 1 })
+    const result = await coll.find(filterWhere(where), { limit: 1 })
     if (result.length === 0) {
       throw createServerError('findOne()', 'NotFound')
     }
@@ -140,7 +160,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    await coll.updateMany(setIdTo_idInWhere(where), operation)
+    await coll.updateMany(filterWhere(where), operation)
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }
