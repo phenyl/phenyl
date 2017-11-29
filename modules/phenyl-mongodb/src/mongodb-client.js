@@ -38,17 +38,15 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
   }, {})
 }
 
-const WHERE_FILTERS : Array<(SimpleFindOperation) => SimpleFindOperation> = [
-  setIdTo_idInWhere,
-  convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
-]
+function composedWhereFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  return [
+    setIdTo_idInWhere,
+    convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
+  ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
+}
 
 export function filterWhere(where: FindOperation): FindOperation {
-  return visitFindOperation(where, {
-    simpleFindOperation: (simpleFindOperation: SimpleFindOperation) => {
-      return WHERE_FILTERS.reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
-    }
-  })
+  return visitFindOperation(where, { simpleFindOperation: composedWhereFilters })
 }
 
 function setIdTo_idInEntity(entity: Entity): Entity {
