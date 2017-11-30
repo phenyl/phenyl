@@ -4,6 +4,7 @@
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-client",
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",

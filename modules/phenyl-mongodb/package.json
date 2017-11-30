@@ -15,7 +15,7 @@
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-mongodb",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb",
   "license": "Apache License 2.0",
   "dependencies": {
     "es6-promisify": "^5.0.0",
