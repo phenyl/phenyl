@@ -15,7 +15,7 @@
   "author": [
     "Shin Suzuki <shinout310@gmail.com>",
     "Leko <leko.noor@gmail.com>"
-  ]
+  ],
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-server",
   "license": "Apache License 2.0"
 }
