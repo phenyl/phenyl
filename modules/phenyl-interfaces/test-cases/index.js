@@ -236,6 +236,30 @@ export const assertEntityClient = (
 
         assert(result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
       })
+
+      it ('rename an entity with updateById command', async () => {
+        const result = await entityClient.updateById({
+          entityName: 'user',
+          id: user1.id,
+          operation: {
+            $rename: {
+              hobbies: 'skills',
+              'favorites.music.singer': 'writer',
+            }
+          },
+        })
+
+        assert(result.ok === 1)
+        assert(result.n === 1)
+
+        const result2 = await entityClient.get({
+          entityName: 'user',
+          id: user1.id,
+        })
+
+        assert(result2.entity.skills.length === 1)
+        assert(result2.entity.favorites.music.writer === 'Tatsuro Yamashita')
+      })
     })
 
     describe('updateMulti', () => {
@@ -256,6 +280,32 @@ export const assertEntityClient = (
 
         result2.entities.forEach(entity => {
           assert(entity.favorites.music.singer === 'Tatsuro Yamashita')
+        })
+      })
+
+      it ('rename entities with updateMulti command', async () => {
+        const result = await entityClient.updateMulti({
+          entityName: 'user',
+          where: { 'name.last': 'Tanaka' },
+          operation: {
+            $rename: {
+              hobbies: 'skills',
+              'favorites.music.singer': 'writer',
+            }
+          },
+        })
+
+        assert(result.ok === 1)
+        assert(result.n === 7)
+
+        const result2 = await entityClient.find({
+          entityName: 'user',
+          where: { 'name.last': 'Tanaka' },
+        })
+
+        result2.entities.forEach(entity => {
+          assert(entity.skills.length > 0)
+          assert(entity.favorites.music.writer === 'Tatsuro Yamashita')
         })
       })
 
