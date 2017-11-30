@@ -4,6 +4,6 @@
   "description": "Define Flow interfaces of MongoDB-like Operations used in Phenyl modules.",
   "main": "index.js",
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/mongolike-operations",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/mongolike-operations",
   "license": "Apache License 2.0"
 }
