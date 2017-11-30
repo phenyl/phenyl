@@ -38,15 +38,15 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
   }, {})
 }
 
-function composedWhereFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return [
     setIdTo_idInWhere,
     convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
 }
 
-export function filterWhere(where: FindOperation): FindOperation {
-  return visitFindOperation(where, { simpleFindOperation: composedWhereFilters })
+export function filterFindOperation(operation: FindOperation): FindOperation {
+  return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
 }
 
 function setIdTo_idInEntity(entity: Entity): Entity {
@@ -71,14 +71,14 @@ export class PhenylMongoDbClient implements DbClient {
     if (skip) options.skip = skip
     if (limit) options.limit = limit
 
-    const result = await coll.find(filterWhere(where), options)
+    const result = await coll.find(filterFindOperation(where), options)
     return result.map(set_idToIdInEntity)
   }
 
   async findOne(query: WhereQuery): Promise<Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find(filterWhere(where), { limit: 1 })
+    const result = await coll.find(filterFindOperation(where), { limit: 1 })
     if (result.length === 0) {
       throw createServerError('findOne()', 'NotFound')
     }
@@ -160,7 +160,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    await coll.updateMany(filterWhere(where), operation)
+    await coll.updateMany(filterFindOperation(where), operation)
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }

@@ -3,9 +3,9 @@
 import { it, describe } from 'kocha'
 import assert from 'power-assert'
 import type { AndFindOperation } from 'phenyl-interfaces'
-import { filterWhere } from '../src/mongodb-client.js'
+import { filterFindOperation } from '../src/mongodb-client.js'
 
-describe('filterWhere', () => {
+describe('filterFindOperation', () => {
   it ('renames id to _id', () => {
     const input: AndFindOperation = {
       $and: [
@@ -19,7 +19,7 @@ describe('filterWhere', () => {
         { type: 'bar' },
       ]
     }
-    const actual = filterWhere(input)
+    const actual = filterFindOperation(input)
     assert.deepEqual(actual, expected)
   })
 
@@ -45,7 +45,7 @@ describe('filterWhere', () => {
         { type: 'bar' },
       ]
     }
-    const actual = filterWhere(input)
+    const actual = filterFindOperation(input)
     assert.deepEqual(actual, expected)
   })
 })
