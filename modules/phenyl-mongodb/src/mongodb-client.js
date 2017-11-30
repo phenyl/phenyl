@@ -20,6 +20,7 @@ import type {
   MultiUpdateCommand,
   DeleteCommand,
   FindOperation,
+  UpdateOperation,
   SimpleFindOperation,
 } from 'phenyl-interfaces'
 
@@ -47,6 +48,22 @@ function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation)
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
+}
+
+function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
+  const renameOperator = operation.$rename
+  if (!renameOperator) return operation
+
+  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator, key) => {
+    operator[key] = key.split('.').slice(0, -1).concat(renameOperator[key]).join('.')
+    return operator
+  }, {})
+
+  return assign(operation, { $set: { $rename: renameOperatorWithParent }})
+}
+
+export function filterUpdateOperation(operation: UpdateOperation): UpdateOperation {
+  return convertNewNameWithParent(operation)
 }
 
 function setIdTo_idInEntity(entity: Entity): Entity {
@@ -145,7 +162,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateOne({ _id: id }, operation)
+    const result = await coll.updateOne({ _id: id }, filterUpdateOperation(operation))
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createServerError(
@@ -160,7 +177,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    await coll.updateMany(filterFindOperation(where), operation)
+    await coll.updateMany(filterFindOperation(where), filterUpdateOperation(operation))
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }

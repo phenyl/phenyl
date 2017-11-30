@@ -2,8 +2,11 @@
 
 import { it, describe } from 'kocha'
 import assert from 'power-assert'
-import type { AndFindOperation } from 'phenyl-interfaces'
-import { filterFindOperation } from '../src/mongodb-client.js'
+import type { AndFindOperation, UpdateOperation } from 'phenyl-interfaces'
+import {
+  filterFindOperation,
+  filterUpdateOperation,
+} from '../src/mongodb-client.js'
 
 describe('filterFindOperation', () => {
   it ('renames id to _id', () => {
@@ -46,6 +49,27 @@ describe('filterFindOperation', () => {
       ]
     }
     const actual = filterFindOperation(input)
+    assert.deepEqual(actual, expected)
+  })
+})
+
+describe('filterUpdateOperation', () => {
+  it ('converts new name to name with parent', () => {
+    const input: UpdateOperation = {
+      $rename: {
+        foo: 'bar',
+        'baz.qux': 'foobar',
+        'baz.foo.qux': 'foobar',
+      }
+    }
+    const expected = {
+      $rename: {
+        foo: 'bar',
+        'baz.qux': 'baz.foobar',
+        'baz.foo.qux': 'baz.foo.foobar',
+      }
+    }
+    const actual = filterUpdateOperation(input)
     assert.deepEqual(actual, expected)
   })
 })
