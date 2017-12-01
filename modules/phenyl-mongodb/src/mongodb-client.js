@@ -20,6 +20,7 @@ import type {
   MultiUpdateCommand,
   DeleteCommand,
   FindOperation,
+  UpdateOperation,
   SimpleFindOperation,
 } from 'phenyl-interfaces'
 
@@ -38,15 +39,31 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
   }, {})
 }
 
-function composedWhereFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return [
     setIdTo_idInWhere,
     convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
 }
 
-export function filterWhere(where: FindOperation): FindOperation {
-  return visitFindOperation(where, { simpleFindOperation: composedWhereFilters })
+export function filterFindOperation(operation: FindOperation): FindOperation {
+  return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
+}
+
+function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
+  const renameOperator = operation.$rename
+  if (!renameOperator) return operation
+
+  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator, key) => {
+    operator[key] = key.split('.').slice(0, -1).concat(renameOperator[key]).join('.')
+    return operator
+  }, {})
+
+  return assign(operation, { $set: { $rename: renameOperatorWithParent }})
+}
+
+export function filterUpdateOperation(operation: UpdateOperation): UpdateOperation {
+  return convertNewNameWithParent(operation)
 }
 
 function setIdTo_idInEntity(entity: Entity): Entity {
@@ -71,14 +88,14 @@ export class PhenylMongoDbClient implements DbClient {
     if (skip) options.skip = skip
     if (limit) options.limit = limit
 
-    const result = await coll.find(filterWhere(where), options)
+    const result = await coll.find(filterFindOperation(where), options)
     return result.map(set_idToIdInEntity)
   }
 
   async findOne(query: WhereQuery): Promise<Entity> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find(filterWhere(where), { limit: 1 })
+    const result = await coll.find(filterFindOperation(where), { limit: 1 })
     if (result.length === 0) {
       throw createServerError('findOne()', 'NotFound')
     }
@@ -145,7 +162,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateOne({ _id: id }, operation)
+    const result = await coll.updateOne({ _id: id }, filterUpdateOperation(operation))
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createServerError(
@@ -160,7 +177,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    await coll.updateMany(filterWhere(where), operation)
+    await coll.updateMany(filterFindOperation(where), filterUpdateOperation(operation))
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }
