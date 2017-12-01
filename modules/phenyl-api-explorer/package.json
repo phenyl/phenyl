@@ -6,7 +6,7 @@
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "build": "cd src/client && rm -rf node_modules && npm i && npm run build",
-    "start": "babel-node examples/index.js",
+    "start": "../../node_modules/.bin/babel-node --help examples/index.js",
     "test": "kocha --require babel-register test/*.js --color always"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
@@ -14,9 +14,6 @@
   "license": "Apache License 2.0",
   "devDependencies": {
     "kocha": "^1.8.0",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
     "phenyl-http-server": "~0.1.0",
     "phenyl-lambda-adapter": "~0.1.0",
     "phenyl-rest-api": "~0.1.0",
