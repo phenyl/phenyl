@@ -101,6 +101,7 @@ export const assertEntityClient = (
         })
 
         assert(result.ok === 1)
+        assert(result.entities.length > 0)
         result.entities.forEach(entity => {
           assert(entity.name.first === 'Shin')
         })
@@ -278,6 +279,7 @@ export const assertEntityClient = (
           where: { 'name.last': 'Tanaka' },
         })
 
+        assert(result2.entities.length > 0)
         result2.entities.forEach(entity => {
           assert(entity.favorites.music.singer === 'Tatsuro Yamashita')
         })
@@ -303,6 +305,7 @@ export const assertEntityClient = (
           where: { 'name.last': 'Tanaka' },
         })
 
+        assert(result2.entities.length > 0)
         result2.entities.forEach(entity => {
           assert(entity.skills.length > 0)
           assert(entity.favorites.music.writer === 'Tatsuro Yamashita')
@@ -356,6 +359,7 @@ export const assertEntityClient = (
 
         assert(result.ok === 1)
         assert(result.n === 7)
+        assert(result.entities.length > 0)
         result.entities.forEach(entity => {
           assert(entity.favorites.book.author === 'Abe Kobo')
         })
