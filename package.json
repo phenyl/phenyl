@@ -36,6 +36,7 @@
     "chalk": "^2.3.0",
     "eslint": "^4.10.0",
     "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-react": "^7.5.1",
     "flow-bin": "^0.58.0",
     "kocha": "^1.8.1",
     "power-assert": "^1.4.4",
