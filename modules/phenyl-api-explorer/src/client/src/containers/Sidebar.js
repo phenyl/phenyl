@@ -8,6 +8,8 @@ import { logout } from '../modules/user'
 import pkg from '../../package.json'
 
 type Props = {
+  version: string,
+  userName: string,
   logout: () => void,
 }
 

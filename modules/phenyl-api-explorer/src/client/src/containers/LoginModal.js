@@ -3,9 +3,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Message, Form, Button, Header, Icon, Modal } from 'semantic-ui-react'
 import { login, loginAsAnonymous } from '../modules/user'
+import type { Credential } from 'phenyl-interfaces'
 
 type Props = {
-
+  entityNames: Array<string>,
+  error: ?Error,
+  open: boolean,
+  login: (string, Credential) => void,
+  loginAsAnonymous: () => void
 }
 
 type State = {

@@ -15,7 +15,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   execute ({ sessionId, entityName, operation, payload }) {
-    dispatch(execute({ entityName, operation, payload }))
+    dispatch(execute({ sessionId, entityName, operation, payload }))
   },
 })
 

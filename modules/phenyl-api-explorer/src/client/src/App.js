@@ -87,7 +87,11 @@ class NotFound extends Component {
   }
 }
 
-class App extends Component {
+type Props = {
+  mustLogin: boolean
+}
+
+class App extends Component<Props> {
   render() {
     return (
       <SemanticSidebar.Pushable as={Segment} className="no-border">

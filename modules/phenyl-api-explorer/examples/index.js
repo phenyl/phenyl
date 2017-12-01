@@ -1,17 +1,11 @@
 // @flow
-import fs from 'fs'
-import path from 'path'
 import http from 'http'
-import type {
-  EncodedHttpRequest,
-  EncodedHttpResponse,
-  RestApiClient,
-} from 'phenyl-interfaces'
 import PhenylRestApi from 'phenyl-rest-api'
 import { createEntityClient } from 'phenyl-memory-db'
 import { StandardUserDefinition, StandardEntityDefinition } from 'phenyl-standards'
 import PhenylHttpServer from 'phenyl-http-server'
 import PhenylApiExplorer from '../src/PhenylApiExplorer'
+import type { Session, RequestData } from 'phenyl-interfaces'
 
 const memoryClient = createEntityClient()
 

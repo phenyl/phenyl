@@ -7,24 +7,36 @@ type Props = {
   match: any,
 }
 
-export const Breadcrumb = ({ match, ...all }) => (
+export const Breadcrumb = ({ match }: Props) => (
   <SemanticBreadcrumb>
     {match.url.split('/').reduce((acc, path, i) => {
       if (i === 0) {
         return acc.concat([
-          <SemanticBreadcrumb.Section link>Home</SemanticBreadcrumb.Section>,
+          <SemanticBreadcrumb.Section
+            key={`${path}-section`}
+            link
+          >
+            Home
+          </SemanticBreadcrumb.Section>,
         ])
       }
 
       return acc.concat([
-        <SemanticBreadcrumb.Divider icon='right angle' />,
-        <SemanticBreadcrumb.Section>{path}</SemanticBreadcrumb.Section>,
+        <SemanticBreadcrumb.Divider
+          key={`${path}-divider`}
+          icon='right angle'
+        />,
+        <SemanticBreadcrumb.Section
+          key={`${path}-section`}
+        >
+          {path}
+        </SemanticBreadcrumb.Section>,
       ])
     }, [])}
   </SemanticBreadcrumb>
 )
 
-const mapStateToProps = (state): Props => ({
+const mapStateToProps = (): Props => ({
 })
 
 export default withRouter(connect(mapStateToProps)(Breadcrumb))

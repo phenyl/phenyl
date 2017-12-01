@@ -1,11 +1,10 @@
+/* eslint-env node */
 // @flow
 import fs from 'fs'
 import path from 'path'
 import ejs from 'ejs'
 import type {
   FunctionalGroup,
-  EncodedHttpRequest,
-  RestApiClient,
   EncodedHttpResponse,
 } from 'phenyl-interfaces'
 
@@ -50,10 +49,7 @@ export default class PhenylApiExplorer {
     return ejs.render(template, data)
   }
 
-  async handler (
-    encodedHttpRequest: EncodedHttpRequest,
-    restApiClient: RestApiClient
-  ): Promise<EncodedHttpResponse> {
+  async handler (): Promise<EncodedHttpResponse> {
     return {
       statusCode: 200,
       headers: {

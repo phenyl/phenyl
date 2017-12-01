@@ -8,11 +8,17 @@ type Props = {
 }
 
 const FunctionalGroup = ({ groupName, functionalNames }: Props) => (
-  <Menu.Item name={groupName}>
+  <Menu.Item key={groupName} name={groupName}>
     <div className="header">{groupName}</div>
     <div className="menu">
       {functionalNames.map(functionalName => (
-        <Menu.Item as={Link} to={`/${groupName}/${functionalName}`}>{functionalName}</Menu.Item>
+        <Menu.Item
+          key={functionalName}
+          as={Link}
+          to={`/${groupName}/${functionalName}`}
+        >
+          {functionalName}
+        </Menu.Item>
       ))}
     </div>
   </Menu.Item>

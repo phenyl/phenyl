@@ -3,6 +3,7 @@ import { Form } from 'semantic-ui-react'
 
 type Props = {
   match: any,
+  sessionId: string,
   operations: Array<string>,
   defaultPayloads: { [string]: Object },
   execute: ({ entitiName: string, operation: string, payload: any }) => any,
