@@ -5,8 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "postinstall": "cd src/client && yarn",
-    "prepublish": "cd src/client && yarn && yarn build",
+    "build": "cd src/client && rm -rf node_modules && npm i && npm run build",
     "start": "babel-node examples/index.js",
     "test": "kocha --require babel-register test/*.js --color always"
   },
@@ -23,9 +22,10 @@
     "phenyl-rest-api": "~0.1.0",
     "phenyl-http-client": "~0.1.0",
     "phenyl-memory-db": "~0.1.0",
-    "phenyl-standards": "~0.1.0s"
+    "phenyl-standards": "~0.1.0",
+    "phenyl-interfaces": "~0.1.0"
   },
   "dependencies": {
-    "ect": "^0.5.9"
+    "ejs": "^2.5.7"
   }
 }

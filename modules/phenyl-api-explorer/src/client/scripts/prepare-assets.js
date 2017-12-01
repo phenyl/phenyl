@@ -44,7 +44,7 @@ $('script[src]').each((i, el) => {
 
 // Inject entities
 const entitiesDefinition = cheerio('<script></script>').text(`
-  window.EntitiesDefinition = <%- JSON.stringify(@functionalGroup) %>
+  window.EntitiesDefinition = <%- JSON.stringify(functionalGroup) %>
 `)
 $('script').eq(0).before(entitiesDefinition)
 

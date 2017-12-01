@@ -1,7 +1,7 @@
 // @flow
 import fs from 'fs'
 import path from 'path'
-import ECT from 'ect'
+import ejs from 'ejs'
 import type {
   FunctionalGroup,
   EncodedHttpRequest,
@@ -14,14 +14,16 @@ export type ExplorerParams = {|
 |}
 
 export default class PhenylApiExplorer {
-  // functionalGroup: FunctionalGroup
-  // path: string
-  // handler: function
+  functionalGroup: FunctionalGroup;
+  path: string;
+  handler: any;
+  html: string;
 
   constructor (functionalGroup: FunctionalGroup, params: ExplorerParams) {
     this.functionalGroup = functionalGroup
     this.path = params.path
     this.handler = this.handler.bind(this)
+    this.html = this.getClientHTML()
   }
 
   shallowMap (obj: Object, fn: (any, string, Object) => any): Object {
@@ -32,24 +34,32 @@ export default class PhenylApiExplorer {
     return ret
   }
 
-  async handler (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient): Promise<EncodedHttpResponse> {
-    const renderer = ECT({ root : __dirname + '/client/build' })
+  getClientHTML (): string {
+    const templatePath = path.join(__dirname, 'client', 'build', 'index.html')
+    const template = fs.readFileSync(templatePath, 'utf8')
+    const data = {
+      functionalGroup: {
+        users: this.shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
+          return { accountPropName, passwordPropName }
+        }),
+        nonUsers: this.shallowMap(this.functionalGroup.nonUsers, () => true),
+        customQueries: this.shallowMap(this.functionalGroup.customQueries, () => true),
+        customCommands: this.shallowMap(this.functionalGroup.customCommands, () => true),
+      },
+    }
+    return ejs.render(template, data)
+  }
 
+  async handler (
+    encodedHttpRequest: EncodedHttpRequest,
+    restApiClient: RestApiClient
+  ): Promise<EncodedHttpResponse> {
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'text/html',
       },
-      body: renderer.render(`index.html`, {
-        functionalGroup: {
-          users: this.shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
-            return { accountPropName, passwordPropName }
-          }),
-          nonUsers: this.shallowMap(this.functionalGroup.nonUsers, () => true),
-          customQueries: this.shallowMap(this.functionalGroup.customQueries, () => true),
-          customCommands: this.shallowMap(this.functionalGroup.customCommands, () => true),
-        },
-      }),
+      body: this.html,
     }
   }
 }
