@@ -7,7 +7,7 @@
   "scripts": {
     "build": "cd src/client && rm -rf node_modules && npm i && npm run build",
     "start": "../../node_modules/.bin/babel-node --help examples/index.js",
-    "test": "kocha --require babel-register test/*.js --color always"
+    "test": "echo no test specified in phenyl-api-explorer"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-api-explorer",
