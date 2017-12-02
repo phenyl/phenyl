@@ -1,7 +1,7 @@
 // @flow
 import { actions } from './phenyl-redux-module.js'
 
-export function mapStateToProps(dispatch: Function) {
+export function mapDispatchToProps(dispatch: Function) {
   const ret = {}
   Object.keys(actions).forEach(methodName => {
     ret[methodName] = (...args) => {
