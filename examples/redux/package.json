@@ -1,0 +1,24 @@
+{
+  "name": "phenyl-example-redux",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "../../node_modules/.bin/babel-node src/index.js"
+  },
+  "devDependencies": {
+    "phenyl-interfaces": "*"
+  },
+  "dependencies": {
+    "phenyl-http-client": "*",
+    "phenyl-http-server": "*",
+    "phenyl-memory-db": "*",
+    "phenyl-redux": "*",
+    "phenyl-rest-api": "*",
+    "phenyl-standards": "*",
+    "redux": "^3.7.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

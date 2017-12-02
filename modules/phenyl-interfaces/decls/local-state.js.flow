@@ -1,0 +1,37 @@
+// @flow
+import type { UpdateOperation } from 'mongolike-operations'
+import type { Entity } from './entity.js.flow'
+import type { Id } from './id.js.flow'
+import type { Session } from './session.js.flow'
+import type { PhenylErrorType, ErrorLocation } from './error.js.flow'
+import type { ActionTag } from './action.js.flow'
+
+export type LocalEntityInfo = {
+  origin: Entity,
+  versionId: Id,
+  commits: Array<UpdateOperation>,
+  head: ?Entity,
+}
+
+export type LocalEntityInfoById = {
+  [entityId: Id] : LocalEntityInfo
+}
+
+export type LocalEntityState = {
+  [entityName: string]: LocalEntityInfoById
+}
+
+export type LocalState = {
+  entities: LocalEntityState,
+  network: {
+    requests: Array<ActionTag>,
+    isOnline: boolean,
+  },
+  error?: {
+    type: PhenylErrorType,
+    at: ErrorLocation,
+    message: string,
+    actionTag: ActionTag,
+  },
+  session?: ?Session,
+}

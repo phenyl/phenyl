@@ -100,9 +100,9 @@ export class Versioning {
     const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
     if (localUncommittedOperations != null) {
-      return { ok: 1, n: 1, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId, newOperation }
+      return { ok: 1, n: 1, hasEntity: 0, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId, newOperation }
     }
-    return { ok: 1, n: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId, newOperation }
+    return { ok: 1, n: 1, hasEntity: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId, newOperation }
   }
 
   /**

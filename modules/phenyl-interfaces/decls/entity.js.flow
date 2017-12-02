@@ -6,3 +6,15 @@ export type Entity = $Subtype<{ id: Id }>
 export type PreEntity<T: Entity> = T | $Subtype<$Diff<T, {| id: Id |}>>
 
 export type ProEntity = PreEntity<{ id: Id }>
+
+export type EntityInfo = {
+  entityName: string,
+  entity: Entity,
+  versionId: Id,
+}
+
+export type EntitiesInfo = {
+  entityName: string,
+  entities: Array<Entity>,
+  versionsById: { [entityId: Id]: Id },
+}

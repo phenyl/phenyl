@@ -6,12 +6,14 @@ import type { CustomQuery } from './query.js.flow'
 import type { CustomQueryResult } from './query-result.js.flow'
 import type { LoginCommand, CustomCommand } from './command.js.flow'
 import type { CustomCommandResult } from './command-result.js.flow'
+import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
 
 export type AuthenticationResult = {|
   ok: 1,
   preSession: PreSession,
   user: ?Entity,
+  versionId: ?Id,
 |}
 
 export type AuthorizationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
