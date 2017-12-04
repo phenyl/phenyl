@@ -1,9 +1,6 @@
 // @flow
 
-import {
-  retargetToProp,
-  mergeOperations,
-} from 'power-assign/jsnext'
+import { retargetToProp, mergeOperations } from 'power-assign/jsnext'
 
 import type {
   DeleteCommand,
@@ -19,12 +16,10 @@ import type {
 
 import PhenylStateFinder from './phenyl-state-finder.js'
 
-
 /**
  *
  */
 export default class PhenylStateUpdater implements EntityStateUpdater {
-
   state: EntityState
 
   constructor(state: EntityState) {
@@ -79,7 +74,10 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
+  static updateById(
+    state: EntityState,
+    command: IdUpdateCommand
+  ): UpdateOperation {
     const { id, entityName, operation } = command
     if (!PhenylStateFinder.has(state, { entityName, id })) {
       throw new Error('Could not find any entity to update.')
@@ -91,7 +89,10 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static updateMulti(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
+  static updateMulti(
+    state: EntityState,
+    command: MultiUpdateCommand
+  ): UpdateOperation {
     const { where, entityName, operation } = command
 
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
@@ -108,10 +109,14 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
+  static register(
+    state: EntityState,
+    entityName: string,
+    ...entities: Array<Entity>
+  ): UpdateOperation {
     const operationList = entities.map(entity => {
       const docPath = ['pool', entityName, entity.id].join('.')
-      return  { $set: { [docPath]: entity } }
+      return { $set: { [docPath]: entity } }
     })
     return mergeOperations(...operationList)
   }
@@ -129,16 +134,22 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperation {
+  static deleteById(
+    state: EntityState,
+    command: IdDeleteCommand
+  ): UpdateOperation {
     const { id, entityName } = command
     const docPath = ['pool', entityName, id].join('.')
-    return { $unset: {[docPath]: '' } }
+    return { $unset: { [docPath]: '' } }
   }
 
   /**
    *
    */
-  static deleteByFindOperation(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
+  static deleteByFindOperation(
+    state: EntityState,
+    command: MultiDeleteCommand
+  ): UpdateOperation {
     const { where, entityName } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const $unset = {}

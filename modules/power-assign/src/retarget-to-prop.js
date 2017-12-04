@@ -1,7 +1,5 @@
 // @flow
-import {
-  normalizeUpdateOperation,
-} from 'oad-utils/jsnext'
+import { normalizeUpdateOperation } from 'oad-utils/jsnext'
 
 import type {
   RegularUpdateOperation,
@@ -14,8 +12,10 @@ import type {
 /**
  * Retarget the given UpdateOperation to the given docPath.
  */
-export function retargetToProp(docPath: DocumentPath, _operation: SetOperator | UpdateOperation): RegularUpdateOperation {
-
+export function retargetToProp(
+  docPath: DocumentPath,
+  _operation: SetOperator | UpdateOperation
+): RegularUpdateOperation {
   const operation = normalizeUpdateOperation(_operation)
   const newOps: UpdateOperator = {}
   const operatorNames = Object.keys(operation)
@@ -33,7 +33,10 @@ export function retargetToProp(docPath: DocumentPath, _operation: SetOperator | 
   return newOps
 }
 
-export function retargetToPropWithRestoration(docPath: DocumentPath, _operation: SetOperator | UpdateOperation): RegularUpdateOperation {
+export function retargetToPropWithRestoration(
+  docPath: DocumentPath,
+  _operation: SetOperator | UpdateOperation
+): RegularUpdateOperation {
   const operation = retargetToProp(docPath, _operation)
 
   const $restore = operation.$restore || {}

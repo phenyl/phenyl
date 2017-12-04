@@ -1,20 +1,17 @@
 // @flow
-import {
-  assign
-} from 'power-assign/jsnext'
+import { assign } from 'power-assign/jsnext'
 
-import type {
-  Entity,
-  ResponseData,
-} from 'phenyl-interfaces'
-
+import type { Entity, ResponseData } from 'phenyl-interfaces'
 
 export type EntityVisitor = (entity: Entity) => Entity
 
 /**
  *
  */
-export function visitEntitiesInResponseData(resData: ResponseData, visitor: EntityVisitor): ResponseData {
+export function visitEntitiesInResponseData(
+  resData: ResponseData,
+  visitor: EntityVisitor
+): ResponseData {
   switch (resData.type) {
     case 'get':
     case 'findOne':

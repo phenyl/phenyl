@@ -1,11 +1,7 @@
 // @flow
 
-import {
-  PhenylStateFinder,
-  PhenylStateUpdater,
-} from 'phenyl-state/jsnext'
-import {
-} from 'oad-utils/jsnext'
+import { PhenylStateFinder, PhenylStateUpdater } from 'phenyl-state/jsnext'
+import {} from 'oad-utils/jsnext'
 import {
   createServerError,
   randomStringWithTimeStamp,
@@ -34,7 +30,7 @@ export class PhenylMemoryDbClient implements DbClient {
   entityState: EntityState
 
   constructor(params: MemoryClientParams = {}) {
-    this.entityState = params.entityState ||  { pool: {} }
+    this.entityState = params.entityState || { pool: {} }
   }
 
   /**
@@ -64,11 +60,13 @@ export class PhenylMemoryDbClient implements DbClient {
   async get(query: IdQuery): Promise<Entity> {
     try {
       return PhenylStateFinder.get(this.entityState, query)
-    }
-    catch (e) {
-      if (e.constructor.name === 'Error') { // Error from entityState
+    } catch (e) {
+      if (e.constructor.name === 'Error') {
+        // Error from entityState
         throw createServerError(
-          `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${query.id}"`,
+          `"PhenylMemoryClient#get()" failed. Could not find any entity with the given id: "${
+            query.id
+          }"`,
           'NotFound'
         )
       }
@@ -82,12 +80,14 @@ export class PhenylMemoryDbClient implements DbClient {
   async getByIds(query: IdsQuery): Promise<Array<Entity>> {
     try {
       return PhenylStateFinder.getByIds(this.entityState, query)
-    }
-    catch (e) {
-      if (e.constructor.name === 'Error') { // Error from entityState
+    } catch (e) {
+      if (e.constructor.name === 'Error') {
+        // Error from entityState
         throw createServerError(
-          `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(', ')}"`, // TODO: prevent from showing existing ids
-          'NotFound',
+          `"PhenylMemoryClient#getByIds()" failed. Some ids are not found. ids: "${query.ids.join(
+            ', '
+          )}"`, // TODO: prevent from showing existing ids
+          'NotFound'
         )
       }
       throw e
@@ -118,7 +118,11 @@ export class PhenylMemoryDbClient implements DbClient {
     const newValue = value.id
       ? value
       : assign(value, { id: randomStringWithTimeStamp() })
-    const operation = PhenylStateUpdater.register(this.entityState, entityName, newValue)
+    const operation = PhenylStateUpdater.register(
+      this.entityState,
+      entityName,
+      newValue
+    )
     this.entityState = assign(this.entityState, operation)
     return newValue
   }
@@ -128,10 +132,17 @@ export class PhenylMemoryDbClient implements DbClient {
    */
   async insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>> {
     const { entityName, values } = command
-    const newValues = values.map(value => value.id ? value : assign(value, { id: randomStringWithTimeStamp() }))
+    const newValues = values.map(
+      value =>
+        value.id ? value : assign(value, { id: randomStringWithTimeStamp() })
+    )
 
     for (const newValue of newValues) {
-      const operation = PhenylStateUpdater.register(this.entityState, entityName, newValue)
+      const operation = PhenylStateUpdater.register(
+        this.entityState,
+        entityName,
+        newValue
+      )
       this.entityState = assign(this.entityState, operation)
     }
     return newValues
@@ -176,11 +187,17 @@ export class PhenylMemoryDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where } = command
     // TODO Performance issue: find() runs twice for just getting N
-    const values = PhenylStateFinder.find(this.entityState, { entityName, where })
+    const values = PhenylStateFinder.find(this.entityState, {
+      entityName,
+      where,
+    })
     const ids = values.map(value => value.id)
     const operation = PhenylStateUpdater.updateMulti(this.entityState, command)
     this.entityState = assign(this.entityState, operation)
-    const updatedValues = PhenylStateFinder.getByIds(this.entityState, { ids, entityName })
+    const updatedValues = PhenylStateFinder.getByIds(this.entityState, {
+      ids,
+      entityName,
+    })
     return updatedValues
   }
 
@@ -190,7 +207,12 @@ export class PhenylMemoryDbClient implements DbClient {
   async delete(command: DeleteCommand): Promise<number> {
     const { entityName } = command
     // TODO Performance issue: find() runs twice for just getting N
-    const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1
+    const n = command.where
+      ? PhenylStateFinder.find(this.entityState, {
+          where: command.where,
+          entityName,
+        }).length
+      : 1
     const operation = PhenylStateUpdater.delete(this.entityState, command)
     this.entityState = assign(this.entityState, operation)
     return n

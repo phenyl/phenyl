@@ -15,9 +15,7 @@ import type {
   BitwiseQueryOperatorName,
   QueryOperatorName,
 } from './decls/query-condition.js.flow'
-import type {
-  Restorable,
-} from './decls/restorable.js.flow'
+import type { Restorable } from './decls/restorable.js.flow'
 import type { SortNotation } from './decls/sort-notation.js.flow'
 import type {
   AddToSetOperator,

@@ -4,9 +4,7 @@ import {
   mergeUpdateOperations,
 } from 'oad-utils/jsnext'
 
-import {
-  randomStringWithTimeStamp
-} from 'phenyl-utils/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
 
 import type {
   Entity,
@@ -26,7 +24,6 @@ import type {
  * Utility classes containing static methods to attach versioning system to EntityClients.
  */
 export class Versioning {
-
   /**
    * @public
    * Create QueryResult with version info from entities.
@@ -43,11 +40,13 @@ export class Versioning {
    * @public
    * Create SingleQueryResult with version info from a entity.
    */
-  static createSingleQueryResult(entity: EntityWithMetaInfo): SingleQueryResult {
+  static createSingleQueryResult(
+    entity: EntityWithMetaInfo
+  ): SingleQueryResult {
     return {
       ok: 1,
       entity: this.stripMeta(entity),
-      versionId: this.getVersionId(entity)
+      versionId: this.getVersionId(entity),
     }
   }
 
@@ -55,12 +54,24 @@ export class Versioning {
    * @public
    * Create PullQueryResult with diff operations.
    */
-  static createPullQueryResult(entity: EntityWithMetaInfo, versionId: Id): PullQueryResult {
+  static createPullQueryResult(
+    entity: EntityWithMetaInfo,
+    versionId: Id
+  ): PullQueryResult {
     const operations = this.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
-      return { ok: 1, entity: this.stripMeta(entity), versionId: this.getVersionId(entity) }
+      return {
+        ok: 1,
+        entity: this.stripMeta(entity),
+        versionId: this.getVersionId(entity),
+      }
     }
-    return { ok: 1, pulled: 1, operations, versionId: this.getVersionId(entity) }
+    return {
+      ok: 1,
+      pulled: 1,
+      operations,
+      versionId: this.getVersionId(entity),
+    }
   }
 
   /**
@@ -81,7 +92,9 @@ export class Versioning {
    * @public
    * Create MultiValuesCommandResult from entities.
    */
-  static createMultiValuesCommandResult(entities: Array<EntityWithMetaInfo>): MultiValuesCommandResult {
+  static createMultiValuesCommandResult(
+    entities: Array<EntityWithMetaInfo>
+  ): MultiValuesCommandResult {
     return {
       ok: 1,
       n: entities.length,
@@ -95,14 +108,38 @@ export class Versioning {
    * @public
    * Create PushCommandResult from entity, updated entity and local versionId.
    */
-  static createPushCommandResult(entity: EntityWithMetaInfo, updatedEntity: EntityWithMetaInfo, versionId: Id, newOperation: UpdateOperation): PushCommandResult {
-    const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
+  static createPushCommandResult(
+    entity: EntityWithMetaInfo,
+    updatedEntity: EntityWithMetaInfo,
+    versionId: Id,
+    newOperation: UpdateOperation
+  ): PushCommandResult {
+    const localUncommittedOperations = this.getOperationDiffsByVersion(
+      entity,
+      versionId
+    )
     const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
     if (localUncommittedOperations != null) {
-      return { ok: 1, n: 1, hasEntity: 0, operations: localUncommittedOperations, prevVersionId, versionId: latestVersionId, newOperation }
+      return {
+        ok: 1,
+        n: 1,
+        hasEntity: 0,
+        operations: localUncommittedOperations,
+        prevVersionId,
+        versionId: latestVersionId,
+        newOperation,
+      }
     }
-    return { ok: 1, n: 1, hasEntity: 1, entity: updatedEntity, prevVersionId, versionId: latestVersionId, newOperation }
+    return {
+      ok: 1,
+      n: 1,
+      hasEntity: 1,
+      entity: updatedEntity,
+      prevVersionId,
+      versionId: latestVersionId,
+      newOperation,
+    }
   }
 
   /**
@@ -110,9 +147,13 @@ export class Versioning {
    * Merge operations into one operation and attach metaInfo.
    * TODO This merge process (using mergeUpdateOperations) is incomplete.
    */
-  static mergeUpdateOperations(...operations: Array<UpdateOperation>): UpdateOperation {
+  static mergeUpdateOperations(
+    ...operations: Array<UpdateOperation>
+  ): UpdateOperation {
     const mergedOperation = mergeUpdateOperations(...operations)
-    const { operation } = this.attachMetaInfoToUpdateCommand({ operation: mergedOperation })
+    const { operation } = this.attachMetaInfoToUpdateCommand({
+      operation: mergedOperation,
+    })
     return operation
   }
 
@@ -123,7 +164,7 @@ export class Versioning {
   static attachMetaInfoToNewEntity(entity: Entity): EntityWithMetaInfo {
     const versionId = randomStringWithTimeStamp()
     const _PhenylMeta = {
-      versions: [ { id: versionId, op: '' }],
+      versions: [{ id: versionId, op: '' }],
     }
     return Object.assign({}, entity, { _PhenylMeta })
   }
@@ -132,11 +173,16 @@ export class Versioning {
    * @public
    * Attach meta info to the given update command.
    */
-  static attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(command: T): T {
+  static attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(
+    command: T
+  ): T {
     const normalizedOperation = normalizeUpdateOperation(command.operation)
-    const version = { id: randomStringWithTimeStamp(), op: JSON.stringify(command.operation) }
+    const version = {
+      id: randomStringWithTimeStamp(),
+      op: JSON.stringify(command.operation),
+    }
     const $push = Object.assign({}, normalizedOperation.$push, {
-      '_PhenylMeta.versions': { $each: [version], $slice: -100 }
+      '_PhenylMeta.versions': { $each: [version], $slice: -100 },
     })
     const newOperation = Object.assign({}, normalizedOperation, { $push })
     return Object.assign({}, command, { operation: newOperation })
@@ -146,7 +192,10 @@ export class Versioning {
    * @public
    * Get operation diffs by the given versionId.
    */
-  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
+  static getOperationDiffsByVersion(
+    entity: EntityWithMetaInfo,
+    versionId: Id
+  ): ?Array<UpdateOperation> {
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
@@ -164,8 +213,7 @@ export class Versioning {
       return metaInfo.versions
         .slice(idx + 1)
         .map(version => JSON.parse(version.op))
-    }
-    catch (e) {
+    } catch (e) {
       // Error while parsing metaInfo? It's OK
       return null
     }
@@ -191,8 +239,7 @@ export class Versioning {
     try {
       const metaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 1].id
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error(`Cannot get versionId from entity. Id: "${entity.id}"`)
     }
   }
@@ -205,18 +252,18 @@ export class Versioning {
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 2].id
-    }
-    catch (e) {
+    } catch (e) {
       return null
     }
   }
-
 
   /**
    * @private
    * Extract current version ids from entities with meta info.
    */
-  static getVersionIds(entities: Array<EntityWithMetaInfo>): { [entityId: Id]: Id } {
+  static getVersionIds(
+    entities: Array<EntityWithMetaInfo>
+  ): { [entityId: Id]: Id } {
     const versionsById = {}
     entities.forEach(entity => {
       const versionId = this.getVersionId(entity)
@@ -229,7 +276,9 @@ export class Versioning {
    * @private
    * Extract previous version ids from entities with meta info.
    */
-  static getPrevVersionIds(entities: Array<EntityWithMetaInfo>): { [entityId: Id]: Id } {
+  static getPrevVersionIds(
+    entities: Array<EntityWithMetaInfo>
+  ): { [entityId: Id]: Id } {
     const versionsById = {}
     entities.forEach(entity => {
       const versionId = this.getPrevVersionId(entity)
@@ -237,5 +286,4 @@ export class Versioning {
     })
     return versionsById
   }
-
 }

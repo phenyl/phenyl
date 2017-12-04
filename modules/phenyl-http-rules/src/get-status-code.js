@@ -1,8 +1,5 @@
 // @flow
-import type {
-  ServerError,
-  ResponseData,
-} from 'phenyl-interfaces'
+import type { ServerError, ResponseData } from 'phenyl-interfaces'
 
 export default function getStatusCode(resData: ResponseData): number {
   if (resData.error != null) {

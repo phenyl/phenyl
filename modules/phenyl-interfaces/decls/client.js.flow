@@ -1,7 +1,5 @@
 // @flow
-import type {
-  Id
-} from './id.js.flow'
+import type { Id } from './id.js.flow'
 import type {
   WhereQuery,
   IdQuery,
@@ -10,9 +8,7 @@ import type {
   PullQuery,
 } from './query.js.flow'
 import type { KvsClient } from './kvs-client.js.flow'
-import type {
-  Session,
-} from './session.js.flow'
+import type { Session } from './session.js.flow'
 import type {
   CustomQueryResult,
   SingleQueryResult,
@@ -46,38 +42,71 @@ import type {
 import type { RestApiHandler } from './rest-api-handler.js.flow'
 
 export interface EntityClient {
-  find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResult>,
-  findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResult>,
-  get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResult>,
-  getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResult>,
-  pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult>,
+  find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResult>;
+  findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResult>;
+  get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResult>;
+  getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResult>;
+  pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult>;
 
-  insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<SingleInsertCommandResult>,
-  insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiInsertCommandResult>,
-  insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResult>,
-  insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
+  insertOne(
+    command: SingleInsertCommand,
+    sessionId?: ?Id
+  ): Promise<SingleInsertCommandResult>;
+  insertMulti(
+    command: MultiInsertCommand,
+    sessionId?: ?Id
+  ): Promise<MultiInsertCommandResult>;
+  insertAndGet(
+    command: SingleInsertCommand,
+    sessionId?: ?Id
+  ): Promise<GetCommandResult>;
+  insertAndGetMulti(
+    command: MultiInsertCommand,
+    sessionId?: ?Id
+  ): Promise<MultiValuesCommandResult>;
 
-  updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<IdUpdateCommandResult>,
-  updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiUpdateCommandResult>,
-  updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResult>,
-  updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult>,
-  push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>,
+  updateById(
+    command: IdUpdateCommand,
+    sessionId?: ?Id
+  ): Promise<IdUpdateCommandResult>;
+  updateMulti(
+    command: MultiUpdateCommand,
+    sessionId?: ?Id
+  ): Promise<MultiUpdateCommandResult>;
+  updateAndGet(
+    command: IdUpdateCommand,
+    sessionId?: ?Id
+  ): Promise<GetCommandResult>;
+  updateAndFetch(
+    command: MultiUpdateCommand,
+    sessionId?: ?Id
+  ): Promise<MultiValuesCommandResult>;
+  push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult>;
 
-  delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult>,
+  delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult>;
 
-  createSessionClient(): SessionClient
+  createSessionClient(): SessionClient;
 }
 
 export interface CustomClient {
-  runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResult>,
-  runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResult>,
+  runCustomQuery(
+    query: CustomQuery,
+    sessionId?: ?Id
+  ): Promise<CustomQueryResult>;
+  runCustomCommand(
+    command: CustomCommand,
+    sessionId?: ?Id
+  ): Promise<CustomCommandResult>;
 }
 
 export interface AuthClient {
-  login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResult>,
-  logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResult>,
+  login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResult>;
+  logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResult>;
 }
 
-export type RestApiClient = EntityClient & CustomClient & AuthClient & RestApiHandler
+export type RestApiClient = EntityClient &
+  CustomClient &
+  AuthClient &
+  RestApiHandler
 
 export type SessionClient = KvsClient<Session>

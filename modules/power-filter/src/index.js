@@ -10,10 +10,7 @@ import type {
   ComparisonQueryOperatorName,
 } from 'mongolike-operations'
 
-import {
-  normalizeQueryCondition,
-  getNestedValue,
-} from 'oad-utils/jsnext'
+import { normalizeQueryCondition, getNestedValue } from 'oad-utils/jsnext'
 
 type Classified = {
   ok: Array<Object>,
@@ -34,40 +31,55 @@ export default class PowerFilter {
   static classify(values: Array<Object>, where: FindOperation): Classified {
     if (where.$and != null) {
       // TODO: confirm spec when $and is []
-      return where.$and.reduce((vals, conds) => {
-        const { ok, ng } = this.classify(vals.ok, conds)
-        return { ok, ng: vals.ng.concat(ng) }
-      }, { ok: values, ng: [] })
+      return where.$and.reduce(
+        (vals, conds) => {
+          const { ok, ng } = this.classify(vals.ok, conds)
+          return { ok, ng: vals.ng.concat(ng) }
+        },
+        { ok: values, ng: [] }
+      )
     }
 
     if (where.$nor != null) {
       // TODO: confirm spec when $nor is []
-      return where.$nor.reduce((vals, conds) => {
-        const { ok, ng } = this.classify(vals.ok, conds)
-        return { ok: ng, ng: vals.ng.concat(ok) }
-      }, { ok: values, ng: [] })
+      return where.$nor.reduce(
+        (vals, conds) => {
+          const { ok, ng } = this.classify(vals.ok, conds)
+          return { ok: ng, ng: vals.ng.concat(ok) }
+        },
+        { ok: values, ng: [] }
+      )
     }
 
     if (where.$or != null) {
       // TODO: confirm spec when $or is []
-      return where.$or.reduce((vals, conds) => {
-        const { ok, ng } = this.classify(vals.ng, conds)
-        return { ok: vals.ok.concat(ok), ng }
-      }, { ok: [], ng: values })
+      return where.$or.reduce(
+        (vals, conds) => {
+          const { ok, ng } = this.classify(vals.ng, conds)
+          return { ok: vals.ok.concat(ok), ng }
+        },
+        { ok: [], ng: values }
+      )
     }
 
     // SimpleFindOperation
     const documentPaths = Object.keys(where)
-    return values.reduce((classified, value) => {
-      const isOk = documentPaths.every(documentPath => {
-        // $FlowIssue(queryCondition-is-QueryCondition-or-EqCondition)
-        const queryCondition = where[documentPath]
-        const nestedValue = getNestedValue(value, documentPath)
-        return this.checkCondition(nestedValue, normalizeQueryCondition(queryCondition || {}))
-      })
-      classified[isOk ? 'ok': 'ng'].push(value)
-      return classified
-    }, { ok: [], ng: [] })
+    return values.reduce(
+      (classified, value) => {
+        const isOk = documentPaths.every(documentPath => {
+          // $FlowIssue(queryCondition-is-QueryCondition-or-EqCondition)
+          const queryCondition = where[documentPath]
+          const nestedValue = getNestedValue(value, documentPath)
+          return this.checkCondition(
+            nestedValue,
+            normalizeQueryCondition(queryCondition || {})
+          )
+        })
+        classified[isOk ? 'ok' : 'ng'].push(value)
+        return classified
+      },
+      { ok: [], ng: [] }
+    )
   }
 
   /**
@@ -99,7 +111,7 @@ export default class PowerFilter {
           return (leftOperand != null) === condition.$exists
 
         case '$type':
-          return (typeof condition.$type === 'number')
+          return typeof condition.$type === 'number'
             ? getBSONTypeNumber(leftOperand) === condition.$type
             : getBSONTypeString(leftOperand) === condition.$type
 
@@ -110,9 +122,10 @@ export default class PowerFilter {
 
         case '$regex':
           if (condition.$regex == null) throw new Error('$regex is not found') // for flow
-          const regex = (typeof condition.$regex === 'string')
-            ? new RegExp(condition.$regex, condition.$options || undefined) // "null" is not allowed but undefined.
-            : condition.$regex
+          const regex =
+            typeof condition.$regex === 'string'
+              ? new RegExp(condition.$regex, condition.$options || undefined) // "null" is not allowed but undefined.
+              : condition.$regex
           return regex.test(leftOperand)
 
         case '$text':
@@ -121,7 +134,9 @@ export default class PowerFilter {
         case '$geoWithin':
         case '$near':
         case '$nearSphere':
-          throw new Error(`Operator "${operator}" is currently unimplemented in power-filter.`)
+          throw new Error(
+            `Operator "${operator}" is currently unimplemented in power-filter.`
+          )
         case '$all':
           if (condition.$all == null) throw new Error('$all is not found') // for flow
           if (!Array.isArray(leftOperand)) return false
@@ -130,7 +145,8 @@ export default class PowerFilter {
           )
 
         case '$elemMatch':
-          if (condition.$elemMatch == null) throw new Error('$elemMatch is not found') // for flow
+          if (condition.$elemMatch == null)
+            throw new Error('$elemMatch is not found') // for flow
           if (!Array.isArray(leftOperand)) return false
           return leftOperand.every(elem =>
             // $FlowIssue(condition-$elemMatch-is-not-null)
@@ -145,7 +161,9 @@ export default class PowerFilter {
         case '$bitsAllSet':
         case '$bitsAnyClear':
         case '$bitsAnySet':
-          throw new Error(`Operator "${operator}" is currently unimplemented in power-filter.`)
+          throw new Error(
+            `Operator "${operator}" is currently unimplemented in power-filter.`
+          )
 
         // co-operator of $regex
         case '$options':
@@ -163,19 +181,31 @@ export default class PowerFilter {
    * return true if the array field contains at least one matched element
    * @see https://docs.mongodb.com/manual/tutorial/query-arrays/#query-an-array-for-an-element
    */
-  static compareIn(operator: '$in' | '$nin', target: any, condValues: any): boolean {
-    if (!Array.isArray(condValues)) throw new Error(`${operator} needs an array`)
+  static compareIn(
+    operator: '$in' | '$nin',
+    target: any,
+    condValues: any
+  ): boolean {
+    if (!Array.isArray(condValues))
+      throw new Error(`${operator} needs an array`)
     if (!Array.isArray(target)) {
       return COMPARE_FUNC[operator](target, condValues)
     }
 
-    const isIn = condValues.some(condValue => this.compare('$eq', target, condValue))
+    const isIn = condValues.some(condValue =>
+      this.compare('$eq', target, condValue)
+    )
     return operator === '$in' ? isIn : !isIn
   }
 
-  static compare(operator: '$eq' | '$gt' | '$gte' | '$lt' | '$lte' | '$ne', target: any, condValue: any): boolean {
+  static compare(
+    operator: '$eq' | '$gt' | '$gte' | '$lt' | '$lte' | '$ne',
+    target: any,
+    condValue: any
+  ): boolean {
     let compareFunc = COMPARE_FUNC[operator]
-    const isQueryArrayForAnElement = Array.isArray(target) && !Array.isArray(condValue)
+    const isQueryArrayForAnElement =
+      Array.isArray(target) && !Array.isArray(condValue)
 
     if (isQueryArrayForAnElement) {
       if (operator === '$ne') {
@@ -189,21 +219,26 @@ export default class PowerFilter {
   }
 }
 
-const COMPARE_FUNC: { [key: ComparisonQueryOperatorName]: (any, any) => boolean } = {
-  $eq : deepEqual,
-  $gt : (t, c) => t > c,
-  $gte : (t, c) => t >= c,
-  $in : (t, c) => c.some(v => deepEqual(t, v)),
-  $lt : (t, c) => t < c,
-  $lte : (t, c) => t <= c,
-  $ne : (t, c) => !deepEqual(t, c),
-  $nin : (t, c) => !c.some(v => deepEqual(t, v)),
+const COMPARE_FUNC: {
+  [key: ComparisonQueryOperatorName]: (any, any) => boolean,
+} = {
+  $eq: deepEqual,
+  $gt: (t, c) => t > c,
+  $gte: (t, c) => t >= c,
+  $in: (t, c) => c.some(v => deepEqual(t, v)),
+  $lt: (t, c) => t < c,
+  $lte: (t, c) => t <= c,
+  $ne: (t, c) => !deepEqual(t, c),
+  $nin: (t, c) => !c.some(v => deepEqual(t, v)),
 }
 
 /**
  * Filter the given values
  */
-export function filter(values: Array<Object>, where: FindOperation): Array<Object> {
+export function filter(
+  values: Array<Object>,
+  where: FindOperation
+): Array<Object> {
   return PowerFilter.filter(values, where)
 }
 
@@ -221,7 +256,7 @@ export function checkCondition(value: any, condition: QueryCondition): boolean {
 function getBSONTypeString(val: any): BSONTypeString {
   switch (typeof val) {
     case 'number':
-      return (parseInt(val, 10) === val) ? 'int' : 'double'
+      return parseInt(val, 10) === val ? 'int' : 'double'
 
     case 'string':
       return 'string'

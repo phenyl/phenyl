@@ -1,29 +1,15 @@
 // @flow
-import type {
-  UpdateOperation
-} from 'mongolike-operations'
+import type { UpdateOperation } from 'mongolike-operations'
 
-import type {
-  Id
-} from './id.js.flow'
+import type { Id } from './id.js.flow'
 
-import type {
-  Entity,
-  EntityInfo,
-  EntitiesInfo,
-} from './entity.js.flow'
+import type { Entity, EntityInfo, EntitiesInfo } from './entity.js.flow'
 
-import type {
-  Session,
-} from './session.js.flow'
+import type { Session } from './session.js.flow'
 
-import type {
-  LocalState,
-} from './local-state.js.flow'
+import type { LocalState } from './local-state.js.flow'
 
-import type {
-  VersionDiff,
-} from './versioning.js.flow'
+import type { VersionDiff } from './versioning.js.flow'
 
 import type {
   IdUpdateCommand,
@@ -32,9 +18,7 @@ import type {
   LogoutCommand,
 } from './command.js.flow'
 
-import type {
-  IdQuery,
-} from './query.js.flow'
+import type { IdQuery } from './query.js.flow'
 
 export type ActionTag = string
 
@@ -142,18 +126,18 @@ export type UnsetSessionAction = {|
 |}
 
 export type PhenylAction =
-  AssignAction |
-  ReplaceAction |
-  ResetAction |
-  CommitAndPushAction |
-  DeleteAction |
-  FollowAction |
-  FollowAllAction |
-  LoginAction |
-  LogoutAction |
-  PatchAction |
-  PullAction |
-  PushAndCommitAction |
-  SetSessionAction |
-  UnfollowAction |
-  UnsetSessionAction
+  | AssignAction
+  | ReplaceAction
+  | ResetAction
+  | CommitAndPushAction
+  | DeleteAction
+  | FollowAction
+  | FollowAllAction
+  | LoginAction
+  | LogoutAction
+  | PatchAction
+  | PullAction
+  | PushAndCommitAction
+  | SetSessionAction
+  | UnfollowAction
+  | UnsetSessionAction

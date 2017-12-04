@@ -3,9 +3,7 @@ import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
 
-import type {
-  PushCommand
-} from './command.js.flow'
+import type { PushCommand } from './command.js.flow'
 
 export type EntityVersion = {
   id: Id,
@@ -16,10 +14,9 @@ export type EntityMetaInfo = {
   versions: Array<EntityVersion>,
 }
 
-
 export type EntityWithMetaInfo = {
   id: Id,
-  _PhenylMeta: EntityMetaInfo
+  _PhenylMeta: EntityMetaInfo,
 }
 
 export type VersionDiff = {|
@@ -39,7 +36,6 @@ export type SubscriptionRequest = {|
   sessionId?: ?Id,
 |}
 
-
 export type SubscriptionResult = {|
   entityName: string,
   id: Id,
@@ -56,11 +52,11 @@ export type SubscriptionInfo = {|
 export type VersionDiffListener = (versionDiff: VersionDiff) => any
 
 export interface VersionDiffSubscriber {
-  subscribeVersionDiff(listener: VersionDiffListener): any
+  subscribeVersionDiff(listener: VersionDiffListener): any;
 }
 
 export interface VersionDiffPublisher {
-  publishVersionDiff(versionDiff: VersionDiff): any
+  publishVersionDiff(versionDiff: VersionDiff): any;
 }
 
 /**
@@ -69,4 +65,5 @@ export interface VersionDiffPublisher {
 export type PushValidation = (
   command: PushCommand,
   entity: Entity,
-  masterOperations: ?Array<UpdateOperation>) => void
+  masterOperations: ?Array<UpdateOperation>
+) => void

@@ -14,11 +14,11 @@ export type LocalEntityInfo = {
 }
 
 export type LocalEntityInfoById = {
-  [entityId: Id] : LocalEntityInfo
+  [entityId: Id]: LocalEntityInfo,
 }
 
 export type LocalEntityState = {
-  [entityName: string]: LocalEntityInfoById
+  [entityName: string]: LocalEntityInfoById,
 }
 
 export type LocalState = {

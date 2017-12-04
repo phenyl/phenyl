@@ -1,7 +1,5 @@
 // @flow
-import {
-  randomStringWithTimeStamp
-} from 'phenyl-utils/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
 
 import type {
   Id,
@@ -29,14 +27,16 @@ export class PhenylSessionClient implements SessionClient {
       return null
     }
     try {
-      const session = await this.dbClient.get({ entityName: '_PhenylSession', id })
+      const session = await this.dbClient.get({
+        entityName: '_PhenylSession',
+        id,
+      })
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
         this.delete(id) // Run asynchronously
         return null
       }
       return session
-    }
-    catch (e) {
+    } catch (e) {
       // TODO: Check error message.
       return null
     }

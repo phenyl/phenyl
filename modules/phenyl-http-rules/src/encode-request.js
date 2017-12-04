@@ -1,7 +1,5 @@
 // @flow
-import {
-  assertValidRequestData
-} from 'phenyl-utils/jsnext'
+import { assertValidRequestData } from 'phenyl-utils/jsnext'
 
 import type {
   EncodedHttpRequest,
@@ -12,10 +10,12 @@ import type {
 /**
  *
  */
-export default function encodeRequest(reqData: RequestData): EncodedHttpRequest {
+export default function encodeRequest(
+  reqData: RequestData
+): EncodedHttpRequest {
   assertValidRequestData(reqData)
   const { sessionId } = reqData
-  const headers: Object = (sessionId != null) ? { authorization: sessionId } : {}
+  const headers: Object = sessionId != null ? { authorization: sessionId } : {}
   let data
 
   switch (reqData.method) {
@@ -25,7 +25,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'GET',
         headers,
         path: addPrefix(`/${data.entityName}/find`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'findOne':
@@ -34,7 +34,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'GET',
         headers,
         path: addPrefix(`/${data.entityName}/findOne`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'get':
@@ -51,7 +51,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'GET',
         headers,
         path: addPrefix(`/${data.entityName}/getByIds`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'pull':
@@ -60,7 +60,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'GET',
         headers,
         path: addPrefix(`/${data.entityName}/pull`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'insertOne':
@@ -71,7 +71,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.entityName}/${reqData.method}`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'insertAndGet':
@@ -81,7 +81,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.entityName}/insertAndGet`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'insertAndGetMulti':
@@ -91,7 +91,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.entityName}/insertAndGetMulti`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'updateById':
@@ -101,7 +101,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/updateById`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'updateMulti':
@@ -111,7 +111,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/updateMulti`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'updateAndGet':
@@ -121,7 +121,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/updateAndGet`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'updateAndFetch':
@@ -131,7 +131,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/updateAndFetch`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'push':
@@ -140,7 +140,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'PUT',
         headers,
         path: addPrefix(`/${data.entityName}/push`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'delete':
@@ -160,7 +160,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'DELETE',
         headers,
         path: addPrefix(`/${data.entityName}/delete`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'runCustomQuery':
@@ -169,7 +169,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'GET',
         headers,
         path: addPrefix(`/${data.name}`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       }
 
     case 'runCustomCommand':
@@ -179,7 +179,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.name}`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'login':
@@ -189,7 +189,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.entityName}/login`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     case 'logout':
@@ -199,7 +199,7 @@ export default function encodeRequest(reqData: RequestData): EncodedHttpRequest 
         method: 'POST',
         headers,
         path: addPrefix(`/${data.entityName}/logout`),
-        body: createBody(data)
+        body: createBody(data),
       }
 
     default:

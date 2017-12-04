@@ -1,9 +1,7 @@
 // @flow
 
 import powerCrypt from 'power-crypt/jsnext'
-import {
-  createServerError,
-} from 'phenyl-utils/jsnext'
+import { createServerError } from 'phenyl-utils/jsnext'
 
 import { StandardEntityDefinition } from './standard-entity-definition.js'
 import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
@@ -21,9 +19,7 @@ import type {
   RestApiExecution,
 } from 'phenyl-interfaces'
 
-import type {
-  EncryptFunction,
-} from '../decls/index.js.flow'
+import type { EncryptFunction } from '../decls/index.js.flow'
 
 export type StandardUserDefinitionParams = {
   entityClient: EntityClient,
@@ -33,7 +29,8 @@ export type StandardUserDefinitionParams = {
   ttl?: number,
 }
 
-export class StandardUserDefinition extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+export class StandardUserDefinition extends StandardEntityDefinition
+  implements EntityDefinition, UserDefinition {
   entityClient: EntityClient
   encrypt: EncryptFunction
   accountPropName: string
@@ -49,7 +46,11 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
+  async authentication(
+    loginCommand: LoginCommand,
+    session: ?Session
+  ): Promise<AuthenticationResult> {
+    // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 
@@ -67,16 +68,26 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
       const expiredAt = new Date(Date.now() + ttl * 1000).toISOString()
       const preSession = { expiredAt, entityName, userId: user.id }
       return { ok: 1, preSession, user, versionId: result.versionId }
-    }
-    catch (e) {
+    } catch (e) {
       throw createServerError(e.message, 'Unauthorized')
     }
   }
 
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
-    const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
+  async wrapExecution(
+    reqData: RequestData,
+    session: ?Session,
+    execution: RestApiExecution
+  ): Promise<ResponseData> {
+    const newReqData = encryptPasswordInRequestData(
+      reqData,
+      this.passwordPropName,
+      this.encrypt
+    )
     const resData = await execution(newReqData, session)
-    const newResData = removePasswordFromResponseData(resData, this.passwordPropName)
+    const newResData = removePasswordFromResponseData(
+      resData,
+      this.passwordPropName
+    )
     return newResData
   }
 }

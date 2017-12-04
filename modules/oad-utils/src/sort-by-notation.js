@@ -1,10 +1,11 @@
 // @flow
 
-import type {
-  SortNotation,
-} from 'mongolike-operations'
+import type { SortNotation } from 'mongolike-operations'
 
-export function sortByNotation<T: Object>(arr: Array<T>, sortNotation: SortNotation): Array<T> {
+export function sortByNotation<T: Object>(
+  arr: Array<T>,
+  sortNotation: SortNotation
+): Array<T> {
   const newArr = arr.slice()
   const sortDnStrs = Object.keys(sortNotation)
   newArr.sort((a, b) => {

@@ -1,9 +1,6 @@
 // @flow
 import type { Restorable } from './restorable.js.flow' // Object
-import type {
-  QueryCondition,
-  EqCondition,
-} from './query-condition.js.flow'
+import type { QueryCondition, EqCondition } from './query-condition.js.flow'
 import type { SortNotation } from './sort-notation.js.flow'
 import type { DocumentPath } from './document-path.js.flow'
 
@@ -12,12 +9,18 @@ export type IncOperator = { [field: DocumentPath]: number }
 export type MinOperator = { [field: DocumentPath]: any }
 export type MaxOperator = { [field: DocumentPath]: any }
 export type MulOperator = { [field: DocumentPath]: number }
-export type AddToSetOperator = { [field: DocumentPath]: any | { $each: Array<any> } }
-export type RegularAddToSetOperator = { [field: DocumentPath]: { $each: Array<any> } }
+export type AddToSetOperator = {
+  [field: DocumentPath]: any | { $each: Array<any> },
+}
+export type RegularAddToSetOperator = {
+  [field: DocumentPath]: { $each: Array<any> },
+}
 export type PopOperator = { [field: DocumentPath]: 1 | - 1 }
 export type UnsetOperator = { [field: DocumentPath]: '' }
 
-export type PullOperator = { +[field: DocumentPath]: QueryCondition | EqCondition }
+export type PullOperator = {
+  +[field: DocumentPath]: QueryCondition | EqCondition,
+}
 export type RegularPullOperator = { +[field: DocumentPath]: QueryCondition }
 
 export type PushModifier = {
@@ -36,7 +39,7 @@ export type BitOperator = {
     and?: number,
     or?: number,
     xor?: number,
-  }
+  },
 }
 
 /**
@@ -57,7 +60,7 @@ export type BitOperator = {
  * new field names will be automatically corrected to fit the MongoDB's spec.
  */
 export type RenameOperator = {
-  [field: DocumentPath]: string
+  [field: DocumentPath]: string,
 }
 
 /**
@@ -78,7 +81,7 @@ export type RenameOperator = {
  *    JSON.stringify(updateOperationToJSON(operation)) // {"$restore":{"foo":""}}
  */
 export type RestoreOperator = {
-  [field: DocumentPath]: '' | Class<Restorable>
+  [field: DocumentPath]: '' | Class<Restorable>,
 }
 
 export type RegularUpdateOperation = $Shape<{
@@ -116,34 +119,34 @@ export type UpdateOperation = $Shape<{
 }>
 
 export type UpdateOperatorName =
-  '$set' |
-  '$inc' |
-  '$min' |
-  '$max' |
-  '$mul' |
-  '$addToSet' |
-  '$pop' |
-  '$pull' |
-  '$push' |
-  '$currentDate' |
-  '$bit' |
-  '$unset' |
-  '$restore' |
-  '$rename'
+  | '$set'
+  | '$inc'
+  | '$min'
+  | '$max'
+  | '$mul'
+  | '$addToSet'
+  | '$pop'
+  | '$pull'
+  | '$push'
+  | '$currentDate'
+  | '$bit'
+  | '$unset'
+  | '$restore'
+  | '$rename'
 
 export type UpdateOperator =
-  SetOperator |
-  IncOperator |
-  MinOperator |
-  MaxOperator |
-  MulOperator |
-  AddToSetOperator |
-  PopOperator |
-  PullOperator |
-  PushOperator |
-  CurrentDateOperator |
-  BitOperator |
-  UnsetOperator |
-  RenameOperator |
-  RestoreOperator |
-  RenameOperator
+  | SetOperator
+  | IncOperator
+  | MinOperator
+  | MaxOperator
+  | MulOperator
+  | AddToSetOperator
+  | PopOperator
+  | PullOperator
+  | PushOperator
+  | CurrentDateOperator
+  | BitOperator
+  | UnsetOperator
+  | RenameOperator
+  | RestoreOperator
+  | RenameOperator

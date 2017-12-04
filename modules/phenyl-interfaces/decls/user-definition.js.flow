@@ -2,15 +2,16 @@
 
 import type { EntityDefinition } from './entity-definition'
 import type { Session } from './session.js.flow'
-import type {
-  LoginCommand,
-} from './command.js.flow'
-import type {
-  AuthenticationResult
-} from './handler.js.flow'
+import type { LoginCommand } from './command.js.flow'
+import type { AuthenticationResult } from './handler.js.flow'
 
 export interface UserDefinition {
-  authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult>,
+  authentication(
+    loginCommand: LoginCommand,
+    session: ?Session
+  ): Promise<AuthenticationResult>;
 }
 
-export type UserDefinitions = { [entityName: string]: EntityDefinition & UserDefinition }
+export type UserDefinitions = {
+  [entityName: string]: EntityDefinition & UserDefinition,
+}

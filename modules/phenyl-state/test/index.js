@@ -11,11 +11,13 @@ describe('find', () => {
     const user2 = { id: '2', name: 'kory' }
     const user3 = { id: '3', name: 'kiry' }
     const state = new PhenylState({
-      pool: { user: {
-        '1': user1,
-        '2': user2,
-        '3': user3,
-      }}
+      pool: {
+        user: {
+          '1': user1,
+          '2': user2,
+          '3': user3,
+        },
+      },
     })
     const usersFoundByQuery = state.find({
       entityName: 'user',
@@ -71,13 +73,13 @@ describe('$update', () => {
     const operation = state.updateById({
       entityName: 'user',
       id: '1',
-      operation: { $set: { name: 'Shinji' }}
+      operation: { $set: { name: 'Shinji' } },
     })
 
     const expected = {
       $set: {
-        'pool.user.1.name': 'Shinji'
-      }
+        'pool.user.1.name': 'Shinji',
+      },
     }
     const newState = assignWithRestoration(state, operation)
     const expectedNewState = new PhenylState({
@@ -91,26 +93,32 @@ describe('$update', () => {
 describe('delete', () => {
   it('returns UpdateOperation to delete pool', () => {
     const state = new PhenylState({
-      pool: { user: {
-        '1': { id: '1', name: 'Shin' },
-        '2': { id: '2', name: 'Tom' },
-        '3': { id: '3', name: 'Jenkins' },
-      } },
+      pool: {
+        user: {
+          '1': { id: '1', name: 'Shin' },
+          '2': { id: '2', name: 'Tom' },
+          '3': { id: '3', name: 'Jenkins' },
+        },
+      },
     })
     const operation = state.delete({
       entityName: 'user',
-      where: { name: { $regex: /in/ } }
+      where: { name: { $regex: /in/ } },
     })
-    const expected = { $unset: {
-      'pool.user.1': '',
-      'pool.user.3': '',
-    } }
+    const expected = {
+      $unset: {
+        'pool.user.1': '',
+        'pool.user.3': '',
+      },
+    }
 
     const newState = assignWithRestoration(state, operation)
     const expectedNewState = new PhenylState({
-      pool: { user: {
-        '2': { id: '2', name: 'Tom' },
-      } },
+      pool: {
+        user: {
+          '2': { id: '2', name: 'Tom' },
+        },
+      },
     })
     assert.deepEqual(expected, operation)
     assert.deepEqual(expectedNewState, newState)
@@ -121,7 +129,7 @@ describe('register', () => {
   it('returns UpdateOperation to register pool', () => {
     const state = new PhenylState({
       pool: {
-        user: { '1': { id: '1', name: 'Shin' } }
+        user: { '1': { id: '1', name: 'Shin' } },
       },
     })
     const operation = state.register('book', { id: 'book01', title: 'ABC-Z' })
@@ -130,15 +138,15 @@ describe('register', () => {
         'pool.book.book01': {
           id: 'book01',
           title: 'ABC-Z',
-        }
-      }
+        },
+      },
     }
     const newState = assignWithRestoration(state, operation)
 
     const expectedNewState = new PhenylState({
       pool: {
         user: { '1': { id: '1', name: 'Shin' } },
-        book: { 'book01': { id: 'book01', title: 'ABC-Z' } },
+        book: { book01: { id: 'book01', title: 'ABC-Z' } },
       },
     })
 

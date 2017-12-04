@@ -7,7 +7,7 @@ module.exports = {
     "plugins": [
       "flowtype"
     ],
-    "extends": "eslint:recommended",
+    "extends": ["eslint:recommended", "prettier"],
     "parserOptions": {
         "sourceType": "module"
     },
@@ -15,18 +15,18 @@ module.exports = {
         "flowtype/define-flow-type": 1,
         "flowtype/use-flow-type": 1,
         "no-case-declarations": 0,
-        "indent": [
-            "error",
-            2,
-            { "SwitchCase": 1 }
-        ],
         "linebreak-style": [
             "error",
             "unix"
         ],
+        "no-unused-vars": [
+            "error",
+            { "args": "none" }
+        ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            { "avoidEscape": true }
         ],
         "semi": [
             "error",

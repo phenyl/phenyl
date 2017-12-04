@@ -1,17 +1,18 @@
 // @flow
 
 import type { Session } from './session.js.flow'
-import type {
-  CustomCommand,
-} from './command.js.flow'
-import type {
-  CustomCommandResult,
-} from './command-result.js.flow'
+import type { CustomCommand } from './command.js.flow'
+import type { CustomCommandResult } from './command-result.js.flow'
 
 export interface CustomCommandDefinition {
-  authorization(command: CustomCommand, session: ?Session): Promise<boolean>,
-  validation(command: CustomCommand, session: ?Session): Promise<void>,
-  execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult>,
+  authorization(command: CustomCommand, session: ?Session): Promise<boolean>;
+  validation(command: CustomCommand, session: ?Session): Promise<void>;
+  execution(
+    command: CustomCommand,
+    session: ?Session
+  ): Promise<CustomCommandResult>;
 }
 
-export type CustomCommandDefinitions = { [name: string]: CustomCommandDefinition }
+export type CustomCommandDefinitions = {
+  [name: string]: CustomCommandDefinition,
+}

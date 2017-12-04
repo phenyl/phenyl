@@ -11,12 +11,10 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-
 /**
  *
  */
 export default class PhenylStateFinder implements EntityStateFinder {
-
   state: EntityState
 
   constructor(state: EntityState) {
@@ -65,7 +63,6 @@ export default class PhenylStateFinder implements EntityStateFinder {
     return this.constructor.has(this.state, query)
   }
 
-
   /**
    *
    */
@@ -81,13 +78,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
    *
    */
   static find(state: EntityState, query: WhereQuery): Array<Entity> {
-    const {
-      entityName,
-      where,
-      sort,
-      skip,
-      limit,
-    } = query
+    const { entityName, where, sort, skip, limit } = query
     let filtered = filter(this.getAll(state, entityName), where)
     if (sort != null) {
       filtered = sortByNotation(filtered, sort)

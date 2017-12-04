@@ -59,12 +59,16 @@ export default class ServerLogic {
    * If modified path starts with "/api/", invoke RestApiHandler#run().
    * Otherwise, invoke registered customRequestHandler.
    */
-  async handleRequest(encodedHttpRequest: EncodedHttpRequest): Promise<EncodedHttpResponse> {
+  async handleRequest(
+    encodedHttpRequest: EncodedHttpRequest
+  ): Promise<EncodedHttpResponse> {
     const modifiedPath = this.modifyPath(encodedHttpRequest.path) || ''
 
     // Check if modified path start with "/api/"
     return isApiRequest(modifiedPath)
-      ? await this.handleApiRequest(Object.assign(encodedHttpRequest, { path: modifiedPath }))  //  "path" is modifiedPath here.
+      ? await this.handleApiRequest(
+          Object.assign(encodedHttpRequest, { path: modifiedPath })
+        ) //  "path" is modifiedPath here.
       : await this.handleCustomRequest(encodedHttpRequest) //  "path" is original path here.
   }
 
@@ -79,8 +83,7 @@ export default class ServerLogic {
       const requestData = decodeRequest(encodedHttpRequest)
       // 2. Invoking PhenylRestApi
       responseData = await this.restApiHandler.handleRequestData(requestData)
-    }
-    catch (err) {
+    } catch (err) {
       responseData = { type: 'error', payload: createServerError(err) }
     }
     // 3. Encoding Response
@@ -95,11 +98,13 @@ export default class ServerLogic {
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
       const restApiClient = new PhenylRestApiDirectClient(this.restApiHandler)
-      const customResponse = await this.customRequestHandler(encodedHttpRequest, restApiClient)
+      const customResponse = await this.customRequestHandler(
+        encodedHttpRequest,
+        restApiClient
+      )
       return customResponse
-    }
-    // TODO: Show error in development environment.
-    catch (err) {
+    } catch (err) {
+      // TODO: Show error in development environment.
       const body = 'Internal Server Error.'
       return createPlainTextResponse(body, 500)
     }
@@ -111,9 +116,15 @@ export default class ServerLogic {
  * Default value of ServerLogic#handleCustomRequest().
  * Return 404 response.
  */
-async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: RestApiClient): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
+async function notFoundHandler(
+  encodedHttpRequest: EncodedHttpRequest,
+  client: RestApiClient
+): Promise<EncodedHttpResponse> {
+  // eslint-disable-line no-unused-vars
   const { path } = encodedHttpRequest
-  const body = `Not Found.\nThe requested URL "${path}" is not found on this server.`
+  const body = `Not Found.\nThe requested URL "${
+    path
+  }" is not found on this server.`
   return createPlainTextResponse(body, 404)
 }
 
@@ -121,13 +132,16 @@ async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: R
  * @private
  * Create plain text response from the body.
  */
-function createPlainTextResponse(body: string, statusCode: number): EncodedHttpResponse {
+function createPlainTextResponse(
+  body: string,
+  statusCode: number
+): EncodedHttpResponse {
   return {
     body,
     statusCode,
     headers: {
       'content-length': Buffer.byteLength(body).toString(),
       'content-type': 'text/plain',
-    }
+    },
   }
 }

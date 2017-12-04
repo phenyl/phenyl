@@ -1,7 +1,5 @@
 // @flow
-import {
-  PhenylRestApiClient,
-} from './phenyl-rest-api-client.js'
+import { PhenylRestApiClient } from './phenyl-rest-api-client.js'
 
 import type {
   RestApiHandler,

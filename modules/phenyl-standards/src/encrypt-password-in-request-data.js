@@ -1,19 +1,17 @@
 // @flow
-import type {
-  RequestData,
-  DocumentPath,
-} from 'phenyl-interfaces'
+import type { RequestData, DocumentPath } from 'phenyl-interfaces'
 
-import type {
-  EncryptFunction,
-} from '../decls/index.js.flow'
+import type { EncryptFunction } from '../decls/index.js.flow'
 
 import { getNestedValue } from 'oad-utils/jsnext'
 
 import { assign } from 'power-assign/jsnext'
 
-
-export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
+export function encryptPasswordInRequestData(
+  reqData: RequestData,
+  passwordPropName: DocumentPath,
+  encrypt: EncryptFunction
+): RequestData {
   switch (reqData.method) {
     case 'insertOne':
     case 'insertMulti':
@@ -26,19 +24,27 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
           const password = getNestedValue(value, passwordPropName)
 
           if (password) {
-            return assign(value, { $set: { [passwordPropName]: encrypt(password)} })
+            return assign(value, {
+              $set: { [passwordPropName]: encrypt(password) },
+            })
           } else {
             return value
           }
         })
 
-        return assign(reqData, { $set: { 'payload.values': valuesWithEncryptedPass }})
+        return assign(reqData, {
+          $set: { 'payload.values': valuesWithEncryptedPass },
+        })
       } else if (payload.value) {
         const password = getNestedValue(payload.value, passwordPropName)
 
         if (password) {
-          const valueWithEncryptedPass = assign(payload.value, { $set: { [passwordPropName]: encrypt(password) } })
-          return assign(reqData, { $set: { 'payload.value': valueWithEncryptedPass }})
+          const valueWithEncryptedPass = assign(payload.value, {
+            $set: { [passwordPropName]: encrypt(password) },
+          })
+          return assign(reqData, {
+            $set: { 'payload.value': valueWithEncryptedPass },
+          })
         } else {
           return reqData
         }
@@ -50,7 +56,6 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
     case 'updateMulti':
     case 'updateAndGet':
     case 'updateAndFetch': {
-
       const { operation } = reqData.payload
 
       let operationWithEncryptedPass = operation
@@ -59,11 +64,15 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
         const password = getNestedValue(operation[key], passwordPropName)
 
         if (password) {
-          operationWithEncryptedPass = assign(operationWithEncryptedPass, { $set: { [`${key}.${passwordPropName}`]: encrypt(password) } })
+          operationWithEncryptedPass = assign(operationWithEncryptedPass, {
+            $set: { [`${key}.${passwordPropName}`]: encrypt(password) },
+          })
         }
       })
 
-      return assign(reqData, { $set: { 'payload.operation': operationWithEncryptedPass }})
+      return assign(reqData, {
+        $set: { 'payload.operation': operationWithEncryptedPass },
+      })
     }
     case 'push':
       // TODO Implement to encrypt password in push command

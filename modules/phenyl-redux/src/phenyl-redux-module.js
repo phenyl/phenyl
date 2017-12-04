@@ -1,11 +1,7 @@
 // @flow
-import {
-  assign,
-} from 'power-assign/jsnext'
+import { assign } from 'power-assign/jsnext'
 
-import {
-  randomStringWithTimeStamp,
-} from 'phenyl-utils/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
 
 import type {
   AssignAction,
@@ -46,7 +42,10 @@ export const createInitialState = () => ({
 /**
  * Reducer.
  */
-export default function phenylReducer(state: ?LocalState, action: PhenylAction): LocalState {
+export default function phenylReducer(
+  state: ?LocalState,
+  action: PhenylAction
+): LocalState {
   if (state == null) {
     return createInitialState()
   }
@@ -70,7 +69,6 @@ export default function phenylReducer(state: ?LocalState, action: PhenylAction):
  * Action Creators.
  */
 export const actions = {
-
   replace(state: LocalState): ReplaceAction {
     return {
       type: 'phenyl/replace',
@@ -115,13 +113,17 @@ export const actions = {
       payload: {
         entityName,
         entity,
-        versionId
+        versionId,
       },
       tag: randomStringWithTimeStamp(),
     }
   },
 
-  followAll(entityName: string, entities: Array<Entity>, versionsById: { [entityId: Id]: Id }): FollowAllAction {
+  followAll(
+    entityName: string,
+    entities: Array<Entity>,
+    versionsById: { [entityId: Id]: Id }
+  ): FollowAllAction {
     return {
       type: 'phenyl/followAll',
       payload: {

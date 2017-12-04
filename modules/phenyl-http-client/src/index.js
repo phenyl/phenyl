@@ -1,13 +1,7 @@
 // @flow
 import fp from 'fetch-ponyfill'
-import {
-  encodeRequest,
-  decodeResponse,
-} from 'phenyl-http-rules/jsnext'
-import {
-  PhenylRestApiClient,
-  createLocalError,
-} from 'phenyl-utils/jsnext'
+import { encodeRequest, decodeResponse } from 'phenyl-http-rules/jsnext'
+import { PhenylRestApiClient, createLocalError } from 'phenyl-utils/jsnext'
 const { fetch } = fp()
 
 import type {
@@ -64,13 +58,7 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
    * Access to PhenylRestApi on server and get ResponseData.
    */
   async handleRequestData(reqData: RequestData): Promise<ResponseData> {
-    const {
-      method,
-      headers,
-      path,
-      qsParams,
-      body,
-    } = encodeRequest(reqData)
+    const { method, headers, path, qsParams, body } = encodeRequest(reqData)
     const qs = stringifyQsParams(qsParams)
     const url = `${this.url}${this.modifyPath(path)}${qs}`
 
@@ -85,7 +73,7 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
     const encodedResponse = {
       body: await response.json(),
       statusCode: response.status,
-      headers: response.headers // FIXME: headers from polyfilled fetch don't implement Headers API.
+      headers: response.headers, // FIXME: headers from polyfilled fetch don't implement Headers API.
     }
 
     return decodeResponse(encodedResponse)
@@ -101,8 +89,14 @@ function stringifyQsParams(qsParams: ?QueryStringParams): string {
     return ''
   }
 
-  return '?' + Object.keys(qsParams).map(name =>
-    // $FlowIssue(object-keys-iteration)
-    `${name}=${encodeURIComponent(qsParams[name])}`
-  ).join('&')
+  return (
+    '?' +
+    Object.keys(qsParams)
+      .map(
+        name =>
+          // $FlowIssue(object-keys-iteration)
+          `${name}=${encodeURIComponent(qsParams[name])}`
+      )
+      .join('&')
+  )
 }

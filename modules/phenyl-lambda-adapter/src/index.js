@@ -1,11 +1,7 @@
 // @flow
-import {
-  ServerLogic,
-} from 'phenyl-http-rules/jsnext'
+import { ServerLogic } from 'phenyl-http-rules/jsnext'
 
-import type {
-  ServerParams,
-} from 'phenyl-interfaces'
+import type { ServerParams } from 'phenyl-interfaces'
 
 import type {
   LambdaEvent,
@@ -21,8 +17,11 @@ import type {
  * 3. Return EncodedHttpResponse using callback.
  */
 export const createLambdaHandler = (params: ServerParams): LambdaHandler => {
-  return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
-
+  return async (
+    event: LambdaEvent,
+    context: LambdaContext,
+    cb: LambdaCallback
+  ): Promise<void> => {
     /**
      * Universal server logic.
      * Offers the flow: EncodedHttpRequest => EncodedHttpResponse

@@ -1,19 +1,14 @@
 // @flow
 import { assignWithRestoration } from 'power-assign/jsnext'
-import type {
-  Entity,
-  PreEntity,
-  KvsClient,
-  Id,
-} from 'phenyl-interfaces'
+import type { Entity, PreEntity, KvsClient, Id } from 'phenyl-interfaces'
 import { randomString } from 'phenyl-utils/jsnext'
 
 interface KeyValuePool<T> {
-  [id: Id]: T
+  [id: Id]: T;
 }
 
 type MemoryKvsClientParams<T> = {
-  pool?: KeyValuePool<T>
+  pool?: KeyValuePool<T>,
 }
 
 export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
@@ -34,7 +29,9 @@ export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
   async create(value: T | PreEntity<T>): Promise<T> {
     if (value.id != null) {
       if (this.pool[value.id] != null) {
-        throw new Error(`The given id "${value.id}" already exists in memory pool.`)
+        throw new Error(
+          `The given id "${value.id}" already exists in memory pool.`
+        )
       }
       return this.set(value)
     }
@@ -44,7 +41,9 @@ export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
   }
 
   async set(value: T): Promise<T> {
-    this.pool = assignWithRestoration(this.pool, { $set: { [value.id]: value } })
+    this.pool = assignWithRestoration(this.pool, {
+      $set: { [value.id]: value },
+    })
     return value
   }
 

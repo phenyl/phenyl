@@ -37,17 +37,18 @@ import type {
  *
  */
 export default class PowerAssign {
-
   /**
    *
    */
-  static assignUpdateOperation(obj: Object, uOp: RegularUpdateOperation): Object {
+  static assignUpdateOperation(
+    obj: Object,
+    uOp: RegularUpdateOperation
+  ): Object {
     let updatedObj: Object = obj
     const operatorNames = Object.keys(uOp)
 
     for (const operatorName of operatorNames) {
       switch (operatorName) {
-
         case '$inc':
           updatedObj = this.$inc(updatedObj, uOp.$inc)
           break
@@ -105,7 +106,9 @@ export default class PowerAssign {
           break
 
         case '$setOnInsert':
-          throw new Error(`The given operator "${operatorName}" is not implemented yet.`)
+          throw new Error(
+            `The given operator "${operatorName}" is not implemented yet.`
+          )
 
         default:
           throw new Error(`Invalid operator: "${operatorName}"`)
@@ -127,7 +130,6 @@ export default class PowerAssign {
     })
     return updatedObj
   }
-
 
   /**
    *
@@ -203,12 +205,18 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$addToSet" operator must be applied to an array. DocumentPath: "${docPath}".`)
+        throw new Error(
+          `"$addToSet" operator must be applied to an array. DocumentPath: "${
+            docPath
+          }".`
+        )
       }
       let modifier = addToSetOp[docPath]
 
-      // $FlowIssue(arr-is-Array)
-      const newArr = modifier.$each.filter(element => !arr.some(arrEl => deepEqual(arrEl, element)))
+      const newArr = modifier.$each.filter(
+        // $FlowIssue(arr-is-Array)
+        element => !arr.some(arrEl => deepEqual(arrEl, element))
+      )
       valuesToSet[docPath] = arr.concat(newArr)
     })
     return this.$set(obj, valuesToSet)
@@ -226,7 +234,11 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$pop" operator must be applied to an array. DocumentPath: "${docPath}".`)
+        throw new Error(
+          `"$pop" operator must be applied to an array. DocumentPath: "${
+            docPath
+          }".`
+        )
       }
       if (popOp[docPath] === 1) {
         arr.pop()
@@ -250,10 +262,16 @@ export default class PowerAssign {
         return // If the field is absent, no requests will be executed
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$pull" operator must be applied to an array. DocumentPath: "${docPath}".`)
+        throw new Error(
+          `"$pull" operator must be applied to an array. DocumentPath: "${
+            docPath
+          }".`
+        )
       }
       const condition = pullOp[docPath]
-      valuesToSet[docPath] = arr.filter(val => checkCondition(val, condition) === false)
+      valuesToSet[docPath] = arr.filter(
+        val => checkCondition(val, condition) === false
+      )
     })
     return this.$set(obj, valuesToSet)
   }
@@ -270,20 +288,26 @@ export default class PowerAssign {
         arr = [] // If the field is absent, empty array is set.
       }
       if (!Array.isArray(arr)) {
-        throw new Error(`"$push" operator must be applied to an array. DocumentPath: "${docPath}".`)
+        throw new Error(
+          `"$push" operator must be applied to an array. DocumentPath: "${
+            docPath
+          }".`
+        )
       }
       let modifier = pushOp[docPath]
 
-      let position = (modifier.$position != null) ? modifier.$position : arr.length
+      let position =
+        modifier.$position != null ? modifier.$position : arr.length
       let newArr = arr.slice()
       newArr.splice(position, 0, ...modifier.$each)
       if (modifier.$sort != null) {
         newArr = sortByNotation(newArr, modifier.$sort)
       }
       if (modifier.$slice != null) {
-        newArr = (modifier.$slice >= 0)
-          ? newArr.slice(0, modifier.$slice)
-          : newArr.slice(modifier.$slice)
+        newArr =
+          modifier.$slice >= 0
+            ? newArr.slice(0, modifier.$slice)
+            : newArr.slice(modifier.$slice)
       }
       valuesToSet[docPath] = newArr
     })
@@ -300,10 +324,11 @@ export default class PowerAssign {
       let typeSpecification = curDateOp[docPath]
 
       if (typeSpecification === true) {
-        typeSpecification = { $type: 'date'}
+        typeSpecification = { $type: 'date' }
       }
       const now = new Date()
-      valuesToSet[docPath] = typeSpecification.$type === 'date' ? now : now.getTime()
+      valuesToSet[docPath] =
+        typeSpecification.$type === 'date' ? now : now.getTime()
     })
     return this.$set(obj, valuesToSet)
   }
@@ -339,21 +364,17 @@ export default class PowerAssign {
    * NOTICE: The objects whose property are deleted will be converted into a plain object.
    */
   static $unset(obj: Object, unsetOp: UnsetOperator): Object {
-
     return Object.keys(unsetOp).reduce((newObj, docPath) => {
       const attrs = parseDocumentPath(docPath)
       const lastAttr = attrs.pop()
       const pathToLast = createDocumentPath(...attrs)
-      const lastObj = pathToLast
-        ? getNestedValue(newObj, pathToLast)
-        : newObj
+      const lastObj = pathToLast ? getNestedValue(newObj, pathToLast) : newObj
 
       let copiedLastObj: Array<any> | Object
       if (Array.isArray(lastObj)) {
         copiedLastObj = lastObj.slice()
         copiedLastObj[lastAttr] = null
-      }
-      else {
+      } else {
         copiedLastObj = Object.assign({}, lastObj)
         delete copiedLastObj[lastAttr]
       }
@@ -369,17 +390,16 @@ export default class PowerAssign {
    * NOTICE: The objects whose property are renamed will be converted into a plain object.
    */
   static $rename(obj: Object, renameOp: RenameOperator): Object {
-
     return Object.keys(renameOp).reduce((newObj, docPath) => {
       const attrs = parseDocumentPath(docPath)
       const lastAttr = attrs.pop()
       const pathToLast = createDocumentPath(...attrs)
-      const lastObj = pathToLast
-        ? getNestedValue(newObj, pathToLast)
-        : newObj
+      const lastObj = pathToLast ? getNestedValue(newObj, pathToLast) : newObj
 
       if (Array.isArray(lastObj)) {
-        throw Error(`$rename operation cannot be applied to array field: "${pathToLast}".`)
+        throw Error(
+          `$rename operation cannot be applied to array field: "${pathToLast}".`
+        )
       }
 
       if (!lastObj.hasOwnProperty(lastAttr)) {
@@ -401,7 +421,11 @@ export default class PowerAssign {
   /**
    *
    */
-  static $restore(originalObj: Object, targetObj: Object, restoreOp: RestoreOperator): Object {
+  static $restore(
+    originalObj: Object,
+    targetObj: Object,
+    restoreOp: RestoreOperator
+  ): Object {
     const valuesToSet = {}
 
     Object.keys(restoreOp).forEach(docPath => {
@@ -429,9 +453,12 @@ export default class PowerAssign {
     const revKeys = parseDocumentPath(docPath).reverse()
     // assert(objsToBeAssigned.length === keys.length)
     // $FlowIssue(return-T)
-    return revKeys.reduce((newValue, key, i) =>
-      // $FlowIssue(reduce-first-argument-type)
-      Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue }), value)
+    return revKeys.reduce(
+      (newValue, key, i) =>
+        // $FlowIssue(reduce-first-argument-type)
+        Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue }),
+      value
+    )
   }
 }
 
@@ -439,7 +466,10 @@ export default class PowerAssign {
  * @public
  * Assign new values to object following the given operation(s).
  */
-export function assign(obj: Object, ...uOps: Array<SetOperator | UpdateOperation>): Object {
+export function assign(
+  obj: Object,
+  ...uOps: Array<SetOperator | UpdateOperation>
+): Object {
   return uOps.reduce((ret, uOp) => {
     return PowerAssign.assignUpdateOperation(ret, normalizeUpdateOperation(uOp))
   }, obj)
@@ -448,7 +478,11 @@ export function assign(obj: Object, ...uOps: Array<SetOperator | UpdateOperation
 /**
  * Assign new values to the property of the obj located at the given documentPath following the given operation.
  */
-export function assignToProp(obj: Object, docPath: DocumentPath, uOp: SetOperator | UpdateOperation): Object {
+export function assignToProp(
+  obj: Object,
+  docPath: DocumentPath,
+  uOp: SetOperator | UpdateOperation
+): Object {
   const modifiedOps = retargetToProp(docPath, uOp)
   return assign(obj, modifiedOps)
 }
@@ -456,7 +490,10 @@ export function assignToProp(obj: Object, docPath: DocumentPath, uOp: SetOperato
 /**
  *
  */
-export function assignWithRestoration<T: Restorable>(obj: T, uOp: SetOperator | UpdateOperation): T {
+export function assignWithRestoration<T: Restorable>(
+  obj: T,
+  uOp: SetOperator | UpdateOperation
+): T {
   const updatedObj = assign(obj, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!
@@ -465,7 +502,11 @@ export function assignWithRestoration<T: Restorable>(obj: T, uOp: SetOperator | 
 /**
  *
  */
-export function assignToPropWithRestoration<T: Restorable>(obj: T, docPath: DocumentPath, uOp: SetOperator | UpdateOperation): T {
+export function assignToPropWithRestoration<T: Restorable>(
+  obj: T,
+  docPath: DocumentPath,
+  uOp: SetOperator | UpdateOperation
+): T {
   const updatedObj = assignToProp(obj, docPath, uOp)
   const Constructor = obj.constructor
   return new Constructor(updatedObj) // if Constructor is Object, it's OK!

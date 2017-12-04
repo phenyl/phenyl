@@ -1,8 +1,6 @@
 // @flow
 
-import type {
-  UpdateOperation,
-} from 'mongolike-operations'
+import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
 import type { Session } from './session.js.flow'
 import type { Entity } from './entity.js.flow'
@@ -54,27 +52,29 @@ export type GetCommandResult = {|
   prevVersionId: ?Id,
 |}
 
-export type PushCommandResult = {|
-  ok: 1,
-  n: number, // TODO necessary?
-  hasEntity: 0,
-  operations: Array<UpdateOperation>,
-  newOperation: UpdateOperation,
-  versionId: Id,
-  prevVersionId: ?Id,
-|} | {|
-  ok: 1,
-  n: number, // TODO necessary?
-  hasEntity: 1,
-  entity: Entity,
-  versionId: Id,
-  prevVersionId: ?Id,
-  newOperation: UpdateOperation,
-|}
+export type PushCommandResult =
+  | {|
+      ok: 1,
+      n: number, // TODO necessary?
+      hasEntity: 0,
+      operations: Array<UpdateOperation>,
+      newOperation: UpdateOperation,
+      versionId: Id,
+      prevVersionId: ?Id,
+    |}
+  | {|
+      ok: 1,
+      n: number, // TODO necessary?
+      hasEntity: 1,
+      entity: Entity,
+      versionId: Id,
+      prevVersionId: ?Id,
+      newOperation: UpdateOperation,
+    |}
 
 export type CustomCommandResult = {
   ok: 1,
-  result?: Object
+  result?: Object,
 }
 
 export type LoginCommandResult = {

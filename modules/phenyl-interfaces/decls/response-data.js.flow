@@ -1,7 +1,5 @@
 // @flow
-import type {
-  ServerError,
-} from './error.js.flow'
+import type { ServerError } from './error.js.flow'
 
 import type {
   CustomQueryResult,
@@ -25,26 +23,26 @@ import type {
 } from './command-result.js.flow'
 
 export type ResponseData =
-  FindResponseData |
-  FindOneResponseData |
-  GetResponseData |
-  GetByIdsResponseData |
-  PullResponseData |
-  InsertOneResponseData |
-  InsertMultiResponseData |
-  InsertAndGetResponseData |
-  InsertAndGetMultiResponseData |
-  UpdateOneResponseData |
-  UpdateMultiResponseData |
-  UpdateAndGetResponseData |
-  UpdateAndFetchResponseData |
-  PushResponseData |
-  DeleteResponseData |
-  RunCustomQueryResponseData |
-  RunCustomCommandResponseData |
-  LoginResponseData |
-  LogoutResponseData |
-  ErrorResponseData
+  | FindResponseData
+  | FindOneResponseData
+  | GetResponseData
+  | GetByIdsResponseData
+  | PullResponseData
+  | InsertOneResponseData
+  | InsertMultiResponseData
+  | InsertAndGetResponseData
+  | InsertAndGetMultiResponseData
+  | UpdateOneResponseData
+  | UpdateMultiResponseData
+  | UpdateAndGetResponseData
+  | UpdateAndFetchResponseData
+  | PushResponseData
+  | DeleteResponseData
+  | RunCustomQueryResponseData
+  | RunCustomCommandResponseData
+  | LoginResponseData
+  | LogoutResponseData
+  | ErrorResponseData
 
 export type FindResponseData = {|
   type: 'find',

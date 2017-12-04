@@ -21,7 +21,8 @@ import type {
  *  const wsServer = new PhenylWebSocketServer(http.createServer(), { restApiHandler, versionDiffSubscriber: pubsub })
  *  wsServer.listen(8081)
  */
-export class DirectVersionDiffPubSub implements VersionDiffPublisher, VersionDiffSubscriber {
+export class DirectVersionDiffPubSub
+  implements VersionDiffPublisher, VersionDiffSubscriber {
   listeners: Array<VersionDiffListener>
 
   constructor() {

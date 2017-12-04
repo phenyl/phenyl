@@ -16,7 +16,7 @@ export function assertValidRequestData(rd: any): void {
   }
 
   try {
-    switch(method) {
+    switch (method) {
       case 'find':
         return assertValidWhereQuery(rd.payload)
       case 'findOne':
@@ -58,9 +58,10 @@ export function assertValidRequestData(rd: any): void {
       default:
         throw new Error('Invalid method name.')
     }
-  }
-  catch (e) {
-    const err = new Error(`Error in "RequestData(method=${method})": ${e.message}`)
+  } catch (e) {
+    const err = new Error(
+      `Error in "RequestData(method=${method})": ${e.message}`
+    )
     err.stack = e.stack
     throw err
   }
@@ -90,7 +91,10 @@ export function assertValidIdQuery(q: any): void {
   }
   const { entityName, id } = q
   assertValidEntityName(entityName, 'IdQuery')
-  assertNonEmptyString(id, `IdQuery.id must be a non-empty string. "${id}" given.`)
+  assertNonEmptyString(
+    id,
+    `IdQuery.id must be a non-empty string. "${id}" given.`
+  )
 }
 
 /**
@@ -118,8 +122,14 @@ export function assertValidPullQuery(q: any): void {
   }
   const { entityName, id, versionId } = q
   assertValidEntityName(entityName, 'PullQuery')
-  assertNonEmptyString(id, `PullQuery.id must be a non-empty string. "${id}" given.`)
-  assertNonEmptyString(versionId, `PullQuery.versionId must be a non-empty string. "${versionId}" given.`)
+  assertNonEmptyString(
+    id,
+    `PullQuery.id must be a non-empty string. "${id}" given.`
+  )
+  assertNonEmptyString(
+    versionId,
+    `PullQuery.versionId must be a non-empty string. "${versionId}" given.`
+  )
 }
 
 /**
@@ -127,7 +137,9 @@ export function assertValidPullQuery(q: any): void {
  */
 export function assertValidSingleInsertCommand(com: any): void {
   if (typeof com !== 'object' || com === null) {
-    throw new Error(`SingleInsertCommand must be an object. ${typeof com} given.`)
+    throw new Error(
+      `SingleInsertCommand must be an object. ${typeof com} given.`
+    )
   }
 
   const { entityName, value } = com
@@ -147,7 +159,9 @@ export function assertValidSingleInsertCommand(com: any): void {
  */
 export function assertValidMultiInsertCommand(com: any): void {
   if (typeof com !== 'object' || com === null) {
-    throw new Error(`MultiInsertCommand must be an object. ${typeof com} given.`)
+    throw new Error(
+      `MultiInsertCommand must be an object. ${typeof com} given.`
+    )
   }
 
   const { entityName, values } = com
@@ -158,11 +172,15 @@ export function assertValidMultiInsertCommand(com: any): void {
   }
 
   if (!Array.isArray(values)) {
-    throw new Error(`MultiInsertCommand.values must be an array. "${typeof values}" given.`)
+    throw new Error(
+      `MultiInsertCommand.values must be an array. "${typeof values}" given.`
+    )
   }
 
   if (typeof values[0] !== 'object') {
-    throw new Error('MultiInsertCommand.values must be an non-empty array<Object>.')
+    throw new Error(
+      'MultiInsertCommand.values must be an non-empty array<Object>.'
+    )
   }
 }
 
@@ -175,7 +193,10 @@ export function assertValidIdUpdateCommand(com: any): void {
   }
 
   const { entityName, operation, id } = com
-  assertNonEmptyString(id, `IdUpdateCommand.id must be a non-empty string. "${id}" given.`)
+  assertNonEmptyString(
+    id,
+    `IdUpdateCommand.id must be a non-empty string. "${id}" given.`
+  )
   assertValidEntityName(entityName, 'IdUpdateCommand')
   assertValidUpdateOperation(operation)
 }
@@ -190,7 +211,9 @@ export function assertValidMultiUpdateCommand(com: any): void {
 
   const { entityName, operation, where } = com
   if (typeof where !== 'object') {
-    throw new Error(`MultiUpdateCommand.where must be an object. "${where}" given.`)
+    throw new Error(
+      `MultiUpdateCommand.where must be an object. "${where}" given.`
+    )
   }
   assertValidEntityName(entityName, 'MultiUpdateCommand')
   assertValidUpdateOperation(operation)
@@ -206,14 +229,24 @@ export function assertValidPushCommand(com: any): void {
 
   const { entityName, operations, id, versionId } = com
   assertValidEntityName(entityName, 'PushCommand')
-  assertNonEmptyString(id, `PushCommand.id must be a non-empty string. "${id}" given.`)
-  assertNonEmptyString(versionId, `PushCommand.versionId must be a non-empty string. "${versionId}" given.`)
+  assertNonEmptyString(
+    id,
+    `PushCommand.id must be a non-empty string. "${id}" given.`
+  )
+  assertNonEmptyString(
+    versionId,
+    `PushCommand.versionId must be a non-empty string. "${versionId}" given.`
+  )
 
   if (!Array.isArray(operations)) {
-    throw new Error(`PushCommand.operations must be an array. "${typeof operations}" given.`)
+    throw new Error(
+      `PushCommand.operations must be an array. "${typeof operations}" given.`
+    )
   }
   if (operations.length === 0) {
-    throw new Error('PushCommand.operations must be a non-empty array. Empty array is given.')
+    throw new Error(
+      'PushCommand.operations must be a non-empty array. Empty array is given.'
+    )
   }
   operations.forEach(assertValidUpdateOperation)
 }
@@ -230,13 +263,18 @@ export function assertValidDeleteCommand(com: any): void {
   assertValidEntityName(entityName, 'DeleteCommand')
 
   if (id != null) {
-    assertNonEmptyString(id, `DeleteCommand.id must be a non-empty string. "${id}" given.`)
+    assertNonEmptyString(
+      id,
+      `DeleteCommand.id must be a non-empty string. "${id}" given.`
+    )
     return
   }
 
   if (where != null) {
     if (typeof where !== 'object') {
-      throw new Error(`DeleteCommand.where must be an object. "${where}" given.`)
+      throw new Error(
+        `DeleteCommand.where must be an object. "${where}" given.`
+      )
     }
     return
   }
@@ -260,7 +298,9 @@ export function assertValidCustomQuery(q: any): void {
 
   // if params exists, it must be an object
   if (typeof params !== 'object') {
-    throw new Error(`CustomQuery.params must be an object or null. ${typeof params} given.`)
+    throw new Error(
+      `CustomQuery.params must be an object or null. ${typeof params} given.`
+    )
   }
 }
 
@@ -282,7 +322,9 @@ export function assertValidCustomCommand(com: any): void {
 
   // if params exists, it must be an object
   if (typeof params !== 'object') {
-    throw new Error(`CustomCommand.params must be an object or null. ${typeof params} given.`)
+    throw new Error(
+      `CustomCommand.params must be an object or null. ${typeof params} given.`
+    )
   }
 }
 
@@ -299,12 +341,17 @@ export function assertValidLoginCommand(com: any): void {
 
   // credentials must be an object
   if (typeof credentials !== 'object' || com === null) {
-    throw new Error(`LoginCommand.credentials must be an object or null. ${typeof credentials} given.`)
+    throw new Error(
+      `LoginCommand.credentials must be an object or null. ${typeof credentials} given.`
+    )
   }
   // values in credentials must be strings
   Object.keys(credentials).forEach(credKey => {
     const value = credentials[credKey]
-    assertNonEmptyString(value, `LoginCommand.credentials['${credKey}'] must be a non-empty string.`)
+    assertNonEmptyString(
+      value,
+      `LoginCommand.credentials['${credKey}'] must be a non-empty string.`
+    )
   })
 }
 
@@ -334,10 +381,17 @@ export function assertValidUpdateOperation(ope: any): void {
  */
 export function assertValidEntityName(entityName: any, _dataName?: string) {
   const dataName = _dataName ? _dataName + '.' : ''
-  assertNonEmptyString(entityName, `${dataName}entityName must be a non-empty string. "${entityName}" given.`)
+  assertNonEmptyString(
+    entityName,
+    `${dataName}entityName must be a non-empty string. "${entityName}" given.`
+  )
 
   if (!/[A-Za-z][A-Za-z0-9-_]*/.test(entityName)) {
-    throw new Error(`${dataName}entityName must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${entityName}" given.`)
+    throw new Error(
+      `${dataName}entityName must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${
+        entityName
+      }" given.`
+    )
   }
 }
 
@@ -346,10 +400,17 @@ export function assertValidEntityName(entityName: any, _dataName?: string) {
  */
 export function assertValidCustomName(name: any, _dataName?: string) {
   const dataName = _dataName ? _dataName + '.' : ''
-  assertNonEmptyString(name, `${dataName}name must be a non-empty string. "${name}" given.`)
+  assertNonEmptyString(
+    name,
+    `${dataName}name must be a non-empty string. "${name}" given.`
+  )
 
   if (!/[A-Za-z][A-Za-z0-9-_]*/.test(name)) {
-    throw new Error(`${dataName}name must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${name}" given.`)
+    throw new Error(
+      `${dataName}name must be the regex: "[A-Za-z][A-Za-z0-9-_]*". "${
+        name
+      }" given.`
+    )
   }
 }
 

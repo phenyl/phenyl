@@ -1,8 +1,5 @@
 // @flow
-import type {
-  FindOperation,
-  UpdateOperation,
-} from 'mongolike-operations'
+import type { FindOperation, UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow' // string
 import type { ProEntity } from './entity.js.flow'
 
@@ -46,7 +43,7 @@ export type PushCommand = {|
 |}
 
 // see https://docs.mongodb.com/manual/reference/command/delete/
-export type DeleteCommand  = IdDeleteCommand | MultiDeleteCommand
+export type DeleteCommand = IdDeleteCommand | MultiDeleteCommand
 
 export type IdDeleteCommand = {|
   entityName: EntityName, // "delete" key in MongoDB reference
@@ -61,19 +58,18 @@ export type MultiDeleteCommand = {|
 |}
 
 export interface CustomCommand {
-  name: string, // custom insert command name
-  params?: Object
+  name: string; // custom insert command name
+  params?: Object;
 }
 
-
 export interface LoginCommand {
-  credentials: Object,
-  entityName: EntityName,
-  options?: Object,
+  credentials: Object;
+  entityName: EntityName;
+  options?: Object;
 }
 
 export interface LogoutCommand {
-  sessionId: Id,
-  userId: Id,
-  entityName: EntityName,
+  sessionId: Id;
+  userId: Id;
+  entityName: EntityName;
 }

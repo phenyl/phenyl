@@ -6,9 +6,13 @@ import type { ResponseData } from './response-data.js.flow'
 import type { RestApiExecution } from './handler.js.flow'
 
 export interface EntityDefinition {
-  authorization(reqData: RequestData, session: ?Session): Promise<boolean>, // AuthorizationHandler
-  validation(reqData: RequestData, session: ?Session): Promise<void>, // ValidationHandler
-  wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData>, // ExecutionWrapper
+  authorization(reqData: RequestData, session: ?Session): Promise<boolean>; // AuthorizationHandler
+  validation(reqData: RequestData, session: ?Session): Promise<void>; // ValidationHandler
+  wrapExecution(
+    reqData: RequestData,
+    session: ?Session,
+    execution: RestApiExecution
+  ): Promise<ResponseData>; // ExecutionWrapper
 }
 
 export type EntityDefinitions = { [entityName: string]: EntityDefinition }

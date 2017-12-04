@@ -13,50 +13,71 @@ export type EqCondition = Basic
 
 export interface QueryCondition {
   // comparison
-  $eq?: any,
-  $gt?: any,
-  $gte?: any,
-  $in?: Array<any>,
-  $lt?: any,
-  $lte?: any,
-  $ne?: any,
-  $nin?: Array<any>,
+  $eq?: any;
+  $gt?: any;
+  $gte?: any;
+  $in?: Array<any>;
+  $lt?: any;
+  $lte?: any;
+  $ne?: any;
+  $nin?: Array<any>;
   // logical
-  $not?: QueryCondition,
+  $not?: QueryCondition;
   // element
-  $exists?: boolean,
-  $type?: BSONTypeNumber | BSONTypeString,
+  $exists?: boolean;
+  $type?: BSONTypeNumber | BSONTypeString;
   // evaluation
-  $mod?: [number, number],
-  $regex?: RegExp | string,
-  $options?: RegExp$flags,
-  $text?: TextQueryCondition,
-  $where?: Function, // To Be Implemented
+  $mod?: [number, number];
+  $regex?: RegExp | string;
+  $options?: RegExp$flags;
+  $text?: TextQueryCondition;
+  $where?: Function; // To Be Implemented
   // geospatial
-  $geoIntersects?: Object, // To Be Implemented
-  $geoWithin?: Object, // To Be Implemented
-  $near?: Object, // To Be Implemented
-  $nearSphere?: Object, // To Be Implemented
+  $geoIntersects?: Object; // To Be Implemented
+  $geoWithin?: Object; // To Be Implemented
+  $near?: Object; // To Be Implemented
+  $nearSphere?: Object; // To Be Implemented
   // array
-  $all?: Array<any>,
-  $elemMatch?: QueryCondition,
-  $size?: number,
+  $all?: Array<any>;
+  $elemMatch?: QueryCondition;
+  $size?: number;
   // bitwise
-  $bitsAllClear?: number, // Currently, only number is allowed
-  $bitsAllSet?: number, // Currently, only number is allowed
-  $bitsAnyClear?: number, // Currently, only number is allowed
-  $bitsAnySet?: number, // Currently, only number is allowed
+  $bitsAllClear?: number; // Currently, only number is allowed
+  $bitsAllSet?: number; // Currently, only number is allowed
+  $bitsAnyClear?: number; // Currently, only number is allowed
+  $bitsAnySet?: number; // Currently, only number is allowed
   // comments
   // $comment: // No implementation
 }
 
-export type ComparisonQueryOperatorName = '$eq' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin'
+export type ComparisonQueryOperatorName =
+  | '$eq'
+  | '$gt'
+  | '$gte'
+  | '$in'
+  | '$lt'
+  | '$lte'
+  | '$ne'
+  | '$nin'
 export type LogicalQueryOperatorName = '$not'
 export type ElementQueryOperatorName = '$exists' | '$type'
-export type EvaluationQueryOperatorName = '$mod' | '$regex' | '$options' | '$text' | '$where'
-export type GeospatialQueryOperatorName = '$geoIntersects' | '$geoWithin' | '$near' | '$nearSphere'
+export type EvaluationQueryOperatorName =
+  | '$mod'
+  | '$regex'
+  | '$options'
+  | '$text'
+  | '$where'
+export type GeospatialQueryOperatorName =
+  | '$geoIntersects'
+  | '$geoWithin'
+  | '$near'
+  | '$nearSphere'
 export type ArrayOperatorName = '$all' | '$elemMatch' | '$size'
-export type BitwiseQueryOperatorName = '$bitsAllClear' | '$bitsAllSet' | '$bitsAnyClear' | '$bitsAnySet'
+export type BitwiseQueryOperatorName =
+  | '$bitsAllClear'
+  | '$bitsAllSet'
+  | '$bitsAnyClear'
+  | '$bitsAnySet'
 export type QueryOperatorName =
   | ComparisonQueryOperatorName
   | LogicalQueryOperatorName
@@ -66,26 +87,47 @@ export type QueryOperatorName =
   | ArrayOperatorName
   | BitwiseQueryOperatorName
 
-export type BSONTypeNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | -1 | 127
+export type BSONTypeNumber =
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14
+  | 15
+  | 16
+  | 17
+  | 18
+  | 19
+  | -1
+  | 127
 export type BSONTypeString =
-  'double' |
-  'string' |
-  'object' |
-  'array' |
-  'binData' |
-  'undefined' |
-  'objectId' |
-  'bool' |
-  'date' |
-  'null' |
-  'regex' |
-  'dbPointer' |
-  'javascript' |
-  'symbol' |
-  'javascriptWithScope' |
-  'int' |
-  'timestamp' |
-  'long' |
-  'decimal' |
-  'minKey' |
-  'maxKey'
+  | 'double'
+  | 'string'
+  | 'object'
+  | 'array'
+  | 'binData'
+  | 'undefined'
+  | 'objectId'
+  | 'bool'
+  | 'date'
+  | 'null'
+  | 'regex'
+  | 'dbPointer'
+  | 'javascript'
+  | 'symbol'
+  | 'javascriptWithScope'
+  | 'int'
+  | 'timestamp'
+  | 'long'
+  | 'decimal'
+  | 'minKey'
+  | 'maxKey'
