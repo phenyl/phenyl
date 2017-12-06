@@ -1,13 +1,7 @@
 // @flow
-import type {
-  Entity
-} from './entity.js.flow'
+import type { Entity } from './entity.js.flow'
 
-import type {
-  IdQuery,
-  IdsQuery,
-  WhereQuery,
-} from './query.js.flow'
+import type { IdQuery, IdsQuery, WhereQuery } from './query.js.flow'
 
 import type {
   IdUpdateCommand,
@@ -17,17 +11,16 @@ import type {
   DeleteCommand,
 } from './command.js.flow'
 
-
 export interface DbClient {
-  find(query: WhereQuery): Promise<Array<Entity>>,
-  findOne(query: WhereQuery): Promise<Entity>,
-  get(query: IdQuery): Promise<Entity>,
-  getByIds(query: IdsQuery): Promise<Array<Entity>>,
-  insertOne(command: SingleInsertCommand): Promise<number>,
-  insertMulti(command: MultiInsertCommand): Promise<number>,
-  insertAndGet(command: SingleInsertCommand): Promise<Entity>,
-  insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>>,
-  updateAndGet(command: IdUpdateCommand): Promise<Entity>,
-  updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>>,
-  delete(command: DeleteCommand): Promise<number>,
+  find(query: WhereQuery): Promise<Array<Entity>>;
+  findOne(query: WhereQuery): Promise<Entity>;
+  get(query: IdQuery): Promise<Entity>;
+  getByIds(query: IdsQuery): Promise<Array<Entity>>;
+  insertOne(command: SingleInsertCommand): Promise<number>;
+  insertMulti(command: MultiInsertCommand): Promise<number>;
+  insertAndGet(command: SingleInsertCommand): Promise<Entity>;
+  insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>>;
+  updateAndGet(command: IdUpdateCommand): Promise<Entity>;
+  updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>>;
+  delete(command: DeleteCommand): Promise<number>;
 }

@@ -3,9 +3,7 @@
 
 import WebSocket from 'ws'
 
-import {
-  createServerError
-} from 'phenyl-utils/jsnext'
+import { createServerError } from 'phenyl-utils/jsnext'
 
 import WebSocketClientInfo from './client-info.js'
 
@@ -39,15 +37,19 @@ export class PhenylWebSocketServer {
     wss.on('connection', (ws: WebSocket) => {
       const clientInfo = new WebSocketClientInfo(ws)
       this.clients.push(clientInfo)
-      ws.addEventListener('message', (evt: Event) => this.onMessage(evt.data || '', clientInfo))
+      ws.addEventListener('message', (evt: Event) =>
+        this.onMessage(evt.data || '', clientInfo)
+      )
     })
     if (params.versionDiffSubscriber) {
-      params.versionDiffSubscriber.subscribeVersionDiff((versionDiff: VersionDiff) => {
-        const { entityName, id } = versionDiff
-        this.clients
-          .filter(client => client.isSubscribed(entityName, id))
-          .forEach(client => client.send({ versionDiff }))
-      })
+      params.versionDiffSubscriber.subscribeVersionDiff(
+        (versionDiff: VersionDiff) => {
+          const { entityName, id } = versionDiff
+          this.clients
+            .filter(client => client.isSubscribed(entityName, id))
+            .forEach(client => client.send({ versionDiff }))
+        }
+      )
     }
   }
 
@@ -60,22 +62,28 @@ export class PhenylWebSocketServer {
       const clientMessage: WebSocketClientMessage = JSON.parse(message)
       const { tag } = clientMessage
       if (clientMessage.reqData != null) {
-        const resData = await this.restApiHandler.handleRequestData(clientMessage.reqData)
+        const resData = await this.restApiHandler.handleRequestData(
+          clientMessage.reqData
+        )
         return clientInfo.send({ tag, resData })
-      }
-      else if (clientMessage.subscription != null) {
+      } else if (clientMessage.subscription != null) {
         const { payload, sessionId } = clientMessage.subscription
         const getRequestData = { method: 'get', payload, sessionId }
-        const getResult = await this.restApiHandler.handleRequestData(getRequestData)
-        const result = (getResult.type !== 'error')
-        const subscriptionResult: SubscriptionResult = { entityName: payload.entityName, id: payload.id, result } // TODO: set ttl.
+        const getResult = await this.restApiHandler.handleRequestData(
+          getRequestData
+        )
+        const result = getResult.type !== 'error'
+        const subscriptionResult: SubscriptionResult = {
+          entityName: payload.entityName,
+          id: payload.id,
+          result,
+        } // TODO: set ttl.
         if (result) {
           clientInfo.addSubscription(payload.entityName, payload.id) // TODO set ttl.
         }
         return clientInfo.send({ tag, subscriptionResult })
       }
-    }
-    catch (e) {
+    } catch (e) {
       return clientInfo.send({ tag, error: createServerError(e) })
     }
   }
@@ -84,7 +92,12 @@ export class PhenylWebSocketServer {
    * @public
    * Listen the given port to launch http server.
    */
-  listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
+  listen(
+    port: number,
+    hostname?: string,
+    backlog?: number,
+    callback?: Function
+  ) {
     this.server.on('request', (req, res) => {
       res.writeHead(404)
       res.end()

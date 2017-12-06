@@ -3,5 +3,5 @@ import type { RequestData } from './request-data.js.flow'
 import type { ResponseData } from './response-data.js.flow'
 
 export interface RestApiHandler {
-  handleRequestData(reqData: RequestData): Promise<ResponseData>,
+  handleRequestData(reqData: RequestData): Promise<ResponseData>;
 }

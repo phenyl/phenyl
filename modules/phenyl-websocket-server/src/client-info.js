@@ -1,11 +1,7 @@
 // @flow
 import type WebSocket from 'ws'
 
-import type {
-  Id,
-  WebSocketServerMessage,
-} from 'phenyl-interfaces'
-
+import type { Id, WebSocketServerMessage } from 'phenyl-interfaces'
 
 /**
  *
@@ -25,7 +21,7 @@ export default class WebSocketClientInfo {
 
   addSubscription(entityName: string, id: Id, ttl?: number) {
     const key = `${entityName}/${id}`
-    this.subscriptions[key] = ttl ? (Date.now() + ttl * 1000) : -1
+    this.subscriptions[key] = ttl ? Date.now() + ttl * 1000 : -1
   }
 
   isSubscribed(entityName: string, id: Id): boolean {

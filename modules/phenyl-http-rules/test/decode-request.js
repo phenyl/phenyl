@@ -9,20 +9,19 @@ import decodeRequest from '../src/decode-request.js'
  * This test checks "wider" parts.
  */
 describe('Parsing path', () => {
-
   it('detects first "/api/" and parse URLs', () => {
     const request = {
       headers: {},
       path: '/api/api/api',
-      method: 'GET'
+      method: 'GET',
     }
     const reqData = decodeRequest(request)
     assert.deepEqual(reqData, {
       method: 'get',
       payload: {
         id: 'api',
-        entityName: 'api'
-      }
+        entityName: 'api',
+      },
     })
   })
 
@@ -30,24 +29,23 @@ describe('Parsing path', () => {
     const request = {
       headers: {},
       path: '/api/api/api/api',
-      method: 'GET'
+      method: 'GET',
     }
     assert.throws(() => decodeRequest(request), /greater than 3/)
   })
 })
 
 describe('sessionId', () => {
-
   it('uses value in querystring prior to headers', () => {
     const request = {
       headers: {
-        authorization: 'sessionId-in-headers'
+        authorization: 'sessionId-in-headers',
       },
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
       path: '/api/user/xxxx',
-      method: 'GET'
+      method: 'GET',
     }
     const reqData = decodeRequest(request)
     assert(reqData.sessionId === 'sessionId-in-querystring')
@@ -57,7 +55,7 @@ describe('sessionId', () => {
     const request = {
       headers: {},
       path: '/api/user/xxxx',
-      method: 'GET'
+      method: 'GET',
     }
     const reqData = decodeRequest(request)
     assert(reqData.sessionId == null)
@@ -73,7 +71,7 @@ describe('GET request', () => {
         sessionId: 'sessionId-in-querystring',
       },
       path: '/api/user',
-      method: 'GET'
+      method: 'GET',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'find')
@@ -85,7 +83,7 @@ describe('GET request', () => {
     const request = {
       headers: {},
       path: '/api/user',
-      method: 'GET'
+      method: 'GET',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'runCustomQuery')
@@ -103,7 +101,7 @@ describe('POST request', () => {
       },
       body: JSON.stringify({ value: { firstName: 'John' } }),
       path: '/api/user',
-      method: 'POST'
+      method: 'POST',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'insertOne')
@@ -119,7 +117,7 @@ describe('POST request', () => {
       },
       body: JSON.stringify({ values: [{ firstName: 'John' }] }),
       path: '/api/user',
-      method: 'POST'
+      method: 'POST',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'insertMulti')
@@ -132,7 +130,7 @@ describe('POST request', () => {
       headers: {},
       body: JSON.stringify({ params: { firstName: 'John' } }),
       path: '/api/user',
-      method: 'POST'
+      method: 'POST',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'runCustomCommand')
@@ -145,12 +143,15 @@ describe('PUT request', () => {
   it('when no methodName is given and payload.operation exists, regarded as "updateById"', () => {
     const request = {
       headers: {},
-      body: JSON.stringify({ id: 'john', operation: { $set: { firstName: 'John' } } }),
+      body: JSON.stringify({
+        id: 'john',
+        operation: { $set: { firstName: 'John' } },
+      }),
       qsParams: {
         sessionId: 'sessionId-in-querystring',
       },
       path: '/api/user',
-      method: 'PUT'
+      method: 'PUT',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'updateById')
@@ -168,7 +169,7 @@ describe('PUT request', () => {
         sessionId: 'sessionId-in-querystring',
       },
       path: '/api/user/john',
-      method: 'PUT'
+      method: 'PUT',
     }
     const reqData = decodeRequest(request)
     assert(reqData.method === 'updateById')
@@ -184,8 +185,11 @@ describe('PUT request', () => {
         sessionId: 'sessionId-in-querystring',
       },
       path: '/api/user/john',
-      method: 'PUT'
+      method: 'PUT',
     }
-    assert.throws(() => decodeRequest(request), /Could not decode the given PUT request/)
+    assert.throws(
+      () => decodeRequest(request),
+      /Could not decode the given PUT request/
+    )
   })
 })

@@ -1,7 +1,5 @@
 // @flow
-import {
-  normalizeQueryCondition
-} from './normalize-query-condition.js'
+import { normalizeQueryCondition } from './normalize-query-condition.js'
 
 import type {
   AddToSetOperator,
@@ -20,22 +18,32 @@ import type {
  * 3. Normalize $pull.
  * 4. Normalize $push.
  */
-export function normalizeUpdateOperation(_operation: Object): RegularUpdateOperation {
+export function normalizeUpdateOperation(
+  _operation: Object
+): RegularUpdateOperation {
   let operation = toUpdateOperation(_operation)
   if (operation.$addToSet != null) {
-    operation = Object.assign({}, operation, { $addToSet: normalizeAddToSetOperator(operation.$addToSet) })
+    operation = Object.assign({}, operation, {
+      $addToSet: normalizeAddToSetOperator(operation.$addToSet),
+    })
   }
   if (operation.$pull != null) {
-    operation = Object.assign({}, operation, { $pull: normalizePullOperator(operation.$pull) })
+    operation = Object.assign({}, operation, {
+      $pull: normalizePullOperator(operation.$pull),
+    })
   }
   if (operation.$push != null) {
-    operation = Object.assign({}, operation, { $push: normalizePushOperator(operation.$push) })
+    operation = Object.assign({}, operation, {
+      $push: normalizePushOperator(operation.$push),
+    })
   }
 
   return operation
 }
 
-function normalizeAddToSetOperator($addToSet: AddToSetOperator): RegularAddToSetOperator {
+function normalizeAddToSetOperator(
+  $addToSet: AddToSetOperator
+): RegularAddToSetOperator {
   const modified = {}
   Object.keys($addToSet).forEach(docPath => {
     let modifier = $addToSet[docPath]

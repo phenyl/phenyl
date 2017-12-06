@@ -7,8 +7,8 @@ import promisify from 'es6-promisify'
 const connectToMongoDb = promisify(MongoClient.connect)
 
 export interface MongoDbConnection {
-  close(): void,
-  collection(entityName: string): Object,
+  close(): void;
+  collection(entityName: string): Object;
 }
 
 export type MongoDbCollection = Object
@@ -25,14 +25,14 @@ export function close(db: MongoDbConnection): void {
 type PhenylMongoDbConnectionParams = {
   db: Object,
   collections?: {
-    [entityName: string]: MongoDbCollection
-  }
+    [entityName: string]: MongoDbCollection,
+  },
 }
 
 export class PhenylMongoDbConnection implements MongoDbConnection {
   db: Object
   collections: {
-    [entityName: string]: MongoDbCollection
+    [entityName: string]: MongoDbCollection,
   }
 
   constructor(params: PhenylMongoDbConnectionParams) {
@@ -70,13 +70,21 @@ type FindChainParams = {
   limit?: number,
 }
 
-type PromisifiedFind = (where?: Object, params?: FindChainParams) => Promise<any>
+type PromisifiedFind = (
+  where?: Object,
+  params?: FindChainParams
+) => Promise<any>
 
 function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
-  return function(where?: Object = {}, params?: FindChainParams = {}): Promise<any> {
+  return function(
+    where?: Object = {},
+    params?: FindChainParams = {}
+  ): Promise<any> {
     const findChain = find(where)
-    const newFindChain = Object.keys(params).reduce((chain, name) =>
-      chain[name](params[name]), findChain)
+    const newFindChain = Object.keys(params).reduce(
+      (chain, name) => chain[name](params[name]),
+      findChain
+    )
     return promisify(newFindChain.toArray, newFindChain)()
   }
 }

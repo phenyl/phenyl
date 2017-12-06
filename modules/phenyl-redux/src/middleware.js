@@ -29,7 +29,7 @@ type Store = any
 
 type Options = {
   client: RestApiClient,
-  storeKey?: string;
+  storeKey?: string,
 }
 
 type Next = (action: PhenylAction) => LocalState
@@ -37,7 +37,9 @@ type Next = (action: PhenylAction) => LocalState
 /**
  *
  */
-export const createMiddleware = (options: Options) => (store: Store) => (next: Next) => {
+export const createMiddleware = (options: Options) => (store: Store) => (
+  next: Next
+) => {
   const storeKey = options.storeKey || 'phenyl'
   const client = options.client
   const handler = new MiddlewareHandler(store, storeKey, client, next)
@@ -83,7 +85,12 @@ export class MiddlewareHandler {
   client: RestApiClient
   next: Next
 
-  constructor(store: Store, storeKey: string, client: RestApiClient, next: Next) {
+  constructor(
+    store: Store,
+    storeKey: string,
+    client: RestApiClient,
+    next: Next
+  ) {
     this.store = store
     this.storeKey = storeKey
     this.client = client
@@ -133,22 +140,44 @@ export class MiddlewareHandler {
       LocalStateUpdater.networkRequest(this.state, action.tag)
     )
 
-    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
-    const pushCommand: PushCommand = { id, operations: commits, entityName, versionId }
+    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
+      entityName,
+      id,
+    })
+    const pushCommand: PushCommand = {
+      id,
+      operations: commits,
+      entityName,
+      versionId,
+    }
 
     const ops = []
     try {
       const result = await this.client.push(pushCommand, this.sessionId)
       if (result.hasEntity) {
-        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
-      }
-      else {
         ops.push(
-          LocalStateUpdater.synchronize(this.state, { entityName, id, operations: result.operations, versionId: result.versionId }, commits),
+          LocalStateUpdater.follow(
+            this.state,
+            entityName,
+            result.entity,
+            result.versionId
+          )
+        )
+      } else {
+        ops.push(
+          LocalStateUpdater.synchronize(
+            this.state,
+            {
+              entityName,
+              id,
+              operations: result.operations,
+              versionId: result.versionId,
+            },
+            commits
+          )
         )
       }
-    }
-    catch (e) {
+    } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'Authorization': {
@@ -163,8 +192,7 @@ export class MiddlewareHandler {
           break
         }
       }
-    }
-    finally {
+    } finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
       this.assignToState(...ops)
     }
@@ -181,11 +209,9 @@ export class MiddlewareHandler {
     try {
       await this.client.delete(action.payload)
       ops.push(LocalStateUpdater.unfollow(this.state, entityName, id))
-    }
-    catch (e) {
+    } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
-    }
-    finally {
+    } finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
       this.assignToState(...ops)
     }
@@ -196,7 +222,9 @@ export class MiddlewareHandler {
    */
   follow(action: FollowAction) {
     const { entityName, entity, versionId } = action.payload
-    this.assignToState(LocalStateUpdater.follow(this.state, entityName, entity, versionId))
+    this.assignToState(
+      LocalStateUpdater.follow(this.state, entityName, entity, versionId)
+    )
   }
 
   /**
@@ -204,7 +232,14 @@ export class MiddlewareHandler {
    */
   followAll(action: FollowAllAction) {
     const { entityName, entities, versionsById } = action.payload
-    this.assignToState(LocalStateUpdater.followAll(this.state, entityName, entities, versionsById))
+    this.assignToState(
+      LocalStateUpdater.followAll(
+        this.state,
+        entityName,
+        entities,
+        versionsById
+      )
+    )
   }
 
   /**
@@ -218,12 +253,17 @@ export class MiddlewareHandler {
     let ops = []
     try {
       const result = await this.client.login(command, this.sessionId)
-      ops.push(LocalStateUpdater.setSession(this.state, result.session, result.user, result.versionId))
-    }
-    catch (e) {
+      ops.push(
+        LocalStateUpdater.setSession(
+          this.state,
+          result.session,
+          result.user,
+          result.versionId
+        )
+      )
+    } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
-    }
-    finally {
+    } finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
       this.assignToState(...ops)
     }
@@ -255,7 +295,10 @@ export class MiddlewareHandler {
     //LocalStateUpdater.commit(this.state, action.payload),
 
     const { operation, id, entityName } = action.payload
-    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
+    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
+      entityName,
+      id,
+    })
     const operations = commits.slice()
     operations.push(operation)
     const pushCommand: PushCommand = { id, operations, entityName, versionId }
@@ -264,16 +307,31 @@ export class MiddlewareHandler {
     try {
       const result = await this.client.push(pushCommand, this.sessionId)
       if (result.hasEntity) {
-        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+        ops.push(
+          LocalStateUpdater.follow(
+            this.state,
+            entityName,
+            result.entity,
+            result.versionId
+          )
+        )
+      } else {
+        ops.push(
+          LocalStateUpdater.synchronize(
+            this.state,
+            {
+              entityName,
+              id,
+              operations: result.operations,
+              versionId: result.versionId,
+            },
+            operations
+          )
+        )
       }
-      else {
-        ops.push(LocalStateUpdater.synchronize(this.state, { entityName, id, operations: result.operations, versionId: result.versionId }, operations))
-      }
-    }
-    catch (e) {
+    } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
-    }
-    finally {
+    } finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
       this.assignToState(...ops)
     }
@@ -284,16 +342,32 @@ export class MiddlewareHandler {
    */
   async pull(action: PullAction) {
     const { id, entityName } = action.payload
-    const { versionId } = LocalStateFinder.getEntityInfo(this.state, action.payload)
+    const { versionId } = LocalStateFinder.getEntityInfo(
+      this.state,
+      action.payload
+    )
     const pullQuery = { id, entityName, versionId }
     const result = await this.client.pull(pullQuery, this.sessionId)
 
     const ops = []
     if (result.pulled) {
-      ops.push(LocalStateUpdater.rebase(this.state, { entityName, id, operations: result.operations, versionId: result.versionId }))
-    }
-    else {
-      ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+      ops.push(
+        LocalStateUpdater.rebase(this.state, {
+          entityName,
+          id,
+          operations: result.operations,
+          versionId: result.versionId,
+        })
+      )
+    } else {
+      ops.push(
+        LocalStateUpdater.follow(
+          this.state,
+          entityName,
+          result.entity,
+          result.versionId
+        )
+      )
     }
     this.assignToState(...ops)
   }
@@ -303,7 +377,9 @@ export class MiddlewareHandler {
    */
   setSession(action: SetSessionAction) {
     const { user, versionId, session } = action.payload
-    this.assignToState(LocalStateUpdater.setSession(this.state, session, user, versionId))
+    this.assignToState(
+      LocalStateUpdater.setSession(this.state, session, user, versionId)
+    )
   }
 
   /**

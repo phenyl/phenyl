@@ -9,7 +9,12 @@ import type {
 } from 'phenyl-interfaces'
 
 function assertWrapExecution(fn: any, name: string, methodName: string) {
-  if (typeof fn !== 'function') throw new Error(`No "wrapExecution" function found for ${name} (methodName = ${methodName})`)
+  if (typeof fn !== 'function')
+    throw new Error(
+      `No "wrapExecution" function found for ${name} (methodName = ${
+        methodName
+      })`
+    )
 }
 
 /**
@@ -17,7 +22,11 @@ function assertWrapExecution(fn: any, name: string, methodName: string) {
  */
 export function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
   const { users, nonUsers } = fg
-  return async function executionWrapper(reqData: RequestData, session: ?Session, execution: RestApiExecution) :Promise<ResponseData> {
+  return async function executionWrapper(
+    reqData: RequestData,
+    session: ?Session,
+    execution: RestApiExecution
+  ): Promise<ResponseData> {
     const { method } = reqData
     switch (reqData.method) {
       case 'find':
@@ -38,9 +47,15 @@ export function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
       case 'login':
       case 'logout': {
         const data = reqData.payload
-        const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
-        if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
-        assertWrapExecution(entityDefinition.wrapExecution, data.entityName, method)
+        const entityDefinition =
+          nonUsers[data.entityName] || users[data.entityName]
+        if (entityDefinition == null)
+          throw new Error(`Unkown entity name "${data.entityName}".`)
+        assertWrapExecution(
+          entityDefinition.wrapExecution,
+          data.entityName,
+          method
+        )
         return entityDefinition.wrapExecution(reqData, session, execution)
       }
 

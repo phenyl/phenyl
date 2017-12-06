@@ -2,14 +2,9 @@
 /*eslint-env node*/
 
 import url from 'url'
-import {
-  ServerLogic,
-} from 'phenyl-http-rules/jsnext'
+import { ServerLogic } from 'phenyl-http-rules/jsnext'
 
-import type {
-  IncomingMessage,
-  ServerResponse,
-} from 'http'
+import type { IncomingMessage, ServerResponse } from 'http'
 import type {
   EncodedHttpResponse,
   HttpMethod,
@@ -39,7 +34,12 @@ export default class PhenylHttpServer {
    * @public
    * Listen the given port to launch http server.
    */
-  listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
+  listen(
+    port: number,
+    hostname?: string,
+    backlog?: number,
+    callback?: Function
+  ) {
     this.server.on('request', this.handleIncomingMessage.bind(this))
     this.server.listen(port, hostname, backlog, callback)
   }
@@ -85,7 +85,10 @@ export default class PhenylHttpServer {
    * 2. Invoke ServerLogic.
    * 3. Response to client via ServerResponse object.
    */
-  async handleIncomingMessage(request: IncomingMessage, response: ServerResponse) {
+  async handleIncomingMessage(
+    request: IncomingMessage,
+    response: ServerResponse
+  ) {
     const requestUrl = url.parse(request.url, true)
 
     const encodedHttpRequest = {
@@ -107,7 +110,10 @@ export default class PhenylHttpServer {
  * Response with Node.js's ServerResponse object.
  * TODO: Buffer type will be allowed in encodedResponse.body.
  */
-function respond(response: ServerResponse, encodedResponse: EncodedHttpResponse) {
+function respond(
+  response: ServerResponse,
+  encodedResponse: EncodedHttpResponse
+) {
   let { body, statusCode, headers } = encodedResponse
   response.writeHead(statusCode, headers)
   if (typeof body !== 'string') {

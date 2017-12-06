@@ -1,14 +1,12 @@
 // @flow
 
-import type {
-  UpdateOperation,
-} from 'mongolike-operations'
+import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
 
 export type CustomQueryResult = {
   ok: 1,
-  result: any
+  result: any,
 }
 
 export type QueryResult = {|
@@ -23,9 +21,11 @@ export type SingleQueryResult = {|
   versionId: Id,
 |}
 
-export type PullQueryResult = {|
-  ok: 1,
-  pulled: 1,
-  operations: Array<UpdateOperation>,
-  versionId: Id,
-|} | SingleQueryResult
+export type PullQueryResult =
+  | {|
+      ok: 1,
+      pulled: 1,
+      operations: Array<UpdateOperation>,
+      versionId: Id,
+    |}
+  | SingleQueryResult

@@ -1,8 +1,8 @@
 // @flow
 
 export default class PowerDebugger {
-
-  static startDebugging<T: Object | Function>(target: T, options?: Object): T { // eslint-disable-line no-unused-vars
+  static startDebugging<T: Object | Function>(target: T, options?: Object): T {
+    // eslint-disable-line no-unused-vars
     if (typeof target === 'object') {
       return this.startDebuggingObject(target)
     }

@@ -1,7 +1,5 @@
 // @flow
-import type {
-  RequestData
-} from './request-data.js.flow'
+import type { RequestData } from './request-data.js.flow'
 import type {
   WhereQuery,
   IdQuery,

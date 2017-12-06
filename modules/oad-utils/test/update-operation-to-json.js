@@ -7,7 +7,7 @@ import { updateOperationToJSON } from '../src/update-operation-to-json.js'
 describe('updateOperationToJSON', () => {
   it('no conversion when operation do not contain $restore property', () => {
     const operation = {
-      $inc: { value: 1 }
+      $inc: { value: 1 },
     }
     const newOps = updateOperationToJSON(operation)
     assert(operation, newOps)
@@ -20,29 +20,28 @@ describe('updateOperationToJSON', () => {
       $inc: { value: 1 },
       $restore: {
         foo: '',
-        bar: Bar
-      }
+        bar: Bar,
+      },
     }
     const expected = {
       $inc: { value: 1 },
       $restore: {
         foo: '',
-        bar: ''
-      }
+        bar: '',
+      },
     }
     const newOperation = updateOperationToJSON(operation)
     assert.deepEqual(newOperation, expected)
   })
 
   it('converts values of $pull property', () => {
-
     const operation = {
       $inc: { value: 1 },
-      $pull: /john/i
+      $pull: /john/i,
     }
     const expected = {
       $inc: { value: 1 },
-      $pull: { $regex: 'john', $options: 'i' }
+      $pull: { $regex: 'john', $options: 'i' },
     }
     const newOperation = updateOperationToJSON(operation)
     assert.deepEqual(newOperation, expected)
@@ -56,19 +55,18 @@ describe('updateOperationToJSON', () => {
       $pull: /john/i,
       $restore: {
         foo: '',
-        bar: Bar
-      }
+        bar: Bar,
+      },
     }
     const expected = {
       $inc: { value: 1 },
       $pull: { $regex: 'john', $options: 'i' },
       $restore: {
         foo: '',
-        bar: ''
-      }
+        bar: '',
+      },
     }
     const newOperation = updateOperationToJSON(operation)
     assert.deepEqual(newOperation, expected)
   })
-
 })

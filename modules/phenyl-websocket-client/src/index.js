@@ -15,11 +15,11 @@ import type {
   WebSocketServerMessage,
 } from 'phenyl-interfaces'
 
-
 /**
  * Universal WebSocket Client for PhenylWebSocketServer.
  */
-export default class PhenylWebSocketClient implements RestApiHandler, VersionDiffSubscriber {
+export default class PhenylWebSocketClient
+  implements RestApiHandler, VersionDiffSubscriber {
   client: WebSocket
   opened: Promise<boolean>
   versionDiffListener: ?VersionDiffListener
@@ -38,7 +38,13 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
       timer = setTimeout(() => {
         // $FlowIssue(compatible)
         this.client.removeEventListener('open', openListener)
-        reject(new Error(`PhenylWebSocketClient could not connect to server "${url}" in 30sec.`))
+        reject(
+          new Error(
+            `PhenylWebSocketClient could not connect to server "${
+              url
+            }" in 30sec.`
+          )
+        )
       }, 30000)
     })
 
@@ -54,13 +60,17 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
   /**
    * @public
    */
-  async subscribe(entityName: string, id: Id, sessionId?: ?Id): Promise<SubscriptionResult> {
+  async subscribe(
+    entityName: string,
+    id: Id,
+    sessionId?: ?Id
+  ): Promise<SubscriptionResult> {
     await this.opened
     return new Promise((resolve, reject) => {
       const subscription: SubscriptionRequest = {
         method: 'subscribe',
         payload: { entityName, id },
-        sessionId
+        sessionId,
       }
 
       const tag = randomStringWithTimeStamp()
@@ -70,14 +80,16 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
 
       const listener = this.client.addEventListener('message', (evt: Event) => {
         try {
-          const subscriptionResult = this.parseAsWaitingSubscriptionResult(evt.data || '', tag)
+          const subscriptionResult = this.parseAsWaitingSubscriptionResult(
+            evt.data || '',
+            tag
+          )
           if (subscriptionResult == null) return
           // $FlowIssue(compatible)
           this.client.removeEventListener('message', listener)
           clearTimeout(timer)
           return resolve(subscriptionResult)
-        }
-        catch (e) {
+        } catch (e) {
           reject(e)
         }
       })
@@ -116,8 +128,7 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
           this.client.removeEventListener('message', listener)
           clearTimeout(timer)
           return resolve(resData)
-        }
-        catch (e) {
+        } catch (e) {
           reject(e)
         }
       })
@@ -136,9 +147,10 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
   parseAsWaitingResponseData(message: any, tag: string): ?ResponseData {
     try {
       const parsed: WebSocketServerMessage = JSON.parse(message)
-      return (parsed.resData != null && parsed.tag != null && parsed.tag === tag) ? parsed.resData : null
-    }
-    catch (e) {
+      return parsed.resData != null && parsed.tag != null && parsed.tag === tag
+        ? parsed.resData
+        : null
+    } catch (e) {
       return null
     }
   }
@@ -146,12 +158,18 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
   /**
    * @private
    */
-  parseAsWaitingSubscriptionResult(message: any, tag: string): ?SubscriptionResult {
+  parseAsWaitingSubscriptionResult(
+    message: any,
+    tag: string
+  ): ?SubscriptionResult {
     try {
       const parsed: WebSocketServerMessage = JSON.parse(message)
-      return (parsed.subscriptionResult != null && parsed.tag != null && parsed.tag === tag) ? parsed.subscriptionResult : null
-    }
-    catch (e) {
+      return parsed.subscriptionResult != null &&
+        parsed.tag != null &&
+        parsed.tag === tag
+        ? parsed.subscriptionResult
+        : null
+    } catch (e) {
       return null
     }
   }
@@ -163,8 +181,7 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
     try {
       const parsed: WebSocketServerMessage = JSON.parse(message)
       return parsed.versionDiff != null ? parsed.versionDiff : null
-    }
-    catch (e) {
+    } catch (e) {
       return null
     }
   }

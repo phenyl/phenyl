@@ -2,7 +2,12 @@
 
 export type PhenylErrorType = ServerErrorType | LocalErrorType
 
-export type ServerErrorType = 'BadRequest' | 'Unauthorized' | 'Forbidden' | 'NotFound' | 'InternalServer'
+export type ServerErrorType =
+  | 'BadRequest'
+  | 'Unauthorized'
+  | 'Forbidden'
+  | 'NotFound'
+  | 'InternalServer'
 export type LocalErrorType = 'NetworkFailed' | 'InvalidData' | 'CodeProblem'
 
 export type PhenylError = ServerError | LocalError
@@ -10,16 +15,16 @@ export type PhenylError = ServerError | LocalError
 export type ErrorLocation = 'server' | 'local'
 
 export interface ServerError {
-  ok: 0,
-  at: 'server',
-  type: ServerErrorType,
-  message: string,
-  stack?: string,
+  ok: 0;
+  at: 'server';
+  type: ServerErrorType;
+  message: string;
+  stack?: string;
 }
 
 export interface LocalError {
-  at: 'local',
-  type: LocalErrorType,
-  message: string,
-  stack?: string,
+  at: 'local';
+  type: LocalErrorType;
+  message: string;
+  stack?: string;
 }

@@ -1,15 +1,15 @@
 // @flow
 import { describe, it } from 'kocha'
 import assert from 'power-assert'
-import {
-  getNestedValue,
-  hasOwnNestedProperty
-} from '../src/nested-value.js'
+import { getNestedValue, hasOwnNestedProperty } from '../src/nested-value.js'
 
-describe('getNestedValue', function () {
-  const obj = { foo: { bar: [{}, {}, { baz1: false, baz2: null } ]}, foo2: undefined }
+describe('getNestedValue', function() {
+  const obj = {
+    foo: { bar: [{}, {}, { baz1: false, baz2: null }] },
+    foo2: undefined,
+  }
 
-  it ('returns nested value', function () {
+  it('returns nested value', function() {
     assert(getNestedValue(obj, 'foo') === obj.foo)
     assert(getNestedValue(obj, 'foo.bar') === obj.foo.bar)
     assert(getNestedValue(obj, 'foo.bar[0]') === obj.foo.bar[0])
@@ -20,19 +20,22 @@ describe('getNestedValue', function () {
     assert(getNestedValue(obj, 'foo2') === obj.foo2)
   })
 
-  it ('returns undefined when the nested value is not found.', function () {
+  it('returns undefined when the nested value is not found.', function() {
     assert(getNestedValue(obj, 'a.b.c.d.e') === undefined)
   })
 
-  it ('throws error when the 3rd argument is true and the nested value is not found.', function () {
+  it('throws error when the 3rd argument is true and the nested value is not found.', function() {
     assert(() => getNestedValue(obj, 'a.b.c.d.e', true), /Cannot get value/)
   })
 })
 
-describe('hasOwnNestedProperty', function () {
-  const obj = { foo: { bar: [{}, {}, { baz1: false, baz2: null } ]}, foo2: undefined }
+describe('hasOwnNestedProperty', function() {
+  const obj = {
+    foo: { bar: [{}, {}, { baz1: false, baz2: null }] },
+    foo2: undefined,
+  }
 
-  it ('returns true when it has own nested property', function () {
+  it('returns true when it has own nested property', function() {
     assert(hasOwnNestedProperty(obj, 'foo') === true)
     assert(hasOwnNestedProperty(obj, 'foo.bar') === true)
     assert(hasOwnNestedProperty(obj, 'foo.bar[0]') === true)
@@ -43,7 +46,7 @@ describe('hasOwnNestedProperty', function () {
     assert(hasOwnNestedProperty(obj, 'foo2') === true)
   })
 
-  it ('returns false when it doesn\'t have own nested property', function () {
+  it("returns false when it doesn't have own nested property", function() {
     assert(hasOwnNestedProperty(obj, 'bar') === false)
     assert(hasOwnNestedProperty(obj, 'foo.baz') === false)
     assert(hasOwnNestedProperty(obj, 'foo.bar[3]') === false)

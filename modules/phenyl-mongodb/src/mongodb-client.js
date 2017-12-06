@@ -1,7 +1,5 @@
 // @flow
-import {
-  createServerError,
-} from 'phenyl-utils/jsnext'
+import { createServerError } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign/jsnext'
 import {
   convertToDotNotationString,
@@ -26,12 +24,16 @@ import type {
 
 import type { MongoDbConnection } from './connection.js'
 
-// $FlowIssue(this-is-SimpleFindOperation)
-function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function setIdTo_idInWhere(
+  // $FlowIssue(this-is-SimpleFindOperation)
+  simpleFindOperation: SimpleFindOperation
+): SimpleFindOperation {
   return assign(simpleFindOperation, { $rename: { id: '_id' } })
 }
 
-function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function convertDocumentPathToDotNotation(
+  simpleFindOperation: SimpleFindOperation
+): SimpleFindOperation {
   return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
     const dstKey = convertToDotNotationString(srcKey)
     operation[dstKey] = simpleFindOperation[srcKey]
@@ -39,30 +41,46 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
   }, {})
 }
 
-function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function composedFinedOperationFilters(
+  simpleFindOperation: SimpleFindOperation
+): SimpleFindOperation {
   return [
     setIdTo_idInWhere,
     convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
-  ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
+  ].reduce(
+    (operation, filterFunc) => filterFunc(operation),
+    simpleFindOperation
+  )
 }
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
-  return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
+  return visitFindOperation(operation, {
+    simpleFindOperation: composedFinedOperationFilters,
+  })
 }
 
 function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   const renameOperator = operation.$rename
   if (!renameOperator) return operation
 
-  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator, key) => {
-    operator[key] = key.split('.').slice(0, -1).concat(renameOperator[key]).join('.')
-    return operator
-  }, {})
+  const renameOperatorWithParent = Object.keys(renameOperator).reduce(
+    (operator, key) => {
+      operator[key] = key
+        .split('.')
+        .slice(0, -1)
+        .concat(renameOperator[key])
+        .join('.')
+      return operator
+    },
+    {}
+  )
 
-  return assign(operation, { $set: { $rename: renameOperatorWithParent }})
+  return assign(operation, { $set: { $rename: renameOperatorWithParent } })
 }
 
-export function filterUpdateOperation(operation: UpdateOperation): UpdateOperation {
+export function filterUpdateOperation(
+  operation: UpdateOperation
+): UpdateOperation {
   return convertNewNameWithParent(operation)
 }
 
@@ -122,7 +140,7 @@ export class PhenylMongoDbClient implements DbClient {
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
-        'NotFound',
+        'NotFound'
       )
     }
     return result.map(set_idToIdInEntity)
@@ -162,7 +180,10 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateOne({ _id: id }, filterUpdateOperation(operation))
+    const result = await coll.updateOne(
+      { _id: id },
+      filterUpdateOperation(operation)
+    )
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createServerError(
@@ -177,7 +198,10 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
-    await coll.updateMany(filterFindOperation(where), filterUpdateOperation(operation))
+    await coll.updateMany(
+      filterFindOperation(where),
+      filterUpdateOperation(operation)
+    )
     // FIXME: the result may be different from updated entities.
     return this.find({ entityName, where: setIdTo_idInWhere(where) })
   }
@@ -188,8 +212,7 @@ export class PhenylMongoDbClient implements DbClient {
     let result
     if (command.id) {
       result = await coll.deleteOne({ _id: command.id })
-    }
-    else if (command.where) {
+    } else if (command.where) {
       result = await coll.deleteMany(setIdTo_idInWhere(command.where))
     }
     // $FlowIssue(deleteCount-exists)

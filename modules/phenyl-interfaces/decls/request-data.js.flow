@@ -1,7 +1,5 @@
 // @flow
-import type {
-  Id
-} from './id.js.flow'
+import type { Id } from './id.js.flow'
 import type {
   IdsQuery,
   IdQuery,
@@ -22,45 +20,45 @@ import type {
 } from './command.js.flow'
 
 export type RequestMethodName =
-  'find' |
-  'findOne' |
-  'get' |
-  'getByIds' |
-  'pull' |
-  'insertOne' |
-  'insertAndGet' |
-  'insertAndGetMulti' |
-  'updateById' |
-  'updateMulti' |
-  'updateAndGet' |
-  'updateAndFetch' |
-  'push' |
-  'delete' |
-  'runCustomQuery' |
-  'runCustomCommand' |
-  'login' |
-  'logout'
+  | 'find'
+  | 'findOne'
+  | 'get'
+  | 'getByIds'
+  | 'pull'
+  | 'insertOne'
+  | 'insertAndGet'
+  | 'insertAndGetMulti'
+  | 'updateById'
+  | 'updateMulti'
+  | 'updateAndGet'
+  | 'updateAndFetch'
+  | 'push'
+  | 'delete'
+  | 'runCustomQuery'
+  | 'runCustomCommand'
+  | 'login'
+  | 'logout'
 
 export type RequestData =
-  FindRequestData |
-  FindOneRequestData |
-  GetRequestData |
-  GetByIdsRequestData |
-  PullRequestData |
-  InsertOneRequestData |
-  InsertMultiRequestData |
-  InsertAndGetRequestData |
-  InsertAndGetMultiRequestData |
-  UpdateOneRequestData |
-  UpdateMultiRequestData |
-  UpdateAndGetRequestData |
-  UpdateAndFetchRequestData |
-  PushRequestData |
-  DeleteRequestData |
-  RunCustomQueryRequestData |
-  RunCustomCommandRequestData |
-  LoginRequestData |
-  LogoutRequestData
+  | FindRequestData
+  | FindOneRequestData
+  | GetRequestData
+  | GetByIdsRequestData
+  | PullRequestData
+  | InsertOneRequestData
+  | InsertMultiRequestData
+  | InsertAndGetRequestData
+  | InsertAndGetMultiRequestData
+  | UpdateOneRequestData
+  | UpdateMultiRequestData
+  | UpdateAndGetRequestData
+  | UpdateAndFetchRequestData
+  | PushRequestData
+  | DeleteRequestData
+  | RunCustomQueryRequestData
+  | RunCustomCommandRequestData
+  | LoginRequestData
+  | LogoutRequestData
 
 export type FindRequestData = {|
   method: 'find',

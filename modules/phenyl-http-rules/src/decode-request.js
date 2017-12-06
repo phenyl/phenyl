@@ -10,7 +10,9 @@ import type {
 /**
  *
  */
-export default function decodeRequest(request: EncodedHttpRequest): RequestData {
+export default function decodeRequest(
+  request: EncodedHttpRequest
+): RequestData {
   let reqData: RequestData
   const sessionId = decodeSessionId(request)
   switch (request.method) {
@@ -30,19 +32,20 @@ export default function decodeRequest(request: EncodedHttpRequest): RequestData 
       reqData = decodeDELETERequest(request)
       break
     default:
-      throw new Error(`Could not handle HTTP method: ${request.method}. Only GET|POST|PUT|DELETE are allowed.`)
+      throw new Error(
+        `Could not handle HTTP method: ${
+          request.method
+        }. Only GET|POST|PUT|DELETE are allowed.`
+      )
   }
-  return (sessionId) ? Object.assign(reqData, { sessionId }) : reqData
+  return sessionId ? Object.assign(reqData, { sessionId }) : reqData
 }
 
 /**
  * @private
  */
 function decodeGETRequest(request: EncodedHttpRequest): RequestData {
-  const {
-    path,
-    qsParams,
-  } = request
+  const { path, qsParams } = request
 
   const payload = decodeDataInQsParams(qsParams)
   let { entityName, methodName } = parsePath(path)
@@ -52,16 +55,19 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
     // WhereQuery => method is "find"
     if (payload.where) {
       methodName = 'find'
-    }
-    // CustomQuery
-    else {
+    } else {
+      // CustomQuery
       const name = entityName
       if (payload.name && payload.name !== name) {
-        throw new Error(`CustomQuery name in payload is different from that in URL. in payload: "${payload.name}", in URL: "${name}".`)
+        throw new Error(
+          `CustomQuery name in payload is different from that in URL. in payload: "${
+            payload.name
+          }", in URL: "${name}".`
+        )
       }
       return {
         method: 'runCustomQuery',
-        payload: Object.assign(payload, { name })
+        payload: Object.assign(payload, { name }),
       }
     }
   }
@@ -70,7 +76,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
   if (Object.keys(payload).length === 0) {
     return {
       method: 'get',
-      payload: { entityName, id: methodName }
+      payload: { entityName, id: methodName },
     }
   }
 
@@ -80,16 +86,28 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
     case 'getByIds':
     case 'pull': {
       if (payload.entityName && payload.entityName !== entityName) {
-        throw new Error(`Invalid GET request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+        throw new Error(
+          `Invalid GET request (method="${
+            methodName
+          }"). entityName in payload is different from that in URL. in payload: "${
+            payload.entityName
+          }", in URL: "${entityName}".`
+        )
       }
       // $FlowIssue(this-is-always-valid-request-data)
       return {
         method: methodName,
-        payload: Object.assign(payload, { entityName })
+        payload: Object.assign(payload, { entityName }),
       }
     }
     default:
-      throw new Error(`Could not decode the given GET request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+      throw new Error(
+        `Could not decode the given GET request. Request = \n${JSON.stringify(
+          request,
+          null,
+          2
+        )}\n\n`
+      )
   }
 }
 
@@ -97,13 +115,16 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
  * @private
  */
 function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
-  const {
-    path,
-    body
-  } = request
+  const { path, body } = request
 
   if (!body) {
-    throw new Error(`Request body is empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+    throw new Error(
+      `Request body is empty in the given POST request. Request = \n${JSON.stringify(
+        request,
+        null,
+        2
+      )}\n\n`
+    )
   }
 
   const payload = decodeBody(body)
@@ -114,19 +135,21 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     // SingleInsertCommand
     if (payload.value) {
       methodName = 'insertOne'
-    }
-    else if (payload.values) {
+    } else if (payload.values) {
       methodName = 'insertMulti'
-    }
-    // CustomCommand
-    else {
+    } else {
+      // CustomCommand
       const name = entityName
       if (payload.name && payload.name !== name) {
-        throw new Error(`CustomQuery command in payload is different from that in URL. in payload: "${payload.name}", in URL: "${name}".`)
+        throw new Error(
+          `CustomQuery command in payload is different from that in URL. in payload: "${
+            payload.name
+          }", in URL: "${name}".`
+        )
       }
       return {
         method: 'runCustomCommand',
-        payload: Object.assign(payload, { name })
+        payload: Object.assign(payload, { name }),
       }
     }
   }
@@ -139,7 +162,13 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     case 'insertAndGet':
     case 'insertAndGetMulti': {
       if (payload.entityName && payload.entityName !== entityName) {
-        throw new Error(`Invalid POST request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+        throw new Error(
+          `Invalid POST request (method="${
+            methodName
+          }"). entityName in payload is different from that in URL. in payload: "${
+            payload.entityName
+          }", in URL: "${entityName}".`
+        )
       }
       // $FlowIssue(this-is-always-valid-request-data)
       return {
@@ -148,7 +177,13 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
       }
     }
     default:
-      throw new Error(`Could not decode the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+      throw new Error(
+        `Could not decode the given POST request. Request = \n${JSON.stringify(
+          request,
+          null,
+          2
+        )}\n\n`
+      )
   }
 }
 
@@ -156,13 +191,16 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
  * @private
  */
 function decodePUTRequest(request: EncodedHttpRequest): RequestData {
-  const {
-    path,
-    body
-  } = request
+  const { path, body } = request
 
   if (!body) {
-    throw new Error(`Request body is empty in the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+    throw new Error(
+      `Request body is empty in the given PUT request. Request = \n${JSON.stringify(
+        request,
+        null,
+        2
+      )}\n\n`
+    )
   }
 
   const payload = decodeBody(body)
@@ -173,14 +211,32 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
     methodName = 'updateById'
   }
   // irregular methodNames are regarded as id and converted into IdUpdateCommand
-  if (!['updateById', 'updateMulti', 'updateAndGet', 'updateAndFetch', 'push'].includes(methodName)) {
+  if (
+    ![
+      'updateById',
+      'updateMulti',
+      'updateAndGet',
+      'updateAndFetch',
+      'push',
+    ].includes(methodName)
+  ) {
     const id = methodName
     if (payload.id && payload.id !== id) {
-      throw new Error(`Invalid PUT request (method="updateById"). id in payload is different from that in URL. in payload: "${payload.id}", in URL: "${id}".`)
+      throw new Error(
+        `Invalid PUT request (method="updateById"). id in payload is different from that in URL. in payload: "${
+          payload.id
+        }", in URL: "${id}".`
+      )
     }
 
     if (!payload.operation) {
-      throw new Error(`Could not decode the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+      throw new Error(
+        `Could not decode the given PUT request. Request = \n${JSON.stringify(
+          request,
+          null,
+          2
+        )}\n\n`
+      )
     }
 
     payload.id = id
@@ -188,7 +244,13 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   }
 
   if (payload.entityName && payload.entityName !== entityName) {
-    throw new Error(`Invalid PUT request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`)
+    throw new Error(
+      `Invalid PUT request (method="${
+        methodName
+      }"). entityName in payload is different from that in URL. in payload: "${
+        payload.entityName
+      }", in URL: "${entityName}".`
+    )
   }
 
   // $FlowIssue(this-is-always-valid-request-data)
@@ -202,10 +264,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
  * @private
  */
 function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
-  const {
-    path,
-    qsParams,
-  } = request
+  const { path, qsParams } = request
 
   const payload = decodeDataInQsParams(qsParams)
   let { entityName, methodName } = parsePath(path)
@@ -215,7 +274,7 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
     return {
       method: 'delete',
       // $FlowIssue(this-is-MultiDeleteCommand)
-      payload: Object.assign(payload, { entityName })
+      payload: Object.assign(payload, { entityName }),
     }
   }
 
@@ -225,24 +284,31 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
       method: 'delete',
       payload: {
         entityName,
-        id: methodName
-      }
+        id: methodName,
+      },
     }
   }
-  throw new Error(`Could not decode the given DELETE request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+  throw new Error(
+    `Could not decode the given DELETE request. Request = \n${JSON.stringify(
+      request,
+      null,
+      2
+    )}\n\n`
+  )
 }
 
-function decodeBody(body: string): any { // return "any" type for suppressing flow error
+function decodeBody(body: string): any {
+  // return "any" type for suppressing flow error
   return JSON.parse(body)
 }
-
 
 /**
  * extract data from query string params
  * parse JSON in "d" field
  * @private
  */
-function decodeDataInQsParams(qsParams: ?QueryStringParams): Object { // return "any" type for suppressing flow error
+function decodeDataInQsParams(qsParams: ?QueryStringParams): Object {
+  // return "any" type for suppressing flow error
   if (qsParams == null || qsParams.d == null) {
     return {}
   }
@@ -256,24 +322,25 @@ function decodeDataInQsParams(qsParams: ?QueryStringParams): Object { // return 
  * 3. return null
  */
 export function decodeSessionId(request: EncodedHttpRequest): ?Id {
-  const {
-    headers,
-    qsParams,
-  } = request
+  const { headers, qsParams } = request
   return (qsParams && qsParams.sessionId) || headers.authorization || null
 }
 
 /**
-*
-*/
+ *
+ */
 function parsePath(path: string): { entityName: string, methodName: ?string } {
   const prefix = path.slice(0, 5)
   if (prefix !== '/api/') {
-    throw new Error(`Invalid request path: "${path}". Paths must start with "/api/" prefix.`)
+    throw new Error(
+      `Invalid request path: "${path}". Paths must start with "/api/" prefix.`
+    )
   }
   const strippedPaths = path.slice(5).split('/')
   if (strippedPaths.length >= 3) {
-    throw new Error(`Invalid request path: "${path}". Paths depth must not be greater than 3.`) // this error comments consider prefix /api/
+    throw new Error(
+      `Invalid request path: "${path}". Paths depth must not be greater than 3.`
+    ) // this error comments consider prefix /api/
   }
   return { entityName: strippedPaths[0], methodName: strippedPaths[1] }
 }

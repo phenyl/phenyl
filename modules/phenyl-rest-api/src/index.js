@@ -6,11 +6,13 @@ export { createCustomQueryHandler } from './create-custom-query-handler.js'
 export { createCustomCommandHandler } from './create-custom-command-handler.js'
 export { createAuthenticationHandler } from './create-authentication-handler.js'
 export { createExecutionWrapper } from './create-execution-wrapper.js'
-export { createParamsByFunctionalGroup } from './create-params-by-functional-group.js'
+export {
+  createParamsByFunctionalGroup,
+} from './create-params-by-functional-group.js'
 export {
   passThroughHandler,
   noHandler,
-  simpleExecutionWrapper
+  simpleExecutionWrapper,
 } from './default-handlers.js'
 
 export default PhenylRestApi

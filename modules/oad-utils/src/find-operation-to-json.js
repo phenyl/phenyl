@@ -1,12 +1,7 @@
 // @flow
-import type {
-  FindOperation,
-  QueryCondition,
-} from 'mongolike-operations'
+import type { FindOperation, QueryCondition } from 'mongolike-operations'
 
-import {
-  visitFindOperation
-} from './visit-find-operation.js'
+import { visitFindOperation } from './visit-find-operation.js'
 
 /**
  *
@@ -15,15 +10,20 @@ export function findOperationToJSON(where: Object): FindOperation {
   return visitFindOperation(where, {
     queryCondition(condition: QueryCondition) {
       return queryConditionToJSON(condition)
-    }
+    },
   })
 }
 
 /**
  *
  */
-export function queryConditionToJSON(queryCondition: QueryCondition): $Supertype<QueryCondition> {
-  if (queryCondition.$regex == null || typeof queryCondition.$regex === 'string') {
+export function queryConditionToJSON(
+  queryCondition: QueryCondition
+): $Supertype<QueryCondition> {
+  if (
+    queryCondition.$regex == null ||
+    typeof queryCondition.$regex === 'string'
+  ) {
     return queryCondition
   }
 

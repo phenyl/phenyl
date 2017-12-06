@@ -18,13 +18,14 @@ import PhenylStateFinder from './phenyl-state-finder.js'
 import PhenylStateUpdater from './phenyl-state-updater.js'
 
 export type PhenylStateParams = {
-  pool?: EntityPool
+  pool?: EntityPool,
 }
 
 /**
  *
  */
-export default class PhenylState implements EntityState, EntityStateFinder, EntityStateUpdater {
+export default class PhenylState
+  implements EntityState, EntityStateFinder, EntityStateUpdater {
   pool: EntityPool
 
   constructor(plain: PhenylStateParams = {}) {

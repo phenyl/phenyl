@@ -1,12 +1,12 @@
 // @flow
 
-import type {
-  DocumentPath,
-  Restorable,
-} from 'mongolike-operations'
+import type { DocumentPath, Restorable } from 'mongolike-operations'
 import { parseDocumentPath } from 'oad-utils/jsnext'
 
-export function getObjectsToBeAssigned(obj: Restorable, docPath: DocumentPath): Array<Restorable> {
+export function getObjectsToBeAssigned(
+  obj: Restorable,
+  docPath: DocumentPath
+): Array<Restorable> {
   const ret = [obj]
   const keys = parseDocumentPath(docPath)
   keys.pop()

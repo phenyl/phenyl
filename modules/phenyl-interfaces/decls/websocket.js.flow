@@ -1,15 +1,9 @@
 // @flow
-import type {
-  RequestData
-} from './request-data.js.flow'
+import type { RequestData } from './request-data.js.flow'
 
-import type {
-  ResponseData
-} from './response-data.js.flow'
+import type { ResponseData } from './response-data.js.flow'
 
-import type {
-  ServerError
-} from './error.js.flow'
+import type { ServerError } from './error.js.flow'
 
 import type {
   VersionDiff,
@@ -18,11 +12,11 @@ import type {
   SubscriptionResult,
 } from './versioning.js.flow'
 
-import type {
-  RestApiHandler
-} from './rest-api-handler.js.flow'
+import type { RestApiHandler } from './rest-api-handler.js.flow'
 
-export type WebSocketClientMessage = WebSocketClientRequestDataMessage | WebSocketClientSubscriptionRequestMessage
+export type WebSocketClientMessage =
+  | WebSocketClientRequestDataMessage
+  | WebSocketClientSubscriptionRequestMessage
 
 export type WebSocketClientRequestDataMessage = {|
   reqData: RequestData,
@@ -35,10 +29,10 @@ export type WebSocketClientSubscriptionRequestMessage = {|
 |}
 
 export type WebSocketServerMessage =
-  WebSocketServerResponseDataMessage |
-  WebSocketServerVersionDiffMessage |
-  WebSocketServerSubscriptionResultMessage |
-  WebSocketServerErrorMessage
+  | WebSocketServerResponseDataMessage
+  | WebSocketServerVersionDiffMessage
+  | WebSocketServerSubscriptionResultMessage
+  | WebSocketServerErrorMessage
 
 export type WebSocketServerResponseDataMessage = {|
   resData: ResponseData,
@@ -61,5 +55,5 @@ export type WebSocketServerErrorMessage = {|
 
 export type WebSocketServerParams = {
   restApiHandler: RestApiHandler,
-  versionDiffSubscriber?: VersionDiffSubscriber
+  versionDiffSubscriber?: VersionDiffSubscriber,
 }

@@ -1,32 +1,30 @@
 // @flow
 import { describe, it } from 'kocha'
 import assert from 'power-assert'
-import {
-  findOperationToJSON,
-} from '../src/find-operation-to-json.js'
+import { findOperationToJSON } from '../src/find-operation-to-json.js'
 
-describe('findOperationToJSON', function () {
-  it ('converts $regex operation', function () {
-    const where = { 'user.firstName': { $regex: /shin/gi }}
+describe('findOperationToJSON', function() {
+  it('converts $regex operation', function() {
+    const where = { 'user.firstName': { $regex: /shin/gi } }
     const modifiedWhere = findOperationToJSON(where)
     assert.deepEqual(modifiedWhere, {
-      'user.firstName': { $regex: 'shin', $options: 'gi' }
+      'user.firstName': { $regex: 'shin', $options: 'gi' },
     })
   })
 
-  it ('converts implicit regex operation', function () {
+  it('converts implicit regex operation', function() {
     const where = { 'user.firstName': /naomi/gi }
     const modifiedWhere = findOperationToJSON(where)
     assert.deepEqual(modifiedWhere, {
-      'user.firstName': { $regex: 'naomi', $options: 'gi' }
+      'user.firstName': { $regex: 'naomi', $options: 'gi' },
     })
   })
 
-  it ('converts complex find operation with regex', function () {
+  it('converts complex find operation with regex', function() {
     const where = {
       $and: [
         { 'user.firstName': /naomi/gi },
-        { 'user.lastName': { $not: { $regex: /Suzuki/ } } }
+        { 'user.lastName': { $not: { $regex: /Suzuki/ } } },
       ],
     }
 
@@ -34,7 +32,7 @@ describe('findOperationToJSON', function () {
     assert.deepEqual(modifiedWhere, {
       $and: [
         { 'user.firstName': { $regex: 'naomi', $options: 'gi' } },
-        { 'user.lastName': { $not: { $regex: 'Suzuki' } } }
+        { 'user.lastName': { $not: { $regex: 'Suzuki' } } },
       ],
     })
   })

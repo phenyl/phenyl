@@ -9,24 +9,18 @@ import {
 } from '../src/mongodb-client.js'
 
 describe('filterFindOperation', () => {
-  it ('renames id to _id', () => {
+  it('renames id to _id', () => {
     const input: AndFindOperation = {
-      $and: [
-        { id: 'abc' },
-        { type: 'bar' },
-      ]
+      $and: [{ id: 'abc' }, { type: 'bar' }],
     }
     const expected = {
-      $and: [
-        { _id: 'abc' },
-        { type: 'bar' },
-      ]
+      $and: [{ _id: 'abc' }, { type: 'bar' }],
     }
     const actual = filterFindOperation(input)
     assert.deepEqual(actual, expected)
   })
 
-  it ('converts document path to dot notation', () => {
+  it('converts document path to dot notation', () => {
     // $FlowIssue(this-is-and-find-operation)
     const input: AndFindOperation = {
       $and: [
@@ -36,7 +30,7 @@ describe('filterFindOperation', () => {
         { 'values[123].test': { $regex: /zz/ } },
         { 'values[1234].test': { $in: ['fizz', 'buzz'] } },
         { type: 'bar' },
-      ]
+      ],
     }
     const expected = {
       $and: [
@@ -46,7 +40,7 @@ describe('filterFindOperation', () => {
         { 'values.123.test': { $regex: /zz/ } },
         { 'values.1234.test': { $in: ['fizz', 'buzz'] } },
         { type: 'bar' },
-      ]
+      ],
     }
     const actual = filterFindOperation(input)
     assert.deepEqual(actual, expected)
@@ -54,20 +48,20 @@ describe('filterFindOperation', () => {
 })
 
 describe('filterUpdateOperation', () => {
-  it ('converts new name to name with parent', () => {
+  it('converts new name to name with parent', () => {
     const input: UpdateOperation = {
       $rename: {
         foo: 'bar',
         'baz.qux': 'foobar',
         'baz.foo.qux': 'foobar',
-      }
+      },
     }
     const expected = {
       $rename: {
         foo: 'bar',
         'baz.qux': 'baz.foobar',
         'baz.foo.qux': 'baz.foo.foobar',
-      }
+      },
     }
     const actual = filterUpdateOperation(input)
     assert.deepEqual(actual, expected)

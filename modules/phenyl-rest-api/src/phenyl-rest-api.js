@@ -1,23 +1,16 @@
 // @flow
-import {
-  assertValidRequestData,
-  createServerError,
-} from 'phenyl-utils/jsnext'
+import { assertValidRequestData, createServerError } from 'phenyl-utils/jsnext'
 
 import {
   passThroughHandler,
   noOperationHandler,
   noHandler,
-  simpleExecutionWrapper
+  simpleExecutionWrapper,
 } from './default-handlers.js'
 
-import {
-  createParamsByFunctionalGroup,
-} from './create-params-by-functional-group.js'
+import { createParamsByFunctionalGroup } from './create-params-by-functional-group.js'
 
-import {
-  createVersionDiff,
-} from './create-version-diff.js'
+import { createVersionDiff } from './create-version-diff.js'
 
 import type {
   RequestData,
@@ -69,7 +62,8 @@ export class PhenylRestApi implements RestApiHandler {
   constructor(params: PhenylRestApiParams) {
     this.client = params.client
     this.sessionClient = params.sessionClient || this.createSessionClient()
-    this.authorizationHandler = params.authorizationHandler || passThroughHandler
+    this.authorizationHandler =
+      params.authorizationHandler || passThroughHandler
     this.validationHandler = params.validationHandler || noOperationHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
     this.customCommandHandler = params.customCommandHandler || noHandler
@@ -87,7 +81,10 @@ export class PhenylRestApi implements RestApiHandler {
    *     customQueries: {}, customCommands: {}, users: {}, nonUsers: {}
    *   }, { client: new PhenylMemoryClient() })
    */
-  static createFromFunctionalGroup(fg: FunctionalGroup, params: PhenylRestApiParams): PhenylRestApi {
+  static createFromFunctionalGroup(
+    fg: FunctionalGroup,
+    params: PhenylRestApiParams
+  ): PhenylRestApi {
     const fgParams = createParamsByFunctionalGroup(fg)
     const newParams = Object.assign({}, params, fgParams)
     return new PhenylRestApi(newParams)
@@ -107,27 +104,35 @@ export class PhenylRestApi implements RestApiHandler {
       // 2. Authorization
       const isAccessible = await this.authorizationHandler(reqData, session)
       if (!isAccessible) {
-        return { type: 'error', payload: createServerError('Authorization Required.', 'Unauthorized') }
+        return {
+          type: 'error',
+          payload: createServerError('Authorization Required.', 'Unauthorized'),
+        }
       }
 
       // 3. Validation
       try {
         await this.validationHandler(reqData, session)
-      }
-      catch (validationError) {
+      } catch (validationError) {
         validationError.message = `Validation Failed. ${validationError.mesage}`
-        return { type: 'error', payload: createServerError(validationError, 'BadRequest') }
+        return {
+          type: 'error',
+          payload: createServerError(validationError, 'BadRequest'),
+        }
       }
 
       // 4. Execution
-      const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
+      const resData = await this.executionWrapper(
+        reqData,
+        session,
+        this.execute.bind(this)
+      )
 
       // 5. Publish VersionDiff (Side-Effect)
       this.publishVersionDiff(reqData, resData)
 
       return resData
-    }
-    catch (e) {
+    } catch (e) {
       return { type: 'error', payload: createServerError(e) }
     }
   }
@@ -135,67 +140,127 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    *
    */
-  async execute(reqData: RequestData, session: ?Session): Promise<ResponseData> {
+  async execute(
+    reqData: RequestData,
+    session: ?Session
+  ): Promise<ResponseData> {
     switch (reqData.method) {
       case 'find':
-        return { type: 'find', payload: await this.client.find(reqData.payload) }
+        return {
+          type: 'find',
+          payload: await this.client.find(reqData.payload),
+        }
 
       case 'findOne':
-        return { type: 'findOne', payload: await this.client.findOne(reqData.payload) }
+        return {
+          type: 'findOne',
+          payload: await this.client.findOne(reqData.payload),
+        }
 
       case 'get':
         return { type: 'get', payload: await this.client.get(reqData.payload) }
 
       case 'getByIds':
-        return { type: 'getByIds', payload: await this.client.getByIds(reqData.payload) }
+        return {
+          type: 'getByIds',
+          payload: await this.client.getByIds(reqData.payload),
+        }
 
       case 'pull':
-        return { type: 'pull', payload: await this.client.pull(reqData.payload) }
+        return {
+          type: 'pull',
+          payload: await this.client.pull(reqData.payload),
+        }
 
       case 'insertOne':
-        return { type: 'insertOne', payload: await this.client.insertOne(reqData.payload) }
+        return {
+          type: 'insertOne',
+          payload: await this.client.insertOne(reqData.payload),
+        }
 
       case 'insertMulti':
-        return { type: 'insertMulti', payload: await this.client.insertMulti(reqData.payload) }
+        return {
+          type: 'insertMulti',
+          payload: await this.client.insertMulti(reqData.payload),
+        }
 
       case 'insertAndGet':
-        return { type: 'insertAndGet', payload: await this.client.insertAndGet(reqData.payload) }
+        return {
+          type: 'insertAndGet',
+          payload: await this.client.insertAndGet(reqData.payload),
+        }
 
       case 'insertAndGetMulti':
-        return { type: 'insertAndGetMulti', payload: await this.client.insertAndGetMulti(reqData.payload) }
+        return {
+          type: 'insertAndGetMulti',
+          payload: await this.client.insertAndGetMulti(reqData.payload),
+        }
 
       case 'updateById':
-        return { type: 'updateById', payload: await this.client.updateById(reqData.payload) }
+        return {
+          type: 'updateById',
+          payload: await this.client.updateById(reqData.payload),
+        }
 
       case 'updateMulti':
-        return { type: 'updateMulti', payload: await this.client.updateMulti(reqData.payload) }
+        return {
+          type: 'updateMulti',
+          payload: await this.client.updateMulti(reqData.payload),
+        }
 
       case 'updateAndGet':
-        return { type: 'updateAndGet', payload: await this.client.updateAndGet(reqData.payload) }
+        return {
+          type: 'updateAndGet',
+          payload: await this.client.updateAndGet(reqData.payload),
+        }
 
       case 'updateAndFetch':
-        return { type: 'updateAndFetch', payload: await this.client.updateAndFetch(reqData.payload) }
+        return {
+          type: 'updateAndFetch',
+          payload: await this.client.updateAndFetch(reqData.payload),
+        }
 
       case 'push':
-        return { type: 'push', payload: await this.client.push(reqData.payload) }
+        return {
+          type: 'push',
+          payload: await this.client.push(reqData.payload),
+        }
 
       case 'delete':
-        return { type: 'delete', payload: await this.client.delete(reqData.payload) }
+        return {
+          type: 'delete',
+          payload: await this.client.delete(reqData.payload),
+        }
 
       case 'runCustomQuery':
-        return { type: 'runCustomQuery', payload: await this.customQueryHandler(reqData.payload, session) }
+        return {
+          type: 'runCustomQuery',
+          payload: await this.customQueryHandler(reqData.payload, session),
+        }
 
       case 'runCustomCommand':
-        return { type: 'runCustomCommand', payload: await this.customCommandHandler(reqData.payload, session) }
+        return {
+          type: 'runCustomCommand',
+          payload: await this.customCommandHandler(reqData.payload, session),
+        }
 
       case 'login':
-        return { type: 'login', payload: await this.login(reqData.payload, session) }
+        return {
+          type: 'login',
+          payload: await this.login(reqData.payload, session),
+        }
 
       case 'logout':
-        return { type: 'logout', payload: await this.logout(reqData.payload, session) }
+        return {
+          type: 'logout',
+          payload: await this.logout(reqData.payload, session),
+        }
 
       default: {
-        return { type: 'error', payload: createServerError('Invalid method name.', 'NotFound') }
+        return {
+          type: 'error',
+          payload: createServerError('Invalid method name.', 'NotFound'),
+        }
       }
     }
   }
@@ -203,14 +268,17 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * create Session
    */
-  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult> {
+  async login(
+    loginCommand: LoginCommand,
+    session: ?Session
+  ): Promise<LoginCommandResult> {
     const result = await this.authenticationHandler(loginCommand, session)
     const newSession = await this.sessionClient.create(result.preSession)
     return {
       ok: 1,
       user: result.user,
       versionId: result.versionId,
-      session: newSession
+      session: newSession,
     }
   }
 
@@ -229,7 +297,11 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
+  async logout(
+    logoutCommand: LogoutCommand,
+    session: ?Session
+  ): Promise<LogoutCommandResult> {
+    // eslint-disable-line no-unused-vars
     const { sessionId } = logoutCommand
     const result = await this.sessionClient.delete(sessionId)
     // sessionId not found
@@ -245,9 +317,10 @@ export class PhenylRestApi implements RestApiHandler {
   createSessionClient(): SessionClient {
     try {
       return this.client.createSessionClient()
-    }
-    catch (e) {
-      throw new Error('"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.')
+    } catch (e) {
+      throw new Error(
+        '"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.'
+      )
     }
   }
 }

@@ -35,10 +35,12 @@
     "babel-register": "^6.26.0",
     "chalk": "^2.3.0",
     "eslint": "^4.10.0",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.58.0",
     "kocha": "^1.8.1",
     "power-assert": "^1.4.4",
+    "prettier": "1.8.2",
     "shelljs": "^0.7.8"
   }
 }

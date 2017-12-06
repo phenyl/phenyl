@@ -10,8 +10,7 @@ async function createMongoDBClient() {
   try {
     const mongoDBConnection = await connect('mongodb://localhost:27017')
     return createEntityClient(mongoDBConnection)
-  }
-  catch (e) {
+  } catch (e) {
     throw new Error('Test was skipped as connection to mongodb failed.')
   }
 }

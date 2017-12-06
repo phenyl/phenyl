@@ -69,16 +69,17 @@ import type {
   EntityStateFinder,
   EntityStateUpdater,
 } from './decls/entity-state.js.flow'
-import type {
-  DbClient,
-} from './decls/db-client.js.flow'
+import type { DbClient } from './decls/db-client.js.flow'
 import type {
   EntitiesInfo,
   Entity,
   EntityInfo,
   PreEntity,
 } from './decls/entity.js.flow'
-import type { EntityDefinition, EntityDefinitions } from './decls/entity-definition.js.flow'
+import type {
+  EntityDefinition,
+  EntityDefinitions,
+} from './decls/entity-definition.js.flow'
 import type {
   ErrorLocation,
   LocalError,
@@ -163,9 +164,7 @@ import type {
   LogoutRequestData,
 } from './decls/request-data.js.flow'
 
-import type {
-  RequestDataHandlers,
-} from './decls/request-data-handlers.js.flow'
+import type { RequestDataHandlers } from './decls/request-data-handlers.js.flow'
 
 import type {
   ResponseData,

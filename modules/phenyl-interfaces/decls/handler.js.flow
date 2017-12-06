@@ -16,13 +16,35 @@ export type AuthenticationResult = {|
   versionId: ?Id,
 |}
 
-export type AuthorizationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
-export type ValidationHandler = (reqData: RequestData, session: ?Session) => Promise<void>
-export type AuthenticationHandler = (loginCommand: LoginCommand, session: ?Session) => Promise<AuthenticationResult>
-export type RestApiExecution = (reqData: RequestData, session: ?Session) => Promise<ResponseData>
-export type ExecutionWrapper = (reqData: RequestData, session: ?Session, execution: RestApiExecution) => Promise<ResponseData>
-export type CustomQueryHandler = (query: CustomQuery, session: ?Session) => Promise<CustomQueryResult>
-export type CustomCommandHandler = (command: CustomCommand, session: ?Session) => Promise<CustomCommandResult>
+export type AuthorizationHandler = (
+  reqData: RequestData,
+  session: ?Session
+) => Promise<boolean>
+export type ValidationHandler = (
+  reqData: RequestData,
+  session: ?Session
+) => Promise<void>
+export type AuthenticationHandler = (
+  loginCommand: LoginCommand,
+  session: ?Session
+) => Promise<AuthenticationResult>
+export type RestApiExecution = (
+  reqData: RequestData,
+  session: ?Session
+) => Promise<ResponseData>
+export type ExecutionWrapper = (
+  reqData: RequestData,
+  session: ?Session,
+  execution: RestApiExecution
+) => Promise<ResponseData>
+export type CustomQueryHandler = (
+  query: CustomQuery,
+  session: ?Session
+) => Promise<CustomQueryResult>
+export type CustomCommandHandler = (
+  command: CustomCommand,
+  session: ?Session
+) => Promise<CustomCommandResult>
 
 export type HandlerParams = {
   authorizationHandler: AuthorizationHandler,

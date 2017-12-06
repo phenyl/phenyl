@@ -1,12 +1,8 @@
 // @flow
 
-import {
-  assign,
-} from 'power-assign/jsnext'
+import { assign } from 'power-assign/jsnext'
 
-import {
-  createLocalError,
-} from 'phenyl-utils/jsnext'
+import { createLocalError } from 'phenyl-utils/jsnext'
 
 import { removeOne } from './utils'
 
@@ -29,7 +25,6 @@ import { LocalStateFinder } from './local-state-finder.js'
  *
  */
 export class LocalStateUpdater {
-
   /**
    * Commit the operation of entity to LocalState.
    * Error is thrown when no entity is registered.
@@ -38,17 +33,21 @@ export class LocalStateUpdater {
     const { entityName, id, operation } = command
 
     if (!LocalStateFinder.hasEntity(state, { entityName, id })) {
-      throw new Error(`LocalStateUpdater.commit(). No entity found. entityName: "${entityName}", id: "${id}".`)
+      throw new Error(
+        `LocalStateUpdater.commit(). No entity found. entityName: "${
+          entityName
+        }", id: "${id}".`
+      )
     }
     const entity = LocalStateFinder.getHeadEntity(state, { id, entityName })
     const newEntity = assign(entity, operation)
     return {
       $push: {
-        [`entities.${entityName}.${id}.commits`]: operation
+        [`entities.${entityName}.${id}.commits`]: operation,
       },
       $set: {
         [`entities.${entityName}.${id}.head`]: newEntity,
-      }
+      },
     }
   }
 
@@ -60,7 +59,11 @@ export class LocalStateUpdater {
     const { entityName, id, operation } = command
 
     if (!LocalStateFinder.hasEntity(state, { entityName, id })) {
-      throw new Error(`LocalStateUpdater.revert(). No entity found. entityName: "${entityName}", id: "${id}".`)
+      throw new Error(
+        `LocalStateUpdater.revert(). No entity found. entityName: "${
+          entityName
+        }", id: "${id}".`
+      )
     }
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
     const commits = removeOne(entityInfo.commits, operation)
@@ -69,7 +72,7 @@ export class LocalStateUpdater {
       $set: {
         [`entities.${entityName}.${id}.commits`]: commits,
         [`entities.${entityName}.${id}.head`]: restoredHead,
-      }
+      },
     }
   }
 
@@ -77,7 +80,12 @@ export class LocalStateUpdater {
    * Register the entity info into LocalState.
    * Overwrite if already exists.
    */
-  static follow(state: LocalState, entityName: string, entity: Entity, versionId: Id): UpdateOperation {
+  static follow(
+    state: LocalState,
+    entityName: string,
+    entity: Entity,
+    versionId: Id
+  ): UpdateOperation {
     return {
       $set: {
         [`entities.${entityName}.${entity.id}`]: {
@@ -85,7 +93,7 @@ export class LocalStateUpdater {
           versionId,
           commits: [],
           head: null,
-        }
+        },
       },
     }
   }
@@ -93,11 +101,15 @@ export class LocalStateUpdater {
   /**
    * Remove the entity info from LocalState.
    */
-  static unfollow(state: LocalState, entityName: string, id: Id): UpdateOperation {
+  static unfollow(
+    state: LocalState,
+    entityName: string,
+    id: Id
+  ): UpdateOperation {
     return {
       $unset: {
-        [`entities.${entityName}.${id}`]: ''
-      }
+        [`entities.${entityName}.${id}`]: '',
+      },
     }
   }
 
@@ -106,16 +118,19 @@ export class LocalStateUpdater {
    */
   static networkRequest(state: LocalState, tag: ActionTag): UpdateOperation {
     return {
-      $push: { 'network.requests': tag }
+      $push: { 'network.requests': tag },
     }
   }
 
   /**
    * Remove network request promise from the request queue.
    */
-  static removeNetworkRequest(state: LocalState, tag: ActionTag): UpdateOperation {
+  static removeNetworkRequest(
+    state: LocalState,
+    tag: ActionTag
+  ): UpdateOperation {
     return {
-      $set: { 'network.requests': removeOne(state.network.requests, tag) }
+      $set: { 'network.requests': removeOne(state.network.requests, tag) },
     }
   }
 
@@ -140,7 +155,7 @@ export class LocalStateUpdater {
         [`entities.${entityName}.${id}.origin`]: newOrigin,
         [`entities.${entityName}.${id}.versionId`]: versionId,
         [`entities.${entityName}.${id}.head`]: newHead,
-      }
+      },
     }
   }
 
@@ -160,21 +175,26 @@ export class LocalStateUpdater {
         [`entities.${entityName}.${id}.origin`]: newOrigin,
         [`entities.${entityName}.${id}.versionId`]: versionId,
         [`entities.${entityName}.${id}.head`]: newHead,
-      }
+      },
     }
   }
 
   /**
    * Apply the master commits, then apply the given local commits.
    */
-  static synchronize(state: LocalState, pushCommand: PushCommand, localCommits: Array<UpdateOperation>): UpdateOperation {
+  static synchronize(
+    state: LocalState,
+    pushCommand: PushCommand,
+    localCommits: Array<UpdateOperation>
+  ): UpdateOperation {
     const { entityName, id, operations, versionId } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
 
     const newOrigin = assign(entityInfo.origin, ...operations, ...localCommits)
     // assert(localCommits.length === 0 || entityInfo.commits[0] === localCommits[0])
     const newCommits = entityInfo.commits.slice(localCommits.length)
-    const newHead = newCommits.length > 0 ? assign(newOrigin, ...newCommits) : null
+    const newHead =
+      newCommits.length > 0 ? assign(newOrigin, ...newCommits) : null
 
     return {
       $set: {
@@ -183,8 +203,8 @@ export class LocalStateUpdater {
           versionId,
           commits: newCommits,
           head: newHead,
-        }
-      }
+        },
+      },
     }
   }
 
@@ -192,11 +212,21 @@ export class LocalStateUpdater {
    * Register all the entities into LocalState.
    * NOTICE: if returned type of this.follow() changes, this implementation must be changed.
    */
-  static followAll(state: LocalState, entityName: string, entities: Array<Entity>, versionsById: { [entityId: Id]: Id}): UpdateOperation {
+  static followAll(
+    state: LocalState,
+    entityName: string,
+    entities: Array<Entity>,
+    versionsById: { [entityId: Id]: Id }
+  ): UpdateOperation {
     const $setOp = {}
     for (const entity of entities) {
       const versionId = versionsById[entity.id]
-      if (versionId == null) throw new Error(`LocalStateUpdater.followAll(): No versionId was passed to the entityName: "${entityName}", id: "${entity.id}".`)
+      if (versionId == null)
+        throw new Error(
+          `LocalStateUpdater.followAll(): No versionId was passed to the entityName: "${
+            entityName
+          }", id: "${entity.id}".`
+        )
       const operation = this.follow(state, entityName, entity, versionId)
       Object.assign($setOp, operation.$set)
     }
@@ -206,10 +236,15 @@ export class LocalStateUpdater {
   /**
    * Set session.
    */
-  static setSession(state: LocalState, session: Session, user: ?Entity, versionId?: ?Id): UpdateOperation {
+  static setSession(
+    state: LocalState,
+    session: Session,
+    user: ?Entity,
+    versionId?: ?Id
+  ): UpdateOperation {
     const { entityName } = session
     const operation = {
-      $set: { session }
+      $set: { session },
     }
     if (user != null && versionId != null) {
       const followOp = this.follow(state, entityName, user, versionId)
@@ -239,8 +274,8 @@ export class LocalStateUpdater {
           at: err.at,
           message: err.message,
           actionTag,
-        }
-      }
+        },
+      },
     }
   }
 
@@ -249,7 +284,7 @@ export class LocalStateUpdater {
    */
   static online(): UpdateOperation {
     return {
-      $set: { 'network.isOnline': true }
+      $set: { 'network.isOnline': true },
     }
   }
 
@@ -258,7 +293,7 @@ export class LocalStateUpdater {
    */
   static offline(): UpdateOperation {
     return {
-      $set: { 'network.isOnline': false }
+      $set: { 'network.isOnline': false },
     }
   }
 }

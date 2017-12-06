@@ -1,13 +1,12 @@
 // @flow
-import type {
-  QueryCondition,
-  EqCondition,
-} from 'phenyl-interfaces'
+import type { QueryCondition, EqCondition } from 'phenyl-interfaces'
 
 /**
  * QueryCondition | EqCondition => QueryCondition
  */
-export function normalizeQueryCondition(condition: QueryCondition | EqCondition): QueryCondition {
+export function normalizeQueryCondition(
+  condition: QueryCondition | EqCondition
+): QueryCondition {
   if (typeof condition != 'object' || Array.isArray(condition)) {
     return { $eq: condition }
   }

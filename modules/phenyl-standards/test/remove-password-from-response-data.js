@@ -4,8 +4,8 @@ import { it, describe } from 'kocha'
 import assert from 'power-assert'
 import { removePasswordFromResponseData } from '../src/remove-password-from-response-data.js'
 
-describe('removePasswordFromResponseData', function () {
-  it ('removes password property', function () {
+describe('removePasswordFromResponseData', function() {
+  it('removes password property', function() {
     const resData = {
       type: 'get',
       payload: {
@@ -16,7 +16,7 @@ describe('removePasswordFromResponseData', function () {
           password: 'foobar',
           name: 'John',
         },
-        versionId: 'xyz'
+        versionId: 'xyz',
       },
     }
 
@@ -30,12 +30,12 @@ describe('removePasswordFromResponseData', function () {
           email: 'foo@example.com',
           name: 'John',
         },
-        versionId: 'xyz'
+        versionId: 'xyz',
       },
     })
   })
 
-  it ('removes password property when nested', function () {
+  it('removes password property when nested', function() {
     const resData = {
       type: 'get',
       payload: {
@@ -48,11 +48,14 @@ describe('removePasswordFromResponseData', function () {
           },
           name: 'John',
         },
-        versionId: 'xyz'
+        versionId: 'xyz',
       },
     }
 
-    const modifiedResData = removePasswordFromResponseData(resData, 'account.password')
+    const modifiedResData = removePasswordFromResponseData(
+      resData,
+      'account.password'
+    )
     assert.deepEqual(modifiedResData, {
       type: 'get',
       payload: {
@@ -64,10 +67,8 @@ describe('removePasswordFromResponseData', function () {
           },
           name: 'John',
         },
-        versionId: 'xyz'
+        versionId: 'xyz',
       },
     })
   })
-
-
 })
