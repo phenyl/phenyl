@@ -18,6 +18,7 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb",
   "license": "Apache License 2.0",
   "dependencies": {
+    "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
     "mongodb": "^2.2.33",
     "oad-utils": "~0.1.0",

@@ -1,4 +1,6 @@
 // @flow
+import mongodb from 'mongodb'
+import bson from 'bson'
 import {
   createServerError,
 } from 'phenyl-utils/jsnext'
@@ -26,6 +28,22 @@ import type {
 
 import type { MongoDbConnection } from './connection.js'
 
+function ObjectID(id: any): any {
+  if (id instanceof mongodb.ObjectID) return id
+  if (typeof id !== 'string') return id
+  try {
+    return /^[0-9a-fA-F]{24}$/.test(id) ? bson.ObjectID(id) : id
+  } catch (e) {
+    return id
+  }
+}
+
+function convertIdToObjectId(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  return simpleFindOperation.id
+    ? assign(simpleFindOperation, { id: ObjectID(simpleFindOperation.id) })
+    : simpleFindOperation
+}
+
 // $FlowIssue(this-is-SimpleFindOperation)
 function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return assign(simpleFindOperation, { $rename: { id: '_id' } })
@@ -41,6 +59,7 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
 
 function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return [
+    convertIdToObjectId,
     setIdTo_idInWhere,
     convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
