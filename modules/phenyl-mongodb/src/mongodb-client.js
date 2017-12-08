@@ -38,7 +38,8 @@ function ObjectID(id: any): any {
   }
 }
 
-function convertIdToObjectId(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+
+function convertIdToObjectIdInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return simpleFindOperation.id
     ? assign(simpleFindOperation, { id: ObjectID(simpleFindOperation.id) })
     : simpleFindOperation
@@ -59,7 +60,7 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
 
 function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return [
-    convertIdToObjectId,
+    convertIdToObjectIdInWhere,
     setIdTo_idInWhere,
     convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
@@ -68,6 +69,7 @@ function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation)
 export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
 }
+
 
 function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   const renameOperator = operation.$rename
@@ -85,8 +87,23 @@ export function filterUpdateOperation(operation: UpdateOperation): UpdateOperati
   return convertNewNameWithParent(operation)
 }
 
+
+function convertIdToObjectIdInEntity(entity: Entity): Entity {
+  return entity.id
+    ? assign(entity, { id: ObjectID(entity.id) })
+    : entity
+}
+
 function setIdTo_idInEntity(entity: Entity): Entity {
   return assign(entity, { $rename: { id: '_id' } })
+}
+
+export function filterInputEntity(srcEntity: Entity): Entity {
+  return [
+    convertIdToObjectIdInEntity,
+    setIdTo_idInEntity,
+  ].reduce((entity, filterFunc) => filterFunc(entity), srcEntity)
+
 }
 
 function set_idToIdInEntity(entity: Entity): Entity {
@@ -124,7 +141,7 @@ export class PhenylMongoDbClient implements DbClient {
   async get(query: IdQuery): Promise<Entity> {
     const { entityName, id } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find({ _id: id })
+    const result = await coll.find({ _id: ObjectID(id) })
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
@@ -137,7 +154,7 @@ export class PhenylMongoDbClient implements DbClient {
   async getByIds(query: IdsQuery): Promise<Array<Entity>> {
     const { entityName, ids } = query
     const coll = this.conn.collection(entityName)
-    const result = await coll.find({ _id: { $in: ids } })
+    const result = await coll.find({ _id: { $in: ids.map(ObjectID) } })
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
@@ -150,21 +167,21 @@ export class PhenylMongoDbClient implements DbClient {
   async insertOne(command: SingleInsertCommand): Promise<number> {
     const { entityName, value } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.insertOne(setIdTo_idInEntity(value))
+    const result = await coll.insertOne(filterInputEntity(value))
     return result.insertedCount
   }
 
   async insertMulti(command: MultiInsertCommand): Promise<number> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
+    const result = await coll.insertMany(command.values.map(filterInputEntity))
     return result.insertedCount
   }
 
   async insertAndGet(command: SingleInsertCommand): Promise<Entity> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.insertOne(setIdTo_idInEntity(command.value))
+    const result = await coll.insertOne(filterInputEntity(command.value))
     // TODO transactional operation needed
     return this.get({ entityName, id: result.insertedId })
   }
@@ -173,7 +190,7 @@ export class PhenylMongoDbClient implements DbClient {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
 
-    const result = await coll.insertMany(command.values.map(setIdTo_idInEntity))
+    const result = await coll.insertMany(command.values.map(filterInputEntity))
     // TODO: transactional operation needed
     return this.getByIds({ entityName, ids: result.insertedIds })
   }
@@ -181,7 +198,7 @@ export class PhenylMongoDbClient implements DbClient {
   async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
-    const result = await coll.updateOne({ _id: id }, filterUpdateOperation(operation))
+    const result = await coll.updateOne({ _id: ObjectID(id) }, filterUpdateOperation(operation))
     const { matchedCount } = result
     if (matchedCount === 0) {
       throw createServerError(
@@ -198,7 +215,7 @@ export class PhenylMongoDbClient implements DbClient {
     const coll = this.conn.collection(entityName)
     await coll.updateMany(filterFindOperation(where), filterUpdateOperation(operation))
     // FIXME: the result may be different from updated entities.
-    return this.find({ entityName, where: setIdTo_idInWhere(where) })
+    return this.find({ entityName, where })
   }
 
   async delete(command: DeleteCommand): Promise<number> {
@@ -206,10 +223,10 @@ export class PhenylMongoDbClient implements DbClient {
     const coll = this.conn.collection(entityName)
     let result
     if (command.id) {
-      result = await coll.deleteOne({ _id: command.id })
+      result = await coll.deleteOne({ _id: ObjectID(command.id) })
     }
     else if (command.where) {
-      result = await coll.deleteMany(setIdTo_idInWhere(command.where))
+      result = await coll.deleteMany(filterFindOperation(command.where))
     }
     // $FlowIssue(deleteCount-exists)
     const { deletedCount } = result

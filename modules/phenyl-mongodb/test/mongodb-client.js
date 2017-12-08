@@ -7,6 +7,7 @@ import type { AndFindOperation, UpdateOperation } from 'phenyl-interfaces'
 import {
   filterFindOperation,
   filterUpdateOperation,
+  filterInputEntity,
 } from '../src/mongodb-client.js'
 
 describe('filterFindOperation', () => {
@@ -63,7 +64,7 @@ describe('filterFindOperation', () => {
         { id: 'bar' },
         { id: bson.ObjectID('222222222222222222222222') },
         // match
-        { id: '333333333333333333333333' },
+        { id: '000123456789abcdefABCDEF' },
       ]
     }
     const expected = {
@@ -72,7 +73,7 @@ describe('filterFindOperation', () => {
         { _id: 111111111111111111111111 },
         { _id: 'bar' },
         { _id: bson.ObjectID('222222222222222222222222') },
-        { _id: bson.ObjectID('333333333333333333333333') },
+        { _id: bson.ObjectID('000123456789abcdefABCDEF') },
       ]
     }
     const actual = filterFindOperation(input)
@@ -97,6 +98,34 @@ describe('filterUpdateOperation', () => {
       }
     }
     const actual = filterUpdateOperation(input)
+    assert.deepEqual(actual, expected)
+  })
+})
+
+describe('filterInputEntity', () => {
+  it ('renames id to _id', () => {
+    const input: Entity = {
+      id: 123,
+      attr: 'bar',
+    }
+    const expected = {
+      _id: 123,
+      attr: 'bar',
+    }
+    const actual = filterInputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+
+  it ('converts id to ObjectId', () => {
+    const input: Entity = {
+      id: '000123456789abcdefABCDEF',
+      attr: 'bar',
+    }
+    const expected = {
+      _id: bson.ObjectID('000123456789abcdefABCDEF'),
+      attr: 'bar',
+    }
+    const actual = filterInputEntity(input)
     assert.deepEqual(actual, expected)
   })
 })
