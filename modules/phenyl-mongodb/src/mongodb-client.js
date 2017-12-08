@@ -105,8 +105,22 @@ export function filterInputEntity(srcEntity: Entity): Entity {
   ].reduce((entity: Entity, filterFunc) => filterFunc(entity), srcEntity)
 }
 
+
+function convertObjectIdToIdInEntity(entity: Entity): Entity {
+  return entity._id instanceof mongodb.ObjectID
+    ? assign(entity, { _id: entity._id.toString() })
+    : entity
+}
+
 function set_idToIdInEntity(entity: Entity): Entity {
   return assign(entity, { $rename: { _id: 'id' } })
+}
+
+export function filterOutputEntity(srcEntity: Entity): Entity {
+  return [
+    convertObjectIdToIdInEntity,
+    set_idToIdInEntity,
+  ].reduce((entity: Entity, filterFunc) => filterFunc(entity), srcEntity)
 }
 
 export class PhenylMongoDbClient implements DbClient {
@@ -124,7 +138,7 @@ export class PhenylMongoDbClient implements DbClient {
     if (limit) options.limit = limit
 
     const result = await coll.find(filterFindOperation(where), options)
-    return result.map(set_idToIdInEntity)
+    return result.map(filterOutputEntity)
   }
 
   async findOne(query: WhereQuery): Promise<Entity> {
@@ -134,7 +148,7 @@ export class PhenylMongoDbClient implements DbClient {
     if (result.length === 0) {
       throw createServerError('findOne()', 'NotFound')
     }
-    return set_idToIdInEntity(result[0] || null)
+    return filterOutputEntity(result[0] || null)
   }
 
   async get(query: IdQuery): Promise<Entity> {
@@ -147,7 +161,7 @@ export class PhenylMongoDbClient implements DbClient {
         'NotFound'
       )
     }
-    return set_idToIdInEntity(result[0])
+    return filterOutputEntity(result[0])
   }
 
   async getByIds(query: IdsQuery): Promise<Array<Entity>> {
@@ -160,7 +174,7 @@ export class PhenylMongoDbClient implements DbClient {
         'NotFound',
       )
     }
-    return result.map(set_idToIdInEntity)
+    return result.map(filterOutputEntity)
   }
 
   async insertOne(command: SingleInsertCommand): Promise<number> {

@@ -3,11 +3,12 @@
 import { it, describe } from 'kocha'
 import bson from 'bson'
 import assert from 'power-assert'
-import type { AndFindOperation, UpdateOperation } from 'phenyl-interfaces'
+import type { AndFindOperation, UpdateOperation, Entity } from 'phenyl-interfaces'
 import {
   filterFindOperation,
   filterUpdateOperation,
   filterInputEntity,
+  filterOutputEntity,
 } from '../src/mongodb-client.js'
 
 describe('filterFindOperation', () => {
@@ -124,6 +125,36 @@ describe('filterInputEntity', () => {
       attr: 'bar',
     }
     const actual = filterInputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+})
+
+describe('filterOutputEntity', () => {
+  it ('renames id to _id', () => {
+    // $FlowIssue(this-is-mongo-entity)
+    const input: Entity = {
+      _id: '123',
+      attr: 'bar',
+    }
+    const expected = {
+      id: '123',
+      attr: 'bar',
+    }
+    const actual = filterOutputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+
+  it ('converts id to ObjectId', () => {
+    // $FlowIssue(this-is-mongo-entity)
+    const input: Entity = {
+      _id: bson.ObjectID('000123456789abcdefabcdef'),
+      attr: 'bar',
+    }
+    const expected = {
+      id: '000123456789abcdefabcdef', // lower case only
+      attr: 'bar',
+    }
+    const actual = filterOutputEntity(input)
     assert.deepEqual(actual, expected)
   })
 })

@@ -31,7 +31,7 @@ describe('mongoDBEntityClient', () => {
 
   before(async () => {
     conn = await connect('mongodb://localhost:27017')
-    entityClient = await createMongoDBClient(conn)
+    entityClient = await createEntityClient(conn)
   })
 
   after(async () => {
@@ -70,7 +70,7 @@ describe('mongoDBEntityClient', () => {
           value: { id: HEX_24_ID, name: 'Jesse' },
         })
 
-        assert(result.entity.id === HEX_24_ID)
+        assert(result.entity.id === HEX_24_ID.toLowerCase())
 
         const users = await conn.collection('user').find({ name: 'Jesse' })
         assert.deepEqual(users[0]._id, bson.ObjectID(HEX_24_ID))
