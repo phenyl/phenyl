@@ -102,8 +102,7 @@ export function filterInputEntity(srcEntity: Entity): Entity {
   return [
     convertIdToObjectIdInEntity,
     setIdTo_idInEntity,
-  ].reduce((entity, filterFunc) => filterFunc(entity), srcEntity)
-
+  ].reduce((entity: Entity, filterFunc) => filterFunc(entity), srcEntity)
 }
 
 function set_idToIdInEntity(entity: Entity): Entity {

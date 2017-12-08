@@ -54,7 +54,8 @@ const user7 = {
 }
 
 const user8 = {
-  // id is generated automatically
+  // $FlowIssue(id-is-generated-automatically)
+  id: undefined,
   name: { first: 'John', last: 'Test' },
   age: 30,
 }

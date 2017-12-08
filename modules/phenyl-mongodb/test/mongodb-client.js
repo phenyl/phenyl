@@ -60,7 +60,6 @@ describe('filterFindOperation', () => {
       $and: [
         // not match
         { id: null },
-        { id: 111111111111111111111111 },
         { id: 'bar' },
         { id: bson.ObjectID('222222222222222222222222') },
         // match
@@ -70,7 +69,6 @@ describe('filterFindOperation', () => {
     const expected = {
       $and: [
         { _id: null },
-        { _id: 111111111111111111111111 },
         { _id: 'bar' },
         { _id: bson.ObjectID('222222222222222222222222') },
         { _id: bson.ObjectID('000123456789abcdefABCDEF') },
@@ -104,12 +102,12 @@ describe('filterUpdateOperation', () => {
 
 describe('filterInputEntity', () => {
   it ('renames id to _id', () => {
-    const input: Entity = {
-      id: 123,
+    const input = {
+      id: '123',
       attr: 'bar',
     }
     const expected = {
-      _id: 123,
+      _id: '123',
       attr: 'bar',
     }
     const actual = filterInputEntity(input)
@@ -117,7 +115,7 @@ describe('filterInputEntity', () => {
   })
 
   it ('converts id to ObjectId', () => {
-    const input: Entity = {
+    const input = {
       id: '000123456789abcdefABCDEF',
       attr: 'bar',
     }
