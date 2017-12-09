@@ -66,6 +66,12 @@ describe('filterFindOperation', () => {
         { id: '000123456789abcdefABCDEF' },
         // match
         { id: '000123456789abcdefabcdef' },
+        { id: { $eq: '000000000011111111112222' }},
+        { id: { $not: { $eq: '000000000011111111112222' }}},
+        { id: { $in: [
+          '000000000011111111112222',
+          '000000000011111111113333',
+        ]}}
       ]
     }
     const expected = {
@@ -75,6 +81,12 @@ describe('filterFindOperation', () => {
         { _id: bson.ObjectID('222222222222222222222222') },
         { _id: '000123456789abcdefABCDEF' },
         { _id: bson.ObjectID('000123456789abcdefabcdef') },
+        { _id: { $eq: bson.ObjectID('000000000011111111112222') }},
+        { _id: { $not: { $eq: bson.ObjectID('000000000011111111112222') }}},
+        { _id: { $in: [
+          bson.ObjectID('000000000011111111112222'),
+          bson.ObjectID('000000000011111111113333'),
+        ]}}
       ]
     }
     const actual = filterFindOperation(input)

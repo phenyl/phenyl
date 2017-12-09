@@ -40,9 +40,18 @@ function ObjectID(id: any): any {
 }
 
 
+function convertToObjectIdRecursively(src: any): any {
+  if (Array.isArray(src)) return src.map(id => ObjectID(id))
+  if (typeof src !== 'object') return ObjectID(src)
+  return Object.keys(src).reduce((dst, key) => {
+    dst[key] = convertToObjectIdRecursively(src[key])
+    return dst
+  }, {})
+}
+
 function convertIdToObjectIdInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return simpleFindOperation.id
-    ? assign(simpleFindOperation, { id: ObjectID(simpleFindOperation.id) })
+    ? assign(simpleFindOperation, { id: convertToObjectIdRecursively(simpleFindOperation.id) })
     : simpleFindOperation
 }
 
@@ -59,7 +68,7 @@ function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperati
   }, {})
 }
 
-function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function composedFindOperationFilters(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return [
     convertIdToObjectIdInWhere,
     setIdTo_idInWhere,
@@ -68,7 +77,7 @@ function composedFinedOperationFilters(simpleFindOperation: SimpleFindOperation)
 }
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
-  return visitFindOperation(operation, { simpleFindOperation: composedFinedOperationFilters })
+  return visitFindOperation(operation, { simpleFindOperation: composedFindOperationFilters })
 }
 
 
