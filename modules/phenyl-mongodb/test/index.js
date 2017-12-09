@@ -26,7 +26,7 @@ describe('mongoDBEntityClient', () => {
   let conn
   let entityClient
 
-  const HEX_24_ID = '000123456789abcdefABCDEF'
+  const HEX_24_ID = '000000000123456789abcdef'
   let generatedId
 
   before(async () => {
@@ -64,13 +64,13 @@ describe('mongoDBEntityClient', () => {
         assert(users[0]._id === 'jane')
       })
 
-      it('to { _id: ObjectId(xxx) } if id is 24-byte hex string', async () => {
+      it('to { _id: ObjectId(xxx) } if id is 24-byte hex lower string', async () => {
         const result = await entityClient.insertAndGet({
           entityName: 'user',
           value: { id: HEX_24_ID, name: 'Jesse' },
         })
 
-        assert(result.entity.id === HEX_24_ID.toLowerCase())
+        assert(result.entity.id === HEX_24_ID)
 
         const users = await conn.collection('user').find({ name: 'Jesse' })
         assert.deepEqual(users[0]._id, bson.ObjectID(HEX_24_ID))

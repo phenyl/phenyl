@@ -28,11 +28,12 @@ import type {
 
 import type { MongoDbConnection } from './connection.js'
 
+// convert 24-byte hex lower string to ObjectId
 function ObjectID(id: any): any {
   if (id instanceof mongodb.ObjectID) return id
   if (typeof id !== 'string') return id
   try {
-    return /^[0-9a-fA-F]{24}$/.test(id) ? bson.ObjectID(id) : id
+    return /^[0-9a-f]{24}$/.test(id) ? bson.ObjectID(id) : id
   } catch (e) {
     return id
   }

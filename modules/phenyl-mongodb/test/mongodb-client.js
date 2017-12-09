@@ -63,8 +63,9 @@ describe('filterFindOperation', () => {
         { id: null },
         { id: 'bar' },
         { id: bson.ObjectID('222222222222222222222222') },
-        // match
         { id: '000123456789abcdefABCDEF' },
+        // match
+        { id: '000123456789abcdefabcdef' },
       ]
     }
     const expected = {
@@ -72,7 +73,8 @@ describe('filterFindOperation', () => {
         { _id: null },
         { _id: 'bar' },
         { _id: bson.ObjectID('222222222222222222222222') },
-        { _id: bson.ObjectID('000123456789abcdefABCDEF') },
+        { _id: '000123456789abcdefABCDEF' },
+        { _id: bson.ObjectID('000123456789abcdefabcdef') },
       ]
     }
     const actual = filterFindOperation(input)
@@ -117,11 +119,11 @@ describe('filterInputEntity', () => {
 
   it ('converts id to ObjectId', () => {
     const input = {
-      id: '000123456789abcdefABCDEF',
+      id: '000123456789abcdefabcdef',
       attr: 'bar',
     }
     const expected = {
-      _id: bson.ObjectID('000123456789abcdefABCDEF'),
+      _id: bson.ObjectID('000123456789abcdefabcdef'),
       attr: 'bar',
     }
     const actual = filterInputEntity(input)
@@ -151,7 +153,7 @@ describe('filterOutputEntity', () => {
       attr: 'bar',
     }
     const expected = {
-      id: '000123456789abcdefabcdef', // lower case only
+      id: '000123456789abcdefabcdef',
       attr: 'bar',
     }
     const actual = filterOutputEntity(input)
