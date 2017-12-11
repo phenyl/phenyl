@@ -1,11 +1,14 @@
 // @flow
 
 import { it, describe } from 'kocha'
+import bson from 'bson'
 import assert from 'power-assert'
-import type { AndFindOperation, UpdateOperation } from 'phenyl-interfaces'
+import type { AndFindOperation, UpdateOperation, Entity } from 'phenyl-interfaces'
 import {
   filterFindOperation,
   filterUpdateOperation,
+  filterInputEntity,
+  filterOutputEntity,
 } from '../src/mongodb-client.js'
 
 describe('filterFindOperation', () => {
@@ -51,6 +54,44 @@ describe('filterFindOperation', () => {
     const actual = filterFindOperation(input)
     assert.deepEqual(actual, expected)
   })
+
+  it ('converts matched string to ObjectId', () => {
+    // $FlowIssue(this-is-and-find-operation)
+    const input: AndFindOperation = {
+      $and: [
+        // not match
+        { id: null },
+        { id: 'bar' },
+        { id: bson.ObjectID('222222222222222222222222') },
+        { id: '000123456789abcdefABCDEF' },
+        // match
+        { id: '000123456789abcdefabcdef' },
+        { id: { $eq: '000000000011111111112222' }},
+        { id: { $not: { $eq: '000000000011111111112222' }}},
+        { id: { $in: [
+          '000000000011111111112222',
+          '000000000011111111113333',
+        ]}}
+      ]
+    }
+    const expected = {
+      $and: [
+        { _id: null },
+        { _id: 'bar' },
+        { _id: bson.ObjectID('222222222222222222222222') },
+        { _id: '000123456789abcdefABCDEF' },
+        { _id: bson.ObjectID('000123456789abcdefabcdef') },
+        { _id: { $eq: bson.ObjectID('000000000011111111112222') }},
+        { _id: { $not: { $eq: bson.ObjectID('000000000011111111112222') }}},
+        { _id: { $in: [
+          bson.ObjectID('000000000011111111112222'),
+          bson.ObjectID('000000000011111111113333'),
+        ]}}
+      ]
+    }
+    const actual = filterFindOperation(input)
+    assert.deepEqual(actual, expected)
+  })
 })
 
 describe('filterUpdateOperation', () => {
@@ -70,6 +111,64 @@ describe('filterUpdateOperation', () => {
       }
     }
     const actual = filterUpdateOperation(input)
+    assert.deepEqual(actual, expected)
+  })
+})
+
+describe('filterInputEntity', () => {
+  it ('renames id to _id', () => {
+    const input = {
+      id: '123',
+      attr: 'bar',
+    }
+    const expected = {
+      _id: '123',
+      attr: 'bar',
+    }
+    const actual = filterInputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+
+  it ('converts id to ObjectId', () => {
+    const input = {
+      id: '000123456789abcdefabcdef',
+      attr: 'bar',
+    }
+    const expected = {
+      _id: bson.ObjectID('000123456789abcdefabcdef'),
+      attr: 'bar',
+    }
+    const actual = filterInputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+})
+
+describe('filterOutputEntity', () => {
+  it ('renames id to _id', () => {
+    // $FlowIssue(this-is-mongo-entity)
+    const input: Entity = {
+      _id: '123',
+      attr: 'bar',
+    }
+    const expected = {
+      id: '123',
+      attr: 'bar',
+    }
+    const actual = filterOutputEntity(input)
+    assert.deepEqual(actual, expected)
+  })
+
+  it ('converts id to ObjectId', () => {
+    // $FlowIssue(this-is-mongo-entity)
+    const input: Entity = {
+      _id: bson.ObjectID('000123456789abcdefabcdef'),
+      attr: 'bar',
+    }
+    const expected = {
+      id: '000123456789abcdefabcdef',
+      attr: 'bar',
+    }
+    const actual = filterOutputEntity(input)
     assert.deepEqual(actual, expected)
   })
 })
