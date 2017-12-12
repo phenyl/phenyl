@@ -1,6 +1,6 @@
 {
   "name": "is-restorable",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Checking instance's restorablity. Designed for testing.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
