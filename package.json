@@ -8,6 +8,7 @@
     "build": "babel-node tools/cli.js build",
     "load": "babel-node tools/cli.js load",
     "clean": "babel-node tools/cli.js clean",
+    "publish": "babel-node tools/cli.js publish",
     "bump:major": "babel-node tools/cli.js bump:major",
     "bump:minor": "babel-node tools/cli.js bump:minor",
     "bump:patch": "babel-node tools/cli.js bump:patch",

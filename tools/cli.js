@@ -47,8 +47,14 @@ class CLI {
     shell.exec(`git push origin ${newTag}`)
   }
 
-  publish(tag: string) {
-    shell.exec(`npm publish --tag ${tag}`)
+  publish() {
+    this.graph.phenylModules.forEach(phenylModule => {
+      const { name, modulePath, scripts } = phenylModule
+      console.log(chalk.cyan(`\npublishing [${name}] `))
+      shell.cd(modulePath)
+      shell.exec(`npm publish`)
+      shell.cd(rootPath)
+    })
   }
 
   clean() {
@@ -135,6 +141,9 @@ switch(command) {
     break
   case 'clean':
     cli.clean()
+    break
+  case 'publish':
+    cli.publish()
     break
   case 'bump:major':
     if (!moduleName) throw new Error('specify moduleName to bump version')
