@@ -12,6 +12,7 @@
     "bump:major": "babel-node tools/cli.js bump:major",
     "bump:minor": "babel-node tools/cli.js bump:minor",
     "bump:patch": "babel-node tools/cli.js bump:patch",
+    "bump:patchAll": "babel-node tools/cli.js bump:patchAll",
     "flow": "flow",
     "chk": "npm run lint && flow",
     "lint": "eslint --quiet modules/*/* examples/*/* tools/*/*"

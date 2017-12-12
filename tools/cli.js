@@ -157,6 +157,11 @@ switch(command) {
     if (!moduleName) throw new Error('specify moduleName to bump version')
     cli.bump(moduleName, 'patch')
     break
+  case 'bump:patchAll':
+    cli.graph.phenylModules.forEach(phenylModule => {
+      cli.bump(phenylModule.name, 'patch')
+    })
+    break
   default:
     throw new Error(`unknown command: ${command}`)
 }
