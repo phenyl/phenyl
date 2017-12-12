@@ -1,6 +1,6 @@
 {
   "name": "phenyl-standards",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -10,13 +10,13 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "phenyl-interfaces": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "oad-utils": "~0.1.0",
-    "phenyl-utils": "~0.1.0",
-    "power-assign": "~0.2.0",
+    "oad-utils": "~0.1.1",
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-utils": "~0.1.1",
+    "power-assign": "~0.2.1",
     "power-crypt": "~0.1.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

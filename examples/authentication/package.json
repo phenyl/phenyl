@@ -7,16 +7,14 @@
   "scripts": {
     "start": "../../node_modules/.bin/babel-node src/index.js"
   },
-  "devDependencies": {
-    "phenyl-interfaces": "~0.1.0"
-  },
   "dependencies": {
-    "oad-utils": "~0.1.0",
-    "phenyl-http-client": "~0.1.0",
-    "phenyl-http-server": "~0.1.0",
-    "phenyl-memory-db": "~0.1.0",
-    "phenyl-rest-api": "~0.1.0",
-    "phenyl-standards": "~0.1.0"
+    "oad-utils": "~0.1.1",
+    "phenyl-http-client": "~0.1.1",
+    "phenyl-http-server": "~0.1.1",
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-memory-db": "~0.1.1",
+    "phenyl-rest-api": "~0.1.1",
+    "phenyl-standards": "~0.1.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/examples/authentication",

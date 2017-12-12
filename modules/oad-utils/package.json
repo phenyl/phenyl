@@ -1,6 +1,6 @@
 {
   "name": "oad-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Collection of utility functions for OAD: Operations As Data.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -10,13 +10,13 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "mongolike-operations": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/oad-utils",
   "license": "Apache License 2.0",
   "dependencies": {
-    "deepmerge": "^2.0.0"
+    "deepmerge": "^2.0.0",
+    "mongolike-operations": "~0.1.0"
   }
 }
