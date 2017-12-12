@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-rules",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -10,7 +10,6 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "phenyl-interfaces": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
@@ -18,6 +17,7 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "fetch-ponyfill": "^4.1.0",
-    "phenyl-utils": "~0.1.0"
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-utils": "~0.1.1"
   }
 }

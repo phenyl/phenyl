@@ -7,16 +7,14 @@
   "scripts": {
     "start": "../../node_modules/.bin/babel-node src/index.js"
   },
-  "devDependencies": {
-    "phenyl-interfaces": "*"
-  },
   "dependencies": {
-    "phenyl-http-client": "*",
-    "phenyl-http-server": "*",
-    "phenyl-memory-db": "*",
-    "phenyl-redux": "*",
-    "phenyl-rest-api": "*",
-    "phenyl-standards": "*",
+    "phenyl-http-client": "~0.1.1",
+    "phenyl-http-server": "~0.1.1",
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-memory-db": "~0.1.1",
+    "phenyl-redux": "~0.2.1",
+    "phenyl-rest-api": "~0.1.1",
+    "phenyl-standards": "~0.1.1",
     "redux": "^3.7.2"
   },
   "author": "",

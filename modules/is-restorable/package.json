@@ -1,6 +1,6 @@
 {
   "name": "is-restorable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Checking instance's restorablity. Designed for testing.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -9,10 +9,10 @@
   },
   "devDependencies": {
     "kocha": "^1.8.0",
-    "babel-register": "^6.24.1",
-    "mongolike-operations": "~0.1.0"
+    "babel-register": "^6.24.1"
   },
   "dependencies": {
+    "mongolike-operations": "~0.1.0",
     "fast-deep-equal": "^1.0.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
