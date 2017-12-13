@@ -90,6 +90,14 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
 
     return decodeResponse(encodedResponse)
   }
+  /**
+   * @public
+   * Access to Phenyl Server (CustomRequestHandler)
+   */
+  async requestText(path: string, params: ?Object): Promise<string> {
+    const result = await fetch(this.url + path, params)
+    return result.text()
+  }
 }
 
 /**
