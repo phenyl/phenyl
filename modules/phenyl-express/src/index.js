@@ -21,7 +21,7 @@ import type { $Request, $Response, NextFunction } from 'express'
  */
 export const createPhenylApiMiddleware = (
   restApiHandler: RestApiHandler,
-  pathRegex: RegExp = /\/api\/.*/
+  pathRegex: RegExp = /^\/api\/.*$/
 ) => async (req: $Request, res: $Response, next: NextFunction) => {
   const { path, method, query, headers } = req
   if (!pathRegex.test(path)) {
@@ -52,7 +52,7 @@ export const createPhenylApiMiddleware = (
  */
 export const createPhenylMiddleware = (
   serverParams: ServerParams,
-  pathRegex: RegExp = /\/api\/.*|\/explorer($|\/.*)/
+  pathRegex: RegExp = /^\/api\/.*$|^\/explorer($|\/.*$)/
 ) => async (req: $Request, res: $Response, next: NextFunction) => {
   const { path, method, query, headers } = req
   if (!pathRegex.test(path)) {
