@@ -27,7 +27,7 @@ export interface IdsQuery {
 export interface PullQuery {
   entityName: string,
   id: Id,
-  versionId: Id,
+  versionId: ?Id,
 }
 
 export interface CustomQuery {

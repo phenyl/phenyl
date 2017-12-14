@@ -16,6 +16,7 @@ import type {
   FollowAllAction,
   Id,
   IdDeleteCommand,
+  IdQuery,
   IdUpdateCommand,
   LocalState,
   LoginAction,
@@ -24,7 +25,6 @@ import type {
   LogoutCommand,
   PhenylAction,
   PullAction,
-  PullQuery,
   PushAndCommitAction,
   ReplaceAction,
   ResetAction,
@@ -168,7 +168,7 @@ export const actions = {
     }
   },
 
-  pull(query: PullQuery): PullAction {
+  pull(query: IdQuery): PullAction {
     return {
       type: 'phenyl/pull',
       payload: query,

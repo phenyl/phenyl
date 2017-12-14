@@ -55,7 +55,7 @@ export class Versioning {
    * @public
    * Create PullQueryResult with diff operations.
    */
-  static createPullQueryResult(entity: EntityWithMetaInfo, versionId: Id): PullQueryResult {
+  static createPullQueryResult(entity: EntityWithMetaInfo, versionId: ?Id): PullQueryResult {
     const operations = this.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
       return { ok: 1, entity: this.stripMeta(entity), versionId: this.getVersionId(entity) }
@@ -146,8 +146,8 @@ export class Versioning {
    * @public
    * Get operation diffs by the given versionId.
    */
-  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: Id): ?Array<UpdateOperation> {
-    if (!entity.hasOwnProperty('_PhenylMeta')) return null
+  static getOperationDiffsByVersion(entity: EntityWithMetaInfo, versionId: ?Id): ?Array<UpdateOperation> {
+    if (!versionId || !entity.hasOwnProperty('_PhenylMeta')) return null
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       let found = false

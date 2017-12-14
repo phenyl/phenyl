@@ -284,7 +284,9 @@ export class MiddlewareHandler {
    */
   async pull(action: PullAction) {
     const { id, entityName } = action.payload
-    const { versionId } = LocalStateFinder.getEntityInfo(this.state, action.payload)
+    const versionId = LocalStateFinder.hasEntity(this.state, action.payload)
+      ? LocalStateFinder.getEntityInfo(this.state, action.payload).versionId
+      : null
     const pullQuery = { id, entityName, versionId }
     const result = await this.client.pull(pullQuery, this.sessionId)
 
