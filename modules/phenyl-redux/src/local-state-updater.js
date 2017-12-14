@@ -153,7 +153,7 @@ export class LocalStateUpdater {
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
 
     const newOrigin = assign(entityInfo.origin, ...operations)
-    const newHead = assign(newOrigin, ...entityInfo.commits)
+    const newHead = entityInfo.commits.length > 0 ? assign(newOrigin, ...entityInfo.commits) : null
 
     return {
       $set: {
