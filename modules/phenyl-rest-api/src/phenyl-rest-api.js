@@ -116,20 +116,22 @@ export class PhenylRestApi implements RestApiHandler {
         return { type: 'error', payload: createServerError('Authorization Required.', 'Unauthorized') }
       }
 
-      // 3. Validation
+      const normalizedReqData = await this.normalizationHandler(reqData, session)
+
+      // 4. Validation
       try {
-        await this.validationHandler(reqData, session)
+        await this.validationHandler(normalizedReqData, session)
       }
       catch (validationError) {
         validationError.message = `Validation Failed. ${validationError.mesage}`
         return { type: 'error', payload: createServerError(validationError, 'BadRequest') }
       }
 
-      // 4. Execution
-      const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
+      // 5. Execution
+      const resData = await this.executionWrapper(normalizedReqData, session, this.execute.bind(this))
 
       // 5. Publish VersionDiff (Side-Effect)
-      this.publishVersionDiff(reqData, resData)
+      this.publishVersionDiff(normalizedReqData, resData)
 
       return resData
     }
