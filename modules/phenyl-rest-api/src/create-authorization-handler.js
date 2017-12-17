@@ -1,7 +1,7 @@
 // @flow
 import type {
   AuthorizationHandler,
-  FunctionalGroup,
+  NormalizedFunctionalGroup,
   RequestData,
   Session,
 } from 'phenyl-interfaces'
@@ -13,7 +13,7 @@ function assertAuthorizationFunction(fn: any, name: string, methodName: string) 
 /**
  *
  */
-export function createAuthorizationHandler(fg: FunctionalGroup): AuthorizationHandler {
+export function createAuthorizationHandler(fg: NormalizedFunctionalGroup): AuthorizationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
   return async function authorizationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
     const { method } = reqData

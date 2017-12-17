@@ -1,7 +1,7 @@
 // @flow
 import type {
   ValidationHandler,
-  FunctionalGroup,
+  NormalizedFunctionalGroup,
   RequestData,
   Session,
 } from 'phenyl-interfaces'
@@ -13,7 +13,7 @@ function assertValidationFunction(fn: any, name: string, methodName: string) {
 /**
  *
  */
-export function createValidationHandler(fg: FunctionalGroup): ValidationHandler {
+export function createValidationHandler(fg: NormalizedFunctionalGroup): ValidationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
   return async function validationHandler(reqData: RequestData, session: ?Session) :Promise<void> {
     const { method } = reqData
