@@ -46,3 +46,10 @@ export async function noHandler(commandOrQuery: LoginCommand | CustomCommand | C
 export async function simpleExecutionWrapper(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
   return execution(reqData, session)
 }
+
+/**
+ * Handler with no normalization.
+ */
+export async function simpleNormalizationHandler(reqData: RequestData): Promise<RequestData> {
+  return reqData
+}
