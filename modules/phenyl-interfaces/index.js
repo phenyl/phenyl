@@ -98,11 +98,12 @@ import type {
   AuthenticationHandler,
   AuthenticationResult,
   CustomCommandHandler,
-  RestApiExecution,
   CustomQueryHandler,
   ExecutionWrapper,
-  ValidationHandler,
   HandlerParams,
+  RequestNormalizationHandler,
+  RestApiExecution,
+  ValidationHandler,
 } from './decls/handler.js.flow'
 import type {
   EncodedHttpRequest,
@@ -363,6 +364,7 @@ export type {
   RequestData,
   RequestDataHandlers,
   RequestMethodName,
+  RequestNormalizationHandler,
   ResetAction,
   ResponseData,
   RunCustomCommandRequestData,

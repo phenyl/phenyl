@@ -7,6 +7,7 @@ import type { RestApiExecution } from './handler.js.flow'
 
 export interface EntityDefinition {
   authorization(reqData: RequestData, session: ?Session): Promise<boolean>, // AuthorizationHandler
+  +normalization?: (reqData: RequestData, session: ?Session) => Promise<RequestData>, // RequestNormalizationHandler
   validation(reqData: RequestData, session: ?Session): Promise<void>, // ValidationHandler
   wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData>, // ExecutionWrapper
 }

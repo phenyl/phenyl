@@ -8,7 +8,8 @@ import {
   passThroughHandler,
   noOperationHandler,
   noHandler,
-  simpleExecutionWrapper
+  simpleExecutionWrapper,
+  simpleNormalizationHandler,
 } from './default-handlers.js'
 
 import {
@@ -24,6 +25,7 @@ import type {
   ResponseData,
   FunctionalGroup,
   NormalizedFunctionalGroup,
+  RequestNormalizationHandler,
   EntityClient,
   SessionClient,
   RestApiHandler,
@@ -45,6 +47,7 @@ export type PhenylRestApiParams = {
   client: EntityClient,
   sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
+  normalizationHandler?: RequestNormalizationHandler,
   validationHandler?: ValidationHandler,
   customQueryHandler?: CustomQueryHandler,
   customCommandHandler?: CustomCommandHandler,
@@ -60,6 +63,7 @@ export class PhenylRestApi implements RestApiHandler {
   client: EntityClient
   sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
+  normalizationHandler: RequestNormalizationHandler
   validationHandler: ValidationHandler
   customQueryHandler: CustomQueryHandler
   customCommandHandler: CustomCommandHandler
@@ -71,6 +75,7 @@ export class PhenylRestApi implements RestApiHandler {
     this.client = params.client
     this.sessionClient = params.sessionClient || this.createSessionClient()
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
+    this.normalizationHandler = params.normalizationHandler || simpleNormalizationHandler
     this.validationHandler = params.validationHandler || noOperationHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
     this.customCommandHandler = params.customCommandHandler || noHandler
@@ -111,20 +116,22 @@ export class PhenylRestApi implements RestApiHandler {
         return { type: 'error', payload: createServerError('Authorization Required.', 'Unauthorized') }
       }
 
-      // 3. Validation
+      const normalizedReqData = await this.normalizationHandler(reqData, session)
+
+      // 4. Validation
       try {
-        await this.validationHandler(reqData, session)
+        await this.validationHandler(normalizedReqData, session)
       }
       catch (validationError) {
         validationError.message = `Validation Failed. ${validationError.mesage}`
         return { type: 'error', payload: createServerError(validationError, 'BadRequest') }
       }
 
-      // 4. Execution
-      const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
+      // 5. Execution
+      const resData = await this.executionWrapper(normalizedReqData, session, this.execute.bind(this))
 
       // 5. Publish VersionDiff (Side-Effect)
-      this.publishVersionDiff(reqData, resData)
+      this.publishVersionDiff(normalizedReqData, resData)
 
       return resData
     }

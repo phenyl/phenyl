@@ -17,6 +17,7 @@ export type AuthenticationResult = {|
 |}
 
 export type AuthorizationHandler = (reqData: RequestData, session: ?Session) => Promise<boolean>
+export type RequestNormalizationHandler = (reqData: RequestData, session: ?Session) => Promise<RequestData>
 export type ValidationHandler = (reqData: RequestData, session: ?Session) => Promise<void>
 export type AuthenticationHandler = (loginCommand: LoginCommand, session: ?Session) => Promise<AuthenticationResult>
 export type RestApiExecution = (reqData: RequestData, session: ?Session) => Promise<ResponseData>
@@ -26,6 +27,7 @@ export type CustomCommandHandler = (command: CustomCommand, session: ?Session) =
 
 export type HandlerParams = {
   authorizationHandler: AuthorizationHandler,
+  normalizationHandler: RequestNormalizationHandler,
   validationHandler: ValidationHandler,
   authenticationHandler: AuthenticationHandler,
   executionWrapper: ExecutionWrapper,
