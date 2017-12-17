@@ -23,6 +23,7 @@ import type {
   RequestData,
   ResponseData,
   FunctionalGroup,
+  NormalizedFunctionalGroup,
   EntityClient,
   SessionClient,
   RestApiHandler,
@@ -88,7 +89,7 @@ export class PhenylRestApi implements RestApiHandler {
    *   }, { client: new PhenylMemoryClient() })
    */
   static createFromFunctionalGroup(fg: FunctionalGroup, params: PhenylRestApiParams): PhenylRestApi {
-    const fgParams = createParamsByFunctionalGroup(fg)
+    const fgParams = createParamsByFunctionalGroup(normalizeFunctionalGroup(fg))
     const newParams = Object.assign({}, params, fgParams)
     return new PhenylRestApi(newParams)
   }
@@ -250,4 +251,13 @@ export class PhenylRestApi implements RestApiHandler {
       throw new Error('"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.')
     }
   }
+}
+
+function normalizeFunctionalGroup(fg: FunctionalGroup): NormalizedFunctionalGroup {
+  return Object.assign({
+    users: {},
+    nonUsers: {},
+    customQueries: {},
+    customCommands: {}
+  }, fg)
 }

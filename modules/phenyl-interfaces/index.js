@@ -89,7 +89,10 @@ import type {
   ServerErrorType,
 } from './decls/error.js.flow'
 
-import type { FunctionalGroup } from './decls/functional-group.js.flow'
+import type {
+  FunctionalGroup,
+  NormalizedFunctionalGroup,
+} from './decls/functional-group.js.flow'
 import type {
   AuthorizationHandler,
   AuthenticationHandler,
@@ -332,6 +335,7 @@ export type {
   MultiUpdateCommand,
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
+  NormalizedFunctionalGroup,
   PatchAction,
   PathModifier,
   PhenylAction,

@@ -2,7 +2,7 @@
 import type {
   RestApiExecution,
   ExecutionWrapper,
-  FunctionalGroup,
+  NormalizedFunctionalGroup,
   RequestData,
   ResponseData,
   Session,
@@ -15,7 +15,7 @@ function assertWrapExecution(fn: any, name: string, methodName: string) {
 /**
  *
  */
-export function createExecutionWrapper(fg: FunctionalGroup): ExecutionWrapper {
+export function createExecutionWrapper(fg: NormalizedFunctionalGroup): ExecutionWrapper {
   const { users, nonUsers } = fg
   return async function executionWrapper(reqData: RequestData, session: ?Session, execution: RestApiExecution) :Promise<ResponseData> {
     const { method } = reqData

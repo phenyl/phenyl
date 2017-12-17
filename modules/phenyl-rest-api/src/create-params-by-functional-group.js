@@ -7,11 +7,11 @@ import { createExecutionWrapper } from './create-execution-wrapper.js'
 import { createValidationHandler } from './create-validation-handler.js'
 
 import type {
-  FunctionalGroup,
+  NormalizedFunctionalGroup,
   HandlerParams,
 } from 'phenyl-interfaces'
 
-export function createParamsByFunctionalGroup(fg: FunctionalGroup): HandlerParams {
+export function createParamsByFunctionalGroup(fg: NormalizedFunctionalGroup): HandlerParams {
   const authenticationHandler = createAuthenticationHandler(fg.users)
   const authorizationHandler = createAuthorizationHandler(fg)
   const validationHandler = createValidationHandler(fg)
