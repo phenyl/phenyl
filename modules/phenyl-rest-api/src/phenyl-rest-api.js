@@ -2,6 +2,7 @@
 import {
   assertValidRequestData,
   createServerError,
+  PhenylRestApiDirectClient
 } from 'phenyl-utils/jsnext'
 
 import {
@@ -138,6 +139,13 @@ export class PhenylRestApi implements RestApiHandler {
     catch (e) {
       return { type: 'error', payload: createServerError(e) }
     }
+  }
+
+  /**
+   * @public
+   */
+  createDirectClient(): PhenylRestApiDirectClient {
+    return new PhenylRestApiDirectClient(this)
   }
 
   /**
