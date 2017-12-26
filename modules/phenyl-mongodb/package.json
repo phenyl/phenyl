@@ -2,7 +2,7 @@
   "name": "phenyl-mongodb",
   "version": "0.1.2",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "pretest": "type mongod && mkdir -p test/tmp/mongodb && mongod --dbpath test/tmp/mongodb > /dev/null &",
