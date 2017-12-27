@@ -1,5 +1,4 @@
 // @flow
-import fp from 'fetch-ponyfill'
 import {
   encodeRequest,
   decodeResponse,
@@ -8,8 +7,6 @@ import {
   PhenylRestApiClient,
   createLocalError,
 } from 'phenyl-utils/jsnext'
-const { fetch } = fp()
-
 import type {
   RequestData,
   ResponseData,
@@ -17,6 +14,7 @@ import type {
   ClientPathModifier,
   QueryStringParams,
 } from 'phenyl-interfaces'
+import fetch from './fetch.js'
 
 /**
  * Client to access to PhenylRestApi on server.

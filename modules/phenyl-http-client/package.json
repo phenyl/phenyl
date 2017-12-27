@@ -7,6 +7,9 @@
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "browser": {
+    "./fetch.js": "./fetch-browser.js"
+  },
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
@@ -20,8 +23,10 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "fetch-ponyfill": "^4.1.0",
-    "phenyl-interfaces": "~0.1.0",
+    "node-fetch": "^1.7.3",
     "phenyl-http-rules": "~0.1.1",
-    "phenyl-utils": "~0.1.1"
+    "phenyl-interfaces": "~0.1.0",
+    "phenyl-utils": "~0.1.1",
+    "whatwg-fetch": "^2.0.3"
   }
 }
