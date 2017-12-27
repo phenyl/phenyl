@@ -16,7 +16,6 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-rules",
   "license": "Apache License 2.0",
   "dependencies": {
-    "fetch-ponyfill": "^4.1.0",
     "phenyl-interfaces": "~0.1.0",
     "phenyl-utils": "~0.1.1"
   }
