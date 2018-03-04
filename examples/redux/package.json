@@ -13,7 +13,7 @@
     "phenyl-interfaces": "~0.1.0",
     "phenyl-memory-db": "~0.1.1",
     "phenyl-redux": "~0.2.1",
-    "phenyl-rest-api": "~0.1.1",
+    "phenyl-rest-api": "~0.2.0",
     "phenyl-standards": "~0.1.1",
     "redux": "^3.7.2"
   },

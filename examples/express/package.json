@@ -13,7 +13,7 @@
     "phenyl-http-client": "~0.1.2",
     "phenyl-interfaces": "~0.1.1",
     "phenyl-memory-db": "~0.1.2",
-    "phenyl-rest-api": "~0.1.2",
+    "phenyl-rest-api": "~0.2.0",
     "phenyl-standards": "~0.1.2"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
