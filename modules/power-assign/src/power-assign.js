@@ -428,10 +428,17 @@ export default class PowerAssign {
     const revObjsToBeAssigned = getObjectsToBeAssigned(obj, docPath).reverse()
     const revKeys = parseDocumentPath(docPath).reverse()
     // assert(objsToBeAssigned.length === keys.length)
+
     // $FlowIssue(return-T)
-    return revKeys.reduce((newValue, key, i) =>
-      // $FlowIssue(reduce-first-argument-type)
-      Object.assign({}, revObjsToBeAssigned[i], { [key]: newValue }), value)
+    return revKeys.reduce((newValue, key, i) => {
+      const objToBeAssigned = revObjsToBeAssigned[i]
+      if (typeof key === 'number' && Array.isArray(objToBeAssigned)) {
+        const shallowCopied = objToBeAssigned.slice()
+        shallowCopied[key] = newValue
+        return shallowCopied
+      }
+      return Object.assign({}, objToBeAssigned, { [key]: newValue })
+    }, value)
   }
 }
 
