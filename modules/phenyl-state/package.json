@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "phenyl-interfaces": "~0.1.0",
-    "power-assign": "~0.2.1",
+    "power-assign": "~0.2.3",
     "power-filter": "~0.1.1",
     "oad-utils": "~0.1.1"
   },

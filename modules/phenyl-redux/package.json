@@ -15,6 +15,6 @@
     "fast-deep-equal": "^1.0.0",
     "phenyl-interfaces": "~0.1.0",
     "phenyl-utils": "~0.1.1",
-    "power-assign": "~0.2.1"
+    "power-assign": "~0.2.3"
   }
 }

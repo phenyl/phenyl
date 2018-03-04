@@ -24,6 +24,6 @@
     "phenyl-central-state": "~0.1.1",
     "phenyl-interfaces": "~0.1.0",
     "phenyl-utils": "~0.1.1",
-    "power-assign": "~0.2.1"
+    "power-assign": "~0.2.3"
   }
 }
