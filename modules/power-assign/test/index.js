@@ -23,21 +23,23 @@ describe('assign', () => {
     assert.deepEqual(newObj, { id: 'user001', name: 'kerisu' })
   })
 
-  it('set values', () => {
+  it('set values to the specific position', () => {
     const obj = { name: { first: 'naomi' } }
     const newObj = assign(obj, { $set: { 'name.first': 'nao' }})
     assert.deepEqual(newObj, { name: { first: 'nao' } })
   })
 
-  it('set values', () => {
+  it('set values to the specific position of an array', () => {
     const obj = { colors: ['yellow', 'red'] }
-    const newObj = assign(obj, { $set: { 'colors.1': 'blue' }})
+    const newObj = assign(obj, { $set: { 'colors[1]': 'blue' }})
+    assert(Array.isArray(newObj.colors))
     assert.deepEqual(newObj, { colors: ['yellow', 'blue'] })
   })
 
-  it('set values', () => {
+  it('set values to the specific position in array', () => {
     const obj = { users: [{ id: 'user1' }, { id: 'user2' }]}
-    const newObj = assign(obj, { $set: { 'users.1.id': 'user123' }})
+    const newObj = assign(obj, { $set: { 'users[1].id': 'user123' }})
+    assert(Array.isArray(newObj.users))
     assert.deepEqual(newObj, { users: [{ id: 'user1' }, { id: 'user123' }]})
   })
 

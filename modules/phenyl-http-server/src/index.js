@@ -53,7 +53,7 @@ export default class PhenylHttpServer {
       const read = () => {
         try {
           // https://nodejs.org/api/stream.html#stream_readable_read_size
-          const chunks = []
+          const chunks: Array<Buffer> = []
           let chunk
           let totalLength = 0
           while (null !== (chunk = request.read())) {

@@ -12,7 +12,7 @@
     "kocha": "^1.8.0",
     "phenyl-http-server": "~0.1.1",
     "phenyl-memory-db": "~0.1.1",
-    "phenyl-rest-api": "~0.1.1",
+    "phenyl-rest-api": "~0.2.0",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

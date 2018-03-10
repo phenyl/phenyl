@@ -234,7 +234,7 @@ export class MiddlewareHandler {
    */
   async logout(action: LogoutAction) {
     const command = action.payload
-    this.client.logout(command, this.sessionId) // No awaiting here.
+    await this.client.logout(command, this.sessionId)
     this.resetState()
   }
 
