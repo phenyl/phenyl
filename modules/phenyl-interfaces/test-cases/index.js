@@ -241,6 +241,17 @@ export const assertEntityClient = (
         })
         assert.deepEqual(result.entity, user8)
       })
+
+      it('returns an error when where query set empty string', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: { id: '' },
+        }).catch((e)=>{
+          return e
+        })
+        assert(result.ok === 0)
+        assert(result.type === 'NotFound')
+      })
     })
 
     describe('get', () => {
