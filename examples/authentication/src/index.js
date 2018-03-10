@@ -86,6 +86,7 @@ async function avoidAuthorization() {
         ttl: 24 * 3600
       })
     }
+
     async authorization(reqData, session): Promise<boolean> {
       if (['insertAndGet', 'insertAndFetch', 'login', 'logout'].includes(reqData.method)) return true
       console.log(session, reqData.payload)
