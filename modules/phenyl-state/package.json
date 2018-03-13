@@ -1,6 +1,6 @@
 {
   "name": "phenyl-state",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -8,10 +8,10 @@
     "test": "kocha --require babel-register test/*.js --color always"
   },
   "dependencies": {
-    "phenyl-interfaces": "~0.1.0",
-    "power-assign": "~0.2.3",
-    "power-filter": "~0.1.1",
-    "oad-utils": "~0.1.1"
+    "phenyl-interfaces": "~0.1.2",
+    "power-assign": "~0.2.4",
+    "power-filter": "~0.1.3",
+    "oad-utils": "~0.1.3"
   },
   "devDependencies": {
     "kocha": "^1.8.0",

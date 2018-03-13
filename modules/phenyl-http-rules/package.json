@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-rules",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -17,7 +17,7 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "fetch-ponyfill": "^4.1.0",
-    "phenyl-interfaces": "~0.1.0",
-    "phenyl-utils": "~0.1.1"
+    "phenyl-interfaces": "~0.1.2",
+    "phenyl-utils": "~0.1.3"
   }
 }

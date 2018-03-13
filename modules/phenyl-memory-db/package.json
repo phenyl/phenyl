@@ -1,6 +1,6 @@
 {
   "name": "phenyl-memory-db",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -13,12 +13,12 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "oad-utils": "~0.1.1",
-    "power-assign": "~0.2.3",
-    "phenyl-central-state": "~0.1.1",
-    "phenyl-interfaces": "~0.1.0",
-    "phenyl-state": "~0.1.1",
-    "phenyl-utils": "~0.1.1"
+    "oad-utils": "~0.1.3",
+    "power-assign": "~0.2.4",
+    "phenyl-central-state": "~0.1.3",
+    "phenyl-interfaces": "~0.1.2",
+    "phenyl-state": "~0.1.3",
+    "phenyl-utils": "~0.1.3"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-db",
