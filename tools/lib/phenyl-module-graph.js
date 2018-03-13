@@ -1,122 +1,74 @@
 // @flow
 import PhenylModule from './phenyl-module.js'
+import type { PackageJSON } from './phenyl-module.js'
 
-export opaque type Version = string
+export type Version = string
 export type BumpType = 'major' | 'minor' | 'patch'
-
-export type PackageJSON = {
-  name: string,
-  version: Version,
-  scripts: ?{ [scriptName: string]: string },
-  dependencies: ?{ [moduleName: string]: Version },
-  devDependencies: ?{ [moduleName: string]: Version },
-}
-type PackageJSONsByName = { [moduleName: string]: PackageJSON }
-
-type PhenylModulesByName = { [moduleName: string]: PhenylModule }
+export type BumpTypesByModuleName = { [moduleName: string]: BumpType }
+export type PackageJSONsByPath = { [modulePath: string]: PackageJSON }
+export type PhenylModulesByName = { [moduleName: string]: PhenylModule }
+export type VersionsByModuleName = { [moduleName: string]: Version }
 
 export default class PhenylModuleGraph {
+  rootPath: string
   modulesByName: PhenylModulesByName
-  exampleModulesByName: PhenylModulesByName
-  sortedModuleNames: Array<string>
+  moduleNames: Array<string>
+  rootPackageJson: PackageJSON
 
-  constructor(rootPath: string, rootPackageJson: PackageJSON, packageJsonsByName: PackageJSONsByName, examplePackageJsonsByName: PackageJSONsByName) {
-    const moduleNames = Object.keys(packageJsonsByName)
+  constructor(rootPath: string, rootPackageJson: PackageJSON, packageJsons: PackageJSONsByPath) {
+    this.rootPath = rootPath
+    this.rootPackageJson = rootPackageJson
+    this.modulesByName = Object.keys(packageJsons).reduce((acc, modulePath) => {
+      const packageJson = packageJsons[modulePath]
+      acc[packageJson.name] = PhenylModule.create(modulePath, packageJson)
+      return acc
+    }, {})
 
-    this.modulesByName = {}
-    this.exampleModulesByName = {}
-
-    moduleNames.forEach(moduleName => {
-      const packageJson = packageJsonsByName[moduleName]
-      const dependedModuleNames = getDependedModuleNames(moduleName, packageJsonsByName)
-      this.modulesByName[moduleName] = createPhenylModule(moduleName, rootPath + '/modules', packageJson, moduleNames, dependedModuleNames, rootPackageJson)
-    })
-    this.sortedModuleNames = topologicalSort(this.modulesByName)
-
-    Object.keys(examplePackageJsonsByName).forEach(moduleName => {
-      const packageJson = examplePackageJsonsByName[moduleName]
-      this.exampleModulesByName[moduleName] = createPhenylExampleModule(moduleName, rootPath + '/examples', packageJson, moduleNames, rootPackageJson)
-    })
+    this.moduleNames = topologicalSort(this.modulesByName)
   }
 
-  get exampleModules(): Array<PhenylModule> {
-    return Object.keys(this.exampleModulesByName).map(name => this.exampleModulesByName[name])
+  get commonModuleNames(): Array<string> {
+    return [].concat(
+      Object.keys(this.rootPackageJson.dependencies || {}),
+      Object.keys(this.rootPackageJson.devDependencies || {}),
+    )
   }
 
   get phenylModules(): Array<PhenylModule> {
-    return this.sortedModuleNames.map(name => this.modulesByName[name])
+    return this.moduleNames.map(name => this.modulesByName[name])
   }
 
-  bumpVersion(moduleName: string, bumpType: BumpType): PhenylModulesByName {
-    const affected = {}
-    const { modulesByName } = this
+  getBumpedVersions(modulesToBump: BumpTypesByModuleName): VersionsByModuleName {
+    const moduleNamesToBump = Object.keys(modulesToBump)
+    const newVersions = moduleNamesToBump.reduce((acc, name) => {
+      const phenylModule = this.modulesByName[name]
+      acc[name] = bumpByType(phenylModule.version, modulesToBump[name])
+      return acc
+    }, {})
 
-    function bump(phenylModule) {
-      const newVersion = bumpByType(phenylModule.version, bumpType)
-      const newPhenylModule = new PhenylModule(Object.assign({}, phenylModule, { version: newVersion }))
-      affected[newPhenylModule.name] = newPhenylModule
-      newPhenylModule.dependedModuleNames.forEach(name => {
-        bump(modulesByName[name])
+    let newlyPatchBumped = []
+    do {
+      newlyPatchBumped = this.phenylModules
+        .filter(phenylModule => newVersions[phenylModule.name] == null)
+        .filter(phenylModule => phenylModule.hasDependencies(...Object.keys(newVersions)))
+      newlyPatchBumped.forEach(phenylModule => {
+        newVersions[phenylModule.name] = bumpByType(phenylModule.version, 'patch')
       })
-    }
-    bump(modulesByName[moduleName])
-    return affected
+    } while (newlyPatchBumped.length > 0)
+
+    return newVersions
   }
-}
-
-/**
- * Factory of PhenylModule
- */
-function createPhenylModule(dirname: string, modulesPath: string, packageJson: PackageJSON, phenylModuleNames: Array<string>, dependedModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
-  const dependencies = packageJson.dependencies || {}
-  const devDependencies = packageJson.devDependencies || {}
-  // $FlowIssue(devDependencies-exists)
-  const commonModuleNames = Object.keys(devDependencies).filter(name => rootPackageJson.devDependencies[name] != null)
-
-  const params = {
-    name: packageJson.name,
-    dirname,
-    modulesPath,
-    version: packageJson.version,
-    scripts: packageJson.scripts,
-    dependingModuleNames: phenylModuleNames.filter(moduleName => dependencies[moduleName] || devDependencies[moduleName]),
-    dependedModuleNames,
-    commonModuleNames,
-  }
-  return new PhenylModule(params)
-}
-
-/**
- * Factory of PhenylExampleModule
- */
-function createPhenylExampleModule(dirname: string, modulesPath: string, packageJson: PackageJSON, phenylModuleNames: Array<string>, rootPackageJson: PackageJSON): PhenylModule {
-  const dependencies = packageJson.dependencies || {}
-  const devDependencies = packageJson.devDependencies || {}
-  // $FlowIssue(devDependencies-exists)
-  const commonModuleNames = Object.keys(devDependencies).filter(name => rootPackageJson.devDependencies[name] != null)
-
-  const params = {
-    name: packageJson.name,
-    dirname,
-    modulesPath,
-    version: packageJson.version,
-    scripts: packageJson.scripts,
-    dependingModuleNames: phenylModuleNames.filter(moduleName => dependencies[moduleName] || devDependencies[moduleName]),
-    dependedModuleNames: [],
-    commonModuleNames,
-  }
-  return new PhenylModule(params)
 }
 
 /**
  * TopologicalSort of phenyl modules by dependencies
  */
-function topologicalSort(modulesByName): Array<string> {
+function topologicalSort(modulesByName: PhenylModulesByName): Array<string> {
   const sorted = []
   const visited = {}
   const loaded = {}
 
-  function visit(phenylModule) {
+  function visit(phenylModule: PhenylModule) {
     const { name } = phenylModule
     if (loaded[name]) {
       return
@@ -126,11 +78,10 @@ function topologicalSort(modulesByName): Array<string> {
     }
     visited[name] = true
 
-    if (phenylModule.dependingModuleNames.length) {
-      phenylModule.dependingModuleNames.forEach(depModuleName => {
-        visit(modulesByName[depModuleName])
-      })
-    }
+    const dependingNames = phenylModule.allDependencies.filter(name => modulesByName[name])
+    dependingNames.forEach(name => {
+      visit(modulesByName[name])
+    })
     sorted.push(name)
     loaded[name] = true
   }
@@ -141,22 +92,13 @@ function topologicalSort(modulesByName): Array<string> {
   return sorted
 }
 
-function getDependedModuleNames(moduleName, packageJsonsByName): Array<string> {
-  return Object.keys(packageJsonsByName).filter(currentModuleName => {
-    const packageJson = packageJsonsByName[currentModuleName]
-    const dependencies = packageJson.dependencies || {}
-    const devDependencies = packageJson.devDependencies || {}
-    return dependencies[moduleName] || devDependencies[moduleName]
-  })
-}
-
 function bumpByType(version: Version, type: BumpType): Version {
   const [major, minor, patch] = version.split('.').map(str => parseInt(str))
   switch (type) {
     case 'major':
-      return [major + 1, minor, patch].join('.')
+      return [major + 1, 0, 0].join('.')
     case 'minor':
-      return [major, minor + 1, patch].join('.')
+      return [major, minor + 1, 0].join('.')
     case 'patch':
       return [major, minor, patch + 1].join('.')
     default:
