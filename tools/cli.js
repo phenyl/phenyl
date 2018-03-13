@@ -38,7 +38,7 @@ class CLI {
   clean() {
     for (const phenylModule of this.graph.phenylModules) {
       console.log(chalk.cyan(`\n[${phenylModule.name}] clean start.`))
-      const { command, args } = phenylModule.clearCommand()
+      const { command, args } = phenylModule.cleanCommand()
       shell[command](...args)
       console.log(chalk.green(`[${phenylModule.name}] ✓ clean done.`))
     }
@@ -124,6 +124,28 @@ class CLI {
 
     console.log(`npm run publish -- ${modulesToPublish.join(' ')}"`)
   }
+
+  publish(...moduleNames: Array<string>) {
+    const { stdout } = shell.exec('npm whoami')
+    if (stdout.trim() !== 'phenyl') {
+      console.error('npm user must be "phenyl" to publish. Check your .npmrc')
+      return
+    }
+
+    for (const phenylModule of this.graph.phenylModules) {
+      if (!moduleNames.includes(phenylModule.name)) { continue }
+
+      console.log(chalk.cyan(`[${phenylModule.name}] start publishing.`))
+      const iter = phenylModule.publishCommands(this.graph)
+      let iterResult = iter.next()
+      while (!iterResult.done) {
+        const { command, args } = iterResult.value
+        shell[command](...args)
+        iterResult = iter.next()
+      }
+      console.log(chalk.green(`[${phenylModule.name}] ✓ publish done.\n`))
+    }
+  }
 }
 
 function main(argv) {
@@ -150,6 +172,10 @@ function main(argv) {
           return acc
         }, {})
       cli.bump(bumpTypesByModuleName)
+      break
+    case 'publish':
+      const moduleNames = argv.slice(1)
+      cli.publish(...moduleNames)
       break
     default:
       throw new Error(`unknown subcommand: ${subcommand}`)

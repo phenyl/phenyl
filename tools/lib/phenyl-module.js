@@ -137,11 +137,21 @@ export default class PhenylModule {
     )
   }
 
-  clearCommand(): ShellCommand {
+  cleanCommand(): ShellCommand {
     return {
       command: 'rm',
       args: ['-rf',
         join(this.modulePath, 'node_modules'),
+        join(this.modulePath, 'dist'),
+        join(this.modulePath, 'package-lock.json'),
+      ]
+    }
+  }
+
+  cleanForReleaseCommand(): ShellCommand {
+    return {
+      command: 'rm',
+      args: ['-rf',
         join(this.modulePath, 'dist'),
         join(this.modulePath, 'package-lock.json'),
       ]
@@ -153,6 +163,14 @@ export default class PhenylModule {
       command: 'exec',
       args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
     }
+  }
+
+  *publishCommands(graph: PhenylModuleGraph): Generator<ShellCommand, void, void> {
+    yield this.cleanForReleaseCommand()
+    yield this.buildCommand()
+    yield { command: 'cd', args: [this.modulePath] }
+    yield { command: 'exec', args: ['npm publish'] }
+    yield { command: 'cd', args: [graph.rootPath] }
   }
 
   /**
