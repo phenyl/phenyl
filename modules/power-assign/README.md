@@ -1,6 +1,6 @@
 # power-assign [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl-js/phenyl)
 
-**Empowered `Object.assign()` in JavaScript** available in whole JavaScript environment.
+Immutable updater of POJO using MongoDB's operator, easier access to nested values.
 
 ```js
 import { assign } from 'power-assign'
