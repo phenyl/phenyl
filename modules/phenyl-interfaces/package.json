@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {},
+  "files": ["index.js", "decls", "package.json", "LICENSE", "README.md"],
   "dependencies": {
     "mongolike-operations": "~0.1.0"
   },

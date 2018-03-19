@@ -9,6 +9,7 @@
     "test": "kocha --require babel-register test/*.js --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
+  "files": ["src", "dist", "package.json", "jsnext.js", "LICENSE", "README.md"],
   "devDependencies": {
     "babel-register": "^6.24.1",
     "power-assert": "^1.4.4"

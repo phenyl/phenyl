@@ -5,6 +5,7 @@
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "files": ["src", "dist", "package.json", "jsnext.js", "LICENSE", "README.md"],
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-dynamodb-client",
   "license": "Apache License 2.0",
