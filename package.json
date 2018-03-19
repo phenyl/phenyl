@@ -12,7 +12,7 @@
     "bump": "babel-node tools/cli.js bump",
     "flow": "flow",
     "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/* examples/*/* tools/*/*"
+    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js"
   },
   "repository": {
     "type": "git",
