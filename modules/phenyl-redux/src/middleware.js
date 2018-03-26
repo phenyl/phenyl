@@ -1,13 +1,12 @@
 // @flow
 
+import type { Middleware } from 'redux'
 import { PhenylReduxModule } from './phenyl-redux-module.js'
-
 import { LocalStateUpdater } from './local-state-updater.js'
 import { LocalStateFinder } from './local-state-finder.js'
 
 import type {
   AuthCommandMapOf,
-  AuthCommandOf,
   CommitAndPushAction,
   DeleteAction,
   EntityMapOf,
@@ -32,55 +31,54 @@ import type {
   UserEntityNameOf,
 } from 'phenyl-interfaces'
 
-type Store = any
+export type PhenylActionOf<TM: TypeMap> = PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>
+export type LocalStateOf<TM: TypeMap> = LocalState<EntityMapOf<TM>>
 
-type PhenylActionOf<TM: TypeMap> = PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>
-type LocalStateOf<TM: TypeMap> = LocalState<EntityMapOf<TM>>
-
-type Options<TM: TypeMap> = {
+export type MiddlewareOptions<TM: TypeMap> = {
   client: RestApiClient<TM>,
-  storeKey?: string;
+  storeKey?: string
 }
 
-type Next<TM: TypeMap> = (action: PhenylActionOf<TM>) => LocalStateOf<TM>
+export type Next<TM: TypeMap, T> = (action: PhenylActionOf<TM>) => Promise<T>
 
 export class MiddlewareCreator<TM: TypeMap> {
-  /**
-   *
-   */
-  static create = (options: Options<TM>) => (store: Store) => (next: Next<TM>) => {
-    const storeKey = options.storeKey || 'phenyl'
-    const client = options.client
-    const handler: MiddlewareHandler<TM> = new MiddlewareHandler(store, storeKey, client, next)
 
-    return (action: PhenylActionOf<TM>) => {
-      switch (action.type) {
-        case 'phenyl/commitAndPush':
-          return handler.commitAndPush(action)
-        case 'phenyl/delete':
-          return handler.delete(action)
-        case 'phenyl/follow':
-          return handler.follow(action)
-        case 'phenyl/followAll':
-          return handler.followAll(action)
-        case 'phenyl/login':
-          return handler.login(action)
-        case 'phenyl/logout':
-          return handler.logout(action)
-        case 'phenyl/patch':
-          return handler.patch(action)
-        case 'phenyl/pull':
-          return handler.pull(action)
-        case 'phenyl/pushAndCommit':
-          return handler.pushAndCommit(action)
-        case 'phenyl/setSession':
-          return handler.setSession(action)
-        case 'phenyl/unfollow':
-          return handler.unfollow(action)
-        case 'phenyl/unsetSession':
-          return handler.unsetSession()
-        default:
-          return next(action)
+  static create<T, S>(options: MiddlewareOptions<TM>): Middleware<S, PhenylActionOf<TM>, Next<TM, T>> {
+    const storeKey = options.storeKey || 'phenyl'
+    return (store: any) => (next: Next<TM, T>) => {
+      const client = options.client
+      const getState = () => store.getState()[storeKey]
+      const handler: MiddlewareHandler<TM, T> = new MiddlewareHandler(getState, client, next)
+
+      return (action: PhenylActionOf<TM>): Promise<T> => {
+        switch (action.type) {
+          case 'phenyl/commitAndPush':
+            return handler.commitAndPush(action)
+          case 'phenyl/delete':
+            return handler.delete(action)
+          case 'phenyl/follow':
+            return handler.follow(action)
+          case 'phenyl/followAll':
+            return handler.followAll(action)
+          case 'phenyl/login':
+            return handler.login(action)
+          case 'phenyl/logout':
+            return handler.logout(action)
+          case 'phenyl/patch':
+            return handler.patch(action)
+          case 'phenyl/pull':
+            return handler.pull(action)
+          case 'phenyl/pushAndCommit':
+            return handler.pushAndCommit(action)
+          case 'phenyl/setSession':
+            return handler.setSession(action)
+          case 'phenyl/unfollow':
+            return handler.unfollow(action)
+          case 'phenyl/unsetSession':
+            return handler.unsetSession()
+          default:
+            return next(action)
+        }
       }
     }
   }
@@ -89,17 +87,16 @@ export class MiddlewareCreator<TM: TypeMap> {
 /**
  *
  */
-export class MiddlewareHandler<TM: TypeMap> {
+export class MiddlewareHandler<TM: TypeMap, T> {
   static LocalStateUpdater: Class<LocalStateUpdater<TM>> = LocalStateUpdater
   static PhenylReduxModule: Class<PhenylReduxModule<TM>> = PhenylReduxModule
-  store: Store
-  storeKey: string
-  client: RestApiClient<TM>
-  next: Next<TM>
 
-  constructor(store: Store, storeKey: string, client: RestApiClient<TM>, next: Next<TM>) {
-    this.store = store
-    this.storeKey = storeKey
+  getState: () => LocalStateOf<TM>
+  client: RestApiClient<TM>
+  next: Next<TM, T>
+
+  constructor(getState: () => LocalStateOf<TM>, client: RestApiClient<TM>, next: Next<TM, T>) {
+    this.getState = getState
     this.client = client
     this.next = next
   }
@@ -108,13 +105,13 @@ export class MiddlewareHandler<TM: TypeMap> {
    *
    */
   get state(): LocalStateOf<TM> {
-    return this.store.getState()[this.storeKey]
+    return this.getState()
   }
 
   /**
    * Invoke reducer 1: Assign operation(s) to state.
    */
-  assignToState(...ops: Array<UpdateOperation>): LocalStateOf<TM> {
+  async assignToState(...ops: Array<UpdateOperation>): Promise<T> {
     const { PhenylReduxModule } = this.constructor
     return this.next(PhenylReduxModule.assign(ops))
   }
@@ -122,7 +119,7 @@ export class MiddlewareHandler<TM: TypeMap> {
   /**
    * Invoke reducer 2: Reset state.
    */
-  resetState(): LocalStateOf<TM> {
+  async resetState(): Promise<T> {
     const { PhenylReduxModule } = this.constructor
     return this.next(PhenylReduxModule.reset())
   }
@@ -141,7 +138,7 @@ export class MiddlewareHandler<TM: TypeMap> {
    * In such cases, pull the entity first.
    * Only when Authorization Error occurred, it will be rollbacked.
    */
-  async commitAndPush<N: EntityNameOf<TM>>(action: CommitAndPushAction<N>) {
+  async commitAndPush<N: EntityNameOf<TM>>(action: CommitAndPushAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { id, entityName } = action.payload
 
@@ -183,14 +180,14 @@ export class MiddlewareHandler<TM: TypeMap> {
     }
     finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
-      this.assignToState(...ops)
     }
+    return this.assignToState(...ops)
   }
 
   /**
    * Delete the entity in the CentralState, then unfollow the entity in LocalState.
    */
-  async delete<N: EntityNameOf<TM>>(action: DeleteAction<N>) {
+  async delete<N: EntityNameOf<TM>>(action: DeleteAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, id } = action.payload
     this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
@@ -205,36 +202,36 @@ export class MiddlewareHandler<TM: TypeMap> {
     }
     finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
-      this.assignToState(...ops)
     }
+    return this.assignToState(...ops)
   }
 
   /**
    * Register the given entity.
    */
-  follow<N: EntityNameOf<TM>>(action: FollowAction<N, EntityOf<TM, N>>) {
+  async follow<N: EntityNameOf<TM>>(action: FollowAction<N, EntityOf<TM, N>>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, entity, versionId } = action.payload
-    this.assignToState(LocalStateUpdater.follow(this.state, entityName, entity, versionId))
+    return this.assignToState(LocalStateUpdater.follow(this.state, entityName, entity, versionId))
   }
 
   /**
    * Register all the given entities.
    */
-  followAll<N: EntityNameOf<TM>>(action: FollowAllAction<N, EntityOf<TM, N>>) {
+  async followAll<N: EntityNameOf<TM>>(action: FollowAllAction<N, EntityOf<TM, N>>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, entities, versionsById } = action.payload
-    this.assignToState(LocalStateUpdater.followAll(this.state, entityName, entities, versionsById))
+    return this.assignToState(LocalStateUpdater.followAll(this.state, entityName, entities, versionsById))
   }
 
   /**
    * Login with credentials, then register the user.
    */
-  async login<N: UserEntityNameOf<TM>>(action: LoginAction<N, AuthCommandOf<TM, N>>) {
+  async login<N: UserEntityNameOf<TM>>(action: LoginAction<N, AuthCommandMapOf<TM>>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const command = action.payload
 
-    this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
+    await this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
 
     let ops = []
     try {
@@ -246,35 +243,35 @@ export class MiddlewareHandler<TM: TypeMap> {
     }
     finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
-      this.assignToState(...ops)
     }
+    return this.assignToState(...ops)
   }
 
   /**
    * Remove the session in CentralState and reset the LocalState.
    */
-  async logout<N: UserEntityNameOf<TM>>(action: LogoutAction<N>) {
+  async logout<N: UserEntityNameOf<TM>>(action: LogoutAction<N>): Promise<T> {
     const command = action.payload
     await this.client.logout(command, this.sessionId)
-    this.resetState()
+    return this.resetState()
   }
 
   /**
    * Apply the VersionDiff.
    */
-  async patch(action: PatchAction) {
+  async patch(action: PatchAction): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const versionDiff = action.payload
-    this.assignToState(LocalStateUpdater.patch(this.state, versionDiff))
+    return this.assignToState(LocalStateUpdater.patch(this.state, versionDiff))
   }
 
   /**
    * Push to the CentralState, then commit to LocalState.
    * If push failed, the commit is not applied.
    */
-  async pushAndCommit<N: EntityNameOf<TM>>(action: PushAndCommitAction<N>) {
+  async pushAndCommit<N: EntityNameOf<TM>>(action: PushAndCommitAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
-    this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
+    await this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
     //LocalStateUpdater.commit(this.state, action.payload),
 
     const { operation, id, entityName } = action.payload
@@ -298,14 +295,14 @@ export class MiddlewareHandler<TM: TypeMap> {
     }
     finally {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
-      this.assignToState(...ops)
     }
+    return this.assignToState(...ops)
   }
 
   /**
    * Pull the differences from CentralState, then rebase the diffs.
    */
-  async pull<N: EntityNameOf<TM>>(action: PullAction<N>) {
+  async pull<N: EntityNameOf<TM>>(action: PullAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { id, entityName } = action.payload
     const { versionId } = LocalStateFinder.getEntityInfo(this.state, action.payload)
@@ -319,33 +316,33 @@ export class MiddlewareHandler<TM: TypeMap> {
     else {
       ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
     }
-    this.assignToState(...ops)
+    return this.assignToState(...ops)
   }
 
   /**
    * Set session info. Register user if exists.
    */
-  setSession(action: SetSessionAction) {
+  async setSession(action: SetSessionAction): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { user, versionId, session } = action.payload
-    this.assignToState(LocalStateUpdater.setSession(this.state, session, user, versionId))
+    return this.assignToState(LocalStateUpdater.setSession(this.state, session, user, versionId))
   }
 
   /**
    * Unregister the entity.
    */
-  unfollow<N: EntityNameOf<TM>>(action: UnfollowAction<N>) {
+  async unfollow<N: EntityNameOf<TM>>(action: UnfollowAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, id } = action.payload
-    this.assignToState(LocalStateUpdater.unfollow(this.state, entityName, id))
+    return this.assignToState(LocalStateUpdater.unfollow(this.state, entityName, id))
   }
 
   /**
    * Unset session info. It doesn't remove the user info.
    */
-  unsetSession() {
+  async unsetSession(): Promise<T> {
     const { LocalStateUpdater } = this.constructor
-    this.assignToState(LocalStateUpdater.unsetSession())
+    return this.assignToState(LocalStateUpdater.unsetSession())
   }
 }
 

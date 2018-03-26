@@ -10,7 +10,6 @@ import {
 import type {
   AssignAction,
   AuthCommandMapOf,
-  AuthCommandOf,
   CommitAndPushAction,
   CredentialsOf,
   DeleteAction,
@@ -117,7 +116,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static follow<N: EntityNameOf<TM>>(entityName: N, entity: EntityOf<TM, N>, versionId: Id): FollowAction<N, EntityOf<TM, N>> {
+  static follow<N: EntityNameOf<TM>>(entityName: N, entity: EntityOf<TM, N>, versionId: Id): FollowAction<N, EntityMapOf<TM>> {
     return {
       type: 'phenyl/follow',
       payload: {
@@ -129,7 +128,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static followAll<N: EntityNameOf<TM>>(entityName: N, entities: Array<EntityOf<TM, N>>, versionsById: { [entityId: Id]: Id }): FollowAllAction<N, EntityOf<TM, N>> {
+  static followAll<N: EntityNameOf<TM>>(entityName: N, entities: Array<EntityOf<TM, N>>, versionsById: { [entityId: Id]: Id }): FollowAllAction<N, EntityMapOf<TM>> {
     return {
       type: 'phenyl/followAll',
       payload: {
@@ -184,7 +183,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static login<N: UserEntityNameOf<TM>, C: CredentialsOf<TM, N>, O: OptionsOf<TM, N>>(command: LoginCommand<N, C, O>): LoginAction<N, AuthCommandOf<TM, N>> {
+  static login<N: UserEntityNameOf<TM>, C: CredentialsOf<TM, N>, O: OptionsOf<TM, N>>(command: LoginCommand<N, C, O>): LoginAction<N, AuthCommandMapOf<TM>> {
     return {
       type: 'phenyl/login',
       payload: command,

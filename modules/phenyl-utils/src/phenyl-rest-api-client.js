@@ -154,7 +154,7 @@ export class PhenylRestApiClient<TM: TypeMap> implements RestApiClient<TM> {
   /**
    *
    */
-  async insertAndGet<N: EntityNameOf<TM>>(command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>, sessionId?: ?Id): Promise<GetCommandResult<EntityOf<TM, N>>> {
+  async insertAndGet<N: EntityNameOf<TM>>(command: SingleInsertCommand<N, $Rest<EntityOf<TM, N>, {| id: string |}>>, sessionId?: ?Id): Promise<GetCommandResult<EntityOf<TM, N>>> {
     const reqData = { method: 'insertAndGet', payload: command, sessionId }
     // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)

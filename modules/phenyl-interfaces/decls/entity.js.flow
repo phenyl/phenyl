@@ -4,7 +4,7 @@ import type { Id } from './id.js.flow'
 export type EntityName = string
 
 export type Entity = $Subtype<{ id: Id }>
-export type ProEntity = $Subtype<{ +id?: Id }>
+export type ProEntity = $Subtype<$Rest<{ id: Id }, {| id: Id |}>>
 
 export type PreEntity<T: Entity> = T | $Subtype<$Rest<T, {| id: Id |}>>
 
