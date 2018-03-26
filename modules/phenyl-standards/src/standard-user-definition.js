@@ -35,7 +35,7 @@ export type StandardUserDefinitionParams<M: EntityMap, A: AuthSetting> = {
   ttl?: number,
 }
 
-export class StandardUserDefinition<M: EntityMap, A: AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
   entityClient: EntityClient<M>
   encrypt: EncryptFunction
   accountPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>

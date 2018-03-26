@@ -23,7 +23,7 @@ type ThisTypeMap = {
   },
 }
 
-class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }, PatientAuthSetting> {
+class PatientDefinition extends StandardUserDefinition {
   constructor() {
     super({
       entityClient: memoryClient,
