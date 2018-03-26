@@ -18,7 +18,7 @@ export class PhenylRedux<TM: TypeMap> {
   }
 
   get reducer(): ((?LocalState<EntityMapOf<TM>>, PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>) => LocalState<EntityMapOf<TM>>) {
-    return PhenylReduxModule.phenylReducer
+    return PhenylReduxModule.phenylReducer.bind(PhenylReduxModule)
   }
 
   get actions(): Class<PhenylReduxModule<TM>> {

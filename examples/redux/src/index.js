@@ -3,7 +3,7 @@
 /* eslint-env node */
 import http from 'http'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { PhenylRedux } from 'phenyl-redux/jsnext'
+import { PhenylRedux, LocalStateFinder } from 'phenyl-redux/jsnext'
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'
@@ -82,6 +82,8 @@ async function main() {
   }})
   store.dispatch(actions.follow('patient', inserted.entity, inserted.versionId))
   const state = store.getState().phenyl
+  const value = LocalStateFinder.getHeadEntity(state, { entityName: 'patient', id: inserted.entity.id })
+  console.log(value.email)
   console.log(JSON.stringify(state, null, 2))
 
   store.dispatch(actions.login({

@@ -202,4 +202,4 @@ export class PhenylReduxModule<TM: TypeMap> {
 
 // For backward compatibility
 export const actions: Class<PhenylReduxModule<*>> = PhenylReduxModule
-export default actions.phenylReducer
+export default actions.phenylReducer.bind(actions)

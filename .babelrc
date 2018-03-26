@@ -2,7 +2,7 @@
   "env": {
     "build": {
       "presets": [["env", { "exclude": ["transform-regenerator"] }], "flow"],
-      "plugins": ["transform-strip-jsnext"]
+      "plugins": ["transform-strip-jsnext", "transform-class-properties"]
     },
 
     "development": {
@@ -10,7 +10,8 @@
         ["env", { "targets": {node: "8"} }],
         "flow",
         "babel-preset-power-assert"
-      ]
+      ],
+      "plugins": ["transform-class-properties"]
     }
   }
 }
