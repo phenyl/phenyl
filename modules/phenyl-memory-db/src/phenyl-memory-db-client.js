@@ -13,7 +13,8 @@ import {
 import { assign } from 'power-assign/jsnext'
 
 import type {
-  Entity,
+  PreEntity,
+  EntityMap,
   DbClient,
   EntityState,
   DeleteCommand,
@@ -26,28 +27,28 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-type MemoryClientParams = {
-  entityState?: EntityState,
+type MemoryClientParams<M: EntityMap> = {
+  entityState?: EntityState<M>,
 }
 
-export class PhenylMemoryDbClient implements DbClient {
-  entityState: EntityState
+export class PhenylMemoryDbClient<M: EntityMap> implements DbClient<M> {
+  entityState: EntityState<M>
 
-  constructor(params: MemoryClientParams = {}) {
+  constructor(params: MemoryClientParams<M> = {}) {
     this.entityState = params.entityState ||  { pool: {} }
   }
 
   /**
    *
    */
-  async find(query: WhereQuery): Promise<Array<Entity>> {
+  async find<N: $Keys<M>>(query: WhereQuery<N>): Promise<Array<$ElementType<M, N>>> {
     return PhenylStateFinder.find(this.entityState, query)
   }
 
   /**
    *
    */
-  async findOne(query: WhereQuery): Promise<Entity> {
+  async findOne<N: $Keys<M>>(query: WhereQuery<N>): Promise<$ElementType<M, N>> {
     const entity = PhenylStateFinder.findOne(this.entityState, query)
     if (entity == null) {
       throw createServerError(
@@ -61,7 +62,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async get(query: IdQuery): Promise<Entity> {
+  async get<N: $Keys<M>>(query: IdQuery<N>): Promise<$ElementType<M, N>> {
     try {
       return PhenylStateFinder.get(this.entityState, query)
     }
@@ -79,7 +80,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async getByIds(query: IdsQuery): Promise<Array<Entity>> {
+  async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<Array<$ElementType<M, N>>> {
     try {
       return PhenylStateFinder.getByIds(this.entityState, query)
     }
@@ -97,7 +98,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand): Promise<number> {
+  async insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number> {
     await this.insertAndGet(command)
     return 1
   }
@@ -105,7 +106,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand): Promise<number> {
+  async insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number> {
     const entities = await this.insertAndGetMulti(command)
     return entities.length
   }
@@ -113,7 +114,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async insertAndGet(command: SingleInsertCommand): Promise<Entity> {
+  async insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<$ElementType<M, N>> {
     const { entityName, value } = command
     const newValue = value.id
       ? value
@@ -126,7 +127,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand): Promise<Array<Entity>> {
+  async insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<Array<$ElementType<M, N>>> {
     const { entityName, values } = command
     const newValues = values.map(value => value.id ? value : assign(value, { id: randomStringWithTimeStamp() }))
 
@@ -140,23 +141,23 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async updateById(command: IdUpdateCommand): Promise<number> {
-    const result = await this.updateAndGet((command: IdUpdateCommand)) // eslint-disable-line no-unused-vars
+  async updateById<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<number> {
+    const result = await this.updateAndGet((command: IdUpdateCommand<N>)) // eslint-disable-line no-unused-vars
     return 1
   }
 
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand): Promise<number> {
-    const entities = await this.updateAndFetch((command: MultiUpdateCommand))
+  async updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<number> {
+    const entities = await this.updateAndFetch((command: MultiUpdateCommand<N>))
     return entities.length
   }
 
   /**
    *
    */
-  async updateAndGet(command: IdUpdateCommand): Promise<Entity> {
+  async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>> {
     const { entityName, id } = command
     try {
       const operation = PhenylStateUpdater.updateById(this.entityState, command)
@@ -173,7 +174,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand): Promise<Array<Entity>> {
+  async updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<Array<$ElementType<M, N>>> {
     const { entityName, where } = command
     // TODO Performance issue: find() runs twice for just getting N
     const values = PhenylStateFinder.find(this.entityState, { entityName, where })
@@ -187,7 +188,7 @@ export class PhenylMemoryDbClient implements DbClient {
   /**
    *
    */
-  async delete(command: DeleteCommand): Promise<number> {
+  async delete<N: $Keys<M>>(command: DeleteCommand<N>): Promise<number> {
     const { entityName } = command
     // TODO Performance issue: find() runs twice for just getting N
     const n = command.where ? PhenylStateFinder.find(this.entityState, { where: command.where, entityName }).length : 1

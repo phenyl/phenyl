@@ -42,10 +42,11 @@ import type {
   LogoutCommand,
   LogoutCommandResult,
   VersionDiffPublisher,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 export type PhenylRestApiParams = {
-  client: EntityClient,
+  client: EntityClient<>,
   sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
   normalizationHandler?: RequestNormalizationHandler,
@@ -61,7 +62,7 @@ export type PhenylRestApiParams = {
  *
  */
 export class PhenylRestApi implements RestApiHandler {
-  client: EntityClient
+  client: EntityClient<>
   sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
   normalizationHandler: RequestNormalizationHandler
@@ -144,7 +145,7 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * @public
    */
-  createDirectClient(): PhenylRestApiDirectClient {
+  createDirectClient<TM: TypeMap>(): PhenylRestApiDirectClient<TM> {
     return new PhenylRestApiDirectClient(this)
   }
 
@@ -219,7 +220,7 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * create Session
    */
-  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult> {
+  async login(loginCommand: LoginCommand<>, session: ?Session): Promise<LoginCommandResult<>> {
     const result = await this.authenticationHandler(loginCommand, session)
     const newSession = await this.sessionClient.create(result.preSession)
     return {
@@ -245,7 +246,7 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
+  async logout(logoutCommand: LogoutCommand<>, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
     const { sessionId } = logoutCommand
     const result = await this.sessionClient.delete(sessionId)
     // sessionId not found

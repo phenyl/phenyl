@@ -6,26 +6,26 @@ import type {
 import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
 
-export type CustomQueryResult = {
+export type CustomQueryResult<R: Object = Object> = {
   ok: 1,
-  result: any
+  result: ?R
 }
 
-export type QueryResult = {|
+export type QueryResult<E: Entity = Entity> = {|
   ok: 1,
-  entities: Array<Entity>,
+  entities: Array<E>,
   versionsById: { [entityId: Id]: Id },
 |}
 
-export type SingleQueryResult = {|
+export type SingleQueryResult<E: Entity = Entity> = {|
   ok: 1,
-  entity: Entity,
+  entity: E,
   versionId: Id,
 |}
 
-export type PullQueryResult = {|
+export type PullQueryResult<E: Entity = Entity> = {|
   ok: 1,
   pulled: 1,
   operations: Array<UpdateOperation>,
   versionId: Id,
-|} | SingleQueryResult
+|} | SingleQueryResult<E>

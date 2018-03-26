@@ -6,31 +6,31 @@ import type {
 import type { Id } from './id.js.flow' // string
 type EntityName = string
 
-export interface WhereQuery {
-  entityName: EntityName,
+export interface WhereQuery<N: EntityName = EntityName> {
+  entityName: N,
   +where: FindOperation,
   skip?: number,
   limit?: number,
   sort?: SortNotation, // { [key: string]: 1 | -1 }
 }
 
-export interface IdQuery {
-  entityName: string,
+export interface IdQuery<N: EntityName = EntityName> {
+  entityName: N,
   id: Id
 }
 
-export interface IdsQuery {
-  entityName: string,
+export interface IdsQuery<N: EntityName = EntityName> {
+  entityName: N,
   ids: Array<Id>
 }
 
-export interface PullQuery {
-  entityName: string,
+export interface PullQuery<N: EntityName = EntityName> {
+  entityName: N,
   id: Id,
   versionId: Id,
 }
 
-export interface CustomQuery {
-  name: string, // custom query name
-  params?: Object,
+export interface CustomQuery<N: string = string, P: Object = Object> {
+  name: N, // custom query name
+  params?: P,
 }

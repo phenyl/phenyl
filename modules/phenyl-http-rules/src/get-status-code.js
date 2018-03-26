@@ -5,15 +5,14 @@ import type {
 } from 'phenyl-interfaces'
 
 export default function getStatusCode(resData: ResponseData): number {
-  if (resData.error != null) {
-    return getErrorStatusCode(resData.error)
+  if (resData.type === 'error') {
+    return getErrorStatusCode(resData.payload)
   }
 
   // insert
-  if (resData.insert || resData.insertAndGet || resData.insertAndGetMulti) {
+  if (['insert', 'insertAndGet', 'insertAndGetMulti'].includes(resData.type)) {
     return 201
   }
-
   return 200
 }
 

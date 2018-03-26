@@ -14,12 +14,13 @@ import type {
   EncodedHttpResponse,
   HttpMethod,
   ServerParams,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
  * HTTP(s) server wrapping ServerLogic (implemented at "phenyl-http-rules") and Node.js server.
  */
-export default class PhenylHttpServer {
+export default class PhenylHttpServer<TM: TypeMap> {
   /**
    * Instance of the result: require('http').createServer()
    */
@@ -28,9 +29,9 @@ export default class PhenylHttpServer {
    * Universal server logic.
    * Offers the flow: EncodedHttpRequest => EncodedHttpResponse
    */
-  logic: ServerLogic
+  logic: ServerLogic<TM>
 
-  constructor(server: net$Server, params: ServerParams) {
+  constructor(server: net$Server, params: ServerParams<TM>) {
     this.server = server
     this.logic = new ServerLogic(params)
   }

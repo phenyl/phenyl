@@ -5,12 +5,19 @@ import {
 
 import type {
   RestApiClient,
+  CommandParamsOf,
+  CommandResultOf,
+  CredentialsOf,
   CustomQuery,
+  CustomQueryNameOf,
   CustomQueryResult,
   CustomCommand,
+  CustomCommandNameOf,
   CustomCommandResult,
   DeleteCommand,
   DeleteCommandResult,
+  EntityNameOf,
+  EntityOf,
   MultiValuesCommandResult,
   GetCommandResult,
   Id,
@@ -25,17 +32,23 @@ import type {
   LoginCommandResult,
   LogoutCommand,
   LogoutCommandResult,
+  OptionsOf,
+  PreEntity,
   PullQuery,
   PullQueryResult,
   PushCommand,
   PushCommandResult,
+  QueryParamsOf,
+  QueryResult,
+  QueryResultOf,
   RequestData,
   ResponseData,
-  QueryResult,
   SessionClient,
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
+  TypeMap,
+  UserEntityNameOf,
   MultiUpdateCommand,
   WhereQuery,
 } from 'phenyl-interfaces'
@@ -52,7 +65,7 @@ import type {
  * For example, PhenylHttpClient is the child and its "handleRequestData()" is to access to PhenylRestApi via HttpServer.
  * Also, PhenylRestApiDirectClient is the direct client which contains PhenylRestApi instance.
  */
-export class PhenylRestApiClient implements RestApiClient {
+export class PhenylRestApiClient<TM: TypeMap> implements RestApiClient<TM> {
 
   /**
    * @abstract
@@ -64,8 +77,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async find(query: WhereQuery, sessionId?: ?Id): Promise<QueryResult> {
+  async find<N: EntityNameOf<TM>>(query: WhereQuery<N>, sessionId?: ?Id): Promise<QueryResult<EntityOf<TM, N>>> {
     const reqData = { method: 'find', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'find') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -74,8 +88,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async findOne(query: WhereQuery, sessionId?: ?Id): Promise<SingleQueryResult> {
+  async findOne<N: EntityNameOf<TM>>(query: WhereQuery<N>, sessionId?: ?Id): Promise<SingleQueryResult<EntityOf<TM, N>>> {
     const reqData = { method: 'findOne', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'findOne') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -84,8 +99,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async get(query: IdQuery, sessionId?: ?Id): Promise<SingleQueryResult> {
+  async get<N: EntityNameOf<TM>>(query: IdQuery<N>, sessionId?: ?Id): Promise<SingleQueryResult<EntityOf<TM, N>>> {
     const reqData = { method: 'get', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'get') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -94,8 +110,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async getByIds(query: IdsQuery, sessionId?: ?Id): Promise<QueryResult> {
+  async getByIds<N: EntityNameOf<TM>>(query: IdsQuery<N>, sessionId?: ?Id): Promise<QueryResult<EntityOf<TM, N>>> {
     const reqData = { method: 'getByIds', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'getByIds') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -104,8 +121,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async pull(query: PullQuery, sessionId?: ?Id): Promise<PullQueryResult> {
+  async pull<N: EntityNameOf<TM>>(query: PullQuery<N>, sessionId?: ?Id): Promise<PullQueryResult<EntityOf<TM, N>>> {
     const reqData = { method: 'pull', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'pull') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -114,8 +132,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand, sessionId?: ?Id): Promise<SingleInsertCommandResult> {
+  async insertOne<N: EntityNameOf<TM>>(command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>, sessionId?: ?Id): Promise<SingleInsertCommandResult> {
     const reqData = { method: 'insertOne', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertOne') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -124,8 +143,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiInsertCommandResult> {
+  async insertMulti<N: EntityNameOf<TM>>(command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>, sessionId?: ?Id): Promise<MultiInsertCommandResult> {
     const reqData = { method: 'insertMulti', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertMulti') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -134,8 +154,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertAndGet(command: SingleInsertCommand, sessionId?: ?Id): Promise<GetCommandResult> {
+  async insertAndGet<N: EntityNameOf<TM>>(command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>, sessionId?: ?Id): Promise<GetCommandResult<EntityOf<TM, N>>> {
     const reqData = { method: 'insertAndGet', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertAndGet') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -144,8 +165,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult> {
+  async insertAndGetMulti<N: EntityNameOf<TM>>(command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>, sessionId?: ?Id): Promise<MultiValuesCommandResult<EntityOf<TM, N>, *>> {
     const reqData = { method: 'insertAndGetMulti', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'insertAndGetMulti') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -154,8 +176,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateById(command: IdUpdateCommand, sessionId?: ?Id): Promise<IdUpdateCommandResult> {
+  async updateById<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>, sessionId?: ?Id): Promise<IdUpdateCommandResult> {
     const reqData = { method: 'updateById', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateById') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -164,8 +187,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiUpdateCommandResult> {
+  async updateMulti<N: EntityNameOf<TM>>(command: MultiUpdateCommand<N>, sessionId?: ?Id): Promise<MultiUpdateCommandResult<*>> {
     const reqData = { method: 'updateMulti', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateMulti') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -174,8 +198,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateAndGet(command: IdUpdateCommand, sessionId?: ?Id): Promise<GetCommandResult> {
+  async updateAndGet<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>, sessionId?: ?Id): Promise<GetCommandResult<EntityOf<TM, N>>> {
     const reqData = { method: 'updateAndGet', payload: command, sessionId}
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateAndGet') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -184,8 +209,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand, sessionId?: ?Id): Promise<MultiValuesCommandResult> {
+  async updateAndFetch<N: EntityNameOf<TM>>(command: MultiUpdateCommand<N>, sessionId?: ?Id): Promise<MultiValuesCommandResult<EntityOf<TM, N>, *>> {
     const reqData = { method: 'updateAndFetch', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'updateAndFetch') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -193,8 +219,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async push(command: PushCommand, sessionId?: ?Id): Promise<PushCommandResult> {
+  async push<N: EntityNameOf<TM>>(command: PushCommand<N>, sessionId?: ?Id): Promise<PushCommandResult<EntityOf<TM, N>>> {
     const reqData = { method: 'push', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'push') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -203,8 +230,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async delete(command: DeleteCommand, sessionId?: ?Id): Promise<DeleteCommandResult> {
+  async delete<N: EntityNameOf<TM>>(command: DeleteCommand<N>, sessionId?: ?Id): Promise<DeleteCommandResult> {
     const reqData = { method: 'delete', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'delete') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -213,8 +241,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async runCustomQuery(query: CustomQuery, sessionId?: ?Id): Promise<CustomQueryResult> {
+  async runCustomQuery<N: CustomQueryNameOf<TM>>(query: CustomQuery<N, QueryParamsOf<TM, N>>, sessionId?: ?Id): Promise<CustomQueryResult<QueryResultOf<TM, N>>> {
     const reqData = { method: 'runCustomQuery', payload: query, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'runCustomQuery') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -223,8 +252,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async runCustomCommand(command: CustomCommand, sessionId?: ?Id): Promise<CustomCommandResult> {
+  async runCustomCommand<N: CustomCommandNameOf<TM>>(command: CustomCommand<N, CommandParamsOf<TM, N>>, sessionId?: ?Id): Promise<CustomCommandResult<CommandResultOf<TM, N>>> {
     const reqData = { method: 'runCustomCommand', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'runCustomCommand') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -233,8 +263,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async login(command: LoginCommand, sessionId?: ?Id): Promise<LoginCommandResult> {
+  async login<N: UserEntityNameOf<TM>>(command: LoginCommand<N, CredentialsOf<TM, N>, OptionsOf<TM, N>>, sessionId?: ?Id): Promise<LoginCommandResult<EntityOf<TM, N>>> {
     const reqData = { method: 'login', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'login') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
@@ -243,8 +274,9 @@ export class PhenylRestApiClient implements RestApiClient {
   /**
    *
    */
-  async logout(command: LogoutCommand, sessionId?: ?Id): Promise<LogoutCommandResult> {
+  async logout<N: UserEntityNameOf<TM>>(command: LogoutCommand<N>, sessionId?: ?Id): Promise<LogoutCommandResult> {
     const reqData = { method: 'logout', payload: command, sessionId }
+    // $FlowIssue(handleRequestData-is-imcomplete)
     const resData = await this.handleRequestData(reqData)
     if (resData.type === 'logout') return resData.payload
     throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)

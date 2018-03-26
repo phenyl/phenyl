@@ -4,7 +4,12 @@ import type {
 } from 'mongolike-operations'
 
 import type {
-  Entity
+  EntityMap,
+} from './type-map.js.flow'
+
+import type {
+  Entity,
+  EntityName,
 } from './entity.js.flow'
 
 import type {
@@ -19,24 +24,24 @@ import type {
   DeleteCommand,
 } from './command.js.flow'
 
-export type EntityPool = { [entityName: string]: EntitiesById }
-export type EntitiesById = { [id: string]: Entity }
+export type EntityPool<M: EntityMap> = $ObjMap<M, <T: Entity>(T) => EntitiesById<T>>
+export type EntitiesById<T: Entity> = { [id: string]: T }
 
-export interface EntityState {
-  pool: EntityPool
+export interface EntityState<M: EntityMap> {
+  pool: EntityPool<M>
 }
 
-export interface EntityStateFinder {
-  find(query: WhereQuery): Array<Entity>,
-  findOne(query: WhereQuery): ?Entity,
-  get(query: IdQuery): Entity,
-  getByIds(query: IdsQuery): Array<Entity>,
-  has(query: IdQuery): boolean,
+export interface EntityStateFinder<M: EntityMap> {
+  find<N: EntityName>(query: WhereQuery<N>): Array<$ElementType<M, N>>,
+  findOne<N: EntityName>(query: WhereQuery<N>): ?$ElementType<M, N>,
+  get<N: EntityName>(query: IdQuery<N>): $ElementType<M, N>,
+  getByIds<N: EntityName>(query: IdsQuery<N>): Array<$ElementType<M, N>>,
+  has<N: EntityName>(query: IdQuery<N>): boolean,
 }
 
-export interface EntityStateUpdater {
-  register(entityName: string, ...entities: Array<Entity>): UpdateOperation,
-  updateById(command: IdUpdateCommand): UpdateOperation,
-  updateMulti(command: MultiUpdateCommand): UpdateOperation,
-  delete(command: DeleteCommand): UpdateOperation,
+export interface EntityStateUpdater<M: EntityMap> {
+  register<N: EntityName>(entityName: N, ...entities: Array<$ElementType<M, N>>): UpdateOperation,
+  updateById<N: EntityName>(command: IdUpdateCommand<N>): UpdateOperation,
+  updateMulti<N: EntityName>(command: MultiUpdateCommand<N>): UpdateOperation,
+  delete<N: EntityName>(command: DeleteCommand<N>): UpdateOperation,
 }

@@ -10,6 +10,7 @@ import {
 import type {
   Entity,
   EntityClient,
+  EntityMap,
   DbClient,
   DeleteCommand,
   DeleteCommandResult,
@@ -23,6 +24,7 @@ import type {
   IdsQuery,
   IdUpdateCommand,
   IdUpdateCommandResult,
+  PreEntity,
   PullQuery,
   PullQueryResult,
   PushCommand,
@@ -37,15 +39,15 @@ import type {
   WhereQuery,
 } from 'phenyl-interfaces'
 
-export type PhenylEntityClientOptions = {
-  validatePushCommand?: PushValidation,
+export type PhenylEntityClientOptions<M: EntityMap> = {
+  validatePushCommand?: PushValidation<M>,
 }
 
 /**
  * Validate PushCommand only when masterOperations are found.
  * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
  */
-function validWhenDiffsFound(command: PushCommand, entity: Entity, masterOperations: ?Array<UpdateOperation>) {
+function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOperations: ?Array<UpdateOperation>) {
   if (masterOperations == null) {
     throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
   }
@@ -57,19 +59,20 @@ function validWhenDiffsFound(command: PushCommand, entity: Entity, masterOperati
  * Pass dbClient: DbClient which accesses to data.
  * Optionally set merge strategy by options.validatePushCommand.
  */
-export class PhenylEntityClient implements EntityClient {
-  dbClient: DbClient
-  validatePushCommand: PushValidation
+export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
+  dbClient: DbClient<M>
+  validatePushCommand: PushValidation<M>
 
-  constructor(dbClient: DbClient, options: PhenylEntityClientOptions = {}) {
+  constructor(dbClient: DbClient<M>, options: PhenylEntityClientOptions<M> = {}) {
     this.dbClient = dbClient
+    // $FlowIssue(compatible-optional-function-type)
     this.validatePushCommand = options.validatePushCommand || validWhenDiffsFound
   }
 
   /**
    *
    */
-  async find(query: WhereQuery): Promise<QueryResult> {
+  async find<N: $Keys<M>>(query: WhereQuery<N>): Promise<QueryResult<$ElementType<M, N>>> {
     const entities = await this.dbClient.find(query)
     return Versioning.createQueryResult(entities)
   }
@@ -77,7 +80,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async findOne(query: WhereQuery): Promise<SingleQueryResult> {
+  async findOne<N: $Keys<M>>(query: WhereQuery<N>): Promise<SingleQueryResult<$ElementType<M, N>>> {
     const entity = await this.dbClient.findOne(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -85,7 +88,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async get(query: IdQuery): Promise<SingleQueryResult> {
+  async get<N: $Keys<M>>(query: IdQuery<N>): Promise<SingleQueryResult<$ElementType<M, N>>> {
     const entity = await this.dbClient.get(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -93,7 +96,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async getByIds(query: IdsQuery): Promise<QueryResult> {
+  async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<QueryResult<$ElementType<M, N>>> {
     const entities = await this.dbClient.getByIds(query)
     return Versioning.createQueryResult(entities)
   }
@@ -101,7 +104,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async pull(query: PullQuery): Promise<PullQueryResult> {
+  async pull<N: $Keys<M>>(query: PullQuery<N>): Promise<PullQueryResult<$ElementType<M, N>>> {
     const { versionId, entityName, id } = query
     const entity = await this.dbClient.get({ entityName, id })
     return Versioning.createPullQueryResult(entity, versionId)
@@ -110,7 +113,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand): Promise<SingleInsertCommandResult> {
+  async insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<SingleInsertCommandResult> {
     const result = await this.insertAndGet(command)
     return { ok: 1, n: 1, versionId: result.versionId }
   }
@@ -118,7 +121,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand): Promise<MultiInsertCommandResult> {
+  async insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<MultiInsertCommandResult> {
     const result = await this.insertAndGetMulti(command)
     return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
@@ -126,7 +129,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async insertAndGet(command: SingleInsertCommand): Promise<GetCommandResult> {
+  async insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<GetCommandResult<$ElementType<M, N>>> {
     const { entityName, value } = command
     const valueWithMeta = Versioning.attachMetaInfoToNewEntity(value)
     const entity = await this.dbClient.insertAndGet({ entityName, value: valueWithMeta })
@@ -136,7 +139,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand): Promise<MultiValuesCommandResult> {
+  async insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>> {
     const { entityName, values } = command
     const valuesWithMeta = values.map(value => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
@@ -146,23 +149,23 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async updateById(command: IdUpdateCommand): Promise<IdUpdateCommandResult> {
-    const result = await this.updateAndGet((command: IdUpdateCommand))
+  async updateById<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<IdUpdateCommandResult> {
+    const result = await this.updateAndGet((command: IdUpdateCommand<N>))
     return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
 
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand): Promise<MultiUpdateCommandResult> {
-    const result = await this.updateAndFetch((command: MultiUpdateCommand))
+  async updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<MultiUpdateCommandResult<*>> {
+    const result = await this.updateAndFetch((command: MultiUpdateCommand<N>))
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
 
   /**
    *
    */
-  async updateAndGet(command: IdUpdateCommand): Promise<GetCommandResult> {
+  async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<GetCommandResult<$ElementType<M, N>>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entity = await this.dbClient.updateAndGet(metaInfoAttachedCommand)
     return Versioning.createGetCommandResult(entity)
@@ -171,7 +174,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand): Promise<MultiValuesCommandResult> {
+  async updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entities = await this.dbClient.updateAndFetch(metaInfoAttachedCommand)
     return Versioning.createMultiValuesCommandResult(entities)
@@ -180,7 +183,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async push(command: PushCommand): Promise<PushCommandResult> {
+  async push<N: $Keys<M>>(command: PushCommand<N>): Promise<PushCommandResult<$ElementType<M, N>>> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.dbClient.get({ entityName, id })
     const masterOperations = Versioning.getOperationDiffsByVersion(entity, versionId)
@@ -195,7 +198,7 @@ export class PhenylEntityClient implements EntityClient {
   /**
    *
    */
-  async delete(command: DeleteCommand): Promise<DeleteCommandResult> {
+  async delete<N: $Keys<M>>(command: DeleteCommand<N>): Promise<DeleteCommandResult> {
     return { ok: 1, n: await this.dbClient.delete(command) }
   }
 

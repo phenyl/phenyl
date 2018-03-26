@@ -9,9 +9,15 @@ import {
 
 import type {
   AssignAction,
+  AuthCommandMapOf,
+  AuthCommandOf,
   CommitAndPushAction,
+  CredentialsOf,
   DeleteAction,
   Entity,
+  EntityMapOf,
+  EntityNameOf,
+  EntityOf,
   FollowAction,
   FollowAllAction,
   Id,
@@ -23,6 +29,7 @@ import type {
   LoginCommand,
   LogoutAction,
   LogoutCommand,
+  OptionsOf,
   PhenylAction,
   PullAction,
   PushAndCommitAction,
@@ -30,86 +37,87 @@ import type {
   ResetAction,
   SetSessionAction,
   Session,
+  TypeMap,
   UnfollowAction,
   UnsetSessionAction,
   UpdateOperation,
+  UserEntityNameOf,
 } from 'phenyl-interfaces'
 
-export const createInitialState = () => ({
-  entities: {},
-  network: {
-    requests: [],
-    isOnline: true,
-  },
-})
+export class PhenylReduxModule<TM: TypeMap> {
 
-/**
- * Reducer.
- */
-export default function phenylReducer(state: ?LocalState, action: PhenylAction): LocalState {
-  if (state == null) {
-    return createInitialState()
+  static createInitialState(): LocalState<EntityMapOf<TM>> {
+    return {
+      entities: {},
+      network: {
+        requests: [],
+        isOnline: true,
+      },
+    }
   }
 
-  switch (action.type) {
-    case 'phenyl/replace':
-      return action.payload
+  /**
+   * Reducer.
+   */
+  static phenylReducer(state: ?LocalState<EntityMapOf<TM>>, action: PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>): LocalState<EntityMapOf<TM>> {
+    if (state == null) {
+      return this.createInitialState()
+    }
 
-    case 'phenyl/reset':
-      return createInitialState()
+    switch (action.type) {
+      case 'phenyl/replace':
+        return action.payload
 
-    case 'phenyl/assign':
-      return assign(state, ...action.payload)
+      case 'phenyl/reset':
+        return this.createInitialState()
 
-    default:
-      return state
+      case 'phenyl/assign':
+        return assign(state, ...action.payload)
+
+      default:
+        return state
+    }
   }
-}
 
-/**
- * Action Creators.
- */
-export const actions = {
-
-  replace(state: LocalState): ReplaceAction {
+  static replace(state: LocalState<EntityMapOf<TM>>): ReplaceAction<EntityMapOf<TM>> {
     return {
       type: 'phenyl/replace',
       payload: state,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  reset(): ResetAction {
+  static reset(): ResetAction {
     return {
       type: 'phenyl/reset',
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  assign(ops: Array<UpdateOperation>): AssignAction {
+  static assign(ops: Array<UpdateOperation>): AssignAction {
     return {
       type: 'phenyl/assign',
       payload: ops,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  setSession(session: Session, user?: ?Entity): SetSessionAction {
+  static setSession(session: Session, user?: ?Entity): SetSessionAction {
     return {
       type: 'phenyl/setSession',
       payload: { session, user },
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  unsetSession(): UnsetSessionAction {
+  static unsetSession(): UnsetSessionAction {
     return {
       type: 'phenyl/unsetSession',
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  follow(entityName: string, entity: Entity, versionId: Id): FollowAction {
+  static follow<N: EntityNameOf<TM>>(entityName: N, entity: EntityOf<TM, N>, versionId: Id): FollowAction<N, EntityOf<TM, N>> {
     return {
       type: 'phenyl/follow',
       payload: {
@@ -119,9 +127,9 @@ export const actions = {
       },
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  followAll(entityName: string, entities: Array<Entity>, versionsById: { [entityId: Id]: Id }): FollowAllAction {
+  static followAll<N: EntityNameOf<TM>>(entityName: N, entities: Array<EntityOf<TM, N>>, versionsById: { [entityId: Id]: Id }): FollowAllAction<N, EntityOf<TM, N>> {
     return {
       type: 'phenyl/followAll',
       payload: {
@@ -131,9 +139,9 @@ export const actions = {
       },
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  unfollow(entityName: string, id: Id): UnfollowAction {
+  static unfollow<N: EntityNameOf<TM>>(entityName: N, id: Id): UnfollowAction<N> {
     return {
       type: 'phenyl/unfollow',
       payload: {
@@ -142,53 +150,57 @@ export const actions = {
       },
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  delete(command: IdDeleteCommand): DeleteAction {
+  static delete<N: EntityNameOf<TM>>(command: IdDeleteCommand<N>): DeleteAction<N> {
     return {
       type: 'phenyl/delete',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  pushAndCommit(command: IdUpdateCommand): PushAndCommitAction {
+  static pushAndCommit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): PushAndCommitAction<N> {
     return {
       type: 'phenyl/pushAndCommit',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  commitAndPush(command: IdUpdateCommand): CommitAndPushAction {
+  static commitAndPush<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAndPushAction<N> {
     return {
       type: 'phenyl/commitAndPush',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  pull(query: IdQuery): PullAction {
+  static pull<N: EntityNameOf<TM>>(query: IdQuery<N>): PullAction<N> {
     return {
       type: 'phenyl/pull',
       payload: query,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  login(command: LoginCommand): LoginAction {
+  static login<N: UserEntityNameOf<TM>, C: CredentialsOf<TM, N>, O: OptionsOf<TM, N>>(command: LoginCommand<N, C, O>): LoginAction<N, AuthCommandOf<TM, N>> {
     return {
       type: 'phenyl/login',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 
-  logout(command: LogoutCommand): LogoutAction {
+  static logout<N: UserEntityNameOf<TM>>(command: LogoutCommand<N>): LogoutAction<N> {
     return {
       type: 'phenyl/logout',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }
-  },
+  }
 }
+
+// For backward compatibility
+export const actions: Class<PhenylReduxModule<*>> = PhenylReduxModule
+export default actions.phenylReducer

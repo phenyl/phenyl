@@ -10,10 +10,12 @@ import { encryptPasswordInRequestData } from './encrypt-password-in-request-data
 import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
 
 import type {
+  AuthSetting,
+  EntityMap,
   EntityClient,
   EntityDefinition,
   UserDefinition,
-  LoginCommand,
+  LoginCommandOf,
   Session,
   AuthenticationResult,
   RequestData,
@@ -25,22 +27,22 @@ import type {
   EncryptFunction,
 } from '../decls/index.js.flow'
 
-export type StandardUserDefinitionParams = {
-  entityClient: EntityClient,
+export type StandardUserDefinitionParams<M: EntityMap, A: AuthSetting> = {
+  entityClient: EntityClient<M>,
   encrypt?: EncryptFunction,
-  accountPropName?: string,
-  passwordPropName?: string,
+  accountPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
+  passwordPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
   ttl?: number,
 }
 
-export class StandardUserDefinition extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
-  entityClient: EntityClient
+export class StandardUserDefinition<M: EntityMap, A: AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+  entityClient: EntityClient<M>
   encrypt: EncryptFunction
-  accountPropName: string
-  passwordPropName: string
+  accountPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
+  passwordPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
   ttl: number
 
-  constructor(params: StandardUserDefinitionParams) {
+  constructor(params: StandardUserDefinitionParams<M, A>) {
     super(params)
     this.entityClient = params.entityClient
     this.encrypt = params.encrypt || powerCrypt // TODO: pass salt string to powerCrypt
@@ -49,7 +51,7 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
+  async authentication<N: $Keys<M>>(loginCommand: LoginCommandOf<A, N>, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 
@@ -80,3 +82,5 @@ export class StandardUserDefinition extends StandardEntityDefinition implements 
     return newResData
   }
 }
+
+export const GeneralStandardUserDefinition: Class<StandardUserDefinition<*, *>> = StandardUserDefinition
