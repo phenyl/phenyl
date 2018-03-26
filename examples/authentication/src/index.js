@@ -7,10 +7,6 @@ import PhenylHttpClient from 'phenyl-http-client/jsnext'
 import { createEntityClient } from 'phenyl-memory-db/jsnext'
 import { StandardUserDefinition } from 'phenyl-standards/jsnext'
 
-import type {
-  FunctionalGroup
-} from 'phenyl-interfaces'
-
 const memoryClient = createEntityClient()
 
 type PlainPatient = { id: string, name: string, email: string, password?: string }
@@ -45,7 +41,7 @@ class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }
   }
 }
 
-const functionalGroup: FunctionalGroup = {
+const functionalGroup = {
   customQueries: {},
   customCommands: {},
   users: {
@@ -55,7 +51,8 @@ const functionalGroup: FunctionalGroup = {
 }
 
 async function main() {
-  const restApiHandler = PhenylRestApi.createFromFunctionalGroup(functionalGroup, { client: memoryClient })
+  const restApiHandler: PhenylRestApi<ThisTypeMap> = PhenylRestApi.createFromFunctionalGroup(functionalGroup, { client: memoryClient })
+
   const server = new PhenylHttpServer(http.createServer(), { restApiHandler })
   server.listen(8080)
 

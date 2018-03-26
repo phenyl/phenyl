@@ -43,10 +43,11 @@ import type {
   LogoutCommandResult,
   VersionDiffPublisher,
   TypeMap,
+  EntityMapOf,
 } from 'phenyl-interfaces'
 
-export type PhenylRestApiParams = {
-  client: EntityClient<>,
+export type PhenylRestApiParams<TM: TypeMap = TypeMap> = {
+  client: EntityClient<EntityMapOf<TM>>,
   sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
   normalizationHandler?: RequestNormalizationHandler,
@@ -61,8 +62,8 @@ export type PhenylRestApiParams = {
 /**
  *
  */
-export class PhenylRestApi implements RestApiHandler {
-  client: EntityClient<>
+export class PhenylRestApi<TM: TypeMap = TypeMap> implements RestApiHandler {
+  client: EntityClient<EntityMapOf<TM>>
   sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
   normalizationHandler: RequestNormalizationHandler
@@ -73,7 +74,7 @@ export class PhenylRestApi implements RestApiHandler {
   executionWrapper: ExecutionWrapper
   versionDiffPublisher: ?VersionDiffPublisher
 
-  constructor(params: PhenylRestApiParams) {
+  constructor(params: PhenylRestApiParams<TM>) {
     this.client = params.client
     this.sessionClient = params.sessionClient || this.createSessionClient()
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
@@ -95,7 +96,7 @@ export class PhenylRestApi implements RestApiHandler {
    *     customQueries: {}, customCommands: {}, users: {}, nonUsers: {}
    *   }, { client: new PhenylMemoryClient() })
    */
-  static createFromFunctionalGroup(fg: FunctionalGroup, params: PhenylRestApiParams): PhenylRestApi {
+  static createFromFunctionalGroup<T: TypeMap>(fg: FunctionalGroup, params: PhenylRestApiParams<T>): PhenylRestApi<T> {
     const fgParams = createParamsByFunctionalGroup(normalizeFunctionalGroup(fg))
     const newParams = Object.assign({}, params, fgParams)
     return new PhenylRestApi(newParams)
@@ -145,7 +146,7 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * @public
    */
-  createDirectClient<TM: TypeMap>(): PhenylRestApiDirectClient<TM> {
+  createDirectClient(): PhenylRestApiDirectClient<TM> {
     return new PhenylRestApiDirectClient(this)
   }
 
