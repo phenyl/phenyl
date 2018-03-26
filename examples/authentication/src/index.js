@@ -15,6 +15,18 @@ const memoryClient = createEntityClient()
 
 type PlainPatient = { id: string, name: string, email: string, password?: string }
 type PatientAuthSetting = { credentials: { email: string, password: string }, options: Object }
+
+type ThisTypeMap = {
+  entities: {
+    patient: PlainPatient
+  },
+  customQueries: {},
+  customCommands: {},
+  auths: {
+    patient: PatientAuthSetting,
+  },
+}
+
 class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }, PatientAuthSetting> {
   constructor() {
     super({
@@ -47,7 +59,7 @@ async function main() {
   const server = new PhenylHttpServer(http.createServer(), { restApiHandler })
   server.listen(8080)
 
-  const client = new PhenylHttpClient({ url: 'http://localhost:8080' })
+  const client: PhenylHttpClient<ThisTypeMap> = new PhenylHttpClient({ url: 'http://localhost:8080' })
 
   const inserted = await client.insertAndGet({ entityName: 'patient', value: {
     name: 'Shin Suzuki',

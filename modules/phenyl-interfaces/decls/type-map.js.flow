@@ -33,12 +33,12 @@ export type CustomCommandMap = {
 
 
 
-export type TypeMap = {|
-  entities: EntityMap,
-  customQueries: CustomQueryMap,
-  customCommands: CustomCommandMap,
-  auths: AuthCommandMap,
-|}
+export type TypeMap = {
+  +entities: EntityMap,
+  +customQueries: CustomQueryMap,
+  +customCommands: CustomCommandMap,
+  +auths: AuthCommandMap,
+}
 
 export type EntityMapOf<TM: TypeMap> = $ElementType<TM, 'entities'>
 export type CustomQueryMapOf<TM: TypeMap> = $ElementType<TM, 'customQueries'>
