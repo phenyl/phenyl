@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "test": "kocha --require babel-register test/*.js --color always"
+    "test": "nyc kocha test/*.js --color always"
   },
   "files": [
     "src",
