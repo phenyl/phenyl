@@ -16,8 +16,9 @@
     "README.md"
   ],
   "devDependencies": {
+    "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "babel-register": "^6.24.1"
+    "nyc": "^11.6.0"
   },
   "dependencies": {
     "mongolike-operations": "~0.1.3",
