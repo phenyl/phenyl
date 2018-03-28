@@ -19,6 +19,7 @@
   ],
   "devDependencies": {
     "babel-register": "^6.24.1",
+    "nyc": "^11.6.0",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
