@@ -22,8 +22,9 @@
     "oad-utils": "~0.1.5"
   },
   "devDependencies": {
+    "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "babel-register": "^6.24.1"
+    "nyc": "^11.6.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-state",
