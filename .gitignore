@@ -1,9 +1,19 @@
+# Dependency directories
 node_modules
+
+# Logs
+*.log
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# nyc test coverage
+.nyc_output
+
+
 package-lock.json
 dist
 tmp
-
-*.log
 
 .idea
 .DS_Store
