@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "main": "index.js",
   "scripts": {
-    "test": "nyc kocha test/*.js --color always"
+    "test": "nyc --nycrc-path ../../.nycrc kocha test/*.js --color always"
   },
   "files": [
     "src",
