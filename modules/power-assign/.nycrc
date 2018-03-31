@@ -1,0 +1,12 @@
+{
+  "cache": true,
+  "all": true,
+  "require": [
+    "babel-register"
+  ],
+  "reporter": [
+    "lcov",
+    "html",
+    "text"
+  ]
+}
