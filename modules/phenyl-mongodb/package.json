@@ -6,7 +6,7 @@
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "pretest": "type mongod && mkdir -p test/tmp/mongodb && mongod --dbpath test/tmp/mongodb > /dev/null &",
-    "test": "nyc --nycrc-path ../../.nycrc kocha test/*.js --color always || (npm run posttest && exit 1)",
+    "test": "nyc kocha test/*.js --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
   "files": [
