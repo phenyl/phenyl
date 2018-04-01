@@ -32,5 +32,5 @@ export interface PullQuery<N: EntityName = EntityName> {
 
 export interface CustomQuery<N: string = string, P: Object = Object> {
   name: N, // custom query name
-  params?: P,
+  params: P,
 }

@@ -62,7 +62,7 @@ export type MultiDeleteCommand<N: EntityName = EntityName> = {|
 
 export interface CustomCommand<N: string = string, P: Object = Object> {
   name: N, // custom insert command name
-  params?: P
+  params: P
 }
 
 

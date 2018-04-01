@@ -28,7 +28,8 @@ export type CustomQueryMap = {
 
 
 export type CustomCommandMap = {
-  [name: string]: { params: Object, result: Object }
+  // name should be string or string literal
+  [name: any]: { params: Object, result: Object }
 }
 
 

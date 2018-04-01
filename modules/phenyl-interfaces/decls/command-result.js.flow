@@ -74,7 +74,7 @@ export type PushCommandResult<E: Entity = Entity> = {|
 
 export type CustomCommandResult<R: Object = Object> = {
   ok: 1,
-  result?: R
+  result: R
 }
 
 export type LoginCommandResult<E: Entity = Entity> = {

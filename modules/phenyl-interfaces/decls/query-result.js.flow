@@ -8,7 +8,7 @@ import type { Entity } from './entity.js.flow'
 
 export type CustomQueryResult<R: Object = Object> = {
   ok: 1,
-  result: ?R
+  result: R
 }
 
 export type QueryResult<E: Entity = Entity> = {|
