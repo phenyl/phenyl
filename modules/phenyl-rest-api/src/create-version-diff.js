@@ -58,7 +58,7 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
   }
 }
 
-function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: IdUpdateCommandResult | GetCommandResult): ?VersionDiff {
+function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand<>, result: IdUpdateCommandResult | GetCommandResult<>): ?VersionDiff {
   const { versionId, prevVersionId } = result
   if (versionId && prevVersionId) {
     const { entityName, id, operation } = command
@@ -67,7 +67,7 @@ function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand, result: Id
   return null
 }
 
-function createVersionDiffByMultiUpdateCommand(command: MultiUpdateCommand, result: MultiValuesCommandResult): Array<?VersionDiff> {
+function createVersionDiffByMultiUpdateCommand(command: MultiUpdateCommand<>, result: MultiValuesCommandResult<>): Array<?VersionDiff> {
   const { versionsById, prevVersionsById } = result
   if (!versionsById || !prevVersionsById) return []
 
@@ -83,7 +83,7 @@ function createVersionDiffByMultiUpdateCommand(command: MultiUpdateCommand, resu
   })
 }
 
-function createVersionDiffByPushCommand(command: PushCommand, result: PushCommandResult): ?VersionDiff {
+function createVersionDiffByPushCommand(command: PushCommand<>, result: PushCommandResult<>): ?VersionDiff {
   const { versionId, prevVersionId, newOperation } = result
   if (versionId && prevVersionId) {
     const { entityName, id } = command

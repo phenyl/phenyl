@@ -1,6 +1,6 @@
 {
   "name": "power-crypt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -8,6 +8,14 @@
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1"
   },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/power-crypt",
   "license": "Apache License 2.0",

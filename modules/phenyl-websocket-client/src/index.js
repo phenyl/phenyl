@@ -1,6 +1,6 @@
 // @flow
 import WebSocket from './websocket.js'
-import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils'
 
 import type {
   Id,
@@ -42,7 +42,8 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
       }, 30000)
     })
 
-    this.client.addEventListener('message', (evt: Event) => {
+    // TODO: evt: MessageEvent
+    this.client.addEventListener('message', (evt: Object) => {
       const { versionDiffListener } = this
       if (versionDiffListener == null) return
       const versionDiff = this.parseAsVersionDiff(evt.data || '')
@@ -68,7 +69,8 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
 
       this.client.send(JSON.stringify({ subscription, tag }))
 
-      const listener = this.client.addEventListener('message', (evt: Event) => {
+      // TODO: evt: MessageEvent
+      const listener = this.client.addEventListener('message', (evt: Object) => {
         try {
           const subscriptionResult = this.parseAsWaitingSubscriptionResult(evt.data || '', tag)
           if (subscriptionResult == null) return
@@ -108,7 +110,8 @@ export default class PhenylWebSocketClient implements RestApiHandler, VersionDif
 
       this.client.send(JSON.stringify({ reqData, tag }))
 
-      const listener = this.client.addEventListener('message', (evt: Event) => {
+      // TODO: evt: MessageEvent
+      const listener = this.client.addEventListener('message', (evt: Object) => {
         try {
           const resData = this.parseAsWaitingResponseData(evt.data || '', tag)
           if (resData == null) return

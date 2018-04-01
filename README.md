@@ -56,9 +56,9 @@ TBD
 ## ServerSide
 ```js
 // @flow
-import PhenylHttpServer from 'phenyl-http-server/jsnext'
-import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import { connect, createEntityClient } from 'phenyl-mongodb/jsnext'
+import PhenylHttpServer from 'phenyl-http-server'
+import PhenylRestApi from 'phenyl-rest-api'
+import { connect, createEntityClient } from 'phenyl-mongodb'
 
 const connection = await connect('mongodb://localhost:12345')
 

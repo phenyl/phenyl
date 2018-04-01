@@ -13,7 +13,7 @@ import type {
 import {
   normalizeQueryCondition,
   getNestedValue,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 
 type Classified = {
   ok: Array<Object>,
@@ -63,7 +63,7 @@ export default class PowerFilter {
         // $FlowIssue(queryCondition-is-QueryCondition-or-EqCondition)
         const queryCondition = where[documentPath]
         const nestedValue = getNestedValue(value, documentPath)
-        return this.checkCondition(nestedValue, normalizeQueryCondition(queryCondition || {}))
+        return this.checkCondition(nestedValue, normalizeQueryCondition(queryCondition))
       })
       classified[isOk ? 'ok': 'ng'].push(value)
       return classified

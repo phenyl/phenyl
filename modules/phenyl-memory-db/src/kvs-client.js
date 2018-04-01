@@ -1,12 +1,12 @@
 // @flow
-import { assignWithRestoration } from 'power-assign/jsnext'
+import { assignWithRestoration } from 'power-assign'
 import type {
   Entity,
   PreEntity,
   KvsClient,
   Id,
 } from 'phenyl-interfaces'
-import { randomString } from 'phenyl-utils/jsnext'
+import { randomString } from 'phenyl-utils'
 
 interface KeyValuePool<T> {
   [id: Id]: T

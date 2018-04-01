@@ -1,7 +1,7 @@
 {
   "name": "phenyl-example-express",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "express": "^4.16.2",
-    "phenyl-express": "~0.1.2",
-    "phenyl-http-client": "~0.1.2",
-    "phenyl-interfaces": "~0.1.1",
-    "phenyl-memory-db": "~0.1.2",
-    "phenyl-rest-api": "~0.1.2",
-    "phenyl-standards": "~0.1.2"
+    "phenyl-express": "~0.2.0",
+    "phenyl-http-client": "~0.2.0",
+    "phenyl-interfaces": "~0.2.0",
+    "phenyl-memory-db": "~0.2.0",
+    "phenyl-rest-api": "~0.3.0",
+    "phenyl-standards": "~0.2.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/examples/express",

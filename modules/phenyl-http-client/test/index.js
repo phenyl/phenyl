@@ -4,10 +4,10 @@ import kocha from 'kocha'
 import assert from 'power-assert'
 import PhenylHttpClient from '../src/index.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
-import PhenylHttpServer from 'phenyl-http-server/jsnext'
+import PhenylHttpServer from 'phenyl-http-server'
 import { createServer } from 'http'
-import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import { createEntityClient } from 'phenyl-memory-db/jsnext'
+import PhenylRestApi from 'phenyl-rest-api'
+import { createEntityClient } from 'phenyl-memory-db'
 
 const entityClient = createEntityClient()
 

@@ -3,7 +3,7 @@
 import { describe, it } from 'kocha'
 import assert from 'assert'
 import { PhenylState } from '../src/index.js'
-import { assignWithRestoration } from 'power-assign/jsnext'
+import { assignWithRestoration } from 'power-assign'
 
 describe('find', () => {
   it('', () => {

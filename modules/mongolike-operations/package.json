@@ -1,7 +1,14 @@
 {
   "name": "mongolike-operations",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Define Flow interfaces of MongoDB-like Operations used in Phenyl modules.",
+  "files": [
+    "index.js",
+    "decls",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "main": "index.js",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/mongolike-operations",

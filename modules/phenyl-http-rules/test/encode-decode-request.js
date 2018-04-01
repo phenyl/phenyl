@@ -304,6 +304,7 @@ describe('Check encode/decode deep equality: ', () => {
       method: 'runCustomQuery',
       payload: {
         name: 'is-occupied',
+        params: {},
       }
     }
     const encodedHttpRequest = encodeRequest(reqData)

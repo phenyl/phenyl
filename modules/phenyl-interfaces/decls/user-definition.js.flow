@@ -10,7 +10,7 @@ import type {
 } from './handler.js.flow'
 
 export interface UserDefinition {
-  authentication(loginCommand: LoginCommand, session: ?Session): Promise<AuthenticationResult>,
+  authentication(loginCommand: $Subtype<LoginCommand<>>, session: ?Session): Promise<AuthenticationResult>,
 }
 
 export type UserDefinitions = { [entityName: string]: EntityDefinition & UserDefinition }

@@ -2,20 +2,25 @@
 
 import type {
   IdQuery,
-  Entity,
+  EntityMapOf,
+  EntityNameOf,
+  EntityOf,
   LocalState,
   LocalEntityInfo,
+  TypeMap,
 } from 'phenyl-interfaces'
+
+type LocalStateOf<TM: TypeMap> = LocalState<EntityMapOf<TM>>
 
 /**
  * Get value(s) of LocalState.
  */
-export class LocalStateFinder {
+export class LocalStateFinder<TM: TypeMap> {
 
   /**
    * Check if LocalState has given id and entityName.
    */
-  static hasEntity(state: LocalState, query: IdQuery): boolean {
+  static hasEntity<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): boolean {
     const { entityName, id } = query
     if (!state.entities[entityName]) return false
     return state.entities[entityName][id] != null
@@ -25,7 +30,7 @@ export class LocalStateFinder {
    * Get head entity by id and entityName.
    * "head" is like git's "HEAD", the current entity in local state.
    */
-  static getHeadEntity(state: LocalState, query: IdQuery): Entity {
+  static getHeadEntity<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): EntityOf<TM, N> {
     const { entityName, id } = query
     if (state.entities[entityName] == null) throw new Error(`LocalStateFinder#getHeadEntity(). No entityName found: "${entityName}".`)
     const entityInfo = state.entities[entityName][id]
@@ -40,7 +45,7 @@ export class LocalStateFinder {
    * It contains origin, head, commits and versionId.
    * head may be null.
    */
-  static getEntityInfo(state: LocalState, query: IdQuery): LocalEntityInfo {
+  static getEntityInfo<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): LocalEntityInfo<EntityOf<TM, N>> {
     const { entityName, id } = query
     if (state.entities[entityName] == null) throw new Error(`LocalStateFinder#getEntityInfo(). No entityName found: "${entityName}".`)
     const entityInfo = state.entities[entityName][id]

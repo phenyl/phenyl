@@ -2,19 +2,23 @@
 import {
   encodeRequest,
   decodeResponse,
-} from 'phenyl-http-rules/jsnext'
+} from 'phenyl-http-rules'
+
 import {
   PhenylRestApiClient,
   createLocalError,
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
+
 import type {
   RequestData,
   ResponseData,
   HttpClientParams,
   ClientPathModifier,
   QueryStringParams,
+  TypeMap,
 } from 'phenyl-interfaces'
-import fetch from './fetch.js'
+
+  import fetch from './fetch.js'
 
 /**
  * Client to access to PhenylRestApi on server.
@@ -36,7 +40,7 @@ import fetch from './fetch.js'
  * AuthClient:
  *   login | logout
  */
-export default class PhenylHttpClient extends PhenylRestApiClient {
+export default class PhenylHttpClient<TM: TypeMap> extends PhenylRestApiClient<TM> {
   /**
    * Base URL without "/api".
    *  No slash at the last.

@@ -1,7 +1,7 @@
 // @flow
 import {
   ServerLogic,
-} from 'phenyl-http-rules/jsnext'
+} from 'phenyl-http-rules'
 
 import type {
   ServerParams,
@@ -20,7 +20,7 @@ import type {
  * 2. Invoke ServerLogic.
  * 3. Return EncodedHttpResponse using callback.
  */
-export const createLambdaHandler = (params: ServerParams): LambdaHandler => {
+export const createLambdaHandler = (params: ServerParams<*>): LambdaHandler => {
   return async (event: LambdaEvent, context: LambdaContext, cb: LambdaCallback): Promise<void> => {
 
     /**

@@ -9,13 +9,10 @@
     "load": "babel-node tools/cli.js load",
     "clean": "babel-node tools/cli.js clean",
     "publish": "babel-node tools/cli.js publish",
-    "bump:major": "babel-node tools/cli.js bump:major",
-    "bump:minor": "babel-node tools/cli.js bump:minor",
-    "bump:patch": "babel-node tools/cli.js bump:patch",
-    "bump:patchAll": "babel-node tools/cli.js bump:patchAll",
+    "bump": "babel-node tools/cli.js bump",
     "flow": "flow",
     "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/* examples/*/* tools/*/*"
+    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js"
   },
   "repository": {
     "type": "git",
@@ -30,7 +27,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
-    "babel-plugin-transform-strip-jsnext": "^2.0.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-power-assert": "^1.0.0",
@@ -38,7 +35,7 @@
     "chalk": "^2.3.0",
     "eslint": "^4.10.0",
     "eslint-plugin-flowtype": "^2.39.1",
-    "flow-bin": "^0.58.0",
+    "flow-bin": "^0.68.0",
     "kocha": "^1.8.1",
     "power-assert": "^1.4.4",
     "shelljs": "^0.7.8"
