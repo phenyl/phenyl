@@ -44,10 +44,12 @@ class CLI {
     }
   }
 
-  test() {
+  test(...moduleNames: Array<string>) {
     const failedModules = []
 
-    for (const phenylModule of this.graph.phenylModules) {
+    const moduleNamesToBuild = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
+    for (const moduleName of moduleNamesToBuild) {
+      const phenylModule = this.graph.getModule(moduleName)
       console.log(chalk.cyan(`\n[${phenylModule.name}] test start.`))
 
       if (phenylModule.hasTest) {
@@ -169,7 +171,8 @@ function main(argv) {
       break
     }
     case 'test': {
-      cli.test()
+      const moduleNames = argv.slice(1)
+      cli.test(...moduleNames)
       break
     }
     case 'clean': {
