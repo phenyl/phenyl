@@ -7,6 +7,9 @@
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "browser": {
+    "./fetch.js": "./fetch-browser.js"
+  },
   "files": [
     "src",
     "dist",
@@ -27,9 +30,10 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client",
   "license": "Apache License 2.0",
   "dependencies": {
-    "fetch-ponyfill": "^4.1.0",
+    "node-fetch": "^1.7.3",
     "phenyl-interfaces": "~0.2.1",
     "phenyl-http-rules": "~0.2.1",
-    "phenyl-utils": "~0.2.1"
+    "phenyl-utils": "~0.2.1",
+    "whatwg-fetch": "^2.0.3"
   }
 }
