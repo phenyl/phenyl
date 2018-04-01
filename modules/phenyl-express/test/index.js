@@ -53,9 +53,9 @@ describe('createPhenylApiMiddleware', function() {
   it('can handle Phenyl API request', async function() {
     app.use(createPhenylApiMiddleware(restApiHandler))
     const client = new PhenylHttpClient({ url: 'http://localhost:3333' })
-    const queryResult = await client.runCustomQuery({ name: 'getVersion' })
+    const queryResult = await client.runCustomQuery({ name: 'getVersion', params: {} })
     assert(queryResult.ok === 1)
-    assert(queryResult.result.version === '1.2.3')
+    assert(queryResult.result && queryResult.result.version === '1.2.3')
   })
 
   it('can handle non-API request by express', async function() {
@@ -111,9 +111,9 @@ describe('createPhenylMiddleware', function() {
       )
     )
     const client = new PhenylHttpClient({ url: 'http://localhost:3333' })
-    const queryResult = await client.runCustomQuery({ name: 'getVersion' })
+    const queryResult = await client.runCustomQuery({ name: 'getVersion', params: {} })
     assert(queryResult.ok === 1)
-    assert(queryResult.result.version === '1.2.3')
+    assert(queryResult.result && queryResult.result.version === '1.2.3')
   })
 
   it('can handle non-API request by Phenyl Custom Request', async function() {

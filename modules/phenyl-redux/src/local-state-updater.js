@@ -14,27 +14,34 @@ import type {
   ActionTag,
   Id,
   IdUpdateCommand,
-  Entity,
+  EntityMapOf,
+  EntityNameOf,
+  EntityOf,
   LocalState,
   PhenylError,
   PushCommand,
   Session,
+  TypeMap,
   UpdateOperation,
+  UserEntityNameOf,
   VersionDiff,
 } from 'phenyl-interfaces'
 
 import { LocalStateFinder } from './local-state-finder.js'
 
+type LocalStateOf<TM: TypeMap> = LocalState<EntityMapOf<TM>>
+
 /**
  *
  */
-export class LocalStateUpdater {
+export class LocalStateUpdater<TM: TypeMap> {
+  static LocalStateFinder: Class<LocalStateFinder<TM>> = LocalStateFinder
 
   /**
    * Commit the operation of entity to LocalState.
    * Error is thrown when no entity is registered.
    */
-  static commit(state: LocalState, command: IdUpdateCommand): UpdateOperation {
+  static commit<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, command: IdUpdateCommand<N>): UpdateOperation {
     const { entityName, id, operation } = command
 
     if (!LocalStateFinder.hasEntity(state, { entityName, id })) {
@@ -56,7 +63,7 @@ export class LocalStateUpdater {
    * Revert the already applied commit.
    * Error is thrown when no entity is registered.
    */
-  static revert(state: LocalState, command: IdUpdateCommand): UpdateOperation {
+  static revert<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, command: IdUpdateCommand<N>): UpdateOperation {
     const { entityName, id, operation } = command
 
     if (!LocalStateFinder.hasEntity(state, { entityName, id })) {
@@ -77,7 +84,7 @@ export class LocalStateUpdater {
    * Register the entity info into LocalState.
    * Overwrite if already exists.
    */
-  static follow(state: LocalState, entityName: string, entity: Entity, versionId: Id): UpdateOperation {
+  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: Id): UpdateOperation {
     return {
       $set: {
         [`entities.${entityName}.${entity.id}`]: {
@@ -93,7 +100,7 @@ export class LocalStateUpdater {
   /**
    * Remove the entity info from LocalState.
    */
-  static unfollow(state: LocalState, entityName: string, id: Id): UpdateOperation {
+  static unfollow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, id: Id): UpdateOperation {
     return {
       $unset: {
         [`entities.${entityName}.${id}`]: ''
@@ -104,7 +111,7 @@ export class LocalStateUpdater {
   /**
    * Push network request promise.
    */
-  static networkRequest(state: LocalState, tag: ActionTag): UpdateOperation {
+  static networkRequest(state: LocalStateOf<TM>, tag: ActionTag): UpdateOperation {
     return {
       $push: { 'network.requests': tag }
     }
@@ -113,7 +120,7 @@ export class LocalStateUpdater {
   /**
    * Remove network request promise from the request queue.
    */
-  static removeNetworkRequest(state: LocalState, tag: ActionTag): UpdateOperation {
+  static removeNetworkRequest(state: LocalStateOf<TM>, tag: ActionTag): UpdateOperation {
     return {
       $set: { 'network.requests': removeOne(state.network.requests, tag) }
     }
@@ -124,7 +131,7 @@ export class LocalStateUpdater {
    * If the diff's prevVersionId isn't equal to registered versionId, no operation is returned.
    * If it equals, applied to origin.
    */
-  static patch(state: LocalState, versionDiff: VersionDiff): UpdateOperation {
+  static patch(state: LocalStateOf<TM>, versionDiff: VersionDiff): UpdateOperation {
     const { entityName, id, versionId, prevVersionId, operation } = versionDiff
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
 
@@ -148,7 +155,7 @@ export class LocalStateUpdater {
    * Apply the master commits.
    * If local commits exist, apply them after master commits.
    */
-  static rebase(state: LocalState, pushCommand: PushCommand): UpdateOperation {
+  static rebase<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, pushCommand: PushCommand<N>): UpdateOperation {
     const { entityName, id, versionId, operations } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
 
@@ -167,7 +174,7 @@ export class LocalStateUpdater {
   /**
    * Apply the master commits, then apply the given local commits.
    */
-  static synchronize(state: LocalState, pushCommand: PushCommand, localCommits: Array<UpdateOperation>): UpdateOperation {
+  static synchronize<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, pushCommand: PushCommand<N>, localCommits: Array<UpdateOperation>): UpdateOperation {
     const { entityName, id, operations, versionId } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
 
@@ -192,7 +199,7 @@ export class LocalStateUpdater {
    * Register all the entities into LocalState.
    * NOTICE: if returned type of this.follow() changes, this implementation must be changed.
    */
-  static followAll(state: LocalState, entityName: string, entities: Array<Entity>, versionsById: { [entityId: Id]: Id}): UpdateOperation {
+  static followAll<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entities: Array<EntityOf<TM, N>>, versionsById: { [entityId: Id]: Id}): UpdateOperation {
     const $setOp = {}
     for (const entity of entities) {
       const versionId = versionsById[entity.id]
@@ -206,7 +213,7 @@ export class LocalStateUpdater {
   /**
    * Set session.
    */
-  static setSession(state: LocalState, session: Session, user: ?Entity, versionId?: ?Id): UpdateOperation {
+  static setSession<N: UserEntityNameOf<TM>>(state: LocalStateOf<TM>, session: Session, user: ?EntityOf<TM, N>, versionId?: ?Id): UpdateOperation {
     const { entityName } = session
     const operation = {
       $set: { session }

@@ -14,7 +14,9 @@ import type { FunctionalGroup } from 'phenyl-interfaces'
 
 const memoryClient = createEntityClient()
 
-class PatientDefinition extends StandardUserDefinition {
+type PlainPatient = { id: string, name: string, email: string, password?: string }
+type PatientAuthSetting = { credentials: { email: string, password: string }, options: Object }
+class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }, PatientAuthSetting> {
   constructor() {
     super({
       entityClient: memoryClient,

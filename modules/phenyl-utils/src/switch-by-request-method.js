@@ -2,9 +2,10 @@
 import type {
   RequestData,
   RequestDataHandlers,
+  TypeMap,
 } from 'phenyl-interfaces'
 
-export async function switchByRequestMethod<T>(reqData: RequestData, funcs: RequestDataHandlers<T>): Promise<T> {
+export async function switchByRequestMethod<TM: TypeMap, T>(reqData: RequestData, funcs: RequestDataHandlers<TM, T>): Promise<T> {
   switch (reqData.method) {
     case 'find':
       return funcs.find ? await funcs.find(reqData.payload) : await funcs.handleDefault(reqData)

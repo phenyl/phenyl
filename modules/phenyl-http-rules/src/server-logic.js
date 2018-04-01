@@ -17,12 +17,13 @@ import type {
   PathModifier,
   RestApiHandler,
   ServerParams,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
  *
  */
-export default class ServerLogic {
+export default class ServerLogic<TM: TypeMap> {
   /**
    * Instance containing API logic invoked via run().
    * PhenylRestApi instance is expected.
@@ -46,9 +47,9 @@ export default class ServerLogic {
    *
    * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
    */
-  customRequestHandler: CustomRequestHandler
+  customRequestHandler: CustomRequestHandler<TM>
 
-  constructor(params: ServerParams) {
+  constructor(params: ServerParams<TM>) {
     this.restApiHandler = params.restApiHandler
     this.modifyPath = params.modifyPath || (path => path)
     this.customRequestHandler = params.customRequestHandler || notFoundHandler
@@ -111,7 +112,7 @@ export default class ServerLogic {
  * Default value of ServerLogic#handleCustomRequest().
  * Return 404 response.
  */
-async function notFoundHandler(encodedHttpRequest: EncodedHttpRequest, client: RestApiClient): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
+async function notFoundHandler<TM: TypeMap>(encodedHttpRequest: EncodedHttpRequest, client: RestApiClient<TM>): Promise<EncodedHttpResponse> { // eslint-disable-line no-unused-vars
   const { path } = encodedHttpRequest
   const body = `Not Found.\nThe requested URL "${path}" is not found on this server.`
   return createPlainTextResponse(body, 404)

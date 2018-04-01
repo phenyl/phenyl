@@ -7,13 +7,13 @@ import {
 
 import type {
   DeleteCommand,
+  EntityMap,
   EntityState,
   EntityStateUpdater,
   IdUpdateCommand,
   IdDeleteCommand,
   MultiUpdateCommand,
   MultiDeleteCommand,
-  Entity,
   UpdateOperation,
 } from 'phenyl-interfaces'
 
@@ -23,25 +23,25 @@ import PhenylStateFinder from './phenyl-state-finder.js'
 /**
  *
  */
-export default class PhenylStateUpdater implements EntityStateUpdater {
+export default class PhenylStateUpdater<M: EntityMap> implements EntityStateUpdater<M> {
 
-  state: EntityState
+  state: EntityState<M>
 
-  constructor(state: EntityState) {
+  constructor(state: EntityState<M>) {
     this.state = state
   }
 
   /**
    *
    */
-  updateById(command: IdUpdateCommand): UpdateOperation {
+  updateById<N: $Keys<M>>(command: IdUpdateCommand<N>): UpdateOperation {
     return this.constructor.updateById(this.state, command)
   }
 
   /**
    *
    */
-  updateMulti(command: MultiUpdateCommand): UpdateOperation {
+  updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>): UpdateOperation {
     return this.constructor.updateMulti(this.state, command)
   }
 
@@ -51,35 +51,35 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  register(entityName: string, ...entities: Array<Entity>): UpdateOperation {
+  register<N: $Keys<M>>(entityName: N, ...entities: Array<$ElementType<M, N>>): UpdateOperation {
     return this.constructor.register(this.state, entityName, ...entities)
   }
 
   /**
    *
    */
-  delete(command: DeleteCommand): UpdateOperation {
+  delete<N: $Keys<M>>(command: DeleteCommand<N>): UpdateOperation {
     return this.constructor.delete(this.state, command)
   }
 
   /**
    *
    */
-  deleteById(command: IdDeleteCommand): UpdateOperation {
+  deleteById<N: $Keys<M>>(command: IdDeleteCommand<N>): UpdateOperation {
     return this.constructor.deleteById(this.state, command)
   }
 
   /**
    *
    */
-  deleteByFindOperation(command: MultiDeleteCommand): UpdateOperation {
+  deleteByFindOperation<N: $Keys<M>>(command: MultiDeleteCommand<N>): UpdateOperation {
     return this.constructor.deleteByFindOperation(this.state, command)
   }
 
   /**
    *
    */
-  static updateById(state: EntityState, command: IdUpdateCommand): UpdateOperation {
+  static updateById<N: $Keys<M>>(state: EntityState<M>, command: IdUpdateCommand<N>): UpdateOperation {
     const { id, entityName, operation } = command
     if (!PhenylStateFinder.has(state, { entityName, id })) {
       throw new Error('Could not find any entity to update.')
@@ -91,7 +91,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static updateMulti(state: EntityState, command: MultiUpdateCommand): UpdateOperation {
+  static updateMulti<N: $Keys<M>>(state: EntityState<M>, command: MultiUpdateCommand<N>): UpdateOperation {
     const { where, entityName, operation } = command
 
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
@@ -108,7 +108,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static register(state: EntityState, entityName: string, ...entities: Array<Entity>): UpdateOperation {
+  static register<N: $Keys<M>>(state: EntityState<M>, entityName: string, ...entities: Array<$ElementType<M, N>>): UpdateOperation {
     const operationList = entities.map(entity => {
       const docPath = ['pool', entityName, entity.id].join('.')
       return  { $set: { [docPath]: entity } }
@@ -119,7 +119,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static delete(state: EntityState, command: DeleteCommand): UpdateOperation {
+  static delete<N: $Keys<M>>(state: EntityState<M>, command: DeleteCommand<N>): UpdateOperation {
     if (command.where) {
       return this.deleteByFindOperation(state, command)
     }
@@ -129,7 +129,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static deleteById(state: EntityState, command: IdDeleteCommand): UpdateOperation {
+  static deleteById<N: $Keys<M>>(state: EntityState<M>, command: IdDeleteCommand<N>): UpdateOperation {
     const { id, entityName } = command
     const docPath = ['pool', entityName, id].join('.')
     return { $unset: {[docPath]: '' } }
@@ -138,7 +138,7 @@ export default class PhenylStateUpdater implements EntityStateUpdater {
   /**
    *
    */
-  static deleteByFindOperation(state: EntityState, command: MultiDeleteCommand): UpdateOperation {
+  static deleteByFindOperation<N: $Keys<M>>(state: EntityState<M>, command: MultiDeleteCommand<N>): UpdateOperation {
     const { where, entityName } = command
     const targetEntities = PhenylStateFinder.find(state, { entityName, where })
     const $unset = {}

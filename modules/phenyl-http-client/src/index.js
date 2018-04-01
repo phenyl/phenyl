@@ -16,6 +16,7 @@ import type {
   HttpClientParams,
   ClientPathModifier,
   QueryStringParams,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
@@ -38,7 +39,7 @@ import type {
  * AuthClient:
  *   login | logout
  */
-export default class PhenylHttpClient extends PhenylRestApiClient {
+export default class PhenylHttpClient<TM: TypeMap> extends PhenylRestApiClient<TM> {
   /**
    * Base URL without "/api".
    *  No slash at the last.

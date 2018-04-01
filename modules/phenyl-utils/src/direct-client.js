@@ -7,12 +7,13 @@ import type {
   RestApiHandler,
   RequestData,
   ResponseData,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
  * Client to access to the given RestApiHandler directly.
  */
-export class PhenylRestApiDirectClient extends PhenylRestApiClient {
+export class PhenylRestApiDirectClient<TM: TypeMap> extends PhenylRestApiClient<TM> {
   restApiHandler: RestApiHandler
 
   constructor(restApiHandler: RestApiHandler) {

@@ -3,7 +3,7 @@ import { sortByNotation } from 'oad-utils/jsnext'
 import { filter } from 'power-filter/jsnext'
 
 import type {
-  Entity,
+  EntityMap,
   EntityState,
   EntityStateFinder,
   IdQuery,
@@ -15,53 +15,53 @@ import type {
 /**
  *
  */
-export default class PhenylStateFinder implements EntityStateFinder {
+export default class PhenylStateFinder<M: EntityMap> implements EntityStateFinder<M> {
 
-  state: EntityState
+  state: EntityState<M>
 
-  constructor(state: EntityState) {
+  constructor(state: EntityState<M>) {
     this.state = state
   }
 
   /**
    *
    */
-  find(query: WhereQuery): Array<Entity> {
+  find<N: $Keys<M>>(query: WhereQuery<N>): Array<$ElementType<M, N>> {
     return this.constructor.find(this.state, query)
   }
 
   /**
    *
    */
-  findOne(query: WhereQuery): ?Entity {
+  findOne<N: $Keys<M>>(query: WhereQuery<N>): ?$ElementType<M, N> {
     return this.constructor.findOne(this.state, query)
   }
 
   /**
    *
    */
-  get(query: IdQuery): Entity {
+  get<N: $Keys<M>>(query: IdQuery<N>): $ElementType<M, N> {
     return this.constructor.get(this.state, query)
   }
 
   /**
    *
    */
-  getByIds(query: IdsQuery): Array<Entity> {
+  getByIds<N: $Keys<M>>(query: IdsQuery<N>): Array<$ElementType<M, N>> {
     return this.constructor.getByIds(this.state, query)
   }
 
   /**
    *
    */
-  getAll(entityName: string): Array<Entity> {
+  getAll<N: $Keys<M>>(entityName: N): Array<$ElementType<M, N>> {
     return this.constructor.getAll(this.state, entityName)
   }
 
   /**
    *
    */
-  has(query: IdQuery): boolean {
+  has<N: $Keys<M>>(query: IdQuery<N>): boolean {
     return this.constructor.has(this.state, query)
   }
 
@@ -69,7 +69,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  static getAll(state: EntityState, entityName: string): Array<Entity> {
+  static getAll<N: $Keys<M>>(state: EntityState<M>, entityName: N): Array<$ElementType<M, N>> {
     const pool = state.pool[entityName]
     if (pool == null) {
       throw new Error(`entityName: "${entityName}" is not found.`)
@@ -80,7 +80,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  static find(state: EntityState, query: WhereQuery): Array<Entity> {
+  static find<N: $Keys<M>>(state: EntityState<M>, query: WhereQuery<N>): Array<$ElementType<M, N>> {
     const {
       entityName,
       where,
@@ -100,14 +100,14 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  static findOne(state: EntityState, query: WhereQuery): ?Entity {
+  static findOne<N: $Keys<M>>(state: EntityState<M>, query: WhereQuery<N>): ?$ElementType<M, N> {
     return this.find(state, query)[0]
   }
 
   /**
    *
    */
-  static get(state: EntityState, query: IdQuery): Entity {
+  static get<N: $Keys<M>>(state: EntityState<M>, query: IdQuery<N>): $ElementType<M, N> {
     const entitiesById = state.pool[query.entityName]
     if (entitiesById == null) throw new Error('NoEntityRegistered')
     const entity = entitiesById[query.id]
@@ -118,7 +118,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  static getByIds(state: EntityState, query: IdsQuery): Array<Entity> {
+  static getByIds<N: $Keys<M>>(state: EntityState<M>, query: IdsQuery<N>): Array<$ElementType<M, N>> {
     const { ids, entityName } = query
     // TODO: handle error
     return ids.map(id => this.get(state, { entityName, id }))
@@ -127,7 +127,7 @@ export default class PhenylStateFinder implements EntityStateFinder {
   /**
    *
    */
-  static has(state: EntityState, query: IdQuery): boolean {
+  static has<N: $Keys<M>>(state: EntityState<M>, query: IdQuery<N>): boolean {
     try {
       PhenylStateFinder.get(state, query)
     } catch (error) {

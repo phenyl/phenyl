@@ -11,13 +11,17 @@ import type {
   SessionClient,
 } from 'phenyl-interfaces'
 
+type PhenylSessionEntityMap = {
+  _PhenylSession: Session
+}
+
 /**
  *
  */
 export class PhenylSessionClient implements SessionClient {
-  dbClient: DbClient
+  dbClient: DbClient<PhenylSessionEntityMap>
 
-  constructor(dbClient: DbClient) {
+  constructor(dbClient: DbClient<*>) {
     this.dbClient = dbClient
   }
 

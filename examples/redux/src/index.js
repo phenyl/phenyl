@@ -3,34 +3,46 @@
 /* eslint-env node */
 import http from 'http'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import phenylReducer, { createMiddleware, actions } from 'phenyl-redux/jsnext'
+import { PhenylRedux, LocalStateFinder } from 'phenyl-redux/jsnext'
 import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'
 import { createEntityClient } from 'phenyl-memory-db/jsnext'
 import { StandardUserDefinition } from 'phenyl-standards/jsnext'
+import type { FunctionalGroup } from 'phenyl-interfaces'
+
+type ThisEntityMap = {
+  patient: { id: string, name: string, email: string, password?: string }
+}
+
+type ThisTypeMap = {
+  entities: ThisEntityMap,
+  customQueries: {},
+  customCommands: {},
+  auths: {
+    patient: { credentials: { email: string, password: string }, options: Object }
+  },
+}
 
 const wait = async msec => new Promise(ok => setTimeout(ok, msec))
 
-import type {
-  FunctionalGroup
-} from 'phenyl-interfaces'
+const httpClient: PhenylHttpClient<ThisTypeMap> = new PhenylHttpClient({ url: 'http://localhost:8080' })
 
-const httpClient = new PhenylHttpClient({ url: 'http://localhost:8080' })
+const phenylRedux: PhenylRedux<ThisTypeMap> = new PhenylRedux()
+const { actions, reducer } = phenylRedux
 
 const store = createStore(
-  combineReducers({ phenyl: phenylReducer }),
+  combineReducers({ phenyl: reducer }),
   applyMiddleware(
-    createMiddleware({
-      client: httpClient,
-      storeKey: 'phenyl'
-    })
+    phenylRedux.createMiddleware({ client: httpClient, storeKey: 'phenyl' })
   )
 )
 
 const memoryClient = createEntityClient()
 
-class PatientDefinition extends StandardUserDefinition {
+type PlainPatient = { id: string, name: string, email: string, password?: string }
+type PatientAuthSetting = { credentials: { email: string, password: string }, options: Object }
+class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }, PatientAuthSetting> {
   constructor() {
     super({
       entityClient: memoryClient,
@@ -69,7 +81,10 @@ async function main() {
     password: 'shin123',
   }})
   store.dispatch(actions.follow('patient', inserted.entity, inserted.versionId))
-  console.log(JSON.stringify(store.getState().phenyl, null, 2))
+  const state = store.getState().phenyl
+  const value = LocalStateFinder.getHeadEntity(state, { entityName: 'patient', id: inserted.entity.id })
+  console.log(value.email)
+  console.log(JSON.stringify(state, null, 2))
 
   store.dispatch(actions.login({
     entityName: 'patient',
@@ -81,9 +96,12 @@ async function main() {
   await wait(10)
   console.log(JSON.stringify(store.getState().phenyl, null, 2))
 
+  const { session } = store.getState().phenyl
+  if (!session) throw new Error('No session')
+
   store.dispatch(actions.logout({
     entityName: 'patient',
-    sessionId: store.getState().phenyl.session.id,
+    sessionId: session.id,
     userId: inserted.entity.id,
   }))
   await wait(10)
