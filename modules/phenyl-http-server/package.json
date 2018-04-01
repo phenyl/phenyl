@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -17,8 +17,8 @@
     "babel-register": "^6.24.1"
   },
   "dependencies": {
-    "phenyl-interfaces": "~0.2.0",
-    "phenyl-http-rules": "~0.2.0"
+    "phenyl-interfaces": "~0.2.1",
+    "phenyl-http-rules": "~0.2.1"
   },
   "author": [
     "Shin Suzuki <shinout310@gmail.com>",

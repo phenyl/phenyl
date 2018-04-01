@@ -1,6 +1,6 @@
 {
   "name": "phenyl-state",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -16,10 +16,10 @@
     "README.md"
   ],
   "dependencies": {
-    "phenyl-interfaces": "~0.2.0",
-    "power-assign": "~0.2.5",
-    "power-filter": "~0.1.4",
-    "oad-utils": "~0.1.4"
+    "phenyl-interfaces": "~0.2.1",
+    "power-assign": "~0.2.6",
+    "power-filter": "~0.1.5",
+    "oad-utils": "~0.1.5"
   },
   "devDependencies": {
     "kocha": "^1.8.0",

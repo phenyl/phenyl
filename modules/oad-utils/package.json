@@ -1,6 +1,6 @@
 {
   "name": "oad-utils",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Collection of utility functions for OAD: Operations As Data.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -25,6 +25,6 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "deepmerge": "^2.0.0",
-    "mongolike-operations": "~0.1.2"
+    "mongolike-operations": "~0.1.3"
   }
 }
