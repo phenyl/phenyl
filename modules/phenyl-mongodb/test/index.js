@@ -13,6 +13,7 @@ async function createMongoDBClient() {
     return createEntityClient(mongoDBConnection)
   }
   catch (e) {
+    console.log(e.message)
     throw new Error('Test was skipped as connection to mongodb failed.')
   }
 }
