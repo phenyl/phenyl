@@ -1,9 +1,17 @@
 {
   "name": "power-debugger",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1"

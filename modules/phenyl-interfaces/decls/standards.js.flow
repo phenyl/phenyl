@@ -5,25 +5,24 @@ import {
   IdsQuery,
 } from './query.js.flow'
 
-import type { Entity } from './entity.js.flow'
-
 import type {
-  QueryResult,
-} from './query-result.js.flow'
+  Entity,
+  EntityName
+} from './entity.js.flow'
 
-type ForeignQuery<T> = T & {
-  foreign?: ForeignQueryParams
+type ForeignQuery<FN, T> = T & {
+  foreign?: ForeignQueryParams<FN>
 }
 
-export type ForeignQueryParams = {
+export type ForeignQueryParams<FN: EntityName> = {
   documentPath: string,
-  entityName: string,
+  entityName: FN,
 }
 
 export type ForeignQueryResult<T> = T & {
   foreign?: { entities: Array<Entity> } | { entity: Entity }
 }
 
-export type ForeignIdQuery = ForeignQuery<IdQuery>
-export type ForeignWhereQuery = ForeignQuery<WhereQuery>
-export type ForeignIdsQuery = ForeignQuery<IdsQuery>
+export type ForeignIdQuery<N: EntityName, FN: EntityName> = ForeignQuery<FN, IdQuery<N>>
+export type ForeignWhereQuery<N: EntityName, FN: EntityName> = ForeignQuery<FN, WhereQuery<N>>
+export type ForeignIdsQuery<N: EntityName, FN: EntityName> = ForeignQuery<FN, IdsQuery<N>>

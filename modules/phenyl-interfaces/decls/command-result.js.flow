@@ -31,30 +31,30 @@ export type IdUpdateCommandResult = {
   prevVersionId: ?Id,
 }
 
-export type MultiUpdateCommandResult = {
+export type MultiUpdateCommandResult<IdMap: { [Id]: Id } = { [Id]: Id }> = {
   ok: 1,
   n: number,
-  versionsById: { [entityId: Id]: Id },
-  prevVersionsById: { [entityId: Id]: Id },
+  versionsById: IdMap,
+  prevVersionsById: $ObjMap<IdMap, Id => Id>,
 }
 
-export type MultiValuesCommandResult = {
+export type MultiValuesCommandResult<E: Entity = Entity, IdMap: { [Id]: Id } = { [Id]: Id }> = {
   ok: 1,
   n: number,
-  entities: Array<Entity>,
-  versionsById: { [entityId: Id]: Id },
-  prevVersionsById: { [entityId: Id]: Id },
+  entities: Array<E>,
+  versionsById: IdMap,
+  prevVersionsById: $ObjMap<IdMap, Id => Id>,
 }
 
-export type GetCommandResult = {|
+export type GetCommandResult<E: Entity = Entity> = {|
   ok: 1,
   n: number, // TODO necessary?
-  entity: Entity,
+  entity: E,
   versionId: Id,
   prevVersionId: ?Id,
 |}
 
-export type PushCommandResult = {|
+export type PushCommandResult<E: Entity = Entity> = {|
   ok: 1,
   n: number, // TODO necessary?
   hasEntity: 0,
@@ -66,21 +66,21 @@ export type PushCommandResult = {|
   ok: 1,
   n: number, // TODO necessary?
   hasEntity: 1,
-  entity: Entity,
+  entity: E,
   versionId: Id,
   prevVersionId: ?Id,
   newOperation: UpdateOperation,
 |}
 
-export type CustomCommandResult = {
+export type CustomCommandResult<R: Object = Object> = {
   ok: 1,
-  result?: Object
+  result: R
 }
 
-export type LoginCommandResult = {
+export type LoginCommandResult<E: Entity = Entity> = {
   ok: 1,
   session: Session,
-  user: ?Entity,
+  user: ?E,
   versionId: ?Id,
 }
 

@@ -1,17 +1,27 @@
 // @flow
 /* eslint-disable no-console */
 import http from 'http'
-import PhenylHttpServer from 'phenyl-http-server/jsnext'
-import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import PhenylHttpClient from 'phenyl-http-client/jsnext'
-import { createEntityClient } from 'phenyl-memory-db/jsnext'
-import { StandardUserDefinition } from 'phenyl-standards/jsnext'
-
-import type {
-  FunctionalGroup
-} from 'phenyl-interfaces'
+import PhenylHttpServer from 'phenyl-http-server'
+import PhenylRestApi from 'phenyl-rest-api'
+import PhenylHttpClient from 'phenyl-http-client'
+import { createEntityClient } from 'phenyl-memory-db'
+import { StandardUserDefinition } from 'phenyl-standards'
 
 const memoryClient = createEntityClient()
+
+type PlainPatient = { id: string, name: string, email: string, password?: string }
+type PatientAuthSetting = { credentials: { email: string, password: string }, options: Object }
+
+type ThisTypeMap = {
+  entities: {
+    patient: PlainPatient
+  },
+  customQueries: {},
+  customCommands: {},
+  auths: {
+    patient: PatientAuthSetting,
+  },
+}
 
 class PatientDefinition extends StandardUserDefinition {
   constructor() {
@@ -31,7 +41,7 @@ class PatientDefinition extends StandardUserDefinition {
   }
 }
 
-const functionalGroup: FunctionalGroup = {
+const functionalGroup = {
   customQueries: {},
   customCommands: {},
   users: {
@@ -41,11 +51,12 @@ const functionalGroup: FunctionalGroup = {
 }
 
 async function main() {
-  const restApiHandler = PhenylRestApi.createFromFunctionalGroup(functionalGroup, { client: memoryClient })
+  const restApiHandler: PhenylRestApi<ThisTypeMap> = PhenylRestApi.createFromFunctionalGroup(functionalGroup, { client: memoryClient })
+
   const server = new PhenylHttpServer(http.createServer(), { restApiHandler })
   server.listen(8080)
 
-  const client = new PhenylHttpClient({ url: 'http://localhost:8080' })
+  const client: PhenylHttpClient<ThisTypeMap> = new PhenylHttpClient({ url: 'http://localhost:8080' })
 
   const inserted = await client.insertAndGet({ entityName: 'patient', value: {
     name: 'Shin Suzuki',

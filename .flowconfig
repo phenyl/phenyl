@@ -1,6 +1,7 @@
 [ignore]
 .*/node_modules/remove-flow-types-loader.*
 
+
 [include]
 
 [libs]
@@ -9,5 +10,4 @@ external-module-types
 [options]
 esproposal.class_static_fields=enable
 esproposal.decorators=ignore
-unsafe.enable_getters_and_setters=true
 suppress_comment=.*\\$FlowIssue(\\(.*\\))?

@@ -1,18 +1,26 @@
 {
   "name": "is-restorable",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Checking instance's restorablity. Designed for testing.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1"
   },
   "dependencies": {
-    "mongolike-operations": "~0.1.0",
+    "mongolike-operations": "~0.1.3",
     "fast-deep-equal": "^1.0.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

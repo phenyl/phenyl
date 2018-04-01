@@ -31,7 +31,7 @@ describe('mongoDBEntityClient', () => {
 
   before(async () => {
     conn = await connect('mongodb://localhost:27017')
-    entityClient = await createEntityClient(conn)
+    entityClient = createEntityClient(conn)
   })
 
   after(async () => {

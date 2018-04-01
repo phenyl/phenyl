@@ -1,20 +1,22 @@
 // @flow
 /* eslint-disable no-console */
 import express from 'express'
-import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import PhenylHttpClient from 'phenyl-http-client/jsnext'
-import { createEntityClient } from 'phenyl-memory-db/jsnext'
-import { StandardUserDefinition } from 'phenyl-standards/jsnext'
+import PhenylRestApi from 'phenyl-rest-api'
+import PhenylHttpClient from 'phenyl-http-client'
+import { createEntityClient } from 'phenyl-memory-db'
+import { StandardUserDefinition } from 'phenyl-standards'
 import {
   createPhenylApiMiddleware,
   createPhenylMiddleware,
-} from 'phenyl-express/jsnext'
+} from 'phenyl-express'
 
 import type { FunctionalGroup } from 'phenyl-interfaces'
 
 const memoryClient = createEntityClient()
 
-class PatientDefinition extends StandardUserDefinition {
+type PlainPatient = { id: string, name: string, email: string, password?: string }
+type PatientAuthSetting = { credentials: { email: string, password: string }, options: Object }
+class PatientDefinition extends StandardUserDefinition<{ patient: PlainPatient }, PatientAuthSetting> {
   constructor() {
     super({
       entityClient: memoryClient,

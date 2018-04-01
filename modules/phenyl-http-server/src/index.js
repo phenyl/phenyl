@@ -4,7 +4,7 @@
 import url from 'url'
 import {
   ServerLogic,
-} from 'phenyl-http-rules/jsnext'
+} from 'phenyl-http-rules'
 
 import type {
   IncomingMessage,
@@ -14,12 +14,13 @@ import type {
   EncodedHttpResponse,
   HttpMethod,
   ServerParams,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
  * HTTP(s) server wrapping ServerLogic (implemented at "phenyl-http-rules") and Node.js server.
  */
-export default class PhenylHttpServer {
+export default class PhenylHttpServer<TM: TypeMap> {
   /**
    * Instance of the result: require('http').createServer()
    */
@@ -28,9 +29,9 @@ export default class PhenylHttpServer {
    * Universal server logic.
    * Offers the flow: EncodedHttpRequest => EncodedHttpResponse
    */
-  logic: ServerLogic
+  logic: ServerLogic<TM>
 
-  constructor(server: net$Server, params: ServerParams) {
+  constructor(server: net$Server, params: ServerParams<TM>) {
     this.server = server
     this.logic = new ServerLogic(params)
   }
@@ -53,7 +54,7 @@ export default class PhenylHttpServer {
       const read = () => {
         try {
           // https://nodejs.org/api/stream.html#stream_readable_read_size
-          const chunks = []
+          const chunks: Array<Buffer> = []
           let chunk
           let totalLength = 0
           while (null !== (chunk = request.read())) {

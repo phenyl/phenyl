@@ -1,20 +1,28 @@
 {
   "name": "phenyl-websocket-client",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-client",
   "devDependencies": {
     "kocha": "^1.8.0",
     "babel-register": "^6.24.1",
-    "phenyl-interfaces": "~0.1.0"
+    "phenyl-interfaces": "~0.2.1"
   },
   "browser": {
     "./src/websocket.js": "./src/websocket.browser.js"
   },
   "dependencies": {
-    "phenyl-utils": "~0.1.0",
+    "phenyl-utils": "~0.2.1",
     "ws": "^3.3.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

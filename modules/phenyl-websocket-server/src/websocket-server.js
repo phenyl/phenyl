@@ -5,7 +5,7 @@ import WebSocket from 'ws'
 
 import {
   createServerError
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import WebSocketClientInfo from './client-info.js'
 
@@ -39,7 +39,8 @@ export class PhenylWebSocketServer {
     wss.on('connection', (ws: WebSocket) => {
       const clientInfo = new WebSocketClientInfo(ws)
       this.clients.push(clientInfo)
-      ws.addEventListener('message', (evt: Event) => this.onMessage(evt.data || '', clientInfo))
+      // TODO: evt: MessageEvent
+      ws.addEventListener('message', (evt: Object) => this.onMessage(evt.data || '', clientInfo))
     })
     if (params.versionDiffSubscriber) {
       params.versionDiffSubscriber.subscribeVersionDiff((versionDiff: VersionDiff) => {

@@ -74,10 +74,51 @@ const user10 = {
   age: 32,
 }
 
-let entityClient
+const user11 = {
+  id: 'user11',
+  name: {first: '0', last: 'Test'},
+  age: 0,
+}
+const user12 = {
+  id: 'user12',
+  name: {first: 'null', last: 'Test'},
+  age: null,
+}
+const user13 = {
+  id: 'user13',
+  name: {first: 'empty', last: 'Test'},
+  age: 19,
+  subName: ''
+}
+const user14 = {
+  id: 'user14',
+  name: {first: 'false', last: 'Test'},
+  age: 19,
+  passed: false
+}
+
+
+type ThisEntityMap = {
+  user: {
+    id: string,
+    name: { first: string, last: string },
+    age: ?number,
+    passed?: boolean,
+    subName?: string,
+    hobbies?: Array<string>,
+    favorites?: {
+      music: { singer: string, writer: string },
+      movie: { title: string },
+      book: { author: string },
+    },
+    skills?: string
+  }
+}
+
+let entityClient: EntityClient<ThisEntityMap>
 
 export const assertEntityClient = (
-  entityClientPromise: EntityClient | Promise<EntityClient>,
+  entityClientPromise: EntityClient<ThisEntityMap> | Promise<EntityClient<ThisEntityMap>>,
   kocha: any,
   assert: Function,
 ) => {
@@ -172,6 +213,12 @@ export const assertEntityClient = (
     })
 
     describe('find', () => {
+      before(async () => {
+        await entityClient.insertAndGetMulti({
+          entityName: 'user',
+          values: [user11, user12, user13, user14]
+        })
+      })
       it('returns entities when condition matches', async () => {
         const result = await entityClient.find({
           entityName: 'user',
@@ -208,7 +255,83 @@ export const assertEntityClient = (
           entityName: 'user',
           where: { id: user8.id },
         })
-        assert.deepEqual(result.entities[0], user8)
+        assert.deepEqual(
+          result.entities[0], user8)
+      })
+
+      it('returns an entity when condition (is 0) matches', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {age: 0},
+        })
+
+        assert(result.ok === 1)
+        assert(result.entities.length === 1)
+        assert(result.entities[0].id === user11.id)
+      })
+
+      it('returns an entity when condition (is null) matches', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {age: null},
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 1)
+        assert(result.entities[0].id === user12.id)
+      })
+
+      it('returns an entity when condition (is false) matches', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {subName: ''},
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 1)
+        assert(result.entities[0].id === user13.id)
+      })
+
+      it('returns an entity when condition (is false) matches', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {passed: false},
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 1)
+        assert(result.entities[0].id === user14.id)
+      })
+
+      it('does not return entities when condition empty string and does not match', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {id: ''}
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 0)
+      })
+      it('does not return entities when condition 0 and does not match', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {id: 0}
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 0)
+      })
+      it('does not return entities when condition null and does not match', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          where: {id: null}
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 0)
+      })
+      it('does not return entities when condition undefined and does not match', async () => {
+        const result = await entityClient.find({
+          entityName: 'user',
+          // $FlowIssue(undefined-is-allowed-here)
+          where: {id: undefined}
+        })
+        assert(result.ok === 1)
+        assert(result.entities.length === 0)
       })
     })
 
@@ -222,6 +345,41 @@ export const assertEntityClient = (
         assert(result.ok === 1)
         assert(result.entity.id === user1.id )
       })
+
+      it('returns an entity when condition (is 0) matches', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: {age: 0},
+        })
+
+        assert(result.ok === 1)
+        assert(result.entity.id === user11.id)
+      })
+      it('returns an entity when condition (is null) matches', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: {age: null},
+        })
+        assert(result.ok === 1)
+        assert(result.entity.id === user12.id)
+      })
+      it('returns an entity when condition (is false) matches', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: {subName: ''},
+        })
+        assert(result.ok === 1)
+        assert(result.entity.id === user13.id)
+      })
+      it('returns an entity when condition (is false) matches', async () => {
+        const result = await entityClient.findOne({
+          entityName: 'user',
+          where: {passed: false},
+        })
+        assert(result.ok === 1)
+        assert(result.entity.id === user14.id)
+      })
+
 
       it('returns null when condition does not match', async () => {
         try {
@@ -240,6 +398,58 @@ export const assertEntityClient = (
           where: { id: user8.id },
         })
         assert.deepEqual(result.entity, user8)
+      })
+
+
+      it('returns a NotFound error when "where" query contains empty string', async () => {
+        try {
+          await entityClient.findOne({
+            entityName: 'user',
+            where: { id: '' }
+          })
+          throw new Error('this must not be called')
+        }
+        catch (error) {
+          assert(error.ok === 0)
+          assert(error.type === 'NotFound')
+        }
+      })
+      it('returns a NotFound error when "where" query contains 0 and no data with the value', async () => {
+        try {
+          await entityClient.findOne({
+            entityName: 'user',
+            where: { id: 0 }
+          })
+        }
+        catch (error) {
+          assert(error.ok === 0)
+          assert(error.type === 'NotFound')
+        }
+      })
+      it('returns a NotFound error when "where" query contains null', async () => {
+        try {
+          await entityClient.findOne({
+            entityName: 'user',
+            where: { id: null }
+          })
+        }
+        catch (error) {
+          assert(error.ok === 0)
+          assert(error.type === 'NotFound')
+        }
+      })
+      it('returns a NotFound error when "where" query contains undefined', async () => {
+        try {
+          await entityClient.findOne({
+            entityName: 'user',
+            // $FlowIssue(undefined-property-is-valid-in-test-here)
+            where: { id: undefined }
+          })
+        }
+        catch (error) {
+          assert(error.ok === 0)
+          assert(error.type === 'NotFound')
+        }
       })
     })
 
@@ -320,7 +530,7 @@ export const assertEntityClient = (
           id: user1.id,
         })
 
-        assert(result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
+        assert(result2.entity.favorites && result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
       })
 
       it ('updates an entity by auto generated id', async () => {
@@ -361,8 +571,8 @@ export const assertEntityClient = (
           id: user1.id,
         })
 
-        assert(result2.entity.skills.length === 1)
-        assert(result2.entity.favorites.music.writer === 'Tatsuro Yamashita')
+        assert(result2.entity.skills && result2.entity.skills.length === 1)
+        assert(result2.entity.favorites && result2.entity.favorites.music.writer === 'Tatsuro Yamashita')
       })
     })
 
@@ -384,13 +594,14 @@ export const assertEntityClient = (
 
         assert(result2.entities.length > 0)
         result2.entities.forEach(entity => {
-          assert(entity.favorites.music.singer === 'Tatsuro Yamashita')
+          assert(entity.favorites && entity.favorites.music.singer === 'Tatsuro Yamashita')
         })
       })
 
       it ('updates entities by autogenerated id', async () => {
         const result = await entityClient.updateMulti({
           entityName: 'user',
+          // $FlowIssue(find-operation)
           where: { id: { $in: [user9.id, user10.id] } },
           operation: { $set: { age: 40 }},
         })
@@ -400,12 +611,13 @@ export const assertEntityClient = (
 
         const result2 = await entityClient.find({
           entityName: 'user',
+          // $FlowIssue(find-operation)
           where: { id: { $in: [user9.id, user10.id] } },
         })
 
         assert(result2.entities.length === 2)
         result2.entities.forEach(entity => {
-          assert(entity.age === 40)
+          assert(entity.age != null && entity.age === 40)
         })
       })
 
@@ -431,8 +643,10 @@ export const assertEntityClient = (
 
         assert(result2.entities.length > 0)
         result2.entities.forEach(entity => {
-          assert(entity.skills.length > 0)
-          assert(entity.favorites.music.writer === 'Tatsuro Yamashita')
+          assert(entity.skills && entity.skills.length > 0)
+          assert(
+            entity.favorites &&
+            entity.favorites.music.writer === 'Tatsuro Yamashita')
         })
       })
 
@@ -451,12 +665,14 @@ export const assertEntityClient = (
         const result = await entityClient.updateAndGet({
           entityName: 'user',
           id: user1.id,
-          operation: { $set: { 'favorites.movie': { title: 'shin godzilla' }}},
+          operation: { $set: { 'favorites.movie': { title: 'Shin Godzilla' }}},
         })
 
         assert(result.ok === 1)
         assert(result.n === 1)
-        assert(result.entity.favorites.movie.title === 'shin godzilla')
+        assert(
+          result.entity.favorites &&
+          result.entity.favorites.movie.title === 'Shin Godzilla')
       })
 
       it ('does not update and get any entity when condition does not match', async () => {
@@ -464,7 +680,7 @@ export const assertEntityClient = (
           await entityClient.updateAndGet({
             entityName: 'user',
             id: 'hoge',
-            operation: { $set: { 'favorites.movie': { title: 'shin godzilla' }}},
+            operation: { $set: { 'favorites.movie': { title: 'Shin Godzilla' }}},
           })
           throw new Error('this must not be called')
         } catch (error) {
@@ -485,7 +701,9 @@ export const assertEntityClient = (
         assert(result.n === 7)
         assert(result.entities.length > 0)
         result.entities.forEach(entity => {
-          assert(entity.favorites.book.author === 'Abe Kobo')
+          assert(
+            entity.favorites &&
+            entity.favorites.book.author === 'Abe Kobo')
         })
       })
 

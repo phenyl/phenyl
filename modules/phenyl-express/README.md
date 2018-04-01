@@ -19,10 +19,9 @@ npm install phenyl-express
 ```
 
 ## Using types with flow
-For [Flow](https://flowtype.org) annotations, just use `/jsnext` entrypoint.
 
 ```js
-import { createPhenylApiMiddleware } from 'phenyl-express/jsnext'
+import { createPhenylApiMiddleware } from 'phenyl-express'
 ```
 
 # API Documentation

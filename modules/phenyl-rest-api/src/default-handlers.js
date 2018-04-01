@@ -30,7 +30,7 @@ export async function noOperationHandler() {
  * NoHandler: handler always throwing an Error.
  * designed to apply for AuthenticationHandler, CustomCommandHandler and CustomQueryHandler
  */
-export async function noHandler(commandOrQuery: LoginCommand | CustomCommand | CustomQuery) {
+export async function noHandler(commandOrQuery: LoginCommand<> | CustomCommand<> | CustomQuery<>) {
   if (commandOrQuery.credentials != null) {
     throw new Error('No Login Handler is registered.')
   }

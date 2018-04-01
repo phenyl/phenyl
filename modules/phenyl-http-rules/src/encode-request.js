@@ -1,7 +1,7 @@
 // @flow
 import {
   assertValidRequestData
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import type {
   EncodedHttpRequest,
@@ -214,13 +214,20 @@ export function isApiRequest(path: string): boolean {
   return path.slice(0, 5) === '/api/'
 }
 
+
+function undefinedToNull(key: string, value: any): any {
+  return (value === undefined) ? null : value
+}
+
+
 // params are not encoded into URI format.
 function createQsParams(data: Object): QueryStringParams {
-  return { d: JSON.stringify(data) }
+
+  return { d: JSON.stringify(data, undefinedToNull) }
 }
 
 function createBody(data: Object): string {
-  return JSON.stringify(data)
+  return JSON.stringify(data, undefinedToNull)
 }
 
 /**

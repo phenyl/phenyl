@@ -7,7 +7,10 @@ import type {
 /**
  * QueryCondition | EqCondition => QueryCondition
  */
-export function normalizeQueryCondition(condition: QueryCondition | EqCondition): QueryCondition {
+export function normalizeQueryCondition(condition: QueryCondition | ?EqCondition): QueryCondition {
+  if (condition == null) {
+    return { $eq: null }
+  }
   if (isRegExp(condition)) {
     // $FlowIssue(only-regex-comes-here)
     return { $regex: condition }
