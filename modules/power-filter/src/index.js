@@ -13,7 +13,7 @@ import type {
 import {
   normalizeQueryCondition,
   getNestedValue,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 
 type Classified = {
   ok: Array<Object>,

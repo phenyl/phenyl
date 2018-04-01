@@ -2,7 +2,7 @@
   "env": {
     "build": {
       "presets": [["env", { "exclude": ["transform-regenerator"] }], "flow"],
-      "plugins": ["transform-strip-jsnext", "transform-class-properties"]
+      "plugins": ["transform-class-properties"]
     },
 
     "development": {

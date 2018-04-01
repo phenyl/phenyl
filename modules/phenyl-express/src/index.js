@@ -5,8 +5,8 @@ import {
   decodeRequest,
   getStatusCode,
   ServerLogic,
-} from 'phenyl-http-rules/jsnext'
-import { createServerError } from 'phenyl-utils/jsnext'
+} from 'phenyl-http-rules'
+import { createServerError } from 'phenyl-utils'
 
 import type {
   ServerParams,

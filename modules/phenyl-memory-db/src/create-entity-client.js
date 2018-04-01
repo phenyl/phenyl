@@ -1,7 +1,7 @@
 // @flow
 import {
   PhenylEntityClient,
-} from 'phenyl-central-state/jsnext'
+} from 'phenyl-central-state'
 
 import { PhenylMemoryDbClient } from './phenyl-memory-db-client.js'
 
@@ -10,7 +10,7 @@ import type {
   EntityState,
 } from 'phenyl-interfaces'
 
-import type { PhenylEntityClientOptions } from 'phenyl-central-state/jsnext'
+import type { PhenylEntityClientOptions } from 'phenyl-central-state'
 
 export type MemoryClientOptions<M: EntityMap> = {
   entityState?: EntityState<M>,

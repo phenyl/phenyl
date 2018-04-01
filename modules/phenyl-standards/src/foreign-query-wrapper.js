@@ -1,15 +1,15 @@
 // @flow
 import {
   assign,
-} from 'power-assign/jsnext'
+} from 'power-assign'
 import {
   switchByRequestMethod,
   assertValidEntityName,
   assertNonEmptyString,
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 import {
   getNestedValue,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 import type {
   Entity,
   EntityMap,

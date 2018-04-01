@@ -3,7 +3,7 @@
 import {
   retargetToProp,
   mergeOperations,
-} from 'power-assign/jsnext'
+} from 'power-assign'
 
 import type {
   DeleteCommand,
