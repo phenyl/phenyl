@@ -53,6 +53,16 @@ brew update
 brew install mongodb
 ```
 
+#### Test only the specified modules
+Just specify the module(s) you want to test.
+
+The following example shows how to run test in `power-assign` and `phenyl-memory-client`.
+
+```bash
+npm test power-assign phenyl-memory-client
+```
+
+
 
 ### Lint and Flow
 To run linting:
@@ -77,6 +87,28 @@ Go to the directory and run `npm start`.
 cd examples/<example-module-name>
 npm start
 ```
+
+### Build = Make compiled files into "dist" folders
+
+```
+npm run build
+```
+
+This command do two things for each module.
+
+1. Create `dist/**/*.js` from `src/**/*.js`.
+2. Create `dist/index.js.flow` from `jsnext.js` to export types.
+
+
+#### Build only the specified modules
+Just specify the module(s) you want to build.
+
+The following example shows how to run test in `power-filter` and `phenyl-rest-api`.
+
+```bash
+npm run build power-filter phenyl-rest-api
+```
+
 
 ### Version bumping (Only for core committers)
 
