@@ -1,20 +1,20 @@
 {
   "name": "phenyl-example-redux",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
     "start": "../../node_modules/.bin/babel-node src/index.js"
   },
   "dependencies": {
-    "phenyl-http-client": "~0.2.0",
-    "phenyl-http-server": "~0.2.0",
-    "phenyl-interfaces": "~0.2.0",
-    "phenyl-memory-db": "~0.2.0",
-    "phenyl-redux": "~0.3.0",
-    "phenyl-rest-api": "~0.3.0",
-    "phenyl-standards": "~0.2.0",
+    "phenyl-http-client": "~0.2.1",
+    "phenyl-http-server": "~0.2.1",
+    "phenyl-interfaces": "~0.2.1",
+    "phenyl-memory-db": "~0.2.1",
+    "phenyl-redux": "~0.3.1",
+    "phenyl-rest-api": "~0.3.1",
+    "phenyl-standards": "~0.2.1",
     "redux": "^3.7.2"
   },
   "author": "",
