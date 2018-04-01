@@ -98,8 +98,10 @@ class CLI {
     }
   }
 
-  build() {
-    for (const phenylModule of this.graph.phenylModules) {
+  build(...moduleNames: Array<string>) {
+    const moduleNamesToBuild = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
+    for (const moduleName of moduleNamesToBuild) {
+      const phenylModule = this.graph.getModule(moduleName)
       const iter = phenylModule.buildCommands()
       let iterResult = iter.next()
       while (!iterResult.done) {
@@ -157,19 +159,24 @@ function main(argv) {
   const cli = new CLI()
   const [ subcommand ] = argv
   switch(subcommand) {
-    case 'build':
-      cli.build()
+    case 'build': {
+      const moduleNames = argv.slice(1)
+      cli.build(...moduleNames)
       break
-    case 'load':
+    }
+    case 'load': {
       cli.load()
       break
-    case 'test':
+    }
+    case 'test': {
       cli.test()
       break
-    case 'clean':
+    }
+    case 'clean': {
       cli.clean()
       break
-    case 'bump':
+    }
+    case 'bump': {
       const bumpTypesByModuleName = argv.slice(1)
         .map(moduleNameBump => moduleNameBump.split(':'))
         .reduce((acc, [modName, bumpType]) => {
@@ -178,12 +185,15 @@ function main(argv) {
         }, {})
       cli.bump(bumpTypesByModuleName)
       break
-    case 'publish':
+    }
+    case 'publish': {
       const moduleNames = argv.slice(1)
       cli.publish(...moduleNames)
       break
-    default:
+    }
+    default: {
       throw new Error(`unknown subcommand: ${subcommand}`)
+    }
   }
 }
 

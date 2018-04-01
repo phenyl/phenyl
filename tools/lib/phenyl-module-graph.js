@@ -38,6 +38,10 @@ export default class PhenylModuleGraph {
     return this.moduleNames.map(name => this.modulesByName[name])
   }
 
+  getModule(moduleName: string): PhenylModule {
+    return this.modulesByName[moduleName]
+  }
+
   getBumpedVersions(modulesToBump: BumpTypesByModuleName): VersionsByModuleName {
     const moduleNamesToBump = Object.keys(modulesToBump)
     const newVersions = moduleNamesToBump.reduce((acc, name) => {
