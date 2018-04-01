@@ -145,8 +145,8 @@ class CLI {
       let iterResult = iter.next()
       while (!iterResult.done) {
         const shellCommand = iterResult.value
-        runCommand(shellCommand)
-        iterResult = iter.next()
+        const shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
       }
       console.log(chalk.green(`[${phenylModule.name}] ✓ publish done.\n`))
     }
