@@ -7,7 +7,7 @@ import encodeResponse from './encode-response.js'
 import {
   createServerError,
   PhenylRestApiDirectClient,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   RestApiClient,

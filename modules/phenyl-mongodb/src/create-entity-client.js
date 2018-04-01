@@ -1,9 +1,9 @@
 // @flow
 import type { EntityMap } from 'phenyl-interfaces'
-import { PhenylEntityClient } from 'phenyl-central-state'
+import { PhenylEntityClient } from 'phenyl-central-state/jsnext'
 import { PhenylMongoDbClient } from './mongodb-client.js'
 import type { MongoDbConnection } from './connection.js'
-import type { PhenylEntityClientOptions } from 'phenyl-central-state'
+import type { PhenylEntityClientOptions } from 'phenyl-central-state/jsnext'
 
 export function createEntityClient<M: EntityMap>(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}): PhenylMongoDbEntityClient<M> {
   return new PhenylMongoDbEntityClient(conn, options)

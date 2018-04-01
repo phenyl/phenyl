@@ -2,12 +2,12 @@
 import {
   encodeRequest,
   decodeResponse,
-} from 'phenyl-http-rules'
+} from 'phenyl-http-rules/jsnext'
 
 import {
   PhenylRestApiClient,
   createLocalError,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   RequestData,
@@ -18,7 +18,7 @@ import type {
   TypeMap,
 } from 'phenyl-interfaces'
 
-  import fetch from './fetch.js'
+import fetch from './fetch.js'
 
 /**
  * Client to access to PhenylRestApi on server.

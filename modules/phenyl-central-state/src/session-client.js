@@ -1,7 +1,7 @@
 // @flow
 import {
   timeStampWithRandomString
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   Id,

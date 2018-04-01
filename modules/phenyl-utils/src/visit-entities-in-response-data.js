@@ -1,7 +1,7 @@
 // @flow
 import {
   assign
-} from 'power-assign'
+} from 'power-assign/jsnext'
 
 import type {
   Entity,

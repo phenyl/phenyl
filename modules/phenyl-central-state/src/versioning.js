@@ -2,11 +2,11 @@
 import {
   normalizeUpdateOperation,
   mergeUpdateOperations,
-} from 'oad-utils'
+} from 'oad-utils/jsnext'
 
 import {
   timeStampWithRandomString
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   Entity,

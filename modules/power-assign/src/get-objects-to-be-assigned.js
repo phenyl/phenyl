@@ -4,7 +4,7 @@ import type {
   DocumentPath,
   Restorable,
 } from 'mongolike-operations'
-import { parseDocumentPath } from 'oad-utils'
+import { parseDocumentPath } from 'oad-utils/jsnext'
 
 export function getObjectsToBeAssigned(obj: Restorable, docPath: DocumentPath): Array<Restorable> {
   const ret = [obj]

@@ -16,8 +16,10 @@ npm install oad-utils
 ```
 
 ## Using types with flow
+For [Flow](https://flowtype.org) annotations, just use `/jsnext` entrypoint.
+
 ```js
-import { hasOwnNestedProperty, visitFindOperation } from 'oad-utils'
+import { hasOwnNestedProperty, visitFindOperation } from 'oad-utils/jsnext'
 ```
 
 All the interfaces are defined in the depending module [mongolike-operations](https://github.com/phenyl-js/phenyl/tree/master/modules/mongolike-operations).

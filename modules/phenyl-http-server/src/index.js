@@ -4,7 +4,7 @@
 import url from 'url'
 import {
   ServerLogic,
-} from 'phenyl-http-rules'
+} from 'phenyl-http-rules/jsnext'
 
 import type {
   IncomingMessage,

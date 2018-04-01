@@ -1,7 +1,7 @@
 // @flow
 import {
   normalizeUpdateOperation,
-} from 'oad-utils'
+} from 'oad-utils/jsnext'
 
 import type {
   RegularUpdateOperation,
