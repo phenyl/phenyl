@@ -2,13 +2,15 @@
 import {
   assertValidRequestData,
   createServerError,
-} from 'phenyl-utils/jsnext'
+  PhenylRestApiDirectClient
+} from 'phenyl-utils'
 
 import {
   passThroughHandler,
   noOperationHandler,
   noHandler,
-  simpleExecutionWrapper
+  simpleExecutionWrapper,
+  simpleNormalizationHandler,
 } from './default-handlers.js'
 
 import {
@@ -23,6 +25,8 @@ import type {
   RequestData,
   ResponseData,
   FunctionalGroup,
+  NormalizedFunctionalGroup,
+  RequestNormalizationHandler,
   EntityClient,
   SessionClient,
   RestApiHandler,
@@ -38,12 +42,15 @@ import type {
   LogoutCommand,
   LogoutCommandResult,
   VersionDiffPublisher,
+  TypeMap,
+  EntityMapOf,
 } from 'phenyl-interfaces'
 
-export type PhenylRestApiParams = {
-  client: EntityClient,
+export type PhenylRestApiParams<TM: TypeMap = TypeMap> = {
+  client: EntityClient<EntityMapOf<TM>>,
   sessionClient?: SessionClient,
   authorizationHandler?: AuthorizationHandler,
+  normalizationHandler?: RequestNormalizationHandler,
   validationHandler?: ValidationHandler,
   customQueryHandler?: CustomQueryHandler,
   customCommandHandler?: CustomCommandHandler,
@@ -55,10 +62,11 @@ export type PhenylRestApiParams = {
 /**
  *
  */
-export class PhenylRestApi implements RestApiHandler {
-  client: EntityClient
+export class PhenylRestApi<TM: TypeMap = TypeMap> implements RestApiHandler {
+  client: EntityClient<EntityMapOf<TM>>
   sessionClient: SessionClient
   authorizationHandler: AuthorizationHandler
+  normalizationHandler: RequestNormalizationHandler
   validationHandler: ValidationHandler
   customQueryHandler: CustomQueryHandler
   customCommandHandler: CustomCommandHandler
@@ -66,10 +74,11 @@ export class PhenylRestApi implements RestApiHandler {
   executionWrapper: ExecutionWrapper
   versionDiffPublisher: ?VersionDiffPublisher
 
-  constructor(params: PhenylRestApiParams) {
+  constructor(params: PhenylRestApiParams<TM>) {
     this.client = params.client
     this.sessionClient = params.sessionClient || this.createSessionClient()
     this.authorizationHandler = params.authorizationHandler || passThroughHandler
+    this.normalizationHandler = params.normalizationHandler || simpleNormalizationHandler
     this.validationHandler = params.validationHandler || noOperationHandler
     this.customQueryHandler = params.customQueryHandler || noHandler
     this.customCommandHandler = params.customCommandHandler || noHandler
@@ -87,8 +96,8 @@ export class PhenylRestApi implements RestApiHandler {
    *     customQueries: {}, customCommands: {}, users: {}, nonUsers: {}
    *   }, { client: new PhenylMemoryClient() })
    */
-  static createFromFunctionalGroup(fg: FunctionalGroup, params: PhenylRestApiParams): PhenylRestApi {
-    const fgParams = createParamsByFunctionalGroup(fg)
+  static createFromFunctionalGroup<T: TypeMap>(fg: FunctionalGroup, params: PhenylRestApiParams<T>): PhenylRestApi<T> {
+    const fgParams = createParamsByFunctionalGroup(normalizeFunctionalGroup(fg))
     const newParams = Object.assign({}, params, fgParams)
     return new PhenylRestApi(newParams)
   }
@@ -110,26 +119,35 @@ export class PhenylRestApi implements RestApiHandler {
         return { type: 'error', payload: createServerError('Authorization Required.', 'Unauthorized') }
       }
 
-      // 3. Validation
+      const normalizedReqData = await this.normalizationHandler(reqData, session)
+
+      // 4. Validation
       try {
-        await this.validationHandler(reqData, session)
+        await this.validationHandler(normalizedReqData, session)
       }
       catch (validationError) {
         validationError.message = `Validation Failed. ${validationError.mesage}`
         return { type: 'error', payload: createServerError(validationError, 'BadRequest') }
       }
 
-      // 4. Execution
-      const resData = await this.executionWrapper(reqData, session, this.execute.bind(this))
+      // 5. Execution
+      const resData = await this.executionWrapper(normalizedReqData, session, this.execute.bind(this))
 
       // 5. Publish VersionDiff (Side-Effect)
-      this.publishVersionDiff(reqData, resData)
+      this.publishVersionDiff(normalizedReqData, resData)
 
       return resData
     }
     catch (e) {
       return { type: 'error', payload: createServerError(e) }
     }
+  }
+
+  /**
+   * @public
+   */
+  createDirectClient(): PhenylRestApiDirectClient<TM> {
+    return new PhenylRestApiDirectClient(this)
   }
 
   /**
@@ -203,12 +221,13 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * create Session
    */
-  async login(loginCommand: LoginCommand, session: ?Session): Promise<LoginCommandResult> {
+  async login(loginCommand: LoginCommand<>, session: ?Session): Promise<LoginCommandResult<>> {
     const result = await this.authenticationHandler(loginCommand, session)
     const newSession = await this.sessionClient.create(result.preSession)
     return {
       ok: 1,
       user: result.user,
+      versionId: result.versionId,
       session: newSession
     }
   }
@@ -228,7 +247,7 @@ export class PhenylRestApi implements RestApiHandler {
   /**
    * delete Session by sessionId if exists.
    */
-  async logout(logoutCommand: LogoutCommand, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
+  async logout(logoutCommand: LogoutCommand<>, session: ?Session): Promise<LogoutCommandResult> { // eslint-disable-line no-unused-vars
     const { sessionId } = logoutCommand
     const result = await this.sessionClient.delete(sessionId)
     // sessionId not found
@@ -249,4 +268,13 @@ export class PhenylRestApi implements RestApiHandler {
       throw new Error('"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.')
     }
   }
+}
+
+function normalizeFunctionalGroup(fg: FunctionalGroup): NormalizedFunctionalGroup {
+  return Object.assign({
+    users: {},
+    nonUsers: {},
+    customQueries: {},
+    customCommands: {}
+  }, fg)
 }

@@ -1,90 +1,70 @@
+// @flow
 /* eslint-env node */
 /* eslint-disable no-console */
 
-import pth from 'path'
-import shell from 'shelljs'
+import { join, dirname as dir } from 'path'
+import { run as runCommand } from './lib/shell.js'
 import chalk from 'chalk'
 import fs from 'fs'
 import PhenylModuleGraph from './lib/phenyl-module-graph.js'
-import type { PackageJSONsByName } from './lib/phenyl-module-graph.js'
-import type { BumpType } from './lib/phenyl-module-graph'
+import type { PackageJSONsByPath, BumpTypesByModuleName } from './lib/phenyl-module-graph.js'
 
-const rootPath = pth.dirname(__dirname)
+const rootPath = dir(__dirname)
 
 class CLI {
+  graph: PhenylModuleGraph
+
+  static loadPackageJsons(path: string): PackageJSONsByPath {
+    return fs.readdirSync(path)
+      .filter(moduleName => fs.statSync(join(path, moduleName)).isDirectory())
+      .reduce((acc, moduleName) => {
+        const modulePath = join(path, moduleName)
+        // $FlowIssue(dynamic-require-json)
+        acc[modulePath] = require(join(modulePath, 'package.json'))
+        return acc
+      }, {})
+  }
+
   constructor() {
-    const rootPackageJson = require(rootPath + '/package.json')
-    const packageJsonsByName = loadPackageJsons(rootPath + '/modules')
-    const examplePackageJsonsByName = loadPackageJsons(rootPath + '/examples')
-    this.graph = new PhenylModuleGraph(rootPath, rootPackageJson, packageJsonsByName, examplePackageJsonsByName)
-  }
-
-  bump(moduleName: string, bumpType: BumpType) {
-    const phenylModulesByName = this.graph.bumpVersion(moduleName, bumpType)
-    Object.keys(phenylModulesByName).forEach(name => {
-      const phenylModule = phenylModulesByName[name]
-      const pathToModule = __dirname + `/../modules/${name}`
-      const packagejson = JSON.parse(fs.readFileSync(pathToModule + '/package.json', 'utf-8'))
-      const oldVersion = packagejson.version
-      const newVersion = phenylModule.version
-      packagejson.version = newVersion
-      fs.writeFileSync(pathToModule + '/package.json', JSON.stringify(packagejson, null, '  '), 'utf-8')
-    })
-  }
-
-  createGitTag(moduleName, version) {
-    return `${moduleName}-v${version}`
-  }
-
-  commitAndTag(oldVersion: string, newVersion: string, moduleName: string, pathToModule: string) {
-    shell.exec(`git commit -am ':bookmark: Release ${moduleName}'`)
-    shell.exec('git push origin master')
-    const oldTag = this.createGitTag(moduleName, oldVersion)
-    const newTag = this.createGitTag(moduleName, newVersion)
-
-    const releaseNote = shell.exec(`git log --oneline --no-merges ${oldTag}...master ${pathToModule}`).stdout
-    shell.exec(`git tag -a ${newTag} -m ${releaseNote}`)
-    shell.exec(`git push origin ${newTag}`)
-  }
-
-  publish(tag: string) {
-    shell.exec(`npm publish --tag ${tag}`)
+    // $FlowIssue(dynamic-require-json)
+    const rootPackageJson = require(join(rootPath, 'package.json'))
+    const packageJsonsByName = Object.assign(
+      this.constructor.loadPackageJsons(join(rootPath, 'modules')),
+      this.constructor.loadPackageJsons(join(rootPath, 'examples'))
+    )
+    this.graph = new PhenylModuleGraph(rootPath, rootPackageJson, packageJsonsByName)
   }
 
   clean() {
-    this.graph.phenylModules.forEach(phenylModule => {
-      const { name, modulePath } = phenylModule
-      console.log(chalk.cyan(`\n[${name}] start clean`))
-      shell.rm('-rf', `${modulePath}/node_modules`, `${modulePath}/dist`, `${modulePath}/package-lock.json`)
-      console.log(chalk.green(`[${name}] ✓ clean done`))
-    })
-
-    this.graph.exampleModules.forEach(exampleModule => {
-      const { name, modulePath } = exampleModule
-      console.log(chalk.cyan(`\n[${name}] start clean`))
-      shell.rm('-rf', `${modulePath}/node_modules`, `${modulePath}/dist`, `${modulePath}/package-lock.json`)
-      console.log(chalk.green(`[${name}] ✓ clean done`))
-    })
+    for (const phenylModule of this.graph.phenylModules) {
+      console.log(chalk.cyan(`\n[${phenylModule.name}] clean start.`))
+      const shellCommand = phenylModule.cleanCommand()
+      runCommand(shellCommand)
+      console.log(chalk.green(`[${phenylModule.name}] ✓ clean done.`))
+    }
   }
 
   test() {
     const failedModules = []
 
-    this.graph.phenylModules.forEach(phenylModule => {
-      const { name, modulePath, scripts } = phenylModule
-      console.log(chalk.cyan(`\n[${name}] start test`))
+    for (const phenylModule of this.graph.phenylModules) {
+      console.log(chalk.cyan(`\n[${phenylModule.name}] test start.`))
 
-      if (scripts && Object.keys(scripts).includes('test')) {
-        shell.cd(modulePath)
-        if (shell.exec('npm test --color always').code !== 0) {
-          failedModules.push(name)
+      if (phenylModule.hasTest) {
+        const iter = phenylModule.testCommands(this.graph)
+        let shellResult, iterResult = iter.next()
+        while (!iterResult.done) {
+          const shellCommand = iterResult.value
+          shellResult = runCommand(shellCommand)
+          iterResult = iter.next(shellResult)
         }
-        shell.cd(rootPath)
+        const succeeded = iterResult.value
+        if (!succeeded) { failedModules.push(phenylModule.name) }
       }
       else {
-        shell.echo(`no test specified in ${name}`)
+        console.log(`No test specified in "${phenylModule.name}".`)
       }
-    })
+    }
 
     console.log(
       chalk.cyan('-------------------\n') +
@@ -105,92 +85,106 @@ class CLI {
   }
 
   load() {
-    this.graph.phenylModules.forEach(installSubModules)
-    this.graph.exampleModules.forEach(installSubModules)
+    for (const phenylModule of this.graph.phenylModules) {
+      console.log(chalk.cyan(`[${phenylModule.name}] start install.`))
+      const iter = phenylModule.installCommands(this.graph)
+      let shellResult, iterResult = iter.next()
+      while (!iterResult.done) {
+        const shellCommand = iterResult.value
+        shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
+      }
+      console.log(chalk.green(`[${phenylModule.name}] ✓ install done.\n`))
+    }
   }
 
   build() {
-    this.graph.phenylModules.forEach(phenylModule => {
-      const { modulePath } = phenylModule
-      shell.exec(`BABEL_ENV=build babel ${modulePath}/src -d ${modulePath}/dist`)
-    })
+    for (const phenylModule of this.graph.phenylModules) {
+      const iter = phenylModule.buildCommands()
+      let iterResult = iter.next()
+      while (!iterResult.done) {
+        const shellCommand = iterResult.value
+        const shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
+      }
+    }
+  }
+
+  bump(bumpTypesByModuleName: BumpTypesByModuleName) {
+    const versions = this.graph.getBumpedVersions(bumpTypesByModuleName)
+    for (const phenylModule of this.graph.phenylModules) {
+      const change = phenylModule.bump(versions)
+      if (change) {
+        // $FlowIssue(dynamic-require-json)
+        const packageJson = Object.assign(require(phenylModule.packageJsonPath), change)
+        fs.writeFileSync(phenylModule.packageJsonPath, JSON.stringify(packageJson, null, 2))
+      }
+    }
+    const versionsForPrint = Object.keys(versions).map(name => `\t${name}: ${versions[name]}`).join('\n')
+    console.log(`git commit -am "update versions: \n${versionsForPrint}"`)
+
+    const modulesToPublish = this.graph.phenylModules
+      .filter(phenylModule => phenylModule.isLib && versions[phenylModule.name])
+      .map(phenylModule => phenylModule.name)
+
+    console.log(`npm run publish -- ${modulesToPublish.join(' ')}"`)
+  }
+
+  publish(...moduleNames: Array<string>) {
+    const { stdout } = runCommand({ type: 'exec', args: ['npm whoami'] })
+    if (stdout.trim() !== 'phenyl') {
+      console.error('npm user must be "phenyl" to publish. Check your .npmrc')
+      return
+    }
+
+    for (const phenylModule of this.graph.phenylModules) {
+      if (!moduleNames.includes(phenylModule.name)) { continue }
+
+      console.log(chalk.cyan(`[${phenylModule.name}] start publishing.`))
+      const iter = phenylModule.publishCommands(this.graph)
+      let iterResult = iter.next()
+      while (!iterResult.done) {
+        const shellCommand = iterResult.value
+        const shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
+      }
+      console.log(chalk.green(`[${phenylModule.name}] ✓ publish done.\n`))
+    }
   }
 }
 
-
-const cli = new CLI()
-
-const command = process.argv[2]
-const moduleName = process.argv[3]
-
-switch(command) {
-  case 'build':
-    cli.build()
-    break
-  case 'load':
-    cli.load()
-    break
-  case 'test':
-    cli.test()
-    break
-  case 'clean':
-    cli.clean()
-    break
-  case 'bump:major':
-    if (!moduleName) throw new Error('specify moduleName to bump version')
-    cli.bump(moduleName, 'major')
-    break
-  case 'bump:minor':
-    if (!moduleName) throw new Error('specify moduleName to bump version')
-    cli.bump(moduleName, 'minor')
-    break
-  case 'bump:patch':
-    if (!moduleName) throw new Error('specify moduleName to bump version')
-    cli.bump(moduleName, 'patch')
-    break
-  default:
-    throw new Error(`unknown command: ${command}`)
+function main(argv) {
+  const cli = new CLI()
+  const [ subcommand ] = argv
+  switch(subcommand) {
+    case 'build':
+      cli.build()
+      break
+    case 'load':
+      cli.load()
+      break
+    case 'test':
+      cli.test()
+      break
+    case 'clean':
+      cli.clean()
+      break
+    case 'bump':
+      const bumpTypesByModuleName = argv.slice(1)
+        .map(moduleNameBump => moduleNameBump.split(':'))
+        .reduce((acc, [modName, bumpType]) => {
+          acc[modName] = bumpType || 'patch'
+          return acc
+        }, {})
+      cli.bump(bumpTypesByModuleName)
+      break
+    case 'publish':
+      const moduleNames = argv.slice(1)
+      cli.publish(...moduleNames)
+      break
+    default:
+      throw new Error(`unknown subcommand: ${subcommand}`)
+  }
 }
 
-function loadPackageJsons(path: string): PackageJSONsByName {
-  const moduleNames = fs.readdirSync(path).filter(moduleName => fs.statSync(path + '/' + moduleName).isDirectory())
-  const packageJsonsByName = {}
-  moduleNames.forEach(moduleName => {
-    // $FlowIssue(load-package.json)
-    packageJsonsByName[moduleName] = require(`${path}/${moduleName}/package.json`)
-  })
-  return packageJsonsByName
-}
-
-function installSubModules(phenylModule) {
-  const { name, modulePath } = phenylModule
-  console.log(chalk.cyan(`[${name}] start install.`))
-
-  const { dependingModuleNames, commonModuleNames } = phenylModule
-  dependingModuleNames.forEach(dependingModuleName => {
-    const dependingModulePath = `${rootPath}/modules/${dependingModuleName}`
-    const relative = pth.relative(modulePath + '/node_modules', dependingModulePath)
-
-    shell.mkdir('-p', `${modulePath}/node_modules`)
-    shell.cd(`${modulePath}/node_modules`)
-    shell.ln('-sf', relative, `${dependingModuleName}`)
-    shell.cd(rootPath)
-  })
-
-  commonModuleNames.forEach(commonModuleName => {
-    shell.mkdir('-p', `${modulePath}/node_modules`)
-    shell.cd(`${modulePath}/node_modules`)
-    shell.ln('-sf', `../../../node_modules/${commonModuleName}`, `${commonModuleName}`)
-    shell.cd(rootPath)
-  })
-
-  shell.mkdir('-p', `${modulePath}/node_modules/.bin`)
-  shell.cd(`${modulePath}/node_modules/.bin`)
-  shell.ln('-sf', '../../../../node_modules/.bin/kocha', 'kocha')
-
-  shell.cd(modulePath)
-  shell.exec('npm install --color always --loglevel=error')
-  shell.rm('-f', `${modulePath}/package-lock.json`)
-  shell.cd(rootPath)
-  console.log(chalk.green(`[${name}] ✓ install done.\n`))
-}
+main(process.argv.slice(2))

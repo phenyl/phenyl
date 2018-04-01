@@ -57,6 +57,9 @@ type WebSocketOptions = {
   ca?: string | Array<string> | Buffer | Array<Buffer>,
 }
 
+type MessageEventHandler = (event: MessageEvent) => mixed
+type MessageEventListener = {handleEvent: MessageEventHandler} | MessageEventHandler
+
 declare class WebSocket extends EventTarget {
   static Server: Class<WebSocketServer>,
   static CONNECTING: 0,

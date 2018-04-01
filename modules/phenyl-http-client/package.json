@@ -1,27 +1,35 @@
 {
   "name": "phenyl-http-client",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "phenyl-http-server": "~0.1.0",
-    "phenyl-interfaces": "~0.1.0",
-    "phenyl-memory-db": "~0.1.0",
-    "phenyl-rest-api": "~0.1.0",
+    "phenyl-http-server": "~0.2.1",
+    "phenyl-memory-db": "~0.2.1",
+    "phenyl-rest-api": "~0.3.1",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-http-client",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client",
   "license": "Apache License 2.0",
   "dependencies": {
     "fetch-ponyfill": "^4.1.0",
-    "phenyl-http-rules": "~0.1.0",
-    "phenyl-utils": "~0.1.0"
+    "phenyl-interfaces": "~0.2.1",
+    "phenyl-http-rules": "~0.2.1",
+    "phenyl-utils": "~0.2.1"
   }
 }

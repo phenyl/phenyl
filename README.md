@@ -24,26 +24,26 @@ TBD
 
 # Phenyl Family
 ## ServerSide Libraries
-- [phenyl-http-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-server): HTTP Server.
-- [phenyl-rest-api](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-rest-api):
-- [phenyl-websocket-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-server):
-- [phenyl-mongodb](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb):
-- [phenyl-dynamodb-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-dynamodb-client):
-- [phenyl-lambda-adapter](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-lambda-adapter):
-- [phenyl-memory-db](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-db):
+- [phenyl-rest-api](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-rest-api): REST API logic. Core part of Phenyl.
+- [phenyl-http-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-server): Simple HTTP Server to host PhenylRestApi.
+- [phenyl-express](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-express): Express middleware to run PhenylRestApi on it.
+- [phenyl-websocket-server](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-server): WebSocket server to emit update operations of entities.
+- [phenyl-mongodb](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb): MongoDB client.
+- [phenyl-lambda-adapter](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-lambda-adapter): Helper to run PhenylRestApi on AWS Lambda.
+- [phenyl-memory-db](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-memory-db): volatile memory DB for local mocking.
 
 ## ClientSide Libraries
-- [phenyl-http-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client):
-- [phenyl-redux](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux):
-- [phenyl-websocket-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-client):
+- [phenyl-http-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client): Client to PhenylRestApi.
+- [phenyl-redux](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux): State synchronization among Phenyl CentralState(server) and LocalState(client) using Redux.
+- [phenyl-websocket-client](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-client): WebSocket client to listen to entities's update.
 
 ## Common Libraries
-- [phenyl-interfaces](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-interfaces):
-- [phenyl-utils](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-utils):
-- [phenyl-state](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-state):
-- [phenyl-standards](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-standards):
-- [phenyl-http-rules](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-):
-- [power-crypt](https://github.com/phenyl-js/phenyl/tree/master/modules/power-crypt):
+- [phenyl-interfaces](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-interfaces): All types of Phenyl family are defined here.
+- [phenyl-standards](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-standards): Provides advanced features.
+- [phenyl-utils](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-utils): (Almost internal) Utility functions in Phenyl family.
+- [phenyl-state](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-state): (Almost internal) Entity state Reader/Writer.
+- [phenyl-http-rules](https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-rules): (Almost internal) Translate HTTP Request/Response into Phenyl RequestData/ResponseData.
+- [power-crypt](https://github.com/phenyl-js/phenyl/tree/master/modules/power-crypt): (Almost internal) Encrypt string.
 
 ### OAD Libraries
 - [power-assign](https://github.com/phenyl-js/phenyl/tree/master/modules/power-assign): Empowered Object.assign().
@@ -56,9 +56,9 @@ TBD
 ## ServerSide
 ```js
 // @flow
-import PhenylHttpServer from 'phenyl-http-server/jsnext'
-import PhenylRestApi from 'phenyl-rest-api/jsnext'
-import { connect, createEntityClient } from 'phenyl-mongodb/jsnext'
+import PhenylHttpServer from 'phenyl-http-server'
+import PhenylRestApi from 'phenyl-rest-api'
+import { connect, createEntityClient } from 'phenyl-mongodb'
 
 const connection = await connect('mongodb://localhost:12345')
 

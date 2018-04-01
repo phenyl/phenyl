@@ -64,114 +64,114 @@ export type RequestData =
 
 export type FindRequestData = {|
   method: 'find',
-  +payload: WhereQuery,
+  +payload: WhereQuery<>,
   sessionId?: ?Id,
 |}
 
 export type FindOneRequestData = {|
   method: 'findOne',
-  +payload: WhereQuery,
+  +payload: WhereQuery<>,
   sessionId?: ?Id,
 |}
 
 export type GetRequestData = {|
   method: 'get',
-  +payload: IdQuery,
+  +payload: IdQuery<>,
   sessionId?: ?Id,
 |}
 
 export type GetByIdsRequestData = {|
   method: 'getByIds',
-  +payload: IdsQuery,
+  +payload: IdsQuery<>,
   sessionId?: ?Id,
 |}
 
 export type PullRequestData = {|
   method: 'pull',
-  +payload: PullQuery,
+  +payload: PullQuery<>,
   sessionId?: ?Id,
 |}
 
 export type InsertOneRequestData = {|
   method: 'insertOne',
-  +payload: SingleInsertCommand,
+  +payload: SingleInsertCommand<>,
   sessionId?: ?Id,
 |}
 
 export type InsertMultiRequestData = {|
   method: 'insertMulti',
-  +payload: MultiInsertCommand,
+  +payload: MultiInsertCommand<>,
   sessionId?: ?Id,
 |}
 
 export type InsertAndGetRequestData = {|
   method: 'insertAndGet',
-  +payload: SingleInsertCommand,
+  +payload: SingleInsertCommand<>,
   sessionId?: ?Id,
 |}
 
 export type InsertAndGetMultiRequestData = {|
   method: 'insertAndGetMulti',
-  +payload: MultiInsertCommand,
+  +payload: MultiInsertCommand<>,
   sessionId?: ?Id,
 |}
 
 export type UpdateOneRequestData = {|
   method: 'updateById',
-  +payload: IdUpdateCommand,
+  +payload: IdUpdateCommand<>,
   sessionId?: ?Id,
 |}
 
 export type UpdateMultiRequestData = {|
   method: 'updateMulti',
-  +payload: MultiUpdateCommand,
+  +payload: MultiUpdateCommand<>,
   sessionId?: ?Id,
 |}
 
 export type UpdateAndGetRequestData = {|
   method: 'updateAndGet',
-  +payload: IdUpdateCommand,
+  +payload: IdUpdateCommand<>,
   sessionId?: ?Id,
 |}
 
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
-  +payload: MultiUpdateCommand,
+  +payload: MultiUpdateCommand<>,
   sessionId?: ?Id,
 |}
 
 export type PushRequestData = {|
   method: 'push',
-  +payload: PushCommand,
+  +payload: PushCommand<>,
   sessionId?: ?Id,
 |}
 
 export type DeleteRequestData = {|
   method: 'delete',
-  +payload: DeleteCommand,
+  +payload: DeleteCommand<>,
   sessionId?: ?Id,
 |}
 
 export type RunCustomQueryRequestData = {|
   method: 'runCustomQuery',
-  +payload: CustomQuery,
+  +payload: CustomQuery<>,
   sessionId?: ?Id,
 |}
 
 export type RunCustomCommandRequestData = {|
   method: 'runCustomCommand',
-  +payload: CustomCommand,
+  +payload: CustomCommand<>,
   sessionId?: ?Id,
 |}
 
 export type LoginRequestData = {|
   method: 'login',
-  +payload: LoginCommand,
+  +payload: LoginCommand<>,
   sessionId?: ?Id,
 |}
 
 export type LogoutRequestData = {|
   method: 'logout',
-  +payload: LogoutCommand,
+  +payload: LogoutCommand<>,
   sessionId?: ?Id,
 |}

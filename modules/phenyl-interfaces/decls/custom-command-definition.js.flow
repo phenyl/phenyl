@@ -7,11 +7,19 @@ import type {
 import type {
   CustomCommandResult,
 } from './command-result.js.flow'
+import type {
+  CustomParams,
+  CustomResult,
+  CustomSetting,
+  CustomCommandMap,
+} from './type-map.js.flow'
 
-export interface CustomCommandDefinition {
-  authorization(command: CustomCommand, session: ?Session): Promise<boolean>,
-  validation(command: CustomCommand, session: ?Session): Promise<void>,
-  execution(command: CustomCommand, session: ?Session): Promise<CustomCommandResult>,
+export interface CustomCommandDefinition<N: string, P: Object, R: Object> {
+  authorization(command: CustomCommand<N, P>, session: ?Session): Promise<boolean>,
+  +normalization?: (command: CustomCommand<N, P>, session: ?Session) => Promise<CustomCommand<N, P>>,
+  validation(command: CustomCommand<N, P>, session: ?Session): Promise<void>,
+  execution(command: CustomCommand<N, P>, session: ?Session): Promise<CustomCommandResult<R>>,
 }
 
-export type CustomCommandDefinitions = { [name: string]: CustomCommandDefinition }
+export type CustomCommandDefinitions<CM: CustomCommandMap = CustomCommandMap> =
+  $ObjMap<CM, <T, N: $Keys<CM>>(T: CustomSetting) => CustomCommandDefinition<N, CustomParams<CM, T>, CustomResult<CM, T>>>

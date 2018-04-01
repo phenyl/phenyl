@@ -1,43 +1,167 @@
 // @flow
+import type {
+  UpdateOperation
+} from 'mongolike-operations'
+
+import type {
+  Id
+} from './id.js.flow'
 
 import type {
   Entity,
+  EntityName,
+  EntityInfo,
+  EntitiesInfo,
 } from './entity.js.flow'
 
 import type {
-  EntityState,
-} from './entity-state.js.flow'
+  Session,
+} from './session.js.flow'
 
 import type {
-  UpdateCommand,
-  DeleteCommand,
+  LocalState,
+} from './local-state.js.flow'
+
+import type {
+  VersionDiff,
+} from './versioning.js.flow'
+
+import type {
+  IdUpdateCommand,
+  IdDeleteCommand,
+  LoginCommand,
+  LogoutCommand,
 } from './command.js.flow'
 
-export type SetAction = {|
-  type: 'phenyl/set',
-  payload: EntityState,
+import type {
+  IdQuery,
+} from './query.js.flow'
+
+import type {
+  AuthCommandMap,
+  AuthCredentials,
+  AuthOptions,
+  EntityMap,
+} from './type-map.js.flow'
+
+export type ActionTag = string
+
+/**
+ *
+ */
+export type AssignAction = {|
+  type: 'phenyl/assign',
+  payload: Array<UpdateOperation>,
+  tag: ActionTag,
 |}
 
-export type RegisterAction = {|
-  type: 'phenyl/register',
-  payload: {|
-    entityName: string,
-    entities: Array<Entity>
-  |}
+/**
+ *
+ */
+export type ReplaceAction<M: EntityMap> = {|
+  type: 'phenyl/replace',
+  payload: LocalState<M>,
+  tag: ActionTag,
 |}
 
-export type UpdateAction = {|
-  type: 'phenyl/$update',
-  payload: UpdateCommand,
+/**
+ *
+ */
+export type ResetAction = {|
+  type: 'phenyl/reset',
+  payload?: Object,
+  tag: ActionTag,
 |}
 
-export type DeleteAction = {|
+export type CommitAndPushAction<N: EntityName> = {|
+  type: 'phenyl/commitAndPush',
+  payload: IdUpdateCommand<N>,
+  tag: ActionTag,
+|}
+
+export type DeleteAction<N: EntityName> = {|
   type: 'phenyl/delete',
-  payload: DeleteCommand,
+  payload: IdDeleteCommand<N>,
+  tag: ActionTag,
 |}
 
-export type PhenylAction =
-  SetAction |
-  RegisterAction |
-  UpdateAction |
-  DeleteAction
+export type FollowAction<N: EntityName, M: EntityMap> = {|
+  type: 'phenyl/follow',
+  payload: EntityInfo<N, $ElementType<M, N>>,
+  tag: ActionTag,
+|}
+
+export type FollowAllAction<N: EntityName, M: EntityMap> = {|
+  type: 'phenyl/followAll',
+  payload: EntitiesInfo<N, $ElementType<M, N>>,
+  tag: ActionTag,
+|}
+
+export type LoginAction<N: EntityName, AM: AuthCommandMap> = {|
+  type: 'phenyl/login',
+  payload: LoginCommand<N, AuthCredentials<AM, N>, AuthOptions<AM, N>>,
+  tag: ActionTag,
+|}
+
+export type LogoutAction<N: EntityName> = {|
+  type: 'phenyl/logout',
+  payload: LogoutCommand<N>,
+  tag: ActionTag,
+|}
+
+export type PatchAction = {|
+  type: 'phenyl/patch',
+  payload: VersionDiff,
+  tag: ActionTag,
+|}
+
+export type PullAction<N: EntityName> = {|
+  type: 'phenyl/pull',
+  payload: IdQuery<N>,
+  tag: ActionTag,
+|}
+
+export type PushAndCommitAction<N: EntityName> = {|
+  type: 'phenyl/pushAndCommit',
+  payload: IdUpdateCommand<N>,
+  tag: ActionTag,
+|}
+
+export type SetSessionAction = {|
+  type: 'phenyl/setSession',
+  payload: {
+    session: Session,
+    user?: ?Entity,
+    versionId?: Id,
+  },
+  tag: ActionTag,
+|}
+
+export type UnfollowAction<N: EntityName> = {|
+  type: 'phenyl/unfollow',
+  payload: IdQuery<N>,
+  tag: ActionTag,
+|}
+
+export type UnsetSessionAction = {|
+  type: 'phenyl/unsetSession',
+  payload?: Object,
+  tag: ActionTag,
+|}
+
+export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
+  AssignAction |
+  ReplaceAction<M> |
+  ResetAction |
+  CommitAndPushAction<$Keys<M>> |
+  DeleteAction<$Keys<M>> |
+  FollowAction<$Keys<M>, M> |
+  FollowAllAction<$Keys<M>, M> |
+  LoginAction<$Keys<M> & $Keys<AM>, AM> |
+  LogoutAction<$Keys<M> & $Keys<AM>> |
+  PatchAction |
+  PullAction<$Keys<M>> |
+  PushAndCommitAction<$Keys<M>> |
+  SetSessionAction |
+  UnfollowAction<$Keys<M>> |
+  UnsetSessionAction

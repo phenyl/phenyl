@@ -3,11 +3,11 @@ import fp from 'fetch-ponyfill'
 import {
   encodeRequest,
   decodeResponse,
-} from 'phenyl-http-rules/jsnext'
+} from 'phenyl-http-rules'
 import {
   PhenylRestApiClient,
   createLocalError,
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 const { fetch } = fp()
 
 import type {
@@ -16,6 +16,7 @@ import type {
   HttpClientParams,
   ClientPathModifier,
   QueryStringParams,
+  TypeMap,
 } from 'phenyl-interfaces'
 
 /**
@@ -38,7 +39,7 @@ import type {
  * AuthClient:
  *   login | logout
  */
-export default class PhenylHttpClient extends PhenylRestApiClient {
+export default class PhenylHttpClient<TM: TypeMap> extends PhenylRestApiClient<TM> {
   /**
    * Base URL without "/api".
    *  No slash at the last.
@@ -89,6 +90,14 @@ export default class PhenylHttpClient extends PhenylRestApiClient {
     }
 
     return decodeResponse(encodedResponse)
+  }
+  /**
+   * @public
+   * Access to Phenyl Server (CustomRequestHandler)
+   */
+  async requestText(path: string, params: ?Object): Promise<string> {
+    const result = await fetch(this.url + path, params)
+    return result.text()
   }
 }
 

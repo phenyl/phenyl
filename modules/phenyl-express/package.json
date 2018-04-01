@@ -1,0 +1,36 @@
+{
+  "name": "phenyl-express",
+  "version": "0.2.1",
+  "description": "Express middleware to use Phenyl in it.",
+  "main": "./dist/index.js",
+  "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "kocha --require babel-register test/*.js --color always"
+  },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "devDependencies": {
+    "babel-register": "^6.24.1",
+    "express": "^4.16.2",
+    "kocha": "^1.8.0",
+    "phenyl-http-client": "~0.2.1",
+    "phenyl-memory-db": "~0.2.1",
+    "phenyl-rest-api": "~0.3.1",
+    "power-assert": "^1.4.4"
+  },
+  "dependencies": {
+    "phenyl-http-rules": "~0.2.1",
+    "phenyl-interfaces": "~0.2.1",
+    "phenyl-utils": "~0.2.1",
+    "raw-body": "^2.3.2"
+  },
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-express",
+  "license": "Apache License 2.0"
+}

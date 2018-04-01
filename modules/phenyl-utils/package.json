@@ -1,24 +1,32 @@
 {
   "name": "phenyl-utils",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "directories": {
     "test": "./test/"
   },
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "phenyl-interfaces": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "oad-utils": "~0.1.0",
-    "power-assign": "~0.2.0"
+    "oad-utils": "~0.1.5",
+    "phenyl-interfaces": "~0.2.1",
+    "power-assign": "~0.2.6"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-utils",

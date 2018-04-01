@@ -58,7 +58,7 @@ describe('isRestorable', () => {
         age: number
         hasCar: ?boolean
         info: Object
-        constructor(params) {
+        constructor(params: Object) {
           this.name = params.name
           this.age = params.age
           this.hasCar = params.hasCar || null
@@ -84,7 +84,7 @@ describe('isRestorable', () => {
         age: number
         hasCar: ?boolean
         info: Object
-        constructor(params) {
+        constructor(params: Object) {
           this.name = params.name
           this.age = params.age
           this.hasCar = params.hasCar || null
@@ -173,7 +173,7 @@ describe('isRestorable', () => {
         createdAt: Date
         updatedAt: Date
         removedAt: ?Date
-        constructor(params) {
+        constructor(params: Object) {
           this.createdAt = new Date(params.createdAt)
           this.updatedAt = new Date(params.updatedAt)
           this.removedAt = params.removedAt == null ? null : new Date(params.removedAt)

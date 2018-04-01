@@ -48,27 +48,27 @@ export type ResponseData =
 
 export type FindResponseData = {|
   type: 'find',
-  +payload: QueryResult,
+  +payload: QueryResult<>,
 |}
 
 export type FindOneResponseData = {|
   type: 'findOne',
-  +payload: SingleQueryResult,
+  +payload: SingleQueryResult<>,
 |}
 
 export type GetResponseData = {|
   type: 'get',
-  +payload: SingleQueryResult,
+  +payload: SingleQueryResult<>,
 |}
 
 export type GetByIdsResponseData = {|
   type: 'getByIds',
-  +payload: QueryResult,
+  +payload: QueryResult<>,
 |}
 
 export type PullResponseData = {|
   type: 'pull',
-  +payload: PullQueryResult,
+  +payload: PullQueryResult<>,
 |}
 
 export type InsertOneResponseData = {|
@@ -83,12 +83,12 @@ export type InsertMultiResponseData = {|
 
 export type InsertAndGetResponseData = {|
   type: 'insertAndGet',
-  +payload: GetCommandResult,
+  +payload: GetCommandResult<>,
 |}
 
 export type InsertAndGetMultiResponseData = {|
   type: 'insertAndGetMulti',
-  +payload: MultiValuesCommandResult,
+  +payload: MultiValuesCommandResult<>,
 |}
 
 export type UpdateOneResponseData = {|
@@ -98,22 +98,22 @@ export type UpdateOneResponseData = {|
 
 export type UpdateMultiResponseData = {|
   type: 'updateMulti',
-  +payload: MultiUpdateCommandResult,
+  +payload: MultiUpdateCommandResult<>,
 |}
 
 export type UpdateAndGetResponseData = {|
   type: 'updateAndGet',
-  +payload: GetCommandResult,
+  +payload: GetCommandResult<>,
 |}
 
 export type UpdateAndFetchResponseData = {|
   type: 'updateAndFetch',
-  +payload: MultiValuesCommandResult,
+  +payload: MultiValuesCommandResult<>,
 |}
 
 export type PushResponseData = {|
   type: 'push',
-  +payload: PushCommandResult,
+  +payload: PushCommandResult<>,
 |}
 
 export type DeleteResponseData = {|
@@ -123,17 +123,17 @@ export type DeleteResponseData = {|
 
 export type RunCustomQueryResponseData = {|
   type: 'runCustomQuery',
-  +payload: CustomQueryResult,
+  +payload: CustomQueryResult<>,
 |}
 
 export type RunCustomCommandResponseData = {|
   type: 'runCustomCommand',
-  +payload: CustomCommandResult,
+  +payload: CustomCommandResult<>,
 |}
 
 export type LoginResponseData = {|
   type: 'login',
-  +payload: LoginCommandResult,
+  +payload: LoginCommandResult<>,
 |}
 
 export type LogoutResponseData = {|

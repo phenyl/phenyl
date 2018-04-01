@@ -19,6 +19,6 @@ export {
   mergeUpdateOperations as mergeOperations,
   updateOperationToJSON as toJSON,
   normalizeUpdateOperation as normalizeOperation,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 
 export default PowerAssign

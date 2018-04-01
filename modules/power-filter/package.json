@@ -1,21 +1,29 @@
 {
   "name": "power-filter",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "Filter objects in array by MongoDB-like FindOperation.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "test": "kocha --require babel-register test/*.js --color always"
   },
+  "files": [
+    "src",
+    "dist",
+    "package.json",
+    "jsnext.js",
+    "LICENSE",
+    "README.md"
+  ],
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
-    "mongolike-operations": "~0.1.0",
     "power-assert": "^1.4.4"
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "oad-utils": "~0.1.0"
+    "mongolike-operations": "~0.1.3",
+    "oad-utils": "~0.1.5"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/power-filter",

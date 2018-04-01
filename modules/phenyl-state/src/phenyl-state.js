@@ -1,7 +1,7 @@
 // @flow
 import type {
   DeleteCommand,
-  Entity,
+  EntityMap,
   EntityPool,
   EntityState,
   EntityStateFinder,
@@ -17,87 +17,87 @@ import type {
 import PhenylStateFinder from './phenyl-state-finder.js'
 import PhenylStateUpdater from './phenyl-state-updater.js'
 
-export type PhenylStateParams = {
-  pool?: EntityPool
+export type PhenylStateParams<M: EntityMap> = {
+  pool?: EntityPool<M>
 }
 
 /**
  *
  */
-export default class PhenylState implements EntityState, EntityStateFinder, EntityStateUpdater {
-  pool: EntityPool
+export default class PhenylState<M: EntityMap> implements EntityState<M>, EntityStateFinder<M>, EntityStateUpdater<M> {
+  pool: EntityPool<M>
 
-  constructor(plain: PhenylStateParams = {}) {
+  constructor(plain: PhenylStateParams<$Shape<M>> = {}) {
     this.pool = plain.pool || {}
   }
 
   /**
    *
    */
-  find(query: WhereQuery): Array<Entity> {
+  find<N: $Keys<M>>(query: WhereQuery<N>): Array<$ElementType<M, N>> {
     return PhenylStateFinder.find(this, query)
   }
 
   /**
    *
    */
-  findOne(query: WhereQuery): ?Entity {
+  findOne<N: $Keys<M>>(query: WhereQuery<N>): ?$ElementType<M, N> {
     return PhenylStateFinder.findOne(this, query)
   }
 
   /**
    *
    */
-  get(query: IdQuery): Entity {
+  get<N: $Keys<M>>(query: IdQuery<N>): $ElementType<M, N> {
     return PhenylStateFinder.get(this, query)
   }
 
   /**
    *
    */
-  getByIds(query: IdsQuery): Array<Entity> {
+  getByIds<N: $Keys<M>>(query: IdsQuery<N>): Array<$ElementType<M, N>> {
     return PhenylStateFinder.getByIds(this, query)
   }
 
   /**
    *
    */
-  getAll(entityName: string): Array<Entity> {
+  getAll<N: $Keys<M>>(entityName: N): Array<$ElementType<M, N>> {
     return PhenylStateFinder.getAll(this, entityName)
   }
 
   /**
    *
    */
-  updateById(command: IdUpdateCommand): UpdateOperation {
+  updateById<N: $Keys<M>>(command: IdUpdateCommand<N>): UpdateOperation {
     return PhenylStateUpdater.updateById(this, command)
   }
 
   /**
    *
    */
-  updateMulti(command: MultiUpdateCommand): UpdateOperation {
+  updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>): UpdateOperation {
     return PhenylStateUpdater.updateMulti(this, command)
   }
 
   /**
    *
    */
-  register(entityName: string, ...pool: Array<Entity>): UpdateOperation {
+  register<N: $Keys<M>>(entityName: N, ...pool: Array<$ElementType<M, N>>): UpdateOperation {
     return PhenylStateUpdater.register(this, entityName, ...pool)
   }
 
   /**
    *
    */
-  delete(command: DeleteCommand): UpdateOperation {
+  delete<N: $Keys<M>>(command: DeleteCommand<N>): UpdateOperation {
     return PhenylStateUpdater.delete(this, command)
   }
 
   /**
    *
    */
-  has(query: IdQuery): boolean {
+  has<N: $Keys<M>>(query: IdQuery<N>): boolean {
     return PhenylStateFinder.has(this, query)
   }
 }

@@ -10,8 +10,8 @@ import type {
 /**
  *
  */
-export function createCustomCommandHandler(commandDefinitions: CustomCommandDefinitions): CustomCommandHandler {
-  return function customCommandHandler(command: CustomCommand, session: ?Session): Promise<CustomCommandResult> {
+export function createCustomCommandHandler(commandDefinitions: CustomCommandDefinitions<>): CustomCommandHandler {
+  return function customCommandHandler(command: CustomCommand<>, session: ?Session): Promise<CustomCommandResult<>> {
     const { name } = command
     const definition = commandDefinitions[name]
     if (definition == null || typeof definition.execution !== 'function') {

@@ -2,10 +2,13 @@
 import type { UpdateOperation } from 'mongolike-operations'
 import type { Id } from './id.js.flow'
 import type { Entity } from './entity.js.flow'
+import type { EntityMap } from './type-map.js.flow'
 
 import type {
   PushCommand
 } from './command.js.flow'
+
+type EntityName = string
 
 export type EntityVersion = {
   id: Id,
@@ -17,13 +20,12 @@ export type EntityMetaInfo = {
 }
 
 
-export type EntityWithMetaInfo = {
-  id: Id,
+export type EntityWithMetaInfo<T: Entity> = T & {
   _PhenylMeta: EntityMetaInfo
 }
 
 export type VersionDiff = {|
-  entityName: string,
+  entityName: EntityName,
   id: Id,
   prevVersionId: Id,
   versionId: Id,
@@ -33,7 +35,7 @@ export type VersionDiff = {|
 export type SubscriptionRequest = {|
   method: 'subscribe',
   payload: {
-    entityName: string,
+    entityName: EntityName,
     id: Id,
   },
   sessionId?: ?Id,
@@ -41,14 +43,14 @@ export type SubscriptionRequest = {|
 
 
 export type SubscriptionResult = {|
-  entityName: string,
+  entityName: EntityName,
   id: Id,
   result: boolean,
   ttl?: number,
 |}
 
 export type SubscriptionInfo = {|
-  entityName: string,
+  entityName: EntityName,
   id: Id,
   ttl?: number,
 |}
@@ -66,7 +68,7 @@ export interface VersionDiffPublisher {
 /**
  * Validate PushCommand in PhenylEntityClient.
  */
-export type PushValidation = (
-  command: PushCommand,
-  entity: Entity,
+export type PushValidation<M: EntityMap> = <N: $Keys<M>>(
+  command: PushCommand<N>,
+  entity: $ElementType<M, N>,
   masterOperations: ?Array<UpdateOperation>) => void
