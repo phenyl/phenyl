@@ -3,7 +3,7 @@ import {
   assertValidRequestData,
   createServerError,
   PhenylRestApiDirectClient
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import {
   passThroughHandler,

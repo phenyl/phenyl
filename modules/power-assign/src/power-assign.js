@@ -1,14 +1,14 @@
 // @flow
 
 import deepEqual from 'fast-deep-equal'
-import { checkCondition } from 'power-filter/jsnext'
+import { checkCondition } from 'power-filter'
 import {
   getNestedValue,
   sortByNotation,
   parseDocumentPath,
   createDocumentPath,
   normalizeUpdateOperation,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 import { retargetToProp } from './retarget-to-prop.js'
 import { getObjectsToBeAssigned } from './get-objects-to-be-assigned.js'
 

@@ -1,7 +1,7 @@
 // @flow
 import {
   assertValidRequestData
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import type {
   EncodedHttpRequest,

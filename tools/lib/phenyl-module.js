@@ -1,6 +1,9 @@
 // @flow
 import { join, relative as rel, dirname as dir, basename as base } from 'path'
-
+import type {
+  ShellResult,
+  ShellCommand,
+} from './shell.js'
 import type PhenylModuleGraph, {
   Version,
   VersionsByModuleName,
@@ -8,23 +11,11 @@ import type PhenylModuleGraph, {
 
 export type PackageJSON = {
   name: string,
+  main: string,
   version: Version,
   scripts: ?{ [scriptName: string]: string },
   dependencies: ?{ [moduleName: string]: Version },
   devDependencies: ?{ [moduleName: string]: Version },
-}
-
-export type ShellCommandType = 'cd' | 'mkdir' | 'exec' | 'ln' | 'rm'
-
-export type ShellCommand = {
-  command: ShellCommandType,
-  args: Array<string>
-}
-
-export type ShellResult = {
-  code: number,
-  stdout: string,
-  stderr: string,
 }
 
 type PhenylModuleParams = {
@@ -32,6 +23,7 @@ type PhenylModuleParams = {
   modulePath: string,
   version: Version,
   scripts?: { [scriptName: string]: string },
+  main: string,
   dependencies?: { [moduleName: string]: string },
   devDependencies?: { [moduleName: string]: string },
 }
@@ -41,6 +33,7 @@ export default class PhenylModule {
   modulePath: string
   version: Version
   scripts: { [scriptName: string]: string }
+  main: string
   dependencies: { [moduleName: string]: string }
   devDependencies: { [moduleName: string]: string }
 
@@ -51,12 +44,14 @@ export default class PhenylModule {
     const scripts = packageJson.scripts || {}
     const dependencies = packageJson.dependencies || {}
     const devDependencies = packageJson.devDependencies || {}
+    const main = packageJson.main || ''
 
     const params = {
       name: packageJson.name,
       modulePath,
       version: packageJson.version,
       scripts,
+      main,
       dependencies,
       devDependencies,
     }
@@ -68,6 +63,7 @@ export default class PhenylModule {
     this.modulePath = params.modulePath
     this.version = params.version
     this.scripts = params.scripts || {}
+    this.main = params.main
     this.dependencies = params.dependencies || {}
     this.devDependencies = params.devDependencies || {}
   }
@@ -139,7 +135,7 @@ export default class PhenylModule {
 
   cleanCommand(): ShellCommand {
     return {
-      command: 'rm',
+      type: 'rm',
       args: ['-rf',
         join(this.modulePath, 'node_modules'),
         join(this.modulePath, 'dist'),
@@ -150,7 +146,7 @@ export default class PhenylModule {
 
   cleanForReleaseCommand(): ShellCommand {
     return {
-      command: 'rm',
+      type: 'rm',
       args: ['-rf',
         join(this.modulePath, 'dist'),
         join(this.modulePath, 'package-lock.json'),
@@ -158,28 +154,49 @@ export default class PhenylModule {
     }
   }
 
-  buildCommand(): ShellCommand {
-    return {
-      command: 'exec',
+  *buildCommands(): Generator<ShellCommand, *, ShellResult> {
+    yield {
+      type: 'exec',
       args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
+    }
+    yield* this.createFlowDefinitionCommands()
+  }
+
+  *createFlowDefinitionCommands(): Generator<ShellCommand, *, ShellResult> {
+    if (!this.main) { return }
+    const result = yield { type: 'test', args: ['-f', join(this.modulePath, 'jsnext.js')] }
+    if (result.code !== 0) { return }
+
+    yield { type: 'mkdir', args: ['-p', join(this.modulePath, dir(this.main))] }
+
+    const { stdout } = yield {
+      type: 'cat',
+      args: [join(this.modulePath, 'jsnext.js')]
+    }
+    const content = stdout.split('./src').join('../src')
+    const dist = join(this.modulePath, this.main) + '.flow'
+    yield {
+      type: 'save',
+      args: [content, dist],
     }
   }
 
-  *publishCommands(graph: PhenylModuleGraph): Generator<ShellCommand, void, void> {
+
+  *publishCommands(graph: PhenylModuleGraph): Generator<ShellCommand, *, ShellResult> {
     yield this.cleanForReleaseCommand()
-    yield this.buildCommand()
-    yield { command: 'cd', args: [this.modulePath] }
-    yield { command: 'exec', args: ['npm publish'] }
-    yield { command: 'cd', args: [graph.rootPath] }
+    yield* this.buildCommands()
+    yield { type: 'cd', args: [this.modulePath] }
+    yield { type: 'exec', args: ['npm publish'] }
+    yield { type: 'cd', args: [graph.rootPath] }
   }
 
   /**
    * Returns whether test succeeded or not.
    */
   *testCommands(graph: PhenylModuleGraph): Generator<ShellCommand, boolean, ShellResult> {
-    yield { command: 'cd', args: [this.modulePath] }
-    const { code } = yield { command: 'exec', args: ['npm test --color always'] }
-    yield { command: 'cd', args: [graph.rootPath] }
+    yield { type: 'cd', args: [this.modulePath] }
+    const { code } = yield { type: 'exec', args: ['npm test --color always'] }
+    yield { type: 'cd', args: [graph.rootPath] }
     return code === 0
   }
 
@@ -187,32 +204,33 @@ export default class PhenylModule {
     const { rootPath } = graph
     const { modulePath } = this
     const nodeModulesPath = join(modulePath, 'node_modules')
-    yield { command: 'mkdir', args: ['-p', nodeModulesPath] }
-    yield { command: 'cd', args: [nodeModulesPath] }
+    yield { type: 'mkdir', args: ['-p', nodeModulesPath] }
+    yield { type: 'cd', args: [nodeModulesPath] }
 
     const dependings = this.getDependings(graph)
     for (const dependingModule of dependings) {
       const relative = rel(nodeModulesPath, dependingModule.modulePath)
-      yield { command: 'ln', args: ['-sf', relative, dependingModule.name] }
+      yield { type: 'ln', args: ['-sf', relative, dependingModule.name] }
     }
-    yield { command: 'cd', args: [nodeModulesPath] }
+    yield { type: 'cd', args: [nodeModulesPath] }
 
     const rootNodeModulesPath = join(rootPath, 'node_modules')
     const commons = this.getCommons(graph)
     for (const commonModuleName of commons) {
       const commonModulePath = join(rootNodeModulesPath, commonModuleName)
       const relative = rel(nodeModulesPath, commonModulePath)
-      yield { command: 'ln', args: ['-sf', relative, commonModuleName] }
+      yield { type: 'ln', args: ['-sf', relative, commonModuleName] }
     }
-    yield { command: 'cd', args: [rootPath] }
+    yield { type: 'cd', args: [rootPath] }
 
     const binPath = join(nodeModulesPath, '.bin')
     const kochaPath = join(rootNodeModulesPath, '.bin', 'kocha')
-    yield { command: 'mkdir', args: ['-p', binPath] }
-    yield { command: 'cd', args: [binPath] }
-    yield { command: 'ln', args: ['-sf', rel(binPath, kochaPath), 'kocha'] }
-    yield { command: 'exec', args: ['npm install --color always --loglevel=error'] }
-    yield { command: 'rm', args: ['-f', join(modulePath, 'package-lock.json')] }
-    yield { command: 'cd', args: [rootPath] }
+    yield { type: 'mkdir', args: ['-p', binPath] }
+    yield { type: 'cd', args: [binPath] }
+    yield { type: 'ln', args: ['-sf', rel(binPath, kochaPath), 'kocha'] }
+    yield { type: 'exec', args: ['npm install --color always --loglevel=error'] }
+    yield { type: 'rm', args: ['-f', join(modulePath, 'package-lock.json')] }
+    yield { type: 'cd', args: [rootPath] }
+    yield* this.createFlowDefinitionCommands()
   }
 }

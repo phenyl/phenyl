@@ -3,12 +3,12 @@ import mongodb from 'mongodb'
 import bson from 'bson'
 import {
   createServerError,
-} from 'phenyl-utils/jsnext'
-import { assign } from 'power-assign/jsnext'
+} from 'phenyl-utils'
+import { assign } from 'power-assign'
 import {
   convertToDotNotationString,
   visitFindOperation,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 
 import type {
   Entity,

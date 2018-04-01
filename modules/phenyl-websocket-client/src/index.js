@@ -1,6 +1,6 @@
 // @flow
 import WebSocket from './websocket.js'
-import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils'
 
 import type {
   Id,

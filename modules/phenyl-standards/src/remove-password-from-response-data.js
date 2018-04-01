@@ -1,15 +1,15 @@
 // @flow
 import {
   hasOwnNestedProperty,
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 
 import {
   visitEntitiesInResponseData,
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import {
   assign,
-} from 'power-assign/jsnext'
+} from 'power-assign'
 
 import type {
   ResponseData,

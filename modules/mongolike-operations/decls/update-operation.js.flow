@@ -73,7 +73,7 @@ export type RenameOperator = {
  *   }
  *
  * 2) Use updateOperationToJSON() function exported from oad-utils
- *    import { updateOperationToJSON } from 'oad-utils/jsnext'
+ *    import { updateOperationToJSON } from 'oad-utils'
  *    const operation: UpdateOperation = { $restore: { foo: Foo } }
  *    JSON.stringify(updateOperationToJSON(operation)) // {"$restore":{"foo":""}}
  */

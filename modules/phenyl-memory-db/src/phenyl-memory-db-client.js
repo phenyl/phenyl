@@ -3,14 +3,14 @@
 import {
   PhenylStateFinder,
   PhenylStateUpdater,
-} from 'phenyl-state/jsnext'
+} from 'phenyl-state'
 import {
-} from 'oad-utils/jsnext'
+} from 'oad-utils'
 import {
   createServerError,
   randomStringWithTimeStamp,
-} from 'phenyl-utils/jsnext'
-import { assign } from 'power-assign/jsnext'
+} from 'phenyl-utils'
+import { assign } from 'power-assign'
 
 import type {
   PreEntity,

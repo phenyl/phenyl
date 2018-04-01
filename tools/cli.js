@@ -3,7 +3,7 @@
 /* eslint-disable no-console */
 
 import { join, dirname as dir } from 'path'
-import shell from 'shelljs'
+import { run as runCommand } from './lib/shell.js'
 import chalk from 'chalk'
 import fs from 'fs'
 import PhenylModuleGraph from './lib/phenyl-module-graph.js'
@@ -38,8 +38,8 @@ class CLI {
   clean() {
     for (const phenylModule of this.graph.phenylModules) {
       console.log(chalk.cyan(`\n[${phenylModule.name}] clean start.`))
-      const { command, args } = phenylModule.cleanCommand()
-      shell[command](...args)
+      const shellCommand = phenylModule.cleanCommand()
+      runCommand(shellCommand)
       console.log(chalk.green(`[${phenylModule.name}] ✓ clean done.`))
     }
   }
@@ -54,8 +54,8 @@ class CLI {
         const iter = phenylModule.testCommands(this.graph)
         let shellResult, iterResult = iter.next()
         while (!iterResult.done) {
-          const { command, args } = iterResult.value
-          shellResult = shell[command](...args)
+          const shellCommand = iterResult.value
+          shellResult = runCommand(shellCommand)
           iterResult = iter.next(shellResult)
         }
         const succeeded = iterResult.value
@@ -90,8 +90,8 @@ class CLI {
       const iter = phenylModule.installCommands(this.graph)
       let shellResult, iterResult = iter.next()
       while (!iterResult.done) {
-        const { command, args } = iterResult.value
-        shellResult = shell[command](...args)
+        const shellCommand = iterResult.value
+        shellResult = runCommand(shellCommand)
         iterResult = iter.next(shellResult)
       }
       console.log(chalk.green(`[${phenylModule.name}] ✓ install done.\n`))
@@ -100,8 +100,13 @@ class CLI {
 
   build() {
     for (const phenylModule of this.graph.phenylModules) {
-      const { command, args } = phenylModule.buildCommand()
-      shell[command](...args)
+      const iter = phenylModule.buildCommands()
+      let iterResult = iter.next()
+      while (!iterResult.done) {
+        const shellCommand = iterResult.value
+        const shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
+      }
     }
   }
 
@@ -126,7 +131,7 @@ class CLI {
   }
 
   publish(...moduleNames: Array<string>) {
-    const { stdout } = shell.exec('npm whoami')
+    const { stdout } = runCommand({ type: 'exec', args: ['npm whoami'] })
     if (stdout.trim() !== 'phenyl') {
       console.error('npm user must be "phenyl" to publish. Check your .npmrc')
       return
@@ -139,9 +144,9 @@ class CLI {
       const iter = phenylModule.publishCommands(this.graph)
       let iterResult = iter.next()
       while (!iterResult.done) {
-        const { command, args } = iterResult.value
-        shell[command](...args)
-        iterResult = iter.next()
+        const shellCommand = iterResult.value
+        const shellResult = runCommand(shellCommand)
+        iterResult = iter.next(shellResult)
       }
       console.log(chalk.green(`[${phenylModule.name}] ✓ publish done.\n`))
     }

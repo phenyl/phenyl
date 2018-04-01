@@ -2,11 +2,11 @@
 
 import {
   assign,
-} from 'power-assign/jsnext'
+} from 'power-assign'
 
 import {
   createLocalError,
-} from 'phenyl-utils/jsnext'
+} from 'phenyl-utils'
 
 import { removeOne } from './utils'
 

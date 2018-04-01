@@ -1,6 +1,6 @@
 // @flow
-import { sortByNotation } from 'oad-utils/jsnext'
-import { filter } from 'power-filter/jsnext'
+import { sortByNotation } from 'oad-utils'
+import { filter } from 'power-filter'
 
 import type {
   EntityMap,
