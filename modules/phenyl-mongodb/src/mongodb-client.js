@@ -221,8 +221,10 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     const coll = this.conn.collection(entityName)
 
     const result = await coll.insertMany(command.values.map(filterInputEntity))
+    // $FlowIssue(ids-are-all-strings)
+    const ids: string[] = Object.values(result.insertedIds)
     // TODO: transactional operation needed
-    return this.getByIds({ entityName, ids: result.insertedIds })
+    return this.getByIds({ entityName, ids })
   }
 
   async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>> {

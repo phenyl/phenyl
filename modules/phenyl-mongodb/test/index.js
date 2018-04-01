@@ -9,7 +9,7 @@ import { assertEntityClient } from 'phenyl-interfaces/test-cases'
 
 async function createMongoDBClient() {
   try {
-    const mongoDBConnection = await connect('mongodb://localhost:27017')
+    const mongoDBConnection = await connect('mongodb://localhost:27017', 'phenyl-mongodb-test')
     return createEntityClient(mongoDBConnection)
   }
   catch (e) {
@@ -30,7 +30,7 @@ describe('mongoDBEntityClient', () => {
   let generatedId
 
   before(async () => {
-    conn = await connect('mongodb://localhost:27017')
+    conn = await connect('mongodb://localhost:27017', 'phenyl-mongodb-test')
     entityClient = createEntityClient(conn)
   })
 

@@ -27,7 +27,7 @@
   "dependencies": {
     "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.0.5",
     "oad-utils": "~0.1.5",
     "phenyl-central-state": "~0.2.1",
     "phenyl-interfaces": "~0.2.1",

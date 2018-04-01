@@ -13,8 +13,9 @@ export interface MongoDbConnection {
 
 export type MongoDbCollection = Object
 
-export async function connect(url: string): Promise<MongoDbConnection> {
-  const db = await connectToMongoDb(url)
+export async function connect(url: string, dbName: string): Promise<MongoDbConnection> {
+  const dbClient = await connectToMongoDb(url)
+  const db = dbClient.db(dbName)
   return new PhenylMongoDbConnection({ db })
 }
 
