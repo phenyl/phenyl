@@ -8,7 +8,7 @@ import {
 } from 'oad-utils'
 import {
   createServerError,
-  randomStringWithTimeStamp,
+  timeStampWithRandomString,
 } from 'phenyl-utils'
 import { assign } from 'power-assign'
 
@@ -118,7 +118,7 @@ export class PhenylMemoryDbClient<M: EntityMap> implements DbClient<M> {
     const { entityName, value } = command
     const newValue = value.id
       ? value
-      : assign(value, { id: randomStringWithTimeStamp() })
+      : assign(value, { id: timeStampWithRandomString() })
     const operation = PhenylStateUpdater.register(this.entityState, entityName, newValue)
     this.entityState = assign(this.entityState, operation)
     return newValue
@@ -129,7 +129,7 @@ export class PhenylMemoryDbClient<M: EntityMap> implements DbClient<M> {
    */
   async insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<Array<$ElementType<M, N>>> {
     const { entityName, values } = command
-    const newValues = values.map(value => value.id ? value : assign(value, { id: randomStringWithTimeStamp() }))
+    const newValues = values.map(value => value.id ? value : assign(value, { id: timeStampWithRandomString() }))
 
     for (const newValue of newValues) {
       const operation = PhenylStateUpdater.register(this.entityState, entityName, newValue)
