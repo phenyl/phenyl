@@ -19,7 +19,6 @@ const fg = {
     diary: {
       authorization: async () => true,
       validation: async () => undefined,
-      wrapExecution: async (a, b, c) => c(a, b),
     },
   },
   customQueries: {

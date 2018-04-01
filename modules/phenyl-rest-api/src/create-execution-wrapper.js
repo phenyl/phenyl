@@ -40,7 +40,11 @@ export function createExecutionWrapper(fg: NormalizedFunctionalGroup): Execution
         const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
+        if (entityDefinition.wrapExecution == null) {
+          return execution(reqData, session)
+        }
         assertWrapExecution(entityDefinition.wrapExecution, data.entityName, method)
+        // $FlowIssue(not-null)
         return entityDefinition.wrapExecution(reqData, session, execution)
       }
 
