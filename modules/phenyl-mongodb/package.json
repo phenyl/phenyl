@@ -1,6 +1,6 @@
 {
   "name": "phenyl-mongodb",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -29,9 +29,9 @@
     "es6-promisify": "^5.0.0",
     "mongodb": "^2.2.33",
     "oad-utils": "~0.1.4",
-    "phenyl-central-state": "~0.1.4",
-    "phenyl-interfaces": "~0.1.3",
-    "phenyl-utils": "~0.1.4",
+    "phenyl-central-state": "~0.2.0",
+    "phenyl-interfaces": "~0.2.0",
+    "phenyl-utils": "~0.2.0",
     "power-assign": "~0.2.5"
   }
 }
