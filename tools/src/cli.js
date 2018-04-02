@@ -4,7 +4,7 @@
 
 import { fork } from 'child_process'
 import { join, dirname as dir } from 'path'
-import ChildExec, { type MethodName, type InterProcessMessage } from './child-exec.js'
+import ChildExec, { type MethodName, type InterProcessMessage, type ExecParams } from './child-exec.js'
 import { run as runCommand } from './lib/shell.js'
 import PhenylModule from './lib/phenyl-module.js'
 import chalk from 'chalk'
@@ -12,9 +12,17 @@ import fs from 'fs'
 import PhenylModuleGraph from './lib/phenyl-module-graph.js'
 import type { PackageJSONsByPath, BumpTypesByModuleName } from './lib/phenyl-module-graph.js'
 
+type ExecOptions = {
+  fork?: boolean,
+  params?: ExecParams,
+}
+
+type ChildExecResult = any
+
 const rootPath = dir(dir(__dirname))
 
 class CLI {
+  fork: boolean
   graph: PhenylModuleGraph
 
   static loadPackageJsons(path: string): PackageJSONsByPath {
@@ -28,101 +36,52 @@ class CLI {
       }, {})
   }
 
-  constructor() {
+  constructor(fork: boolean) {
     // $FlowIssue(dynamic-require-json)
     const rootPackageJson = require(join(rootPath, 'package.json'))
     const packageJsonsByName = Object.assign(
       this.constructor.loadPackageJsons(join(rootPath, 'modules')),
       this.constructor.loadPackageJsons(join(rootPath, 'examples'))
     )
+    this.fork = fork
     this.graph = PhenylModuleGraph.create(rootPath, rootPackageJson, packageJsonsByName)
   }
 
-  execChild(phenylModule: PhenylModule, methodName: MethodName, params?: Object) {
-    const send = this.onReceiveMessage.bind(this)
-    const child = new ChildExec({ moduleName: phenylModule.name, graph: this.graph }, send)
-    child.run(methodName, params)
+  get allModuleNames(): Array<string> {
+    return this.graph.moduleNames
   }
 
-  async execChildByFork(phenylModule: PhenylModule, methodName: MethodName, params?: Object) {
-    const childPath = join(__dirname, 'child-exec.js')
-    const cp = fork(childPath)
-    cp.on('message', this.onReceiveMessage.bind(this))
-    cp.send({ moduleName: phenylModule.name, graph: this.graph, methodName, params })
-    return new Promise(resolve => {
-      cp.on('exit', resolve)
-    })
+  async clean(...moduleNames: Array<string>) {
+    await this.execChildren(moduleNames, 'clean', { fork: this.fork })
+    return 0
   }
 
-  onReceiveMessage(message: InterProcessMessage) {
-    switch (message.type) {
-      case 'message': {
-        const { color, text } = message.payload
-        console.log(color ? chalk[color](text) : text)
-        break
-      }
-      case 'result': {
-        console.log({ succeeded: message.payload.succeeded })
-        break
-      }
-      default: {
-        console.error(message)
-        throw new Error('Unknown message')
-      }
-    }
-  }
-
-  clean() {
-    for (const phenylModule of this.graph.phenylModules) {
-      this.execChildByFork(phenylModule, 'clean')
-    }
-  }
-
-  test(...moduleNames: Array<string>) {
-    const failedModules = []
-    const moduleNamesToTest = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
-    for (const moduleName of moduleNamesToTest) {
-      const phenylModule = this.graph.getModule(moduleName)
-      this.execChildByFork(phenylModule, 'test')
-    }
-
-    console.log(
-      chalk.cyan('-------------------\n') +
-      chalk.cyan('test summary\n') +
-      chalk.cyan('-------------------')
-    )
-
+  async test(...moduleNames: Array<string>) {
+    const results = await this.execChildren(moduleNames, 'test', { fork: this.fork })
+    const failedModules = Object.keys(results)
+      .filter(succeeded => !succeeded)
+    console.log(chalk.cyan(['-------------------', 'Test Summary', '-------------------'].join('\n')))
     if (failedModules.length > 0) {
-      console.log(
-        chalk.red('☓ Tests failed in The following modules\n') +
-        '\n' +
-        failedModules.join('\n')
-      )
-      process.exit(1)
-    } else {
-      console.log(chalk.green('✓ Tests passed in all modules!'))
+      console.log(chalk.red('☓ Tests failed in The following modules\n\n') + failedModules.join('\n'))
+      return 1
     }
+    console.log(chalk.green('✓ Tests passed in all modules!'))
+    return 0
   }
 
-  load() {
-    for (const phenylModule of this.graph.phenylModules) {
-      this.execChildByFork(phenylModule, 'load')
-    }
+  async load(...moduleNames: Array<string>) {
+    await this.execChildren(moduleNames, 'load', { fork: this.fork })
+    return 0
   }
 
-  build(...moduleNames: Array<string>) {
-    const moduleNamesToBuild = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
-    for (const moduleName of moduleNamesToBuild) {
-      const phenylModule = this.graph.getModule(moduleName)
-      this.execChildByFork(phenylModule, 'build')
-    }
+  async build(...moduleNames: Array<string>) {
+    await this.execChildren(moduleNames, 'build', { fork: this.fork })
+    return 0
   }
 
-  bump(bumpTypesByModuleName: BumpTypesByModuleName) {
+  async bump(bumpTypesByModuleName: BumpTypesByModuleName) {
     const versions = this.graph.getBumpedVersions(bumpTypesByModuleName)
-    for (const phenylModule of this.graph.phenylModules) {
-      this.execChild(phenylModule, 'bump', bumpTypesByModuleName)
-    }
+    await this.execChildren(this.allModuleNames, 'bump', { fork: this.fork, params: { bumpTypesByModuleName } })
     const versionsForPrint = Object.keys(versions).map(name => `\t${name}: ${versions[name]}`).join('\n')
     console.log(`git commit -am "update versions: \n${versionsForPrint}"`)
 
@@ -133,40 +92,89 @@ class CLI {
     console.log(`npm run publish -- ${modulesToPublish.join(' ')}"`)
   }
 
-  publish(...moduleNames: Array<string>) {
+  async publish(...moduleNames: Array<string>) {
     const { stdout } = runCommand({ type: 'exec', args: ['npm whoami'] })
     if (stdout.trim() !== 'phenyl') {
       console.error('npm user must be "phenyl" to publish. Check your .npmrc')
       return
     }
+    await this.execChildren(moduleNames, 'publish', { fork: this.fork })
+    return 0
+  }
 
-    for (const phenylModule of this.graph.phenylModules) {
-      if (!moduleNames.includes(phenylModule.name)) { continue }
-      this.execChild(phenylModule, 'publish')
+  async execChildren(moduleNames: Array<string>, methodName: MethodName, options: ExecOptions): Promise<{ [string]: ChildExecResult }> {
+    console.time(`Total Execution Time(method=${methodName}): `)
+    const names = moduleNames.length > 0 ? this.allModuleNames.filter(name => moduleNames.includes(name)): this.allModuleNames
+    const results = await Promise.all(names.map(moduleName => this.execChild(this.graph.getModule(moduleName), methodName, options)))
+    console.timeEnd(`Total Execution Time(method=${methodName}): `)
+    return results.reduce((acc, result, i) => {
+      const moduleName = names[i]
+      return Object.assign(acc, { [moduleName]: result })
+    }, {})
+  }
+
+  async execChild(phenylModule: PhenylModule, methodName: MethodName, options: ExecOptions): Promise<ChildExecResult> {
+    const { fork, params } = options
+    if (fork) {
+      return this.execChildByFork(phenylModule, methodName, params)
+    }
+    return this.execChildInTheSameProcess(phenylModule, methodName, params)
+  }
+
+  execChildInTheSameProcess(phenylModule: PhenylModule, methodName: MethodName, params: ?ExecParams): ChildExecResult {
+    const send = this.onReceiveMessage.bind(this)
+    const child = new ChildExec({ moduleName: phenylModule.name, graph: this.graph }, send)
+    child.run(methodName, params)
+  }
+
+  async execChildByFork(phenylModule: PhenylModule, methodName: MethodName, params: ?ExecParams): Promise<ChildExecResult> {
+    const childPath = join(__dirname, 'child-exec.js')
+    const cp = fork(childPath)
+    cp.on('message', this.onReceiveMessage.bind(this))
+    cp.send({ moduleName: phenylModule.name, graph: this.graph, methodName, params })
+    return new Promise(resolve => {
+      cp.on('exit', (status: number) => {
+        resolve(status === 0)
+      })
+    })
+  }
+
+  onReceiveMessage(message: InterProcessMessage) {
+    switch (message.type) {
+      case 'message': {
+        const { color, text } = message.payload
+        console.log(color ? chalk[color](text) : text)
+        break
+      }
+      default: {
+        console.error(message)
+        throw new Error('Unknown message')
+      }
     }
   }
 }
 
 function main(argv) {
-  const cli = new CLI()
+  const fork = (['fork', 'f'].includes(argv[argv.length - 1]))
+  if (fork) argv.pop()
+  const cli = new CLI(fork)
   const [ subcommand ] = argv
+  const moduleNames = argv.slice(1)
   switch(subcommand) {
     case 'build': {
-      const moduleNames = argv.slice(1)
       cli.build(...moduleNames)
       break
     }
     case 'load': {
-      cli.load()
+      cli.load(...moduleNames)
       break
     }
     case 'test': {
-      const moduleNames = argv.slice(1)
       cli.test(...moduleNames)
       break
     }
     case 'clean': {
-      cli.clean()
+      cli.clean(...moduleNames)
       break
     }
     case 'bump': {
@@ -180,7 +188,6 @@ function main(argv) {
       break
     }
     case 'publish': {
-      const moduleNames = argv.slice(1)
       cli.publish(...moduleNames)
       break
     }

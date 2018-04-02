@@ -2,28 +2,23 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 
+import fs from 'fs'
 import { run as runCommand } from './lib/shell.js'
 import PhenylModule from './lib/phenyl-module.js'
 import PhenylModuleGraph, { type PlainPhenylModuleGraph, type BumpTypesByModuleName } from './lib/phenyl-module-graph.js'
 export type MethodName = 'clean' | 'load' | 'build' | 'test' | 'bump' | 'publish'
+export type ExecParams = $Shape<{
+  bumpTypesByModuleName: BumpTypesByModuleName
+}>
 
-import fs from 'fs'
-
-type TextMessage = {
+export type InterProcessMessage = {
   type: 'message',
   payload: {
     text: string,
     color?: 'cyan' | 'green'
   }
 }
-type ResultMessage = {
-  type: 'result',
-  payload: {
-    succeeded: boolean
-  }
-}
 
-export type InterProcessMessage = TextMessage | ResultMessage
 
 export type PlainChildExec = {
   moduleName: string,
@@ -32,7 +27,7 @@ export type PlainChildExec = {
 
 export type ChildInfo = {
   methodName: MethodName,
-  params?: Object,
+  params: ?ExecParams,
 } & PlainChildExec
 
 
@@ -53,7 +48,7 @@ export default class ChildExec {
     return this.graph.getModule(this.moduleName)
   }
 
-  run(methodName: MethodName, extraArguments?: Object) {
+  run(methodName: MethodName, params: ?ExecParams) {
     switch (methodName) {
       case 'clean': {
         return this.clean()
@@ -68,7 +63,11 @@ export default class ChildExec {
         return this.build()
       }
       case 'bump': {
-        return this.bump(extraArguments || {})
+        if (params == null) {
+          throw new Error('No params given.')
+        }
+        const { bumpTypesByModuleName } = params
+        return this.bump(bumpTypesByModuleName)
       }
       case 'publish': {
         return this.publish()
@@ -97,11 +96,9 @@ export default class ChildExec {
         iterResult = iter.next(shellResult)
       }
       const succeeded = iterResult.value
-      this.send({ type: 'result', payload: { succeeded: !!succeeded } })
+      return succeeded ? 0 : 1
     }
-    else {
-      this.send({ type: 'message', payload: { text: `No test specified in "${phenylModule.name}".` } })
-    }
+    this.send({ type: 'message', payload: { text: `No test specified in "${phenylModule.name}".` } })
   }
 
   load() {
@@ -160,5 +157,6 @@ process.once('message', (childInfo: ChildInfo) => {
   const child = new ChildExec(childInfo, send)
   const { methodName, params } = childInfo
   // $FlowIssue(methodName-is-compatible)
-  child[methodName](params)
+  const status = child[methodName](params)
+  process.exit(status == null ? 0 : status)
 })
