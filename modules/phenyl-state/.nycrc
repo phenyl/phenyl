@@ -1,6 +1,6 @@
 {
   "cache": true,
-  "all": true,
+  "exclude": ["jsnext.js", "test/**/*.js"],
   "require": [
     "babel-register"
   ],
