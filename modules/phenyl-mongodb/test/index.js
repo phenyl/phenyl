@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable no-console */
 
 import kocha, { after, before, describe, it } from 'kocha'
 import { createEntityClient } from '../src/create-entity-client.js'
@@ -6,10 +7,13 @@ import assert from 'power-assert'
 import bson from 'bson'
 import { connect } from '../src/connection.js'
 import { assertEntityClient } from 'phenyl-interfaces/test-cases'
+import type { MongoDbConnection } from '../src/connection.js'
+
+const url = 'mongodb://localhost:27017'
 
 async function createMongoDBClient() {
   try {
-    const mongoDBConnection = await connect('mongodb://localhost:27017', 'phenyl-mongodb-test')
+    const mongoDBConnection = await connect(url, 'phenyl-mongodb-test')
     return createEntityClient(mongoDBConnection)
   }
   catch (e) {
@@ -20,18 +24,16 @@ async function createMongoDBClient() {
 
 assertEntityClient(createMongoDBClient(), kocha, assert)
 
-
-
 describe('mongoDBEntityClient', () => {
 
-  let conn
+  let conn: MongoDbConnection
   let entityClient
 
   const HEX_24_ID = '000000000123456789abcdef'
   let generatedId
 
   before(async () => {
-    conn = await connect('mongodb://localhost:27017', 'phenyl-mongodb-test')
+    conn = await connect(url, 'phenyl-mongodb-test')
     entityClient = createEntityClient(conn)
   })
 
@@ -105,6 +107,28 @@ describe('mongoDBEntityClient', () => {
       })
 
       assert(result.entity.name === 'Jesse')
+    })
+  })
+
+  describe('[Unstable because of the mongodb client library] ChangeStream', () => {
+    it('next', async (done) => {
+      const stream = entityClient.dbClient.watch('user')
+      stream.next((err, evt) => {
+        if (evt.operationType === 'update') {
+          assert(evt.updateDescription.removedFields.length === 1)
+          assert(evt.updateDescription.updatedFields['shin.a123'] === 'out')
+          done()
+        }
+        else {
+          done(`Operation type is invalid. ${evt.operationType} is given.`)
+        }
+      })
+
+      await entityClient.updateAndGet({
+        entityName: 'user',
+        id: HEX_24_ID,
+        operation: { $set: { 'shin.a123': 'out' }, $unset: { name: '' } }
+      })
     })
   })
 })
