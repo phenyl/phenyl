@@ -14,7 +14,7 @@
   ],
   "devDependencies": {
     "babel-register": "^6.24.1",
-    "kocha": "^1.8.0",
+    "mocha": "^5.0.5",
     "power-assert": "^1.4.4"
   },
   "dependencies": {

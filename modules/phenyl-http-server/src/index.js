@@ -46,6 +46,14 @@ export default class PhenylHttpServer<TM: TypeMap> {
   }
 
   /**
+   * @public
+   * Stops the server from accepting new connections.
+   */
+  close() {
+    this.server.close()
+  }
+
+  /**
    * @private
    * Concatenate request body from chunks.
    */

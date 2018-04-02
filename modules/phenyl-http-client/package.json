@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "test": "nyc kocha test/*.js --color always"
+    "test": "nyc mocha test/*.js --color always"
   },
   "browser": {
     "./fetch.js": "./fetch-browser.js"
@@ -20,7 +20,6 @@
   ],
   "devDependencies": {
     "babel-register": "^6.24.1",
-    "kocha": "^1.8.0",
     "nyc": "^11.6.0",
     "phenyl-http-server": "~0.2.1",
     "phenyl-memory-db": "~0.2.1",

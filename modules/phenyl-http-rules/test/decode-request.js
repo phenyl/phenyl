@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import { it, describe } from 'mocha'
 import assert from 'power-assert'
 import decodeRequest from '../src/decode-request.js'
 

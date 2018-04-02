@@ -1,5 +1,5 @@
 // @flow
-import { describe, it, before, beforeEach } from 'kocha'
+import { describe, it, before, beforeEach } from 'mocha'
 import assert from 'power-assert'
 import { createEntityClient } from '../src/create-entity-client.js'
 import { assign } from 'power-assign/jsnext'

@@ -33,8 +33,7 @@ export type MongoDbCollection = {
 
 export async function connect(url: string, dbName: string): Promise<MongoDbConnection> {
   const dbClient = await connectToMongoDb(url)
-  const db = dbClient.db(dbName)
-  return new PhenylMongoDbConnection({ db })
+  return new PhenylMongoDbConnection({ dbClient, dbName })
 }
 
 export function close(db: MongoDbConnection): void {
@@ -42,33 +41,36 @@ export function close(db: MongoDbConnection): void {
 }
 
 type PhenylMongoDbConnectionParams = {
-  db: Object,
+  dbClient: MongoClient,
+  dbName: string,
   collections?: {
     [entityName: string]: MongoDbCollection
   }
 }
 
 export class PhenylMongoDbConnection implements MongoDbConnection {
-  db: Object
+  dbClient: MongoClient
+  dbName: string
   collections: {
     [entityName: string]: MongoDbCollection
   }
 
   constructor(params: PhenylMongoDbConnectionParams) {
-    this.db = params.db
+    this.dbClient = params.dbClient
+    this.dbName = params.dbName
     this.collections = params.collections || {}
   }
 
   collection(entityName: string): MongoDbCollection {
     if (this.collections[entityName] == null) {
-      const coll = this.db.collection(entityName)
+      const coll = this.dbClient.db(this.dbName).collection(entityName)
       this.collections[entityName] = promisifyCollection(coll)
     }
     return this.collections[entityName]
   }
 
   close(): void {
-    this.db.close()
+    this.dbClient.close()
   }
 }
 
