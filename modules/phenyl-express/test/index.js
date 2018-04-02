@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe, afterEach, beforeEach } from 'kocha'
+import { it, describe, afterEach, beforeEach } from 'mocha'
 import assert from 'power-assert'
 import express from 'express'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'

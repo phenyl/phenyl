@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import { it, describe } from 'mocha'
 import powerCrypt from 'power-crypt/jsnext'
 import assert from 'power-assert'
 import { encryptPasswordInRequestData } from '../src/encrypt-password-in-request-data.js'

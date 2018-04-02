@@ -119,18 +119,19 @@ let entityClient: EntityClient<ThisEntityMap>
 
 export const assertEntityClient = (
   entityClientPromise: EntityClient<ThisEntityMap> | Promise<EntityClient<ThisEntityMap>>,
-  kocha: any,
+  mocha: any,
   assert: Function,
 ) => {
-  const { describe, it, after, before } = kocha
-
-  before(async () => {
-    entityClient = await entityClientPromise
-  })
+  const { describe, it, after, before } = mocha
 
   describe('assertEntityClient', () => {
+
+    before(async () => {
+      entityClient = await entityClientPromise
+    })
+
     after(async () => {
-      entityClient.delete({ entityName: 'user', where: {} })
+      await entityClient.delete({ entityName: 'user', where: {} })
     })
 
     describe('insert', () => {

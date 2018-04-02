@@ -1,6 +1,6 @@
 // @flow
 
-import { describe, it } from 'kocha'
+import { describe, it } from 'mocha'
 import assert from 'power-assert'
 import { filter } from '../src/index.js'
 import type { QueryCondition } from 'mongolike-operations'

@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-console */
 
-import kocha, { after, before, describe, it } from 'kocha'
+import mocha, { after, before, describe, it } from 'mocha'
 import { createEntityClient } from '../src/create-entity-client.js'
 import assert from 'power-assert'
 import bson from 'bson'
@@ -11,20 +11,18 @@ import type { MongoDbConnection } from '../src/connection.js'
 
 const url = 'mongodb://localhost:27017'
 
-async function createMongoDBClient() {
-  try {
-    const mongoDBConnection = await connect(url, 'phenyl-mongodb-test')
-    return createEntityClient(mongoDBConnection)
-  }
-  catch (e) {
-    console.log(e.message)
-    throw new Error('Test was skipped as connection to mongodb failed.')
-  }
-}
+describe('MongoDBEntityClient', async () => {
+  const conn = await connect(url, 'phenyl-mongodb-test')
+  const client = createEntityClient(conn)
 
-assertEntityClient(createMongoDBClient(), kocha, assert)
+  assertEntityClient(client, mocha, assert)
 
-describe('mongoDBEntityClient', () => {
+  after(() => {
+    conn.close()
+  })
+})
+
+describe('MongoDBEntityClient', () => {
 
   let conn: MongoDbConnection
   let entityClient
@@ -38,7 +36,8 @@ describe('mongoDBEntityClient', () => {
   })
 
   after(async () => {
-    entityClient.delete({ entityName: 'user', where: {} })
+    await entityClient.delete({ entityName: 'user', where: {} })
+    conn.close()
   })
 
   describe('inserts entity', () => {
@@ -111,20 +110,22 @@ describe('mongoDBEntityClient', () => {
   })
 
   describe('[Unstable because of the mongodb client library] ChangeStream', () => {
-    it('next', async (done) => {
+    it('next', (done) => {
       const stream = entityClient.dbClient.watch('user')
       stream.next((err, evt) => {
         if (evt.operationType === 'update') {
           assert(evt.updateDescription.removedFields.length === 1)
           assert(evt.updateDescription.updatedFields['shin.a123'] === 'out')
+          stream.close()
           done()
         }
         else {
+          stream.close()
           done(`Operation type is invalid. ${evt.operationType} is given.`)
         }
       })
 
-      await entityClient.updateAndGet({
+      entityClient.updateAndGet({
         entityName: 'user',
         id: HEX_24_ID,
         operation: { $set: { 'shin.a123': 'out' }, $unset: { name: '' } }
