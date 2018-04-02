@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "pretest": "type mongod && mkdir -p test/tmp/mongodb && mongod --dbpath test/tmp/mongodb > /dev/null &",
+    "pretest": "test/scripts/init-mongodb.sh",
     "test": "nyc kocha test/*.js --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
@@ -28,7 +28,7 @@
   "dependencies": {
     "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
-    "mongodb": "^2.2.33",
+    "mongodb": "^3.0.5",
     "oad-utils": "~0.1.5",
     "phenyl-central-state": "~0.2.1",
     "phenyl-interfaces": "~0.2.1",

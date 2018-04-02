@@ -12,8 +12,7 @@ jobs:
           - v1-dependencies-
       - run: npm install
       - run: npm run load
-      - run: sudo apt-get update
-      - run: sudo apt-get install mongodb
+      - run: npm run install-mongodb-on-ubuntu
       - save_cache:
           paths:
             - node_modules

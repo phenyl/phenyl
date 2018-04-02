@@ -12,7 +12,8 @@
     "bump": "babel-node tools/cli.js bump",
     "flow": "flow",
     "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js"
+    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js",
+    "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh"
   },
   "repository": {
     "type": "git",

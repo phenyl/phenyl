@@ -10,6 +10,7 @@ export function createEntityClient<M: EntityMap>(conn: MongoDbConnection, option
 }
 
 export class PhenylMongoDbEntityClient<M: EntityMap> extends PhenylEntityClient<M> {
+  dbClient: PhenylMongoDbClient<M>
 
   constructor(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}) {
     const dbClient = new PhenylMongoDbClient(conn)

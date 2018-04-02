@@ -3,18 +3,37 @@
 
 import { MongoClient } from 'mongodb'
 import promisify from 'es6-promisify'
+import type {
+  FindOperation,
+  UpdateOperation,
+} from 'phenyl-interfaces'
+import type {
+  ChangeStreamPipeline,
+  ChangeStreamOptions,
+  ChangeStream,
+} from './change-stream.js'
 
 const connectToMongoDb = promisify(MongoClient.connect)
 
 export interface MongoDbConnection {
   close(): void,
-  collection(entityName: string): Object,
+  collection(entityName: string): MongoDbCollection,
 }
 
-export type MongoDbCollection = Object
+export type MongoDbCollection = {
+  find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Object>>,
+  insertOne(obj: Object): Promise<{ insertedId: string, insertedCount: number }>,
+  insertMany(objs: Array<Object>): Promise<{ insertedIds: { [string]: string }, insertedCount: number }>,
+  updateOne({ _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
+  updateMany(fOp: FindOperation, uOp: UpdateOperation): Promise<Object>,
+  deleteOne({ _id: any }): Promise<{ deletedCount: number }>,
+  deleteMany(op: FindOperation): Promise<{ deletedCount: number }>,
+  watch(pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream
+}
 
-export async function connect(url: string): Promise<MongoDbConnection> {
-  const db = await connectToMongoDb(url)
+export async function connect(url: string, dbName: string): Promise<MongoDbConnection> {
+  const dbClient = await connectToMongoDb(url)
+  const db = dbClient.db(dbName)
   return new PhenylMongoDbConnection({ db })
 }
 
@@ -62,6 +81,7 @@ function promisifyCollection(coll: Object): MongoDbCollection {
     updateMany: promisify(coll.updateMany, coll),
     deleteOne: promisify(coll.deleteOne, coll),
     deleteMany: promisify(coll.deleteMany, coll),
+    watch: coll.watch.bind(coll),
   }
 }
 
