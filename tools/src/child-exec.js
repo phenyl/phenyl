@@ -48,31 +48,39 @@ export default class ChildExec {
     return this.graph.getModule(this.moduleName)
   }
 
-  run(methodName: MethodName, params: ?ExecParams) {
+  run(methodName: MethodName, params: ?ExecParams): number {
+    let status
     switch (methodName) {
       case 'clean': {
-        return this.clean()
+        status = this.clean()
+        break
       }
       case 'test': {
-        return this.test()
+        status = this.test()
+        break
       }
       case 'load': {
-        return this.load()
+        status = this.load()
+        break
       }
       case 'build': {
-        return this.build()
+        status = this.build()
+        break
       }
       case 'bump': {
         if (params == null) {
           throw new Error('No params given.')
         }
         const { bumpTypesByModuleName } = params
-        return this.bump(bumpTypesByModuleName)
+        status = this.bump(bumpTypesByModuleName)
+        break
       }
       case 'publish': {
-        return this.publish()
+        status = this.publish()
+        break
       }
     }
+    return  status == null ? 0 : status
   }
 
   clean() {
@@ -156,7 +164,6 @@ process.once('message', (childInfo: ChildInfo) => {
 
   const child = new ChildExec(childInfo, send)
   const { methodName, params } = childInfo
-  // $FlowIssue(methodName-is-compatible)
-  const status = child[methodName](params)
-  process.exit(status == null ? 0 : status)
+  const status = child.run(methodName, params)
+  process.exit(status)
 })

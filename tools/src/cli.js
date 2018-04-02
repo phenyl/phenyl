@@ -17,7 +17,7 @@ type ExecOptions = {
   params?: ExecParams,
 }
 
-type ChildExecResult = any
+type ChildExecResult = boolean
 
 const rootPath = dir(dir(__dirname))
 
@@ -124,7 +124,8 @@ class CLI {
   execChildInTheSameProcess(phenylModule: PhenylModule, methodName: MethodName, params: ?ExecParams): ChildExecResult {
     const send = this.onReceiveMessage.bind(this)
     const child = new ChildExec({ moduleName: phenylModule.name, graph: this.graph }, send)
-    child.run(methodName, params)
+    const status = child.run(methodName, params)
+    return status === 0
   }
 
   async execChildByFork(phenylModule: PhenylModule, methodName: MethodName, params: ?ExecParams): Promise<ChildExecResult> {
