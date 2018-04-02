@@ -211,8 +211,9 @@ export default class PhenylModule {
 
     const dependings = this.getDependings(graph)
     for (const dependingModule of dependings) {
+      yield { type: 'rm', args: ['-rf', join(nodeModulesPath, dependingModule.name)] }
       const relative = rel(nodeModulesPath, dependingModule.modulePath)
-      yield { type: 'ln', args: ['-sf', relative, dependingModule.name] }
+      yield { type: 'ln', args: ['-s', relative, dependingModule.name] }
     }
     yield { type: 'cd', args: [nodeModulesPath] }
 
