@@ -16,7 +16,7 @@ const server = new PhenylHttpServer(createServer(), { restApiHandler })
 
 const client = new PhenylHttpClient({ url: 'http://localhost:8080' })
 
-describe('PhenylHttpClient', () => {
+describe('PhenylHttpClient as EntityClient', () => {
   before(() => {
     server.listen(8080)
   })

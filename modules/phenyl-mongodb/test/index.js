@@ -11,7 +11,7 @@ import type { MongoDbConnection } from '../src/connection.js'
 
 const url = 'mongodb://localhost:27017'
 
-describe('MongoDBEntityClient', async () => {
+describe('MongoDBEntityClient as EntityClient', async () => {
   const conn = await connect(url, 'phenyl-mongodb-test')
   const client = createEntityClient(conn)
 
