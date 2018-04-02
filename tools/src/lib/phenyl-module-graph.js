@@ -9,22 +9,39 @@ export type PackageJSONsByPath = { [modulePath: string]: PackageJSON }
 export type PhenylModulesByName = { [moduleName: string]: PhenylModule }
 export type VersionsByModuleName = { [moduleName: string]: Version }
 
+export type PlainPhenylModuleGraph = {
+  rootPath: string,
+  modulesByName: PhenylModulesByName,
+  moduleNames: Array<string>,
+  rootPackageJson: PackageJSON,
+}
+
 export default class PhenylModuleGraph {
+
   rootPath: string
   modulesByName: PhenylModulesByName
   moduleNames: Array<string>
   rootPackageJson: PackageJSON
 
-  constructor(rootPath: string, rootPackageJson: PackageJSON, packageJsons: PackageJSONsByPath) {
-    this.rootPath = rootPath
-    this.rootPackageJson = rootPackageJson
-    this.modulesByName = Object.keys(packageJsons).reduce((acc, modulePath) => {
+  static create(rootPath: string, rootPackageJson: PackageJSON, packageJsons: PackageJSONsByPath): PhenylModuleGraph {
+    const modulesByName = Object.keys(packageJsons).reduce((acc, modulePath) => {
       const packageJson = packageJsons[modulePath]
       acc[packageJson.name] = PhenylModule.create(modulePath, packageJson)
       return acc
     }, {})
 
-    this.moduleNames = topologicalSort(this.modulesByName)
+    const moduleNames = topologicalSort(modulesByName)
+    return new PhenylModuleGraph({ rootPath, modulesByName, moduleNames, rootPackageJson })
+  }
+
+  constructor(plain: PlainPhenylModuleGraph) {
+    this.rootPath = plain.rootPath
+    this.modulesByName = Object.entries(plain.modulesByName).reduce((acc, [key, value]) => {
+      // $FlowIssue(value-is-plain)
+      return Object.assign(acc, { [key]: new PhenylModule(value)})
+    }, {})
+    this.moduleNames = plain.moduleNames
+    this.rootPackageJson = plain.rootPackageJson
   }
 
   get commonModuleNames(): Array<string> {

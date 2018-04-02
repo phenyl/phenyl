@@ -2,14 +2,17 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 
+import { fork } from 'child_process'
 import { join, dirname as dir } from 'path'
+import ChildExec, { type MethodName, type InterProcessMessage } from './child-exec.js'
 import { run as runCommand } from './lib/shell.js'
+import PhenylModule from './lib/phenyl-module.js'
 import chalk from 'chalk'
 import fs from 'fs'
 import PhenylModuleGraph from './lib/phenyl-module-graph.js'
 import type { PackageJSONsByPath, BumpTypesByModuleName } from './lib/phenyl-module-graph.js'
 
-const rootPath = dir(__dirname)
+const rootPath = dir(dir(__dirname))
 
 class CLI {
   graph: PhenylModuleGraph
@@ -32,40 +35,55 @@ class CLI {
       this.constructor.loadPackageJsons(join(rootPath, 'modules')),
       this.constructor.loadPackageJsons(join(rootPath, 'examples'))
     )
-    this.graph = new PhenylModuleGraph(rootPath, rootPackageJson, packageJsonsByName)
+    this.graph = PhenylModuleGraph.create(rootPath, rootPackageJson, packageJsonsByName)
+  }
+
+  execChild(phenylModule: PhenylModule, methodName: MethodName, params?: Object) {
+    const send = this.onReceiveMessage.bind(this)
+    const child = new ChildExec({ moduleName: phenylModule.name, graph: this.graph }, send)
+    child.run(methodName, params)
+  }
+
+  async execChildByFork(phenylModule: PhenylModule, methodName: MethodName, params?: Object) {
+    const childPath = join(__dirname, 'child-exec.js')
+    const cp = fork(childPath)
+    cp.on('message', this.onReceiveMessage.bind(this))
+    cp.send({ moduleName: phenylModule.name, graph: this.graph, methodName, params })
+    return new Promise(resolve => {
+      cp.on('exit', resolve)
+    })
+  }
+
+  onReceiveMessage(message: InterProcessMessage) {
+    switch (message.type) {
+      case 'message': {
+        const { color, text } = message.payload
+        console.log(color ? chalk[color](text) : text)
+        break
+      }
+      case 'result': {
+        console.log({ succeeded: message.payload.succeeded })
+        break
+      }
+      default: {
+        console.error(message)
+        throw new Error('Unknown message')
+      }
+    }
   }
 
   clean() {
     for (const phenylModule of this.graph.phenylModules) {
-      console.log(chalk.cyan(`\n[${phenylModule.name}] clean start.`))
-      const shellCommand = phenylModule.cleanCommand()
-      runCommand(shellCommand)
-      console.log(chalk.green(`[${phenylModule.name}] ✓ clean done.`))
+      this.execChildByFork(phenylModule, 'clean')
     }
   }
 
   test(...moduleNames: Array<string>) {
     const failedModules = []
-
-    const moduleNamesToBuild = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
-    for (const moduleName of moduleNamesToBuild) {
+    const moduleNamesToTest = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
+    for (const moduleName of moduleNamesToTest) {
       const phenylModule = this.graph.getModule(moduleName)
-      console.log(chalk.cyan(`\n[${phenylModule.name}] test start.`))
-
-      if (phenylModule.hasTest) {
-        const iter = phenylModule.testCommands(this.graph)
-        let shellResult, iterResult = iter.next()
-        while (!iterResult.done) {
-          const shellCommand = iterResult.value
-          shellResult = runCommand(shellCommand)
-          iterResult = iter.next(shellResult)
-        }
-        const succeeded = iterResult.value
-        if (!succeeded) { failedModules.push(phenylModule.name) }
-      }
-      else {
-        console.log(`No test specified in "${phenylModule.name}".`)
-      }
+      this.execChildByFork(phenylModule, 'test')
     }
 
     console.log(
@@ -88,15 +106,7 @@ class CLI {
 
   load() {
     for (const phenylModule of this.graph.phenylModules) {
-      console.log(chalk.cyan(`[${phenylModule.name}] start install.`))
-      const iter = phenylModule.installCommands(this.graph)
-      let shellResult, iterResult = iter.next()
-      while (!iterResult.done) {
-        const shellCommand = iterResult.value
-        shellResult = runCommand(shellCommand)
-        iterResult = iter.next(shellResult)
-      }
-      console.log(chalk.green(`[${phenylModule.name}] ✓ install done.\n`))
+      this.execChildByFork(phenylModule, 'load')
     }
   }
 
@@ -104,25 +114,14 @@ class CLI {
     const moduleNamesToBuild = moduleNames.length > 0 ? moduleNames : this.graph.moduleNames
     for (const moduleName of moduleNamesToBuild) {
       const phenylModule = this.graph.getModule(moduleName)
-      const iter = phenylModule.buildCommands()
-      let iterResult = iter.next()
-      while (!iterResult.done) {
-        const shellCommand = iterResult.value
-        const shellResult = runCommand(shellCommand)
-        iterResult = iter.next(shellResult)
-      }
+      this.execChildByFork(phenylModule, 'build')
     }
   }
 
   bump(bumpTypesByModuleName: BumpTypesByModuleName) {
     const versions = this.graph.getBumpedVersions(bumpTypesByModuleName)
     for (const phenylModule of this.graph.phenylModules) {
-      const change = phenylModule.bump(versions)
-      if (change) {
-        // $FlowIssue(dynamic-require-json)
-        const packageJson = Object.assign(require(phenylModule.packageJsonPath), change)
-        fs.writeFileSync(phenylModule.packageJsonPath, JSON.stringify(packageJson, null, 2))
-      }
+      this.execChild(phenylModule, 'bump', bumpTypesByModuleName)
     }
     const versionsForPrint = Object.keys(versions).map(name => `\t${name}: ${versions[name]}`).join('\n')
     console.log(`git commit -am "update versions: \n${versionsForPrint}"`)
@@ -143,16 +142,7 @@ class CLI {
 
     for (const phenylModule of this.graph.phenylModules) {
       if (!moduleNames.includes(phenylModule.name)) { continue }
-
-      console.log(chalk.cyan(`[${phenylModule.name}] start publishing.`))
-      const iter = phenylModule.publishCommands(this.graph)
-      let iterResult = iter.next()
-      while (!iterResult.done) {
-        const shellCommand = iterResult.value
-        const shellResult = runCommand(shellCommand)
-        iterResult = iter.next(shellResult)
-      }
-      console.log(chalk.green(`[${phenylModule.name}] ✓ publish done.\n`))
+      this.execChild(phenylModule, 'publish')
     }
   }
 }
