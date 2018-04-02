@@ -39,6 +39,7 @@
     "eslint-plugin-flowtype": "^2.39.1",
     "flow-bin": "^0.68.0",
     "kocha": "^1.8.1",
+    "nyc": "^11.6.0",
     "power-assert": "^1.4.4",
     "shelljs": "^0.7.8"
   }

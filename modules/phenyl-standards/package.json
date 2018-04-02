@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "test": "kocha --require babel-register test/*.js --color always"
+    "test": "nyc kocha test/*.js --color always"
   },
   "files": [
     "src",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "kocha": "^1.8.0",
+    "nyc": "^11.6.0",
     "power-assert": "^1.4.4"
   },
   "dependencies": {

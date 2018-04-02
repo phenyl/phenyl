@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "test": "kocha --require babel-register test/*.js --color always"
+    "test": "nyc kocha test/*.js --color always"
   },
   "files": [
     "src",
@@ -19,6 +19,7 @@
     "babel-register": "^6.24.1",
     "express": "^4.16.2",
     "kocha": "^1.8.0",
+    "nyc": "^11.6.0",
     "phenyl-http-client": "~0.2.1",
     "phenyl-memory-db": "~0.2.1",
     "phenyl-rest-api": "~0.3.1",
