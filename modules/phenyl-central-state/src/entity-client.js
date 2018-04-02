@@ -60,7 +60,7 @@ function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOper
  * Optionally set merge strategy by options.validatePushCommand.
  */
 export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
-  dbClient: DbClient<M>
+  dbClient: $Subtype<DbClient<M>>
   validatePushCommand: PushValidation<M>
 
   constructor(dbClient: DbClient<M>, options: PhenylEntityClientOptions<M> = {}) {

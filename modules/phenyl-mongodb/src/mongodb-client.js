@@ -30,6 +30,12 @@ import type {
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
+import type {
+  ChangeStreamPipeline,
+  ChangeStreamOptions,
+  ChangeStream,
+} from './change-stream.js'
+
 
 // convert 24-byte hex lower string to ObjectId
 function ObjectID(id: any): any {
@@ -184,6 +190,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
   async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<Array<$ElementType<M, N>>> {
     const { entityName, ids } = query
     const coll = this.conn.collection(entityName)
+    // $FlowIssue(find-operation)
     const result = await coll.find({ _id: { $in: ids.map(ObjectID) } })
     if (result.length === 0) {
       throw createServerError(
@@ -221,8 +228,10 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     const coll = this.conn.collection(entityName)
 
     const result = await coll.insertMany(command.values.map(filterInputEntity))
+    // $FlowIssue(ids-are-all-strings)
+    const ids: string[] = Object.values(result.insertedIds)
     // TODO: transactional operation needed
-    return this.getByIds({ entityName, ids: result.insertedIds })
+    return this.getByIds({ entityName, ids })
   }
 
   async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>> {
@@ -261,5 +270,9 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     // $FlowIssue(deleteCount-exists)
     const { deletedCount } = result
     return deletedCount
+  }
+
+  watch<N: $Keys<M>>(entityName: N, pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream {
+    return this.conn.collection(entityName).watch(pipeline, options)
   }
 }
