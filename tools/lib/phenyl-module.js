@@ -140,6 +140,8 @@ export default class PhenylModule {
         join(this.modulePath, 'node_modules'),
         join(this.modulePath, 'dist'),
         join(this.modulePath, 'package-lock.json'),
+        join(this.modulePath, '.nyc_output'),
+        join(this.modulePath, 'coverage'),
       ]
     }
   }
