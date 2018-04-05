@@ -13,7 +13,7 @@ import PhenylModuleGraph from './lib/phenyl-module-graph.js'
 import type { PackageJSONsByPath, BumpTypesByModuleName } from './lib/phenyl-module-graph.js'
 
 type ExecOptions = {
-  fork?: boolean,
+  parallel?: boolean,
   params?: ExecParams,
 }
 
@@ -22,7 +22,7 @@ type ChildExecResult = boolean
 const rootPath = dir(dir(__dirname))
 
 class CLI {
-  fork: boolean
+  parallel: boolean
   graph: PhenylModuleGraph
 
   static loadPackageJsons(path: string): PackageJSONsByPath {
@@ -36,14 +36,14 @@ class CLI {
       }, {})
   }
 
-  constructor(fork: boolean) {
+  constructor(parallel: boolean) {
     // $FlowIssue(dynamic-require-json)
     const rootPackageJson = require(join(rootPath, 'package.json'))
     const packageJsonsByName = Object.assign(
       this.constructor.loadPackageJsons(join(rootPath, 'modules')),
       this.constructor.loadPackageJsons(join(rootPath, 'examples'))
     )
-    this.fork = fork
+    this.parallel = parallel
     this.graph = PhenylModuleGraph.create(rootPath, rootPackageJson, packageJsonsByName)
   }
 
@@ -52,12 +52,12 @@ class CLI {
   }
 
   async clean(...moduleNames: Array<string>) {
-    await this.execChildren(moduleNames, 'clean', { fork: this.fork })
+    await this.execChildren(moduleNames, 'clean', { parallel: this.parallel })
     return 0
   }
 
   async test(...moduleNames: Array<string>) {
-    const results = await this.execChildren(moduleNames, 'test', { fork: this.fork })
+    const results = await this.execChildren(moduleNames, 'test', { parallel: this.parallel })
     const failedModules = Object.keys(results)
       .filter(succeeded => !succeeded)
     console.log(chalk.cyan(['-------------------', 'Test Summary', '-------------------'].join('\n')))
@@ -70,18 +70,18 @@ class CLI {
   }
 
   async load(...moduleNames: Array<string>) {
-    await this.execChildren(moduleNames, 'load', { fork: this.fork })
+    await this.execChildren(moduleNames, 'load', { parallel: this.parallel })
     return 0
   }
 
   async build(...moduleNames: Array<string>) {
-    await this.execChildren(moduleNames, 'build', { fork: this.fork })
+    await this.execChildren(moduleNames, 'build', { parallel: this.parallel })
     return 0
   }
 
   async bump(bumpTypesByModuleName: BumpTypesByModuleName) {
     const versions = this.graph.getBumpedVersions(bumpTypesByModuleName)
-    await this.execChildren(this.allModuleNames, 'bump', { fork: this.fork, params: { bumpTypesByModuleName } })
+    await this.execChildren(this.allModuleNames, 'bump', { parallel: this.parallel, params: { bumpTypesByModuleName } })
     const versionsForPrint = Object.keys(versions).map(name => `\t${name}: ${versions[name]}`).join('\n')
     console.log(`git commit -am "update versions: \n${versionsForPrint}"`)
 
@@ -98,12 +98,13 @@ class CLI {
       console.error('npm user must be "phenyl" to publish. Check your .npmrc')
       return
     }
-    await this.execChildren(moduleNames, 'publish', { fork: this.fork })
+    await this.execChildren(moduleNames, 'publish', { parallel: this.parallel })
     return 0
   }
 
   async execChildren(moduleNames: Array<string>, methodName: MethodName, options: ExecOptions): Promise<{ [string]: ChildExecResult }> {
     console.time(`Total Execution Time(method=${methodName}): `)
+    console.log(`Run in ${options.parallel ? 'parallel' : 'order' }`)
     const names = moduleNames.length > 0 ? this.allModuleNames.filter(name => moduleNames.includes(name)): this.allModuleNames
     const results = await Promise.all(names.map(moduleName => this.execChild(this.graph.getModule(moduleName), methodName, options)))
     console.timeEnd(`Total Execution Time(method=${methodName}): `)
@@ -114,8 +115,8 @@ class CLI {
   }
 
   async execChild(phenylModule: PhenylModule, methodName: MethodName, options: ExecOptions): Promise<ChildExecResult> {
-    const { fork, params } = options
-    if (fork) {
+    const { parallel, params } = options
+    if (parallel) {
       return this.execChildByFork(phenylModule, methodName, params)
     }
     return this.execChildInTheSameProcess(phenylModule, methodName, params)
@@ -156,9 +157,9 @@ class CLI {
 }
 
 function main(argv) {
-  const fork = (['fork', 'f'].includes(argv[argv.length - 1]))
-  if (fork) argv.pop()
-  const cli = new CLI(fork)
+  const parallel = (['parallel', 'p'].includes(argv[argv.length - 1]))
+  if (parallel) argv.pop()
+  const cli = new CLI(parallel)
   const [ subcommand ] = argv
   const moduleNames = argv.slice(1)
   switch(subcommand) {
