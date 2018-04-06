@@ -140,6 +140,8 @@ export default class PhenylModule {
         join(this.modulePath, 'node_modules'),
         join(this.modulePath, 'dist'),
         join(this.modulePath, 'package-lock.json'),
+        join(this.modulePath, '.nyc_output'),
+        join(this.modulePath, 'coverage'),
       ]
     }
   }
@@ -209,8 +211,9 @@ export default class PhenylModule {
 
     const dependings = this.getDependings(graph)
     for (const dependingModule of dependings) {
+      yield { type: 'rm', args: ['-rf', join(nodeModulesPath, dependingModule.name)] }
       const relative = rel(nodeModulesPath, dependingModule.modulePath)
-      yield { type: 'ln', args: ['-sf', relative, dependingModule.name] }
+      yield { type: 'ln', args: ['-s', relative, dependingModule.name] }
     }
     yield { type: 'cd', args: [nodeModulesPath] }
 
