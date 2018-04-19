@@ -69,10 +69,12 @@ export function createError(
   // $FlowIssue(Error-can-have-prop)
   e.type = error.type || _type || guessErrorTypes[e.at](e)
   // $FlowIssue(Error-can-have-prop)
-  Object.defineProperty(e, 'toJSON', {
-    // $FlowIssue(at-is-ErrorLocation)
-    value: toJSONs[e.at]
-  })
+  if (e.toJSON == null) {
+    Object.defineProperty(e, 'toJSON', {
+      // $FlowIssue(at-is-ErrorLocation)
+      value: toJSONs[e.at],
+    })
+  }
   // $FlowIssue(compatible)
   return e
 }
