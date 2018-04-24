@@ -1,6 +1,6 @@
 {
   "name": "phenyl-redux",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -22,7 +22,7 @@
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
     "phenyl-interfaces": "~0.2.2",
-    "phenyl-utils": "~0.2.2",
+    "phenyl-utils": "~0.2.3",
     "power-assign": "~0.2.7"
   }
 }
