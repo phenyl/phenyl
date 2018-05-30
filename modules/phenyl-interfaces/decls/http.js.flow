@@ -14,7 +14,7 @@ export type EncodedHttpRequest = {
 }
 
 export type EncodedHttpResponse = {
-  +headers: { [name: string]: string } | Headers,
+  +headers: { [name: string]: string } ,
   +body: string | ResponseData, // stringified JSON or parsed JSON
   statusCode: number,
 }
