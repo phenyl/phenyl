@@ -1,6 +1,6 @@
 {
   "name": "is-restorable",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Checking instance's restorablity. Designed for testing.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -21,7 +21,7 @@
     "nyc": "^11.6.0"
   },
   "dependencies": {
-    "mongolike-operations": "~0.1.4",
+    "mongolike-operations": "~0.1.5",
     "fast-deep-equal": "^1.0.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

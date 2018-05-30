@@ -1,6 +1,6 @@
 {
   "name": "phenyl-redux",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -21,8 +21,8 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "phenyl-interfaces": "~0.2.2",
-    "phenyl-utils": "~0.2.4",
-    "power-assign": "~0.2.8"
+    "phenyl-interfaces": "~0.2.3",
+    "phenyl-utils": "~0.2.5",
+    "power-assign": "~0.2.9"
   }
 }

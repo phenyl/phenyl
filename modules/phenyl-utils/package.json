@@ -1,6 +1,6 @@
 {
   "name": "phenyl-utils",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -25,9 +25,9 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
-    "oad-utils": "~0.2.0",
-    "phenyl-interfaces": "~0.2.2",
-    "power-assign": "~0.2.8"
+    "oad-utils": "~0.2.1",
+    "phenyl-interfaces": "~0.2.3",
+    "power-assign": "~0.2.9"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-utils",

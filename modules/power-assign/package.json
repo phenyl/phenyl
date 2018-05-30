@@ -1,6 +1,6 @@
 {
   "name": "power-assign",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Empowered Object.assign() in JavaScript available in whole JavaScript environment.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -25,8 +25,8 @@
   },
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
-    "mongolike-operations": "~0.1.4",
-    "oad-utils": "~0.2.0",
-    "power-filter": "~0.1.7"
+    "mongolike-operations": "~0.1.5",
+    "oad-utils": "~0.2.1",
+    "power-filter": "~0.1.8"
   }
 }
