@@ -526,6 +526,24 @@ export const assertEntityClient = (
       assert(result2.entity.favorites && result2.entity.favorites.music.singer === 'Tatsuro Yamashita')
     })
 
+    it ('updates a property in array with updateById command', async () => {
+      const result = await entityClient.updateById({
+        entityName: 'user',
+        id: user1.id,
+        operation: { $set: { 'hobbies[0]': 'Jazz' }},
+      })
+
+      assert(result.ok === 1)
+      assert(result.n === 1)
+
+      const result2 = await entityClient.get({
+        entityName: 'user',
+        id: user1.id,
+      })
+
+      assert(result2.entity.hobbies && result2.entity.hobbies[0] === 'Jazz')
+    })
+
     it ('updates an entity by auto generated id', async () => {
       const result = await entityClient.updateById({
         entityName: 'user',

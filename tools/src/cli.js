@@ -145,6 +145,7 @@ class CLI {
     switch (message.type) {
       case 'message': {
         const { color, text } = message.payload
+        // $FlowIssue(chalk[color])
         console.log(color ? chalk[color](text) : text)
         break
       }
