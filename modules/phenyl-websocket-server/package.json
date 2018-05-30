@@ -1,6 +1,6 @@
 {
   "name": "phenyl-websocket-server",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -19,7 +19,7 @@
     "phenyl-interfaces": "~0.2.2"
   },
   "dependencies": {
-    "phenyl-utils": "~0.2.3",
+    "phenyl-utils": "~0.2.4",
     "ws": "^3.3.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
