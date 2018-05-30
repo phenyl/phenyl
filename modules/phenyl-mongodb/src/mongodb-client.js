@@ -8,6 +8,7 @@ import { assign } from 'power-assign/jsnext'
 import {
   convertToDotNotationString,
   visitFindOperation,
+  visitUpdateOperation,
 } from 'oad-utils/jsnext'
 
 import type {
@@ -73,7 +74,7 @@ function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFind
   return assign(simpleFindOperation, { $rename: { id: '_id' } })
 }
 
-function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function convertDocumentPathToDotNotationInFindOperation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
     const dstKey = convertToDotNotationString(srcKey)
     operation[dstKey] = simpleFindOperation[srcKey]
@@ -85,14 +86,13 @@ function composedFindOperationFilters(simpleFindOperation: SimpleFindOperation):
   return [
     convertIdToObjectIdInWhere,
     setIdTo_idInWhere,
-    convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
+    convertDocumentPathToDotNotationInFindOperation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
 }
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, { simpleFindOperation: composedFindOperationFilters })
 }
-
 
 function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   const renameOperator = operation.$rename
@@ -106,8 +106,24 @@ function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   return assign(operation, { $set: { $rename: renameOperatorWithParent }})
 }
 
-export function filterUpdateOperation(operation: UpdateOperation): UpdateOperation {
-  return convertNewNameWithParent(operation)
+function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+  return visitUpdateOperation(updateOperation, {
+    operation: op => {
+      return Object.keys(op).reduce((acc, srcKey) => {
+        const dstKey = convertToDotNotationString(srcKey)
+        // $FlowIssue(op[srcKey])
+        acc[dstKey] = op[srcKey]
+        return acc
+      }, {})
+    }
+  })
+}
+
+export function filterUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+  return [
+    convertNewNameWithParent,
+    convertDocumentPathToDotNotationInUpdateOperation,
+  ].reduce((operation, filterFunc) => filterFunc(operation), updateOperation)
 }
 
 
