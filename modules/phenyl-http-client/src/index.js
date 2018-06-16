@@ -96,7 +96,7 @@ export default class PhenylHttpClient<TM: TypeMap> extends PhenylRestApiClient<T
    * @public
    * Access to Phenyl Server (CustomRequestHandler)
    */
-  async requestText(path: string, params: ?Object): Promise<string> {
+  async requestText(path: string, params?: Object): Promise<string> {
     const result = await fetch(this.url + path, params)
     return result.text()
   }
