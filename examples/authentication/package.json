@@ -1,7 +1,7 @@
 {
   "name": "phenyl-example-authentication",
   "private": true,
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "oad-utils": "~0.2.1",
-    "phenyl-http-client": "~0.2.5",
+    "phenyl-http-client": "~0.2.6",
     "phenyl-http-server": "~0.2.5",
     "phenyl-interfaces": "~0.2.3",
     "phenyl-memory-db": "~0.2.5",
