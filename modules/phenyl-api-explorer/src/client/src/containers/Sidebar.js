@@ -1,4 +1,4 @@
-/* global EntitiesDefinition */
+/* global PhenylFunctionalGroupSkeleton */
 import React from 'react'
 import { Sidebar as SemanticSidebar, Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -16,10 +16,10 @@ type Props = {
 export const Sidebar = ({ version, userName, logout }: Props) => (
   <SemanticSidebar as={Menu} visible icon='labeled' vertical inverted className="fixed">
     <Information version={version} userName={userName} onLogout={logout} />
-    <FunctionalGroup groupName={'users'} functionalNames={Object.keys(EntitiesDefinition.users)} />
-    <FunctionalGroup groupName={'nonUsers'} functionalNames={Object.keys(EntitiesDefinition.nonUsers)} />
-    <FunctionalGroup groupName={'customQueries'} functionalNames={Object.keys(EntitiesDefinition.customQueries)} />
-    <FunctionalGroup groupName={'customCommands'} functionalNames={Object.keys(EntitiesDefinition.customCommands)} />
+    <FunctionalGroup groupName={'users'} functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.users)} />
+    <FunctionalGroup groupName={'nonUsers'} functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.nonUsers)} />
+    <FunctionalGroup groupName={'customQueries'} functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.customQueries)} />
+    <FunctionalGroup groupName={'customCommands'} functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.customCommands)} />
   </SemanticSidebar>
 )
 

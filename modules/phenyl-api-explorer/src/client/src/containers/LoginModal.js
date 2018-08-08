@@ -1,4 +1,4 @@
-/* global EntitiesDefinition */
+/* global PhenylFunctionalGroupSkeleton */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Message, Form, Button, Header, Icon, Modal } from 'semantic-ui-react'
@@ -27,10 +27,10 @@ class LoginModal extends Component<Props, State> {
   }
 
   handleChangeEntity = (event, { value }) => {
-    if (!EntitiesDefinition.users[value]) {
+    if (!PhenylFunctionalGroupSkeleton.users[value]) {
       throw new Error(`Entity '${value}' is not defined`)
     }
-    const { accountPropName, passwordPropName } = EntitiesDefinition.users[value]
+    const { accountPropName, passwordPropName } = PhenylFunctionalGroupSkeleton.users[value]
 
     this.setState({
       entityName: value,
@@ -114,7 +114,7 @@ class LoginModal extends Component<Props, State> {
 }
 
 const mapStateToProps = (state) => ({
-  entityNames: Object.keys(EntitiesDefinition.users),
+  entityNames: Object.keys(PhenylFunctionalGroupSkeleton.users),
   error: state.user.error,
 })
 

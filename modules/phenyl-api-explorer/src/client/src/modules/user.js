@@ -1,4 +1,4 @@
-/* global EntitiesDefinition */
+/* global PhenylFunctionalGroupSkeleton */
 import PhenylHttpClient from 'phenyl-http-client'
 
 const LOGIN = 'user/LOGIN'
@@ -34,7 +34,7 @@ export const reducer = (state = initialState, action) => {
         error: null,
       }
     case LOGIN_SUCCESS:
-      const { accountPropName } = EntitiesDefinition.users[action.session.entityName]
+      const { accountPropName } = PhenylFunctionalGroupSkeleton.users[action.session.entityName]
       return {
         ...state,
         error: null,

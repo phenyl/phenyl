@@ -44,9 +44,9 @@ $('script[src]').each((i, el) => {
 })
 
 // Inject entities
-const entitiesDefinition = cheerio('<script></script>').text(`
-  window.EntitiesDefinition = <%- JSON.stringify(functionalGroup) %>
+const phenylFunctionalGroupSkeleton = cheerio('<script></script>').text(`
+  window.PhenylFunctionalGroupSkeleton = <%- JSON.stringify(functionalGroup) %>
 `)
-$('script').eq(0).before(entitiesDefinition)
+$('script').eq(0).before(phenylFunctionalGroupSkeleton)
 
 fs.writeFileSync(indexPath, $.html(), 'utf8')
