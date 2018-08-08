@@ -27,13 +27,15 @@ class PatientDefinition extends StandardUserDefinition {
   }
 
   async authorization(reqData, session): Promise<boolean> {
-    const noLoginCommands = ['insertOne', 'insertAndGet', 'insertMulti', 'insertAndGetMulti', 'login']
-
-    if (noLoginCommands.includes(reqData.method)) {
-      return true
+    switch (reqData.method) {
+      case 'insertOne':
+      case 'insertAndGet':
+      case 'insertAndGetMulti':
+      case 'login':
+        return true
+      default:
+        return session != null
     }
-
-    return session != null && session.userId === reqData.payload.id
   }
 }
 
@@ -48,7 +50,7 @@ const functionalGroup = {
     patient: new PatientDefinition(),
   },
   nonUsers: {
-    hospital: new HospitalDefinition(),
+    hospital: new HospitalDefinition({}),
   },
 }
 
