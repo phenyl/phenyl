@@ -1,7 +1,11 @@
 {
-  "name": "client",
+  "name": "phenyl-api-explorer-client",
   "version": "0.1.0",
+  "description": "Client application of phenyl-api-explorer",
   "private": true,
+  "scripts": {
+    "build": "NODE_ENV=production BABEL_ENV=production node scripts/build.js && node scripts/prepare-assets.js"
+  },
   "dependencies": {
     "phenyl-utils": "~0.1.0",
     "phenyl-http-client": "~0.1.0",
@@ -14,9 +18,6 @@
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.2.0",
     "semantic-ui-react": "^0.76.0"
-  },
-  "scripts": {
-    "build": "NODE_ENV=production BABEL_ENV=production node scripts/build.js && node scripts/prepare-assets.js"
   },
   "devDependencies": {
     "react-dev-utils": "^4.2.1",
