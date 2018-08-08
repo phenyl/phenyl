@@ -38,6 +38,13 @@ export type MultiUpdateCommandResult<IdMap: { [Id]: Id } = { [Id]: Id }> = {
   prevVersionsById: $ObjMap<IdMap, Id => Id>,
 }
 
+export type UpsertCommandResult = {
+  ok: 1,
+  n: number,
+  versionId: Id,
+  prevVersionId: ?Id,
+}
+
 export type MultiValuesCommandResult<E: Entity = Entity, IdMap: { [Id]: Id } = { [Id]: Id }> = {
   ok: 1,
   n: number,

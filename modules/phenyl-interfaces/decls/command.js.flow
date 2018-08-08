@@ -38,6 +38,13 @@ export type MultiUpdateCommand<N: EntityName = EntityName> = {|
   ordered?: boolean,
 |}
 
+export type UpsertCommand<N: EntityName = EntityName, P: ProEntity = ProEntity> = {|
+  entityName: N, // "update" key in MongoDB reference
+  +where: FindOperation, // "q" key in MongoDB reference
+  value: P, // "u" key in MongoDB reference
+  ordered?: boolean,
+|}
+
 export type PushCommand<N: EntityName = EntityName> = {|
   entityName: N,
   id: Id,
