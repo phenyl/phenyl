@@ -6,7 +6,7 @@
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "build": "cd src/client && rm -rf node_modules && npm i && npm run build",
-    "start": "../../node_modules/.bin/babel-node --help examples/index.js",
+    "start": "../../node_modules/.bin/babel-node examples/index.js",
     "test": "echo no test specified in phenyl-api-explorer"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
