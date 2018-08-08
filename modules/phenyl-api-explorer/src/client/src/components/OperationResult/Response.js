@@ -28,7 +28,6 @@ const Response = ({ loading, expanded, response, error }: Props) => {
       <Segment className='result'>
         <JSONTree
           hideRoot
-          sortObjectKeys
           shouldExpandNode={() => expanded}
           data={response}
         />
