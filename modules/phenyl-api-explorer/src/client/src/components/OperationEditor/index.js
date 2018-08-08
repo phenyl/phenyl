@@ -6,7 +6,7 @@ type Props = {
   sessionId: string,
   operations: Array<string>,
   defaultPayloads: { [string]: Object },
-  execute: ({ entitiName: string, operation: string, payload: any }) => any,
+  execute: ({ entityName: string, operation: string, payload: any }) => any,
 }
 
 type State = {
