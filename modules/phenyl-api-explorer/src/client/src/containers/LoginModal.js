@@ -60,7 +60,7 @@ class LoginModal extends Component<Props, State> {
 
     return (
       <Modal open={open} basic size='small'>
-        <Header icon='user circle outline' content='Login to Phenyl explorer' />
+        <Header icon='user circle outline' content='Login to Phenyl API Explorer' />
         <Modal.Content>
           <p>Please enter credential.</p>
           <Form inverted error={!!error}>

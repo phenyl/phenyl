@@ -9,7 +9,7 @@ type Props = {
 
 const Information = ({ version, userName, onLogout }: Props) => (
   <Menu.Item name='home'>
-    <div className="header">Phenyl Explorer v{version}</div>
+    <div className="header">Phenyl API Explorer v{version}</div>
     <div className="menu">
       {userName && (
         <Menu.Item>
