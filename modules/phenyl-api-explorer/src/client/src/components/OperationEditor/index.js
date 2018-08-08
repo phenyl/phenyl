@@ -6,29 +6,29 @@ type Props = {
   sessionId: string,
   operations: Array<string>,
   defaultPayloads: { [string]: Object },
-  execute: ({ entityName: string, operation: string, payload: any }) => any,
+  execute: ({ entityName: string, method: string, payload: any }) => any,
 }
 
 type State = {
-  operation: string, // FIXME: enum
+  method: string, // FIXME: enum
   payload: string,
 }
 
 class OperationEditor extends Component<Props, State> {
   state: State = {
-    operation: null,
+    method: null,
     payload: null,
   }
 
   handleChangeOperation = (event, { value }) => {
     if (!this.props.defaultPayloads[value]) {
-      throw new Error(`Unknown operation: ${value}`)
+      throw new Error(`Unknown method: ${value}`)
     }
 
     const payload = this.props.defaultPayloads[value]
 
     this.setState({
-      operation: value,
+      method: value,
       payload: JSON.stringify(payload, null, 2),
     })
   }
@@ -44,7 +44,7 @@ class OperationEditor extends Component<Props, State> {
     execute({
       sessionId: this.props.sessionId,
       entityName: match.params.functional,
-      operation: this.state.operation,
+      method: this.state.method,
       payload,
     })
   }

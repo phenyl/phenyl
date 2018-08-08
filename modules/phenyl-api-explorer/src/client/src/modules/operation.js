@@ -55,14 +55,14 @@ export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
   error,
 })
 
-export const execute = ({ sessionId, entityName, operation, payload }) => async (dispatch) => {
+export const execute = ({ sessionId, entityName, method, payload }) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
   dispatch(startExecute())
 
   const start = new Date()
   let response = null
   try {
-    switch (operation) {
+    switch (method) {
       case 'find':
         response = await client.find({ entityName, ...payload }, sessionId)
         break
@@ -128,7 +128,7 @@ export const execute = ({ sessionId, entityName, operation, payload }) => async 
         break
 
       default:
-        throw new Error(`Unknown operation: ${operation}`)
+        throw new Error(`Unknown method: ${method}`)
     }
 
     dispatch(receiveResponse(response, new Date() - start))
