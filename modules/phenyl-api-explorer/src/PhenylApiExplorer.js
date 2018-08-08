@@ -7,6 +7,7 @@ import type {
   FunctionalGroup,
   EncodedHttpResponse,
 } from 'phenyl-interfaces'
+import { shallowMap } from './utils'
 
 export type ExplorerParams = {|
   path: string,
@@ -25,25 +26,17 @@ export default class PhenylApiExplorer {
     this.html = this.getClientHtml()
   }
 
-  shallowMap (obj: Object, fn: (any, string, Object) => any): Object {
-    const ret = {}
-    for (let p in obj) {
-      ret[p] = fn(obj[p], p, obj)
-    }
-    return ret
-  }
-
   getClientHtml (): string {
     const templatePath = path.join(__dirname, 'client', 'build', 'index.html')
     const template = fs.readFileSync(templatePath, 'utf8')
     const data = {
       functionalGroup: {
-        users: this.shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
+        users: shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
           return { accountPropName, passwordPropName }
         }),
-        nonUsers: this.shallowMap(this.functionalGroup.nonUsers, () => true),
-        customQueries: this.shallowMap(this.functionalGroup.customQueries, () => true),
-        customCommands: this.shallowMap(this.functionalGroup.customCommands, () => true),
+        nonUsers: shallowMap(this.functionalGroup.nonUsers, () => true),
+        customQueries: shallowMap(this.functionalGroup.customQueries, () => true),
+        customCommands: shallowMap(this.functionalGroup.customCommands, () => true),
       },
     }
     return ejs.render(template, data)
