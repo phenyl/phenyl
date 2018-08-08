@@ -7,8 +7,8 @@
     "build": "node scripts/build.js && node scripts/prepare-assets.js"
   },
   "dependencies": {
-    "phenyl-utils": "~0.1.0",
-    "phenyl-http-client": "~0.1.0",
+    "phenyl-utils": "~0.2.5",
+    "phenyl-http-client": "~0.2.6",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-json-tree": "^0.11.0",
