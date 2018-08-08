@@ -1,14 +1,14 @@
 // @flow
 /* eslint-disable no-console */
 import express from 'express'
-import PhenylRestApi from 'phenyl-rest-api'
-import PhenylHttpClient from 'phenyl-http-client'
-import { createEntityClient } from 'phenyl-memory-db'
-import { StandardUserDefinition } from 'phenyl-standards'
+import PhenylRestApi from 'phenyl-rest-api/jsnext'
+import PhenylHttpClient from 'phenyl-http-client/jsnext'
+import { createEntityClient } from 'phenyl-memory-db/jsnext'
+import { StandardUserDefinition } from 'phenyl-standards/jsnext'
 import {
   createPhenylApiMiddleware,
   createPhenylMiddleware,
-} from 'phenyl-express'
+} from 'phenyl-express/jsnext'
 
 import type { FunctionalGroup } from 'phenyl-interfaces'
 

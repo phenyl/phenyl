@@ -4,7 +4,7 @@
 import url from 'url'
 import {
   ServerLogic,
-} from 'phenyl-http-rules'
+} from 'phenyl-http-rules/jsnext'
 
 import type {
   IncomingMessage,
@@ -43,6 +43,14 @@ export default class PhenylHttpServer<TM: TypeMap> {
   listen(port: number, hostname?: string, backlog?: number, callback?: Function) {
     this.server.on('request', this.handleIncomingMessage.bind(this))
     this.server.listen(port, hostname, backlog, callback)
+  }
+
+  /**
+   * @public
+   * Stops the server from accepting new connections.
+   */
+  close() {
+    this.server.close()
   }
 
   /**

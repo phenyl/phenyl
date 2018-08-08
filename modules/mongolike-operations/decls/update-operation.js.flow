@@ -1,5 +1,4 @@
 // @flow
-import type { Restorable } from './restorable.js.flow' // Object
 import type {
   QueryCondition,
   EqCondition,
@@ -73,12 +72,12 @@ export type RenameOperator = {
  *   }
  *
  * 2) Use updateOperationToJSON() function exported from oad-utils
- *    import { updateOperationToJSON } from 'oad-utils'
+ *    import { updateOperationToJSON } from 'oad-utils/jsnext'
  *    const operation: UpdateOperation = { $restore: { foo: Foo } }
  *    JSON.stringify(updateOperationToJSON(operation)) // {"$restore":{"foo":""}}
  */
 export type RestoreOperator = {
-  [field: DocumentPath]: '' | Class<Restorable>
+  [field: DocumentPath]: '' | Class<*>
 }
 
 export type RegularUpdateOperation = $Shape<{

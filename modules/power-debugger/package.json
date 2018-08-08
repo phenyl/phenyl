@@ -1,6 +1,6 @@
 {
   "name": "power-debugger",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -13,7 +13,7 @@
     "README.md"
   ],
   "devDependencies": {
-    "kocha": "^1.8.0",
+    "mocha": "^5.0.5",
     "babel-register": "^6.24.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",

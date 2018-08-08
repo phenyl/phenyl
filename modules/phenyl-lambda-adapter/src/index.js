@@ -1,7 +1,7 @@
 // @flow
 import {
   ServerLogic,
-} from 'phenyl-http-rules'
+} from 'phenyl-http-rules/jsnext'
 
 import type {
   ServerParams,

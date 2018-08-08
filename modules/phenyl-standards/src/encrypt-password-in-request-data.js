@@ -8,9 +8,9 @@ import type {
   EncryptFunction,
 } from '../decls/index.js.flow'
 
-import { getNestedValue } from 'oad-utils'
+import { getNestedValue } from 'oad-utils/jsnext'
 
-import { assign } from 'power-assign'
+import { assign } from 'power-assign/jsnext'
 
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {

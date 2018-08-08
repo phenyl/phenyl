@@ -1,7 +1,7 @@
 // @flow
 import {
-  randomStringWithTimeStamp
-} from 'phenyl-utils'
+  timeStampWithRandomString
+} from 'phenyl-utils/jsnext'
 
 import type {
   Id,
@@ -52,7 +52,7 @@ export class PhenylSessionClient implements SessionClient {
   async create(preSession: PreSession): Promise<Session> {
     let value = preSession
     if (value.id == null) {
-      value = Object.assign({}, value, { id: randomStringWithTimeStamp() })
+      value = Object.assign({}, value, { id: timeStampWithRandomString() })
     }
     return this.set(value)
   }

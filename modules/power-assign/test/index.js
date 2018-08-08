@@ -1,6 +1,6 @@
 // @flow
 
-import { describe, it, context } from 'kocha'
+import { describe, it, describe as context } from 'mocha'
 import assert from 'power-assert'
 import { assign, assignWithRestoration, mergeOperations } from '../src/index.js'
 

@@ -1,6 +1,6 @@
 // @flow
 
-import { describe, it } from 'kocha'
+import { describe, it } from 'mocha'
 import assert from 'power-assert'
 import { retargetToProp, retargetToPropWithRestoration } from '../src/retarget-to-prop.js'
 

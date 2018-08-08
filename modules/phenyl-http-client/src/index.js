@@ -1,14 +1,13 @@
 // @flow
-import fp from 'fetch-ponyfill'
 import {
   encodeRequest,
   decodeResponse,
-} from 'phenyl-http-rules'
+} from 'phenyl-http-rules/jsnext'
+
 import {
   PhenylRestApiClient,
   createLocalError,
-} from 'phenyl-utils'
-const { fetch } = fp()
+} from 'phenyl-utils/jsnext'
 
 import type {
   RequestData,
@@ -18,6 +17,8 @@ import type {
   QueryStringParams,
   TypeMap,
 } from 'phenyl-interfaces'
+
+import fetch from './fetch.js'
 
 /**
  * Client to access to PhenylRestApi on server.
@@ -95,7 +96,7 @@ export default class PhenylHttpClient<TM: TypeMap> extends PhenylRestApiClient<T
    * @public
    * Access to Phenyl Server (CustomRequestHandler)
    */
-  async requestText(path: string, params: ?Object): Promise<string> {
+  async requestText(path: string, params?: Object): Promise<string> {
     const result = await fetch(this.url + path, params)
     return result.text()
   }

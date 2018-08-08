@@ -1,11 +1,11 @@
 // @flow
 import {
   assign,
-} from 'power-assign'
+} from 'power-assign/jsnext'
 
 import {
   randomStringWithTimeStamp,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import type {
   AssignAction,

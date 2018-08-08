@@ -140,6 +140,8 @@ export default class PhenylModule {
         join(this.modulePath, 'node_modules'),
         join(this.modulePath, 'dist'),
         join(this.modulePath, 'package-lock.json'),
+        join(this.modulePath, '.nyc_output'),
+        join(this.modulePath, 'coverage'),
       ]
     }
   }
@@ -209,8 +211,9 @@ export default class PhenylModule {
 
     const dependings = this.getDependings(graph)
     for (const dependingModule of dependings) {
+      yield { type: 'rm', args: ['-rf', join(nodeModulesPath, dependingModule.name)] }
       const relative = rel(nodeModulesPath, dependingModule.modulePath)
-      yield { type: 'ln', args: ['-sf', relative, dependingModule.name] }
+      yield { type: 'ln', args: ['-s', relative, dependingModule.name] }
     }
     yield { type: 'cd', args: [nodeModulesPath] }
 
@@ -224,10 +227,12 @@ export default class PhenylModule {
     yield { type: 'cd', args: [rootPath] }
 
     const binPath = join(nodeModulesPath, '.bin')
-    const kochaPath = join(rootNodeModulesPath, '.bin', 'kocha')
+    const mochaPath = join(rootNodeModulesPath, '.bin', 'mocha')
+    const nycPath = join(rootNodeModulesPath, '.bin', 'nyc')
     yield { type: 'mkdir', args: ['-p', binPath] }
     yield { type: 'cd', args: [binPath] }
-    yield { type: 'ln', args: ['-sf', rel(binPath, kochaPath), 'kocha'] }
+    yield { type: 'ln', args: ['-sf', rel(binPath, mochaPath), 'mocha'] }
+    yield { type: 'ln', args: ['-sf', rel(binPath, nycPath), 'nyc'] }
     yield { type: 'exec', args: ['npm install --color always --loglevel=error'] }
     yield { type: 'rm', args: ['-f', join(modulePath, 'package-lock.json')] }
     yield { type: 'cd', args: [rootPath] }

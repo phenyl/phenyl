@@ -1,9 +1,9 @@
 // @flow
 
-import { describe, it } from 'kocha'
+import { describe, it } from 'mocha'
 import assert from 'assert'
 import { PhenylState } from '../src/index.js'
-import { assignWithRestoration } from 'power-assign'
+import { assignWithRestoration } from 'power-assign/jsnext'
 
 describe('find', () => {
   it('', () => {

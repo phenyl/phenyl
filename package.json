@@ -4,15 +4,17 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "babel-node tools/cli.js test",
-    "build": "babel-node tools/cli.js build",
-    "load": "babel-node tools/cli.js load",
-    "clean": "babel-node tools/cli.js clean",
-    "publish": "babel-node tools/cli.js publish",
-    "bump": "babel-node tools/cli.js bump",
+    "postinstall": "babel tools/src -d tools/dist",
+    "test": "node tools/dist/cli.js test",
+    "build": "node tools/dist/cli.js build",
+    "load": "node tools/dist/cli.js load",
+    "clean": "node tools/dist/cli.js clean",
+    "publish": "node tools/dist/cli.js publish",
+    "bump": "node tools/dist/cli.js bump",
     "flow": "flow",
     "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js"
+    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js",
+    "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-strip-jsnext": "^2.0.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-power-assert": "^1.0.0",
@@ -37,7 +40,8 @@
     "eslint-plugin-flowtype": "^2.39.1",
     "eslint-plugin-react": "^7.5.1",
     "flow-bin": "^0.68.0",
-    "kocha": "^1.8.1",
+    "mocha": "^5.0.5",
+    "nyc": "^11.6.0",
     "power-assert": "^1.4.4",
     "shelljs": "^0.7.8"
   }

@@ -1,11 +1,11 @@
 // @flow
 
-import { it, describe, afterEach, beforeEach } from 'kocha'
+import { it, describe, afterEach, beforeEach } from 'mocha'
 import assert from 'power-assert'
 import express from 'express'
-import PhenylHttpClient from 'phenyl-http-client'
-import { createEntityClient } from 'phenyl-memory-db'
-import PhenylRestApi from 'phenyl-rest-api'
+import PhenylHttpClient from 'phenyl-http-client/jsnext'
+import { createEntityClient } from 'phenyl-memory-db/jsnext'
+import PhenylRestApi from 'phenyl-rest-api/jsnext'
 import {
   createPhenylApiMiddleware,
   createPhenylMiddleware,
@@ -19,7 +19,6 @@ const fg = {
     diary: {
       authorization: async () => true,
       validation: async () => undefined,
-      wrapExecution: async (a, b, c) => c(a, b),
     },
   },
   customQueries: {

@@ -1,9 +1,9 @@
 // @flow
 
-import powerCrypt from 'power-crypt'
+import powerCrypt from 'power-crypt/jsnext'
 import {
   createServerError,
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import { StandardEntityDefinition } from './standard-entity-definition.js'
 import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'

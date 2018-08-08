@@ -1,11 +1,14 @@
 {
   "name": "phenyl-http-client",
-  "version": "0.2.1",
+  "version": "0.2.6",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
-    "test": "kocha --require babel-register test/*.js --color always"
+    "test": "nyc mocha test/*.js --color always"
+  },
+  "browser": {
+    "./fetch.js": "./fetch-browser.js"
   },
   "files": [
     "src",
@@ -17,19 +20,20 @@
   ],
   "devDependencies": {
     "babel-register": "^6.24.1",
-    "kocha": "^1.8.0",
-    "phenyl-http-server": "~0.2.1",
-    "phenyl-memory-db": "~0.2.1",
-    "phenyl-rest-api": "~0.3.1",
+    "nyc": "^11.6.0",
+    "phenyl-http-server": "~0.2.5",
+    "phenyl-memory-db": "~0.2.5",
+    "phenyl-rest-api": "~0.3.5",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client",
   "license": "Apache License 2.0",
   "dependencies": {
-    "fetch-ponyfill": "^4.1.0",
-    "phenyl-interfaces": "~0.2.1",
-    "phenyl-http-rules": "~0.2.1",
-    "phenyl-utils": "~0.2.1"
+    "node-fetch": "^1.7.3",
+    "phenyl-interfaces": "~0.2.3",
+    "phenyl-http-rules": "~0.2.5",
+    "phenyl-utils": "~0.2.5",
+    "whatwg-fetch": "^2.0.3"
   }
 }

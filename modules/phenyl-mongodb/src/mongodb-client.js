@@ -3,12 +3,13 @@ import mongodb from 'mongodb'
 import bson from 'bson'
 import {
   createServerError,
-} from 'phenyl-utils'
-import { assign } from 'power-assign'
+} from 'phenyl-utils/jsnext'
+import { assign } from 'power-assign/jsnext'
 import {
   convertToDotNotationString,
   visitFindOperation,
-} from 'oad-utils'
+  visitUpdateOperation,
+} from 'oad-utils/jsnext'
 
 import type {
   Entity,
@@ -30,6 +31,12 @@ import type {
 } from 'phenyl-interfaces'
 
 import type { MongoDbConnection } from './connection.js'
+import type {
+  ChangeStreamPipeline,
+  ChangeStreamOptions,
+  ChangeStream,
+} from './change-stream.js'
+
 
 // convert 24-byte hex lower string to ObjectId
 function ObjectID(id: any): any {
@@ -67,7 +74,7 @@ function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFind
   return assign(simpleFindOperation, { $rename: { id: '_id' } })
 }
 
-function convertDocumentPathToDotNotation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+function convertDocumentPathToDotNotationInFindOperation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
   return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
     const dstKey = convertToDotNotationString(srcKey)
     operation[dstKey] = simpleFindOperation[srcKey]
@@ -79,14 +86,13 @@ function composedFindOperationFilters(simpleFindOperation: SimpleFindOperation):
   return [
     convertIdToObjectIdInWhere,
     setIdTo_idInWhere,
-    convertDocumentPathToDotNotation, // execute last because power-assign required documentPath
+    convertDocumentPathToDotNotationInFindOperation, // execute last because power-assign required documentPath
   ].reduce((operation, filterFunc) => filterFunc(operation), simpleFindOperation)
 }
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, { simpleFindOperation: composedFindOperationFilters })
 }
-
 
 function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   const renameOperator = operation.$rename
@@ -100,8 +106,24 @@ function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   return assign(operation, { $set: { $rename: renameOperatorWithParent }})
 }
 
-export function filterUpdateOperation(operation: UpdateOperation): UpdateOperation {
-  return convertNewNameWithParent(operation)
+function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+  return visitUpdateOperation(updateOperation, {
+    operation: op => {
+      return Object.keys(op).reduce((acc, srcKey) => {
+        const dstKey = convertToDotNotationString(srcKey)
+        // $FlowIssue(op[srcKey])
+        acc[dstKey] = op[srcKey]
+        return acc
+      }, {})
+    }
+  })
+}
+
+export function filterUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+  return [
+    convertNewNameWithParent,
+    convertDocumentPathToDotNotationInUpdateOperation,
+  ].reduce((operation, filterFunc) => filterFunc(operation), updateOperation)
 }
 
 
@@ -184,6 +206,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
   async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<Array<$ElementType<M, N>>> {
     const { entityName, ids } = query
     const coll = this.conn.collection(entityName)
+    // $FlowIssue(find-operation)
     const result = await coll.find({ _id: { $in: ids.map(ObjectID) } })
     if (result.length === 0) {
       throw createServerError(
@@ -221,8 +244,10 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     const coll = this.conn.collection(entityName)
 
     const result = await coll.insertMany(command.values.map(filterInputEntity))
+    // $FlowIssue(ids-are-all-strings)
+    const ids: string[] = Object.values(result.insertedIds)
     // TODO: transactional operation needed
-    return this.getByIds({ entityName, ids: result.insertedIds })
+    return this.getByIds({ entityName, ids })
   }
 
   async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>> {
@@ -261,5 +286,9 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     // $FlowIssue(deleteCount-exists)
     const { deletedCount } = result
     return deletedCount
+  }
+
+  watch<N: $Keys<M>>(entityName: N, pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream {
+    return this.conn.collection(entityName).watch(pipeline, options)
   }
 }

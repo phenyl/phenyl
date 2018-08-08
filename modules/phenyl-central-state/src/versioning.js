@@ -2,11 +2,11 @@
 import {
   normalizeUpdateOperation,
   mergeUpdateOperations,
-} from 'oad-utils'
+} from 'oad-utils/jsnext'
 
 import {
-  randomStringWithTimeStamp
-} from 'phenyl-utils'
+  timeStampWithRandomString
+} from 'phenyl-utils/jsnext'
 
 import type {
   Entity,
@@ -121,7 +121,7 @@ export class Versioning {
    * Attach meta info ("_PhenylMeta" property) to the given entity.
    */
   static attachMetaInfoToNewEntity<E: Entity>(entity: E): EntityWithMetaInfo<E> {
-    const versionId = randomStringWithTimeStamp()
+    const versionId = timeStampWithRandomString()
     const _PhenylMeta = {
       versions: [ { id: versionId, op: '' }],
     }
@@ -134,7 +134,7 @@ export class Versioning {
    */
   static attachMetaInfoToUpdateCommand<T: { operation: UpdateOperation }>(command: T): T {
     const normalizedOperation = normalizeUpdateOperation(command.operation)
-    const version = { id: randomStringWithTimeStamp(), op: JSON.stringify(command.operation) }
+    const version = { id: timeStampWithRandomString(), op: JSON.stringify(command.operation) }
     const $push = Object.assign({}, normalizedOperation.$push, {
       '_PhenylMeta.versions': { $each: [version], $slice: -100 }
     })

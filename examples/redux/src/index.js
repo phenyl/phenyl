@@ -3,12 +3,12 @@
 /* eslint-env node */
 import http from 'http'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { PhenylRedux, LocalStateFinder } from 'phenyl-redux'
-import PhenylHttpServer from 'phenyl-http-server'
-import PhenylRestApi from 'phenyl-rest-api'
-import PhenylHttpClient from 'phenyl-http-client'
-import { createEntityClient } from 'phenyl-memory-db'
-import { StandardUserDefinition } from 'phenyl-standards'
+import { PhenylRedux, LocalStateFinder } from 'phenyl-redux/jsnext'
+import PhenylHttpServer from 'phenyl-http-server/jsnext'
+import PhenylRestApi from 'phenyl-rest-api/jsnext'
+import PhenylHttpClient from 'phenyl-http-client/jsnext'
+import { createEntityClient } from 'phenyl-memory-db/jsnext'
+import { StandardUserDefinition } from 'phenyl-standards/jsnext'
 import type { FunctionalGroup } from 'phenyl-interfaces'
 
 type ThisEntityMap = {

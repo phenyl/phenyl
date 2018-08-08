@@ -1,4 +1,4 @@
-import { describe, it } from 'kocha'
+import { describe, it } from 'mocha'
 
 describe('', () => {
   it('', () => {

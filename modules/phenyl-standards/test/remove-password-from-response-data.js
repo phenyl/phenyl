@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import { it, describe } from 'mocha'
 import assert from 'power-assert'
 import { removePasswordFromResponseData } from '../src/remove-password-from-response-data.js'
 

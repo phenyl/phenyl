@@ -1,12 +1,12 @@
 // @flow
 import shajs from 'sha.js'
 
-export type PowerCryptOptions = {
-  nStretch?: number,
-  algorithm?: 'sha224' | 'sha256' | 'sha384' | 'sha384' | 'sha512',
-  encode?: 'hex' | 'utf8' | 'base64',
-  salt?: string
-}
+export type PowerCryptOptions = $Shape<{
+  nStretch: number,
+  algorithm: 'sha224' | 'sha256' | 'sha384' | 'sha384' | 'sha512',
+  encode: 'hex' | 'utf8' | 'base64',
+  salt: string
+}>
 
 /**
  *

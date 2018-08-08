@@ -5,7 +5,7 @@ import WebSocket from 'ws'
 
 import {
   createServerError
-} from 'phenyl-utils'
+} from 'phenyl-utils/jsnext'
 
 import WebSocketClientInfo from './client-info.js'
 

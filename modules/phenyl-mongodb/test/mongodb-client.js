@@ -1,6 +1,6 @@
 // @flow
 
-import { it, describe } from 'kocha'
+import { it, describe } from 'mocha'
 import bson from 'bson'
 import assert from 'power-assert'
 import type { AndFindOperation, UpdateOperation, Entity } from 'phenyl-interfaces'
