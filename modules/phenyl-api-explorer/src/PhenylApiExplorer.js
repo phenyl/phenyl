@@ -32,6 +32,9 @@ export default class PhenylApiExplorer {
     const data = {
       functionalGroup: {
         users: shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
+          if (!accountPropName || !passwordPropName) {
+            throw new Error('accountPropName and passwordPropName are required')
+          }
           return { accountPropName, passwordPropName }
         }),
         nonUsers: shallowMap(this.functionalGroup.nonUsers, () => true),
