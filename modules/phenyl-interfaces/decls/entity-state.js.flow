@@ -21,6 +21,7 @@ import type {
 import type {
   IdUpdateCommand,
   MultiUpdateCommand,
+  UpsertCommand,
   DeleteCommand,
 } from './command.js.flow'
 
@@ -43,5 +44,6 @@ export interface EntityStateUpdater<M: EntityMap> {
   register<N: EntityName>(entityName: N, ...entities: Array<$ElementType<M, N>>): UpdateOperation,
   updateById<N: EntityName>(command: IdUpdateCommand<N>): UpdateOperation,
   updateMulti<N: EntityName>(command: MultiUpdateCommand<N>): UpdateOperation,
+  upsert<N: EntityName>(command: UpsertCommand<N>): UpdateOperation,
   delete<N: EntityName>(command: DeleteCommand<N>): UpdateOperation,
 }

@@ -15,6 +15,7 @@ import type {
   DeleteCommandResult,
   GetCommandResult,
   IdUpdateCommandResult,
+  UpsertCommandResult,
   LoginCommandResult,
   LogoutCommandResult,
   MultiInsertCommandResult,
@@ -38,6 +39,7 @@ export type ResponseData =
   UpdateMultiResponseData |
   UpdateAndGetResponseData |
   UpdateAndFetchResponseData |
+  UpsertResponseData |
   PushResponseData |
   DeleteResponseData |
   RunCustomQueryResponseData |
@@ -109,6 +111,16 @@ export type UpdateAndGetResponseData = {|
 export type UpdateAndFetchResponseData = {|
   type: 'updateAndFetch',
   +payload: MultiValuesCommandResult<>,
+|}
+
+export type UpsertResponseData = {|
+  type: 'upsert',
+  +payload: UpsertCommandResult,
+|}
+
+export type UpsertAndGetResponseData = {|
+  type: 'upsertAndGet',
+  +payload: GetCommandResult<>,
 |}
 
 export type PushResponseData = {|

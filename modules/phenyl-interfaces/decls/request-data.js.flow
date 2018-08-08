@@ -13,6 +13,7 @@ import type {
   DeleteCommand,
   SingleInsertCommand,
   MultiInsertCommand,
+  UpsertCommand,
   LoginCommand,
   LogoutCommand,
   PushCommand,
@@ -137,6 +138,18 @@ export type UpdateAndGetRequestData = {|
 export type UpdateAndFetchRequestData = {|
   method: 'updateAndFetch',
   +payload: MultiUpdateCommand<>,
+  sessionId?: ?Id,
+|}
+
+export type UpsertRequestData = {|
+  method: 'upsert',
+  +payload: UpsertCommand<>,
+  sessionId?: ?Id,
+|}
+
+export type UpsertAndGetRequestData = {|
+  method: 'upsertAndGet',
+  +payload: UpsertCommand<>,
   sessionId?: ?Id,
 |}
 
