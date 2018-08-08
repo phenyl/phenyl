@@ -4,7 +4,7 @@
   "description": "Client application of phenyl-api-explorer",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production BABEL_ENV=production node scripts/build.js && node scripts/prepare-assets.js"
+    "build": "node scripts/build.js && node scripts/prepare-assets.js"
   },
   "dependencies": {
     "phenyl-utils": "~0.1.0",
