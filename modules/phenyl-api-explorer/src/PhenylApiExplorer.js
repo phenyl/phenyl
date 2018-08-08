@@ -22,7 +22,7 @@ export default class PhenylApiExplorer {
     this.functionalGroup = functionalGroup
     this.path = params.path
     this.handler = this.handler.bind(this)
-    this.html = this.getClientHTML()
+    this.html = this.getClientHtml()
   }
 
   shallowMap (obj: Object, fn: (any, string, Object) => any): Object {
@@ -33,7 +33,7 @@ export default class PhenylApiExplorer {
     return ret
   }
 
-  getClientHTML (): string {
+  getClientHtml (): string {
     const templatePath = path.join(__dirname, 'client', 'build', 'index.html')
     const template = fs.readFileSync(templatePath, 'utf8')
     const data = {
