@@ -11,7 +11,7 @@ type Props = {
 
 type State = {
   operation: string, // FIXME: enum
-  payload: Object,
+  payload: string,
 }
 
 class OperationEditor extends Component<Props, State> {
