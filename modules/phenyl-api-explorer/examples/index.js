@@ -7,6 +7,7 @@ import PhenylHttpServer from 'phenyl-http-server'
 import PhenylApiExplorer from '../src/PhenylApiExplorer'
 import type { Session, RequestData } from 'phenyl-interfaces'
 
+const PORT = 8000
 const memoryClient = createEntityClient()
 
 class HospitalDefinition extends StandardEntityDefinition {
@@ -58,4 +59,5 @@ const server = new PhenylHttpServer(http.createServer(), {
   customRequestHandler: new PhenylApiExplorer(functionalGroup, { path: '/explorer' }).handler,
 })
 
-server.listen(8000)
+server.listen(PORT)
+console.log(`server is listening on :${PORT}`)
