@@ -14,11 +14,11 @@ export function shallowMap(obj: ?Object, fn: (any, string, Object) => any): Obje
   return ret
 }
 
-export const pkgDir = (name: string): ?string => {
+export const pkgDir = (name: string): string => {
   const dir = require.resolve.paths(name)
     .find(p => fs.existsSync(path.join(p, name, 'package.json')))
   if (!dir) {
-    return null
+    throw new Error(`Cannot find ${name}`)
   }
 
   return path.join(dir, name)
