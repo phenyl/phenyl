@@ -13,6 +13,8 @@ import Sidebar from './containers/Sidebar'
 import Breadcrumb from './containers/Breadcrumb'
 import OperationEditor from './containers/OperationEditor'
 import OperationResult from './containers/OperationResult'
+import CustomQueryEditor from './containers/CustomQueryEditor'
+import CustomCommandEditor from './containers/CustomCommandEditor'
 import './App.css'
 
 const Home = () => (
@@ -40,7 +42,7 @@ const CustomQuery = () => (
   <div>
     <Breadcrumb />
     <Divider horizontal>Settings</Divider>
-    <OperationEditor />
+    <CustomQueryEditor />
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
@@ -49,7 +51,7 @@ const CustomCommand = () => (
   <div>
     <Breadcrumb />
     <Divider horizontal>Settings</Divider>
-    <OperationEditor />
+    <CustomCommandEditor />
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
@@ -78,8 +80,8 @@ const App = ({ mustLogin }: Props) => (
           <Route exact path='/' component={Home} />
           <Route path='/users/:functional' component={Users} />
           <Route path='/nonUsers/:functional' component={NonUsers} />
-          <Route path='/customQuery/:functional' component={CustomQuery} />
-          <Route path='/customCommand/:functional' component={CustomCommand} />
+          <Route path='/customQueries/:name' component={CustomQuery} />
+          <Route path='/customCommands/:name' component={CustomCommand} />
           <Route component={NotFound} />
         </Switch>
       </Segment>

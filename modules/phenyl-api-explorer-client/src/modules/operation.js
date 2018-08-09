@@ -136,3 +136,29 @@ export const execute = ({ sessionId, entityName, method, payload }) => async (di
     dispatch(receiveErrorResponse(e, new Date() - start))
   }
 }
+
+export const runCustomQuery = ({ sessionId, name, params }) => async (dispatch) => {
+  const client = new PhenylHttpClient({ url: window.location.origin })
+  dispatch(startExecute())
+
+  const start = new Date()
+  try {
+    const response = await client.runCustomQuery({ name, params }, sessionId)
+    dispatch(receiveResponse(response, new Date() - start))
+  } catch (e) {
+    dispatch(receiveErrorResponse(e, new Date() - start))
+  }
+}
+
+export const runCustomCommand = ({ sessionId, name, params }) => async (dispatch) => {
+  const client = new PhenylHttpClient({ url: window.location.origin })
+  dispatch(startExecute())
+
+  const start = new Date()
+  try {
+    const response = await client.runCustomCommand({ name, params }, sessionId)
+    dispatch(receiveResponse(response, new Date() - start))
+  } catch (e) {
+    dispatch(receiveErrorResponse(e, new Date() - start))
+  }
+}
