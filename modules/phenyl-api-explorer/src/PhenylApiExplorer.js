@@ -7,7 +7,7 @@ import type {
   FunctionalGroup,
   EncodedHttpResponse,
 } from 'phenyl-interfaces'
-import { shallowMap } from './utils'
+import { shallowMap, pkgDir } from './utils'
 
 export type ExplorerParams = {|
   path: string,
@@ -27,7 +27,7 @@ export default class PhenylApiExplorer {
   }
 
   getClientHtml (): string {
-    const templatePath = path.join(__dirname, 'client', 'build', 'index.html')
+    const templatePath = path.join(pkgDir('phenyl-api-explorer-client'), 'build', 'index.html')
     const template = fs.readFileSync(templatePath, 'utf8')
     const data = {
       functionalGroup: {
