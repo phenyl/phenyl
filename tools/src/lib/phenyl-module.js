@@ -201,7 +201,7 @@ export default class PhenylModule {
 
   *publishCommands(graph: PhenylModuleGraph): Generator<ShellCommand, *, ShellResult> {
     yield this.cleanForReleaseCommand()
-    yield* this.buildCommands()
+    yield* this.buildCommands(graph)
     yield { type: 'cd', args: [this.modulePath] }
     yield { type: 'exec', args: ['npm publish'] }
     yield { type: 'cd', args: [graph.rootPath] }

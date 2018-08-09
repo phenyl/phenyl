@@ -43,7 +43,7 @@ class OperationEditor extends Component<Props, State> {
     const payload = JSON.parse(this.state.payload)
     execute({
       sessionId: this.props.sessionId,
-      entityName: match.params.functional,
+      entityName: match.params.entityName,
       method: this.state.method,
       payload,
     })

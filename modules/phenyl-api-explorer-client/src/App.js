@@ -78,8 +78,8 @@ const App = ({ mustLogin }: Props) => (
       <Segment basic className="no-border">
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route path='/users/:functional' component={Users} />
-          <Route path='/nonUsers/:functional' component={NonUsers} />
+          <Route path='/users/:entityName' component={Users} />
+          <Route path='/nonUsers/:entityName' component={NonUsers} />
           <Route path='/customQueries/:name' component={CustomQuery} />
           <Route path='/customCommands/:name' component={CustomCommand} />
           <Route component={NotFound} />
