@@ -244,10 +244,12 @@ export default class PhenylModule {
     const binPath = join(nodeModulesPath, '.bin')
     const mochaPath = join(rootNodeModulesPath, '.bin', 'mocha')
     const nycPath = join(rootNodeModulesPath, '.bin', 'nyc')
+    const babelNodePath = join(rootNodeModulesPath, '.bin', 'babel-node')
     yield { type: 'mkdir', args: ['-p', binPath] }
     yield { type: 'cd', args: [binPath] }
     yield { type: 'ln', args: ['-sf', rel(binPath, mochaPath), 'mocha'] }
     yield { type: 'ln', args: ['-sf', rel(binPath, nycPath), 'nyc'] }
+    yield { type: 'ln', args: ['-sf', rel(binPath, babelNodePath), 'babel-node'] }
     yield { type: 'exec', args: ['npm install --color always --loglevel=error'] }
     yield { type: 'rm', args: ['-f', join(modulePath, 'package-lock.json')] }
     yield { type: 'cd', args: [rootPath] }
