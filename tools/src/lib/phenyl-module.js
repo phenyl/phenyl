@@ -156,12 +156,27 @@ export default class PhenylModule {
     }
   }
 
-  *buildCommands(): Generator<ShellCommand, *, ShellResult> {
-    yield {
-      type: 'exec',
-      args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
+  *buildCommands(graph: PhenylModuleGraph): Generator<ShellCommand, *, ShellResult> {
+    if (this.scripts.build) {
+      yield {
+        type: 'cd',
+        args: [this.modulePath]
+      }
+      yield {
+        type: 'exec',
+        args: ['npm run build']
+      }
+      yield {
+        type: 'cd',
+        args: [graph.rootPath]
+      }
+    } else {
+      yield {
+        type: 'exec',
+        args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
+      }
+      yield* this.createFlowDefinitionCommands()
     }
-    yield* this.createFlowDefinitionCommands()
   }
 
   *createFlowDefinitionCommands(): Generator<ShellCommand, *, ShellResult> {
