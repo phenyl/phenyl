@@ -5,6 +5,7 @@ import { runCustomQuery } from '../modules/operation'
 
 const mapStateToProps = (state) => ({
   sessionId: state.user.session ? state.user.session.id : null,
+  isFetching: state.operation.isFetching,
 })
 
 const mapDispatchToProps = (dispatch) => ({

@@ -6,6 +6,7 @@ import { execute } from '../modules/operation'
 
 const mapStateToProps = (state) => ({
   sessionId: state.user.session ? state.user.session.id : null,
+  isFetching: state.operation.isFetching,
   operations: operations.map(op => op.name),
   defaultPayloads: operations.reduce((acc, op) => ({
     ...acc,

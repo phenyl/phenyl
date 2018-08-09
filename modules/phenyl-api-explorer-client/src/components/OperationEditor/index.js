@@ -3,6 +3,7 @@ import { Form } from 'semantic-ui-react'
 
 type Props = {
   match: any,
+  isFetching: boolean,
   sessionId: string,
   operations: Array<string>,
   defaultPayloads: { [string]: Object },
@@ -56,12 +57,13 @@ class OperationEditor extends Component<Props, State> {
   }
 
   render () {
-    const { operations } = this.props
+    const { operations, isFetching } = this.props
     return (
       <div>
         <Form>
           <Form.Group>
             <Form.Select
+              disabled={isFetching}
               label='Operation'
               options={operations.map(op => ({
                 key: op,
@@ -73,12 +75,14 @@ class OperationEditor extends Component<Props, State> {
             />
           </Form.Group>
           <Form.TextArea
+            disabled={isFetching}
             rows={4}
             label='Payload'
             value={this.state.payload}
             onChange={this.handleChangePayload}
           />
           <Form.Button
+            disabled={isFetching}
             positive
             onClick={this.handleRun}
           >

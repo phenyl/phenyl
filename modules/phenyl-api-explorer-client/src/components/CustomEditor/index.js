@@ -3,6 +3,7 @@ import { Form } from 'semantic-ui-react'
 
 type Props = {
   match: any,
+  isFetching: boolean,
   sessionId: string,
   execute: ({ name: string, params: Object }) => any,
 }
@@ -31,16 +32,19 @@ class OperationEditor extends Component<Props, State> {
   }
 
   render () {
+    const { isFetching } = this.props
     return (
       <div>
         <Form>
           <Form.TextArea
+            disabled={isFetching}
             rows={4}
             label='Payload'
             value={this.state.params}
             onChange={this.handleChangePayload}
           />
           <Form.Button
+            disabled={isFetching}
             positive
             onClick={this.handleRun}
           >
