@@ -5,7 +5,16 @@ import { createEntityClient } from 'phenyl-memory-db'
 import { StandardUserDefinition, StandardEntityDefinition } from 'phenyl-standards'
 import PhenylHttpServer from 'phenyl-http-server'
 import PhenylApiExplorer from '../src/PhenylApiExplorer'
-import type { Session, RequestData } from 'phenyl-interfaces'
+import type {
+  Session,
+  RequestData,
+  CustomCommand,
+  CustomCommandDefinition,
+  CustomCommandResult,
+  CustomQuery,
+  CustomQueryDefinition,
+  CustomQueryResult,
+} from 'phenyl-interfaces'
 
 const PORT = 8000
 const memoryClient = createEntityClient()
@@ -39,12 +48,66 @@ class PatientDefinition extends StandardUserDefinition {
   }
 }
 
+type CustomCommandParams = {|
+  echo: string,
+|}
+type CustomCommandResponse = {|
+  echo: string,
+  session: ?Session,
+|}
+class TestCustomCommand implements CustomCommandDefinition<*, CustomCommandParams, CustomCommandResponse> {
+  async authorization(command: CustomCommand<*, CustomCommandParams>, session: ?Session): Promise<boolean> {
+    return !!session
+  }
+
+  async validation(): Promise<void> {
+    // Does nothing
+  }
+
+  async execution(command: CustomCommand<*, CustomCommandParams>, session: ?Session): Promise<CustomCommandResult<CustomCommandResponse>> {
+    return {
+      ok: 1,
+      result: {
+        echo: command.params.echo,
+        session,
+      }
+    }
+  }
+}
+
+type CustomQueryParams = {|
+  echo: string,
+|}
+type CustomQueryResponse = {|
+  echo: string,
+  session: ?Session,
+|}
+class TestCustomQuery implements CustomQueryDefinition<*, CustomQueryParams, CustomQueryResponse> {
+  async authorization(command: CustomQuery<*, CustomQueryParams>, session: ?Session): Promise<boolean> {
+    return !!session
+  }
+
+  async validation(): Promise<void> {
+    // Does nothing
+  }
+
+  async execution(command: CustomQuery<*, CustomQueryParams>, session: ?Session): Promise<CustomQueryResult<CustomQueryResponse>> {
+    return {
+      ok: 1,
+      result: {
+        echo: command.params.echo,
+        session,
+      }
+    }
+  }
+}
+
 const functionalGroup = {
   customQueries: {
-
+    test: new TestCustomCommand(),
   },
   customCommands: {
-
+    test: new TestCustomQuery(),
   },
   users: {
     patient: new PatientDefinition(),
