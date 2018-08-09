@@ -1,8 +1,7 @@
 // @flow
 import React from 'react'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import { Route, Switch } from 'react-router-dom'
+import { withRouter, Route, Switch } from 'react-router-dom'
 import {
   Sidebar as SemanticSidebar,
   Segment,
