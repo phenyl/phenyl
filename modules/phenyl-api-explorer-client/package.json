@@ -2,7 +2,6 @@
   "name": "phenyl-api-explorer-client",
   "version": "0.1.0",
   "description": "Client application of phenyl-api-explorer",
-  "private": true,
   "scripts": {
     "build": "node scripts/build.js && node scripts/prepare-assets.js"
   },
