@@ -5,7 +5,7 @@ type Props = {
   match: any,
   isFetching: boolean,
   sessionId: string,
-  execute: ({ name: string, params: Object }) => any,
+  execute: ({ name: string, params: string }) => any,
 }
 
 type State = {
@@ -14,7 +14,7 @@ type State = {
 
 class OperationEditor extends Component<Props, State> {
   state: State = {
-    params: null,
+    params: '',
   }
 
   handleChangePayload = (event, { value }) => {
@@ -23,11 +23,11 @@ class OperationEditor extends Component<Props, State> {
 
   handleRun = () => {
     const { match, execute } = this.props
-    const params = JSON.parse(this.state.params)
+
     execute({
       sessionId: this.props.sessionId,
       name: match.params.name,
-      params,
+      params: this.state.params,
     })
   }
 

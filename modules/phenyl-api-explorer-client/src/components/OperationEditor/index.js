@@ -7,7 +7,7 @@ type Props = {
   sessionId: string,
   operations: Array<string>,
   defaultPayloads: { [string]: Object },
-  execute: ({ entityName: string, method: string, payload: any }) => any,
+  execute: ({ entityName: string, method: string, payload: string }) => any,
 }
 
 type State = {
@@ -41,12 +41,11 @@ class OperationEditor extends Component<Props, State> {
   handleRun = () => {
     const { match, execute } = this.props
 
-    const payload = JSON.parse(this.state.payload)
     execute({
       sessionId: this.props.sessionId,
       entityName: match.params.entityName,
       method: this.state.method,
-      payload,
+      payload: this.state.payload,
     })
   }
 

@@ -55,13 +55,14 @@ export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
   error,
 })
 
-export const execute = ({ sessionId, entityName, method, payload }) => async (dispatch) => {
+export const execute = ({ sessionId, entityName, method, payload: payloadStr }) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
   dispatch(startExecute())
 
   const start = new Date()
   let response = null
   try {
+    const payload = JSON.parse(payloadStr)
     switch (method) {
       case 'find':
         response = await client.find({ entityName, ...payload }, sessionId)
@@ -137,12 +138,13 @@ export const execute = ({ sessionId, entityName, method, payload }) => async (di
   }
 }
 
-export const runCustomQuery = ({ sessionId, name, params }) => async (dispatch) => {
+export const runCustomQuery = ({ sessionId, name, params: paramsStr }) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
   dispatch(startExecute())
 
   const start = new Date()
   try {
+    const params = JSON.parse(paramsStr)
     const response = await client.runCustomQuery({ name, params }, sessionId)
     dispatch(receiveResponse(response, new Date() - start))
   } catch (e) {
@@ -150,12 +152,13 @@ export const runCustomQuery = ({ sessionId, name, params }) => async (dispatch) 
   }
 }
 
-export const runCustomCommand = ({ sessionId, name, params }) => async (dispatch) => {
+export const runCustomCommand = ({ sessionId, name, params: paramsStr }) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
   dispatch(startExecute())
 
   const start = new Date()
   try {
+    const params = JSON.parse(paramsStr)
     const response = await client.runCustomCommand({ name, params }, sessionId)
     dispatch(receiveResponse(response, new Date() - start))
   } catch (e) {

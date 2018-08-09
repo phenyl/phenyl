@@ -58,11 +58,7 @@ const CustomCommand = () => (
 )
 const NotFound = () => (
   <div>
-    <Breadcrumb />
-    <Divider horizontal>Settings</Divider>
-    <OperationEditor />
-    <Divider horizontal>Result</Divider>
-    <OperationResult />
+    <span>Not found</span>
   </div>
 )
 
