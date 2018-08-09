@@ -4,7 +4,6 @@
   "description": "Client application of phenyl-api-explorer",
   "main": "index.js",
   "scripts": {
-    "prepare": "npm run build",
     "build": "node scripts/build.js && node scripts/prepare-assets.js"
   },
   "dependencies": {},
