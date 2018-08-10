@@ -72,7 +72,7 @@ export default class PhenylStateFinder<M: EntityMap> implements EntityStateFinde
   static getAll<N: $Keys<M>>(state: EntityState<M>, entityName: N): Array<$ElementType<M, N>> {
     const pool = state.pool[entityName]
     if (pool == null) {
-      throw new Error(`entityName: "${entityName}" is not found.`)
+      return []
     }
     return Object.keys(pool).map(key => pool[key])
   }
