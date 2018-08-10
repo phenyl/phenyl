@@ -1,0 +1,32 @@
+html,body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+#root {
+  height: 100%;
+}
+
+.ui.segment.no-border {
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+}
+/*.ui.segment.pushable,*/
+.ui.vertical.icon.menu {
+  width: 260px;
+}
+.ui.sidebar .item,
+.ui.sidebar .item .header,
+.ui.sidebar .item .menu .item {
+  text-align: left;
+}
+.ui.sidebar .item .header,
+.ui.breadcrumb .section {
+  text-transform: capitalize;
+}
+
+.result {
+  min-height: 150px;
+}

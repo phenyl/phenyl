@@ -124,7 +124,7 @@ export default class ChildExec {
 
   build() {
     const { phenylModule } = this
-    const iter = phenylModule.buildCommands()
+    const iter = phenylModule.buildCommands(this.graph)
     let iterResult = iter.next()
     while (!iterResult.done) {
       const shellCommand = iterResult.value

@@ -156,12 +156,27 @@ export default class PhenylModule {
     }
   }
 
-  *buildCommands(): Generator<ShellCommand, *, ShellResult> {
-    yield {
-      type: 'exec',
-      args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
+  *buildCommands(graph: PhenylModuleGraph): Generator<ShellCommand, *, ShellResult> {
+    if (this.scripts.build) {
+      yield {
+        type: 'cd',
+        args: [this.modulePath]
+      }
+      yield {
+        type: 'exec',
+        args: ['npm run build']
+      }
+      yield {
+        type: 'cd',
+        args: [graph.rootPath]
+      }
+    } else {
+      yield {
+        type: 'exec',
+        args: [`BABEL_ENV=build babel ${join(this.modulePath, 'src')} -d ${join(this.modulePath, 'dist')}`]
+      }
+      yield* this.createFlowDefinitionCommands()
     }
-    yield* this.createFlowDefinitionCommands()
   }
 
   *createFlowDefinitionCommands(): Generator<ShellCommand, *, ShellResult> {
@@ -186,7 +201,7 @@ export default class PhenylModule {
 
   *publishCommands(graph: PhenylModuleGraph): Generator<ShellCommand, *, ShellResult> {
     yield this.cleanForReleaseCommand()
-    yield* this.buildCommands()
+    yield* this.buildCommands(graph)
     yield { type: 'cd', args: [this.modulePath] }
     yield { type: 'exec', args: ['npm publish'] }
     yield { type: 'cd', args: [graph.rootPath] }
@@ -229,10 +244,12 @@ export default class PhenylModule {
     const binPath = join(nodeModulesPath, '.bin')
     const mochaPath = join(rootNodeModulesPath, '.bin', 'mocha')
     const nycPath = join(rootNodeModulesPath, '.bin', 'nyc')
+    const babelNodePath = join(rootNodeModulesPath, '.bin', 'babel-node')
     yield { type: 'mkdir', args: ['-p', binPath] }
     yield { type: 'cd', args: [binPath] }
     yield { type: 'ln', args: ['-sf', rel(binPath, mochaPath), 'mocha'] }
     yield { type: 'ln', args: ['-sf', rel(binPath, nycPath), 'nyc'] }
+    yield { type: 'ln', args: ['-sf', rel(binPath, babelNodePath), 'babel-node'] }
     yield { type: 'exec', args: ['npm install --color always --loglevel=error'] }
     yield { type: 'rm', args: ['-f', join(modulePath, 'package-lock.json')] }
     yield { type: 'cd', args: [rootPath] }

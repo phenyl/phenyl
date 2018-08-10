@@ -5,9 +5,13 @@ module.exports = {
     },
     "parser": "babel-eslint",
     "plugins": [
-      "flowtype"
+      "flowtype",
+      "react"
     ],
-    "extends": "eslint:recommended",
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
     "parserOptions": {
         "sourceType": "module"
     },
