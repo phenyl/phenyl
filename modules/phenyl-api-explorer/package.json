@@ -2,7 +2,7 @@
   "name": "phenyl-api-explorer",
   "version": "0.1.0",
   "description": "Automatically renders API explorer pages like swagger",
-  "main": "./dist/index.js",
+  "main": "./dist/PhenylApiExplorer.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "start": "nodemon examples/index.js --exec babel-node --watch src --watch examples",
