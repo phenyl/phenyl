@@ -1,6 +1,8 @@
 # phenyl-api-explorer
 Automatically renders API explorer pages like [swagger UI](https://github.com/swagger-api/swagger-ui).
 
+![screenshot.png](https://github.com/phenyl-js/phenyl/raw/master/modules/phenyl-api-explorer/examples/screenshot.png)
+
 ## Install
 ```
 npm install phenyl-api-explorer
