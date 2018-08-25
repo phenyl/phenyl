@@ -1,6 +1,6 @@
 {
   "name": "phenyl-api-explorer-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Client application of phenyl-api-explorer",
   "main": "index.js",
   "scripts": {
