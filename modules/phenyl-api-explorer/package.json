@@ -1,6 +1,6 @@
 {
   "name": "phenyl-api-explorer",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Automatically renders API explorer pages like swagger",
   "main": "./dist/PhenylApiExplorer.js",
   "jsnext:main": "./jsnext.js",
@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "ejs": "^2.6.1",
-    "phenyl-api-explorer-client": "~0.1.3"
+    "phenyl-api-explorer-client": "~0.1.4"
   }
 }
