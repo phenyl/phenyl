@@ -7,6 +7,7 @@ import type { Credential } from 'phenyl-interfaces'
 
 type Props = {
   entityNames: Array<string>,
+  busy: boolean,
   error: ?Error,
   open: boolean,
   login: (string, Credential) => void,
@@ -56,7 +57,7 @@ class LoginModal extends Component<Props, State> {
   }
 
   render () {
-    const { error, entityNames, open, loginAsAnonymous } = this.props
+    const { error, busy, entityNames, open, loginAsAnonymous } = this.props
 
     return (
       <Modal open={open} basic size='small'>
@@ -101,10 +102,10 @@ class LoginModal extends Component<Props, State> {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button basic color='red' inverted onClick={loginAsAnonymous}>
+          <Button basic color='red' inverted onClick={loginAsAnonymous} disabled={busy}>
             Login as anonymous
           </Button>
-          <Button color='green' inverted onClick={this.handleLogin}>
+          <Button color='green' inverted onClick={this.handleLogin} disabled={busy}>
             <Icon name='checkmark' /> Login
           </Button>
         </Modal.Actions>
@@ -116,6 +117,7 @@ class LoginModal extends Component<Props, State> {
 const mapStateToProps = (state) => ({
   entityNames: Object.keys(PhenylFunctionalGroupSkeleton.users),
   error: state.user.error,
+  busy: state.user.busy,
 })
 
 const mapDispatchToProps = (dispatch) => ({
