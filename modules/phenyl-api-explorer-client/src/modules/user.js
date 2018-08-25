@@ -3,11 +3,13 @@ import PhenylHttpClient from 'phenyl-http-client'
 
 const LOGIN = 'user/LOGIN'
 const LOGIN_AS_ANONYMOUS = 'user/LOGIN_AS_ANONYMOUS'
+const LOGIN_REQUEST = 'user/LOGIN_REQUEST'
 const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
 const LOGIN_FAILED = 'user/LOGIN_FAILED'
 const LOGOUT = 'user/LOGOUT'
 
 const initialState = {
+  busy: false,
   displayName: '',
   session: null,
   anonymous: false,
@@ -28,15 +30,22 @@ export const reducer = (state = initialState, action) => {
     case LOGIN_AS_ANONYMOUS:
       return {
         ...state,
+        busy: false,
         anonymous: true,
         session: null,
         user: null,
         error: null,
       }
+    case LOGIN_REQUEST:
+      return {
+        ...state,
+        busy: true
+      }
     case LOGIN_SUCCESS:
       const { accountPropName } = PhenylFunctionalGroupSkeleton.users[action.session.entityName]
       return {
         ...state,
+        busy: false,
         error: null,
         displayName: action.user[accountPropName],
         session: action.session,
@@ -45,6 +54,7 @@ export const reducer = (state = initialState, action) => {
     case LOGIN_FAILED:
       return {
         ...state,
+        busy: false,
         error: action.error,
       }
     case LOGOUT:
@@ -61,6 +71,7 @@ export const login = (entityName, credentials) => async (dispatch) => {
   const client = new PhenylHttpClient({ url: window.location.origin })
 
   try {
+    dispatch(loginRequest())
     const { ok, user, session } = await client.login({
       entityName,
       credentials,
@@ -84,6 +95,10 @@ export const loginAsAnonymous = () => {
 export const logout = () => {
   return { type: LOGOUT }
 }
+
+export const loginRequest = () => ({
+  type: LOGIN_REQUEST,
+})
 
 export const loginSuccess = ({ user, session }) => {
   return { type: LOGIN_SUCCESS, user, session }
