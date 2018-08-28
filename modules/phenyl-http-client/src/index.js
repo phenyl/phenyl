@@ -1,4 +1,6 @@
 // @flow
+import fetch from 'cross-fetch'
+
 import {
   encodeRequest,
   decodeResponse,
@@ -17,8 +19,6 @@ import type {
   QueryStringParams,
   TypeMap,
 } from 'phenyl-interfaces'
-
-import fetch from './fetch.js'
 
 /**
  * Client to access to PhenylRestApi on server.
