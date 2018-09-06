@@ -7,9 +7,6 @@
   "scripts": {
     "test": "nyc mocha test/*.js --color always"
   },
-  "browser": {
-    "./fetch.js": "./fetch-browser.js"
-  },
   "files": [
     "src",
     "dist",
@@ -30,10 +27,9 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-client",
   "license": "Apache License 2.0",
   "dependencies": {
-    "node-fetch": "^1.7.3",
-    "phenyl-interfaces": "~0.2.3",
+    "cross-fetch": "^2.2.2",
     "phenyl-http-rules": "~0.2.5",
-    "phenyl-utils": "~0.2.5",
-    "whatwg-fetch": "^2.0.3"
+    "phenyl-interfaces": "~0.2.3",
+    "phenyl-utils": "~0.2.5"
   }
 }
