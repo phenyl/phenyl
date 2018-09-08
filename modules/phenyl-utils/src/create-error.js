@@ -7,6 +7,7 @@ import type {
   ServerErrorType,
   PhenylError,
   PhenylErrorType,
+  ErrorDetail
 } from 'phenyl-interfaces'
 
 const toJSONs = {
@@ -52,15 +53,16 @@ const guessErrorTypes = {
  * Phenyl error implements interface of PhenylError.
  */
 export function createError(
-  error: $Supertype<Error | PhenylError | string>,
+  error: $Supertype<Error | PhenylError | string | ErrorDetail>,
   _type?: ?PhenylErrorType,
-  defaultLocation?: ErrorLocation = 'local'): $Subtype<PhenylError> & Error {
-
+  defaultLocation?: ErrorLocation = 'local'
+): $Subtype<PhenylError> & Error {
   // String to
   if (typeof error === 'string') {
     return createError(new Error(error), _type, defaultLocation)
   }
-  const e = (error instanceof Error) ? error : new Error(error.message)
+  const e = error instanceof Error ? error : new Error(error.message)
+  // $FlowIssue(e is Error obj )
   if (error.stack) e.stack = error.stack
   // $FlowIssue(Error-can-have-prop)
   e.ok = 0
@@ -73,9 +75,11 @@ export function createError(
     // $FlowIssue(Error-can-have-prop)
     Object.defineProperty(e, 'toJSON', {
       // $FlowIssue(at-is-ErrorLocation)
-      value: toJSONs[e.at],
+      value: toJSONs[e.at]
     })
   }
+  // $FlowIssue(Error-can-have-prop)
+  if (error.details) e.details = error.details
   // $FlowIssue(compatible)
   return e
 }
@@ -83,13 +87,19 @@ export function createError(
 /**
  * Create a ServerError (Error in Node.js).
  */
-export function createServerError(error: $Supertype<Error | ServerError | string>, _type?: ServerErrorType): $Subtype<ServerError> & Error {
+export function createServerError(
+  error: $Supertype<Error | ServerError | string>,
+  _type?: ServerErrorType
+): $Subtype<ServerError> & Error {
   return createError(error, _type, 'server')
 }
 
 /**
  * Create a LocalError (Error in browser, React Native, etc...).
  */
-export function createLocalError(error: $Supertype<Error | ServerError | string>, _type?: LocalErrorType): $Subtype<LocalError> & Error {
+export function createLocalError(
+  error: $Supertype<Error | ServerError | string>,
+  _type?: LocalErrorType
+): $Subtype<LocalError> & Error {
   return createError(error, _type, 'local')
 }

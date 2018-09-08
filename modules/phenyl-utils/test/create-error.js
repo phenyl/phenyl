@@ -79,6 +79,25 @@ describe('createError', function () {
     assert.notDeepEqual(e, createError(json))
   })
 
+  it ('returns PhenylError from ErrorDetail Object. Default location is Local.', function () {
+    const e = createError({
+      message:'Invalid value.',
+      details: {
+        type:'loginId', status: 'duplicate'
+      }
+    })
+    assert(e instanceof Error)
+    assert(e.ok === 0)
+    assert(e.at === 'local')
+    assert(e.type === 'InvalidData')
+    assert(e.message === 'Invalid value.')
+    assert(e.stack)
+    assert(e.details.type === 'loginId')
+    assert(e.details.status === 'duplicate')
+    const json = e.toJSON()
+    // Checking restorability
+    assert.deepEqual(e, createError(json))
+  })
 
 })
 
