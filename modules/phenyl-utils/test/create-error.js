@@ -4,12 +4,11 @@ import assert from 'power-assert'
 import {
   createError,
   createServerError,
-  createLocalError,
+  createLocalError
 } from '../src/create-error.js'
 
-describe('createError', function () {
-
-  it ('returns PhenylError from string. Default location is Local.', function () {
+describe('createError', function() {
+  it('returns PhenylError from string. Default location is Local.', function() {
     const e = createError('Invalid value.')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -22,7 +21,7 @@ describe('createError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns PhenylError from string, with error type.', function () {
+  it('returns PhenylError from string, with error type.', function() {
     const e = createError('Invalid value.', 'CodeProblem')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -35,7 +34,7 @@ describe('createError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns PhenylError from string, with location.', function () {
+  it('returns PhenylError from string, with location.', function() {
     const e = createError('Invalid value.', null, 'server')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -48,7 +47,7 @@ describe('createError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns PhenylError from Error instance. Default location is Local.', function () {
+  it('returns PhenylError from Error instance. Default location is Local.', function() {
     const e = createError(new Error('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -61,7 +60,7 @@ describe('createError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns PhenylError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', function () {
+  it('returns PhenylError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', function() {
     const e = createError(new ReferenceError('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -79,11 +78,12 @@ describe('createError', function () {
     assert.notDeepEqual(e, createError(json))
   })
 
-  it ('returns PhenylError from ErrorDetail Object. Default location is Local.', function () {
+  it('returns PhenylError from ErrorDetail Object. Default location is Local.', function() {
     const e = createError({
-      message:'Invalid value.',
-      details: {
-        type:'loginId', status: 'duplicate'
+      message: 'Invalid value.',
+      detail: {
+        type: 'loginId',
+        status: 'duplicate'
       }
     })
     assert(e instanceof Error)
@@ -92,17 +92,16 @@ describe('createError', function () {
     assert(e.type === 'InvalidData')
     assert(e.message === 'Invalid value.')
     assert(e.stack)
-    assert(e.details.type === 'loginId')
-    assert(e.details.status === 'duplicate')
+    assert(e.detail.type === 'loginId')
+    assert(e.detail.status === 'duplicate')
     const json = e.toJSON()
     // Checking restorability
     assert.deepEqual(e, createError(json))
   })
-
 })
 
-describe('createServerError', function () {
-  it ('returns ServerError from string.', function () {
+describe('createServerError', function() {
+  it('returns ServerError from string.', function() {
     const e = createServerError('Invalid value.')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -115,7 +114,7 @@ describe('createServerError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns ServerError from string, with error type.', function () {
+  it('returns ServerError from string, with error type.', function() {
     const e = createServerError('Invalid value.', 'NotFound')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -128,7 +127,7 @@ describe('createServerError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns ServerError from Error instance.', function () {
+  it('returns ServerError from Error instance.', function() {
     const e = createServerError(new Error('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -141,7 +140,7 @@ describe('createServerError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns ServerError from ReferenceError instance. Default type is "InternalServer", and it has no restorability.', function () {
+  it('returns ServerError from ReferenceError instance. Default type is "InternalServer", and it has no restorability.', function() {
     const e = createServerError(new ReferenceError('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -160,9 +159,8 @@ describe('createServerError', function () {
   })
 })
 
-describe('createLocalError', function () {
-
-  it ('returns LocalError from string.', function () {
+describe('createLocalError', function() {
+  it('returns LocalError from string.', function() {
     const e = createLocalError('Invalid value.')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -175,7 +173,7 @@ describe('createLocalError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns LocalError from string, with error type.', function () {
+  it('returns LocalError from string, with error type.', function() {
     const e = createLocalError('Invalid value.', 'NetworkFailed')
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -188,7 +186,7 @@ describe('createLocalError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns LocalError from Error instance.', function () {
+  it('returns LocalError from Error instance.', function() {
     const e = createLocalError(new Error('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)
@@ -201,7 +199,7 @@ describe('createLocalError', function () {
     assert.deepEqual(e, createError(json))
   })
 
-  it ('returns LocalError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', function () {
+  it('returns LocalError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', function() {
     const e = createLocalError(new ReferenceError('Invalid value.'))
     assert(e instanceof Error)
     assert(e.ok === 0)

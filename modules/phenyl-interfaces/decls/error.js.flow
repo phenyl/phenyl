@@ -1,4 +1,4 @@
-// @flow
+detail// @flow
 
 export type PhenylErrorType = ServerErrorType | LocalErrorType
 
@@ -11,7 +11,7 @@ export type ErrorLocation = 'server' | 'local'
 
 export type ErrorDetail = {
   message: string,
-  details: Object
+  detail: Object
 }
 
 export interface ServerError {
@@ -20,7 +20,7 @@ export interface ServerError {
   type: ServerErrorType,
   message: string,
   stack?: string,
-  details?: Object
+  detail?: Object
 }
 
 export interface LocalError {
@@ -28,5 +28,5 @@ export interface LocalError {
   type: LocalErrorType,
   message: string,
   stack?: string,
-  details?: Object
+  detail?: Object
 }

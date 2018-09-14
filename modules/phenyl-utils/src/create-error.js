@@ -17,7 +17,8 @@ const toJSONs = {
       at: 'server',
       type: this.type,
       message: this.message,
-      stack: this.stack
+      stack: this.stack,
+      detail: this.detail
     }
   },
   local: function toLocalErrorJSON(): LocalError {
@@ -26,7 +27,8 @@ const toJSONs = {
       at: 'local',
       type: this.type,
       message: this.message,
-      stack: this.stack
+      stack: this.stack,
+      detail: this.detail
     }
   }
 }
@@ -79,7 +81,7 @@ export function createError(
     })
   }
   // $FlowIssue(Error-can-have-prop)
-  if (error.details) e.details = error.details
+  if (error.detail) e.detail = error.detail
   // $FlowIssue(compatible)
   return e
 }
