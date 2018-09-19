@@ -44,20 +44,8 @@ import type {
   VersionDiffPublisher,
   TypeMap,
   EntityMapOf,
+  PhenylRestApiParams,
 } from 'phenyl-interfaces'
-
-export type PhenylRestApiParams<TM: TypeMap = TypeMap> = {
-  client: EntityClient<EntityMapOf<TM>>,
-  sessionClient?: SessionClient,
-  authorizationHandler?: AuthorizationHandler,
-  normalizationHandler?: RequestNormalizationHandler,
-  validationHandler?: ValidationHandler,
-  customQueryHandler?: CustomQueryHandler,
-  customCommandHandler?: CustomCommandHandler,
-  authenticationHandler?: AuthenticationHandler,
-  executionWrapper?: ExecutionWrapper,
-  versionDiffPublisher?: VersionDiffPublisher,
-}
 
 /**
  *

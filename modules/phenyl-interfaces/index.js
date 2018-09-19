@@ -123,7 +123,7 @@ import type {
 } from './decls/http-server.js.flow'
 import type { Id } from './decls/id.js.flow'
 import type { KvsClient } from './decls/kvs-client.js.flow'
-import type { RestApiHandler } from './decls/rest-api-handler.js.flow'
+import type { RestApiHandler, PhenylRestApiParams } from './decls/rest-api-handler.js.flow'
 import type {
   LocalEntityInfo,
   LocalEntityInfoById,
@@ -397,6 +397,7 @@ export type {
   PhenylAction,
   PhenylError,
   PhenylErrorType,
+  PhenylRestApiParams,
   RestApiClient,
   RestApiExecution,
   RestApiHandler,

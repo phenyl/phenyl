@@ -1,6 +1,17 @@
 // @flow
 import type {
-  RequestData,
+  AuthenticationHandler,
+  AuthorizationHandler,
+  CustomCommandHandler,
+  CustomQueryHandler,
+  ExecutionWrapper,
+  RequestNormalizationHandler,
+  ValidationHandler
+} from './handler.js.flow'
+import type { EntityClient, SessionClient } from './client.js.flow'
+import type { EntityMapOf, TypeMap } from './type-map.js.flow'
+import type {
+  RequestData
   // FindRequestData,
   // FindOneRequestData,
   // GetRequestData,
@@ -22,7 +33,7 @@ import type {
   // LogoutRequestData
 } from './request-data.js.flow'
 import type {
-  ResponseData,
+  ResponseData
   // FindResponseData,
   // FindOneResponseData,
   // GetResponseData,
@@ -44,9 +55,10 @@ import type {
   // LogoutResponseData,
   // ErrorResponseData
 } from './response-data.js.flow'
+import { VersionDiffPublisher } from './versioning.js.flow'
 
 export interface RestApiHandler {
-  handleRequestData(reqData: RequestData): Promise<ResponseData>,
+  handleRequestData(reqData: RequestData): Promise<ResponseData>;
   // handleRequestData(reqData: FindRequestData): Promise<FindResponseData | ErrorResponseData>,
   // handleRequestData(reqData: FindOneRequestData): Promise<FindOneResponseData | ErrorResponseData>,
   // handleRequestData(reqData: GetRequestData): Promise<GetResponseData | ErrorResponseData>,
@@ -66,4 +78,16 @@ export interface RestApiHandler {
   // handleRequestData(reqData: RunCustomCommandRequestData): Promise<RunCustomCommandResponseData | ErrorResponseData>,
   // handleRequestData(reqData: LoginRequestData): Promise<LoginResponseData | ErrorResponseData>,
   // handleRequestData(reqData: LogoutRequestData): Promise<LogoutResponseData | ErrorResponseData>,
+}
+export type PhenylRestApiParams<TM: TypeMap = TypeMap> = {
+  client: EntityClient<EntityMapOf<TM>>,
+  sessionClient?: SessionClient,
+  authorizationHandler?: AuthorizationHandler,
+  normalizationHandler?: RequestNormalizationHandler,
+  validationHandler?: ValidationHandler,
+  customQueryHandler?: CustomQueryHandler,
+  customCommandHandler?: CustomCommandHandler,
+  authenticationHandler?: AuthenticationHandler,
+  executionWrapper?: ExecutionWrapper,
+  versionDiffPublisher?: VersionDiffPublisher
 }
