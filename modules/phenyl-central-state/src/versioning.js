@@ -188,13 +188,13 @@ export class Versioning {
    * @private
    * Extract current version id from entity with meta info.
    */
-  static getVersionId<E: Entity>(entity: EntityWithMetaInfo<E>): Id {
+  static getVersionId<E: Entity>(entity: EntityWithMetaInfo<E>): ?Id {
     try {
       const metaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 1].id
     }
     catch (e) {
-      throw new Error(`Cannot get versionId from entity. Id: "${entity.id}"`)
+      return null
     }
   }
 
@@ -217,11 +217,10 @@ export class Versioning {
    * @private
    * Extract current version ids from entities with meta info.
    */
-  static getVersionIds<E: Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: Id]: Id } {
+  static getVersionIds<E: Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: Id]: ?Id } {
     const versionsById = {}
     entities.forEach(entity => {
-      const versionId = this.getVersionId(entity)
-      if (versionId) versionsById[entity.id] = versionId
+      versionsById[entity.id] = this.getVersionId(entity)
     })
     return versionsById
   }
