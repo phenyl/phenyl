@@ -217,7 +217,7 @@ export class Versioning {
    * @private
    * Extract current version ids from entities with meta info.
    */
-  static getVersionIds<E: Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: Id]: ?Id } {
+  static getVersionIds<E: Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: Id]: Id } {
     const versionsById = {}
     entities.forEach(entity => {
       versionsById[entity.id] = this.getVersionId(entity)
