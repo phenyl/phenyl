@@ -4,6 +4,9 @@
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "react-native": {
+    "cross-fetch": "./global-fetch.js"
+  },
   "scripts": {
     "test": "nyc mocha test/*.js --color always"
   },
