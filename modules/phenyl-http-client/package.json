@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-client",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",

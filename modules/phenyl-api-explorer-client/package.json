@@ -1,6 +1,6 @@
 {
   "name": "phenyl-api-explorer-client",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Client application of phenyl-api-explorer",
   "main": "index.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "file-loader": "1.1.5",
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
-    "phenyl-http-client": "~0.2.8",
+    "phenyl-http-client": "~0.2.9",
     "phenyl-utils": "~0.2.5",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
