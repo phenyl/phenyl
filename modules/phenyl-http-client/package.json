@@ -15,6 +15,7 @@
     "dist",
     "package.json",
     "jsnext.js",
+    "global-fetch.js",
     "LICENSE",
     "README.md"
   ],
