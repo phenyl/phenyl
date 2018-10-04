@@ -1,4 +1,4 @@
-detail// @flow
+// @flow
 
 export type PhenylErrorType = ServerErrorType | LocalErrorType
 
