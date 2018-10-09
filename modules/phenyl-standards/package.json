@@ -1,6 +1,6 @@
 {
   "name": "phenyl-standards",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "oad-utils": "~0.2.1",
-    "phenyl-interfaces": "~0.2.3",
-    "phenyl-utils": "~0.2.5",
+    "phenyl-interfaces": "~0.3.0",
+    "phenyl-utils": "~0.3.0",
     "power-assign": "~0.2.9",
     "power-crypt": "~0.1.4"
   },
