@@ -88,6 +88,7 @@ import type {
   PhenylErrorType,
   ServerError,
   ServerErrorType,
+  ErrorDetail,
 } from './decls/error.js.flow'
 
 import type {
@@ -431,6 +432,7 @@ export type {
   RunCustomQueryResponseData,
   ServerError,
   ServerErrorType,
+  ErrorDetail,
   ServerParams,
   Session,
   SessionClient,
