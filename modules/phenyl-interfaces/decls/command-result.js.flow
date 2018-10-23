@@ -31,19 +31,19 @@ export type IdUpdateCommandResult = {
   prevVersionId: ?Id,
 }
 
-export type MultiUpdateCommandResult<IdMap: { [Id]: Id } = { [Id]: Id }> = {
+export type MultiUpdateCommandResult<IdMap: { [Id]: ?Id } = { [Id]: ?Id }> = {
   ok: 1,
   n: number,
   versionsById: IdMap,
-  prevVersionsById: $ObjMap<IdMap, Id => Id>,
+  prevVersionsById: IdMap,
 }
 
-export type MultiValuesCommandResult<E: Entity = Entity, IdMap: { [Id]: Id } = { [Id]: Id }> = {
+export type MultiValuesCommandResult<E: Entity = Entity, IdMap: { [Id]: ?Id } = { [Id]: ?Id }> = {
   ok: 1,
   n: number,
   entities: Array<E>,
   versionsById: IdMap,
-  prevVersionsById: $ObjMap<IdMap, Id => Id>,
+  prevVersionsById: IdMap,
 }
 
 export type GetCommandResult<E: Entity = Entity> = {|

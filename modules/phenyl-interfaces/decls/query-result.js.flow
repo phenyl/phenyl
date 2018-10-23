@@ -14,7 +14,7 @@ export type CustomQueryResult<R: Object = Object> = {
 export type QueryResult<E: Entity = Entity> = {|
   ok: 1,
   entities: Array<E>,
-  versionsById: { [entityId: Id]: Id },
+  versionsById: { [entityId: Id]: ?Id },
 |}
 
 export type SingleQueryResult<E: Entity = Entity> = {|
