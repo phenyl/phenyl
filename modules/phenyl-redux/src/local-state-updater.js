@@ -258,7 +258,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static online(): UpdateOperation {
     return {
-      $set: { createDocumentPath('network', 'isOnline'): true }
+      $set: { [createDocumentPath('network', 'isOnline')]: true }
     }
   }
 
@@ -267,7 +267,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static offline(): UpdateOperation {
     return {
-      $set: { createDocumentPath('network', 'isOnline'): false }
+      $set: { [createDocumentPath('network', 'isOnline')]: false }
     }
   }
 }
