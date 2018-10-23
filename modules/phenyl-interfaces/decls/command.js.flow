@@ -42,7 +42,7 @@ export type PushCommand<N: EntityName = EntityName> = {|
   entityName: N,
   id: Id,
   operations: Array<UpdateOperation>,
-  versionId: Id,
+  +versionId: ?Id,
 |}
 
 // see https://docs.mongodb.com/manual/reference/command/delete/
