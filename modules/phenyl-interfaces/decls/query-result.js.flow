@@ -20,12 +20,12 @@ export type QueryResult<E: Entity = Entity> = {|
 export type SingleQueryResult<E: Entity = Entity> = {|
   ok: 1,
   entity: E,
-  versionId: Id,
+  versionId: ?Id,
 |}
 
 export type PullQueryResult<E: Entity = Entity> = {|
   ok: 1,
   pulled: 1,
   operations: Array<UpdateOperation>,
-  versionId: Id,
+  versionId: ?Id,
 |} | SingleQueryResult<E>

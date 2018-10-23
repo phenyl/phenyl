@@ -86,7 +86,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    * Register the entity info into LocalState.
    * Overwrite if already exists.
    */
-  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: Id): UpdateOperation {
+  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: ?Id): UpdateOperation {
     return {
       $set: {
         [createDocumentPath('entities', entityName, entity.id)]: {
