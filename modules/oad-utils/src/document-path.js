@@ -10,8 +10,9 @@ import type {
  * Parse DocumentPath into an array of property names.
  */
 export function parseDocumentPath(docPath: DocumentPath): Array<string | number> {
-  return docPath.split(/(?<!\\)[.[]/).map(
-    attribute => attribute.charAt(attribute.length - 1) === ']' ? parseInt(attribute.slice(0, -1)) : unescapePathDelimiter(attribute)
+  // Many JS runtime cannot use look behind.
+  return docPath.split(/\\./).join('$$$').split(/[.[]/).map(
+    attribute => attribute.charAt(attribute.length - 1) === ']' ? parseInt(attribute.slice(0, -1)) : unescapePathDelimiter(attribute.split('$$$').join('\\.'))
   )
 }
 
