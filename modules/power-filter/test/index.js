@@ -2,6 +2,7 @@
 
 import { describe, it } from 'mocha'
 import assert from 'power-assert'
+import { createDocumentPath } from 'oad-utils'
 import { filter } from '../src/index.js'
 import type { QueryCondition } from 'mongolike-operations'
 
@@ -17,11 +18,11 @@ describe('filter', () => {
 
   describe('items', () => {
     const data = [
-      { item: 'journal', tag: 'red', dim_cm: 14 },
-      { item: 'notebook', tag: 'red', dim_cm: 21 },
-      { item: 'paper', tag: 'plain', dim_cm:  14 },
-      { item: 'planner', tag: 'red', dim_cm: 30 },
-      { item: 'postcard', tag: 'blue', dim_cm: 10 }
+      { item: 'journal', tag: 'red', dim_cm: 14, 'dot.notated': true },
+      { item: 'notebook', tag: 'red', dim_cm: 21, 'dot.notated': false },
+      { item: 'paper', tag: 'plain', dim_cm:  14, 'dot.notated': true },
+      { item: 'planner', tag: 'red', dim_cm: 30, 'dot.notated': false },
+      { item: 'postcard', tag: 'blue', dim_cm: 10, 'dot.notated': true }
     ]
 
     describe('$eq', () => {
@@ -30,6 +31,12 @@ describe('filter', () => {
         const filtered = filter(data, query)
         const items = filtered.map(f => f.item)
         assert.deepEqual(items, ['journal', 'notebook', 'planner'])
+      })
+      it('find equal items with dot notated path', () => {
+        const query: QueryCondition = {[createDocumentPath('dot.notated')]: {$eq: false}}
+        const filtered = filter(data, query)
+        const items = filtered.map(f => f.item)
+        assert.deepEqual(items, ['notebook', 'planner'])
       })
     })
 
