@@ -86,7 +86,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    * Register the entity info into LocalState.
    * Overwrite if already exists.
    */
-  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: Id): UpdateOperation {
+  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: ?Id): UpdateOperation {
     return {
       $set: {
         [createDocumentPath('entities', entityName, entity.id)]: {
@@ -205,7 +205,6 @@ export class LocalStateUpdater<TM: TypeMap> {
     const $setOp = {}
     for (const entity of entities) {
       const versionId = versionsById[entity.id]
-      if (versionId == null) throw new Error(`LocalStateUpdater.followAll(): No versionId was passed to the entityName: "${entityName}", id: "${entity.id}".`)
       const operation = this.follow(state, entityName, entity, versionId)
       Object.assign($setOp, operation.$set)
     }

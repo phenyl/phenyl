@@ -729,6 +729,95 @@ export const assertEntityClient = (
     })
   })
 
+  describe('pull', () => {
+    let firstVersionId, lastVersionId
+
+    before(async () => {
+      const { versionId } = await entityClient.insertOne({
+        entityName: 'user',
+        value: { id: 'userToPull', name: { first: 'John', last: 'Doe' }, age: 33 },
+      })
+      firstVersionId = versionId
+
+      const updatedResult = await entityClient.updateById({
+        entityName: 'user',
+        id: 'userToPull',
+        operation: {
+          $set: { 'name.first': 'Johnson' }
+        }
+      })
+      lastVersionId = updatedResult.versionId
+    })
+
+    after(async () => {
+      await entityClient.delete({
+        entityName: 'user',
+        id: 'userToPull',
+      })
+    })
+
+    it('fetches the diff calculated by versionId', async () => {
+      const pullResult = await entityClient.pull({
+        entityName: 'user',
+        id: 'userToPull',
+        versionId: firstVersionId,
+      })
+      assert(pullResult.versionId === lastVersionId)
+    })
+
+    it('fetches an entity by id when the given versionId is null', async () => {
+      // $FlowIssue(not-pulled)
+      const result = await entityClient.pull({
+        entityName: 'user',
+        id: 'userToPull',
+        versionId: null,
+      })
+
+      assert(!result.pulled)
+      assert.deepEqual(result.entity, {
+        id: 'userToPull', name: { first: 'Johnson', last: 'Doe' }, age: 33
+      })
+      assert(result.versionId === lastVersionId)
+    })
+  })
+
+  describe('push', () => {
+    let firstVersionId
+
+    before(async () => {
+      const { versionId } = await entityClient.insertOne({
+        entityName: 'user',
+        value: { id: 'userToPush', name: { first: 'John', last: 'Doe' }, age: 33 },
+      })
+      firstVersionId = versionId
+    })
+
+    after(async () => {
+      await entityClient.delete({
+        entityName: 'user',
+        id: 'userToPush',
+      })
+    })
+
+    it('pushes to the latest commit', async () => {
+      // $FlowIssue(push-result-has-no-entity)
+      const pushResult = await entityClient.push({
+        entityName: 'user',
+        id: 'userToPush',
+        operations: [{
+          $set: { 'name.first': 'Johnson' }
+        }],
+        versionId: firstVersionId
+      })
+      assert(pushResult.hasEntity === 0)
+      assert(pushResult.prevVersionId === firstVersionId)
+      assert.deepEqual(pushResult.newOperation.$set, { 'name.first': 'Johnson' })
+      assert.deepEqual(pushResult.operations, [])
+    })
+  })
+
+
+
   describe('delete', () => {
     it ('deletes an entity with id delete command', async () => {
       const id = user1.id

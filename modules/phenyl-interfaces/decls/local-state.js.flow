@@ -9,7 +9,7 @@ import type { ActionTag } from './action.js.flow'
 
 export type LocalEntityInfo<E: Entity> = {
   origin: E,
-  versionId: Id,
+  +versionId: ?Id,
   commits: Array<UpdateOperation>,
   head: ?E,
 }
