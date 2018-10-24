@@ -1,6 +1,6 @@
 {
   "name": "phenyl-mongodb",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -29,10 +29,10 @@
     "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
     "mongodb": "^3.0.5",
-    "oad-utils": "~0.2.1",
-    "phenyl-central-state": "~0.2.6",
-    "phenyl-interfaces": "~0.3.0",
-    "phenyl-utils": "~0.3.0",
-    "power-assign": "~0.2.9"
+    "oad-utils": "~0.3.0",
+    "phenyl-central-state": "~0.3.0",
+    "phenyl-interfaces": "~0.4.0",
+    "phenyl-utils": "~0.4.0",
+    "power-assign": "~0.2.10"
   }
 }
