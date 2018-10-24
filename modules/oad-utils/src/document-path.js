@@ -10,7 +10,11 @@ import type {
  * Parse DocumentPath into an array of property names.
  */
 export function parseDocumentPath(docPath: DocumentPath): Array<string | number> {
-  // Many JS runtime cannot use look behind.
+  /*
+   * This is workaround for negative lookbehind regular expression.
+   * Some JS runtimes haven't implemented the feature determined by ES2018.
+   * "$$$" is a temporary replacer of ".".
+   */
   return docPath.split(/\\./).join('$$$').split(/[.[]/).map(
     attribute => attribute.charAt(attribute.length - 1) === ']' ? parseInt(attribute.slice(0, -1)) : unescapePathDelimiter(attribute.split('$$$').join('\\.'))
   )
