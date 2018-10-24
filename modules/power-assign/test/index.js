@@ -2,6 +2,7 @@
 
 import { describe, it, describe as context } from 'mocha'
 import assert from 'power-assert'
+import { createDocumentPath } from 'oad-utils'
 import { assign, assignWithRestoration, mergeOperations } from '../src/index.js'
 
 describe('assign', () => {
@@ -9,6 +10,11 @@ describe('assign', () => {
     const obj = { name: 'korisu' }
     const newObj = assign(obj, { $set: { name: 'kerisu' }})
     assert.deepEqual(newObj, { name: 'kerisu' })
+  })
+  it('set a value with dot included path', () => {
+    const obj = { user: { 'name.firstName': { a: { 'b.c': 'korisu' } } } }
+    const newObj = assign(obj, { $set: { [createDocumentPath('user', 'name.firstName', 'a', 'b.c')]: 'kerisu' }})
+    assert.deepEqual(newObj, { user: { 'name.firstName': { a: { 'b.c': 'kerisu' } } } })
   })
 
   it('set a value with implicit $set operator', () => {
@@ -169,12 +175,20 @@ describe('assign', () => {
   it('remove props by $unset operator', () => {
     const obj = {
       categories: ['fashion', 'news', 'cooking-recipes'],
-      name: { first: 'Shin', last: 'Suzuki' }
+      name: { first: 'Shin', last: 'Suzuki' },
+      dot: { 'notated.prop1': 'Hoge', 'notated.prop2': 'Foo' },
     }
-    const newObj = assign(obj, { $unset: { 'categories[1]': '', 'name.last': '' } })
+    const newObj = assign(obj, {
+      $unset: {
+        [createDocumentPath('categories', 1)]: '',
+        [createDocumentPath('name', 'last')]: '',
+        [createDocumentPath('dot', 'notated.prop1')]: '',
+      }
+    })
     assert.deepEqual(newObj, {
       categories: ['fashion', null, 'cooking-recipes'],
-      name: { first: 'Shin' }
+      name: { first: 'Shin' },
+      dot: { 'notated.prop2': 'Foo' },
     })
   })
 
@@ -182,18 +196,19 @@ describe('assign', () => {
     const obj = {
       ttle: 'October',
       names: [
-        { first: 'Shin', lsat: 'Suzuki' }
+        { first: 'Shin', lsat: 'Suzuki', 'geho.ofo': 'Human' }
       ],
     }
     const newObj = assign(obj, { $rename: {
-      'ttle': 'title',
-      'names[0].lsat': 'last',
-      'names[0].nonExistingField': 'abc',
+      [createDocumentPath('ttle')]: 'title',
+      [createDocumentPath('names', 0, 'lsat')]: 'last',
+      [createDocumentPath('names', 0, 'nonExistingField')]: 'abc',
+      [createDocumentPath('names', 0, 'geho.ofo')]: 'hoge.foo',
     } })
     assert.deepEqual(newObj, {
       title: 'October',
       names: [
-        { first: 'Shin', last: 'Suzuki' }
+        { first: 'Shin', last: 'Suzuki', 'hoge.foo': 'Human' }
       ],
     })
   })

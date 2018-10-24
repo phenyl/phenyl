@@ -21,6 +21,7 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
+    "oad-utils": "~0.2.1",
     "phenyl-interfaces": "~0.3.0",
     "phenyl-utils": "~0.3.0",
     "power-assign": "~0.2.9"

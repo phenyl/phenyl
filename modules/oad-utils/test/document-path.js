@@ -14,6 +14,11 @@ describe('parseDocumentPath', function () {
     const attributes = parseDocumentPath(docPath)
     assert.deepEqual(attributes, ['user', 'favorites', 1, 'music', 30000])
   })
+  it ('not parses escaped path', function () {
+    const docPath = 'user.name\\.profile.favorites[1].music[30000]'
+    const attributes = parseDocumentPath(docPath)
+    assert.deepEqual(attributes, ['user', 'name.profile', 'favorites', 1, 'music', 30000])
+  })
 })
 
 describe('convertToDotNotation', function () {
@@ -32,5 +37,10 @@ describe('createDocumentPath', function () {
   })
   it ('returns empty string when no attribute list is given', function () {
     assert(createDocumentPath() === '')
+  })
+  it ('converts dot included attribute to escaped path', function () {
+    const attrs = ['user', 'name.profile', 'favorites', 1, 'music', 30000]
+    const docPath = createDocumentPath(...attrs)
+    assert(docPath === 'user.name\\.profile.favorites[1].music[30000]')
   })
 })
