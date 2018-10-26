@@ -32,7 +32,7 @@ export type MongoDbCollection = {
 }
 
 export async function connect(url: string, dbName: string): Promise<MongoDbConnection> {
-  const dbClient = await connectToMongoDb(url)
+  const dbClient = await connectToMongoDb(url, { useNewUrlParser: true })
   return new PhenylMongoDbConnection({ dbClient, dbName })
 }
 
