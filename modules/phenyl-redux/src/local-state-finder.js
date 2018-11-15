@@ -24,6 +24,13 @@ export class LocalStateFinder<TM: TypeMap> {
   /**
    * Check if LocalState has given id and entityName.
    */
+  static hasEntityField<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N): boolean {
+    return state.entities[entityName] != null
+  }
+
+  /**
+   * Check if LocalState has given id and entityName.
+   */
   static hasEntity<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): boolean {
     const { entityName, id } = query
     if (!state.entities[entityName]) return false

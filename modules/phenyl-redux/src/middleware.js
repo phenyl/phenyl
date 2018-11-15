@@ -28,6 +28,7 @@ import type {
   TypeMap,
   UnfollowAction,
   UpdateOperation,
+  UseEntitiesAction,
   UserEntityNameOf,
 } from 'phenyl-interfaces'
 
@@ -52,6 +53,8 @@ export class MiddlewareCreator<TM: TypeMap> {
 
       return (action: PhenylActionOf<TM>): Promise<T> => {
         switch (action.type) {
+          case 'phenyl/useEntities':
+            return handler.useEntities(action)
           case 'phenyl/commitAndPush':
             return handler.commitAndPush(action)
           case 'phenyl/delete':
@@ -130,6 +133,19 @@ export class MiddlewareHandler<TM: TypeMap, T> {
   get sessionId(): ?Id {
     const { session } = this.state
     return session ? session.id : null
+  }
+
+  /**
+   * Initialize entity fields with an empty map object if not exists.
+   */
+  async useEntities(action: UseEntitiesAction): Promise<T> {
+    const entityNames = action.payload
+
+    const ops = entityNames.filter(entityName =>
+      !LocalStateFinder.hasEntityField(this.state, entityName)
+    ).map(entityName => LocalStateUpdater.initialize(this.state, entityName))
+
+    return this.assignToState(...ops)
   }
 
   /**
