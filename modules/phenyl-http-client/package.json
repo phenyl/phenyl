@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-client",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -22,9 +22,9 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "nyc": "^11.6.0",
-    "phenyl-http-server": "~0.2.7",
-    "phenyl-memory-db": "~0.2.7",
-    "phenyl-rest-api": "~0.3.7",
+    "phenyl-http-server": "~0.2.8",
+    "phenyl-memory-db": "~0.2.8",
+    "phenyl-rest-api": "~0.3.8",
     "power-assert": "^1.4.4"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
@@ -32,8 +32,8 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "cross-fetch": "^2.2.2",
-    "phenyl-http-rules": "~0.2.7",
-    "phenyl-interfaces": "~0.4.0",
-    "phenyl-utils": "~0.4.0"
+    "phenyl-http-rules": "~0.2.8",
+    "phenyl-interfaces": "~0.4.1",
+    "phenyl-utils": "~0.4.1"
   }
 }

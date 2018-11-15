@@ -1,6 +1,6 @@
 {
   "name": "phenyl-utils",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "oad-utils": "~0.3.0",
-    "phenyl-interfaces": "~0.4.0",
+    "phenyl-interfaces": "~0.4.1",
     "power-assign": "~0.2.10"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
