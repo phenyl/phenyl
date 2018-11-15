@@ -14,6 +14,7 @@ import type {
   CredentialsOf,
   DeleteAction,
   Entity,
+  EntityName,
   EntityMapOf,
   EntityNameOf,
   EntityOf,
@@ -40,6 +41,7 @@ import type {
   UnfollowAction,
   UnsetSessionAction,
   UpdateOperation,
+  UseEntitiesAction,
   UserEntityNameOf,
 } from 'phenyl-interfaces'
 
@@ -82,6 +84,14 @@ export class PhenylReduxModule<TM: TypeMap> {
     return {
       type: 'phenyl/replace',
       payload: state,
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static useEntities(entityNames: Array<EntityName>): UseEntitiesAction {
+    return {
+      type: 'phenyl/useEntities',
+      payload: entityNames,
       tag: randomStringWithTimeStamp(),
     }
   }

@@ -40,6 +40,17 @@ export class LocalStateUpdater<TM: TypeMap> {
   static LocalStateFinder: Class<LocalStateFinder<TM>> = LocalStateFinder
 
   /**
+   * Initialize the given entity field.
+   */
+  static initialize<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N): UpdateOperation {
+    return {
+      $set: {
+        [createDocumentPath('entities', entityName)]: {}
+      }
+    }
+  }
+
+  /**
    * Commit the operation of entity to LocalState.
    * Error is thrown when no entity is registered.
    */
