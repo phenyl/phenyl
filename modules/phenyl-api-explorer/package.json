@@ -1,6 +1,6 @@
 {
   "name": "phenyl-api-explorer",
-  "version": "0.1.11",
+  "version": "0.1.15",
   "description": "Automatically renders API explorer pages like swagger",
   "main": "./dist/PhenylApiExplorer.js",
   "jsnext:main": "./jsnext.js",
@@ -13,16 +13,16 @@
   "license": "Apache License 2.0",
   "devDependencies": {
     "nodemon": "^1.18.3",
-    "phenyl-http-client": "~0.2.10",
-    "phenyl-http-server": "~0.2.6",
-    "phenyl-interfaces": "~0.3.0",
-    "phenyl-lambda-adapter": "~0.2.6",
-    "phenyl-memory-db": "~0.2.6",
-    "phenyl-rest-api": "~0.3.6",
-    "phenyl-standards": "~0.2.6"
+    "phenyl-http-client": "~0.2.12",
+    "phenyl-http-server": "~0.2.8",
+    "phenyl-interfaces": "~0.4.1",
+    "phenyl-lambda-adapter": "~0.2.8",
+    "phenyl-memory-db": "~0.2.8",
+    "phenyl-rest-api": "~0.3.8",
+    "phenyl-standards": "~0.2.8"
   },
   "dependencies": {
     "ejs": "^2.6.1",
-    "phenyl-api-explorer-client": "~0.1.10"
+    "phenyl-api-explorer-client": "~0.1.14"
   }
 }

@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable no-console */
 /* eslint-env node */
+import assert from 'assert'
 import http from 'http'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { PhenylRedux, LocalStateFinder } from 'phenyl-redux/jsnext'
@@ -12,7 +13,7 @@ import { StandardUserDefinition } from 'phenyl-standards/jsnext'
 import type { FunctionalGroup } from 'phenyl-interfaces'
 
 type ThisEntityMap = {
-  patient: { id: string, name: string, email: string, password?: string }
+  patient: { id: string, name: string, email: string, password?: string },
 }
 
 type ThisTypeMap = {
@@ -98,6 +99,22 @@ async function main() {
 
   const { session } = store.getState().phenyl
   if (!session) throw new Error('No session')
+
+  store.dispatch(
+    actions.useEntities(['patient', 'dummy001', 'dummy002'])
+  )
+  const entities = store.getState().phenyl.entities
+  console.log(entities)
+  assert(Object.keys(entities.patient).length === 1)
+  // $FlowIssue(dummy)
+  assert(entities.dummy001)
+  // $FlowIssue(dummy)
+  assert(entities.dummy002)
+  // $FlowIssue(dummy)
+  assert(Object.keys(entities.dummy001).length === 0)
+  // $FlowIssue(dummy)
+  assert(Object.keys(entities.dummy002).length === 0)
+
 
   store.dispatch(actions.logout({
     entityName: 'patient',

@@ -1,6 +1,6 @@
 {
   "name": "power-filter",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Filter objects in array by MongoDB-like FindOperation.",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -24,7 +24,7 @@
   "dependencies": {
     "fast-deep-equal": "^1.0.0",
     "mongolike-operations": "~0.1.5",
-    "oad-utils": "~0.2.1"
+    "oad-utils": "~0.3.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/power-filter",

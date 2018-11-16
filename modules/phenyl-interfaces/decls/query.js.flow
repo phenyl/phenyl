@@ -27,7 +27,7 @@ export interface IdsQuery<N: EntityName = EntityName> {
 export interface PullQuery<N: EntityName = EntityName> {
   entityName: N,
   id: Id,
-  versionId: Id,
+  +versionId: ?Id,
 }
 
 export interface CustomQuery<N: string = string, P: Object = Object> {

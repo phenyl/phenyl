@@ -3,10 +3,12 @@
 import {
   assign,
 } from 'power-assign/jsnext'
-
 import {
   createLocalError,
 } from 'phenyl-utils/jsnext'
+import {
+  createDocumentPath,
+} from 'oad-utils/jsnext'
 
 import { removeOne } from './utils'
 
@@ -38,6 +40,17 @@ export class LocalStateUpdater<TM: TypeMap> {
   static LocalStateFinder: Class<LocalStateFinder<TM>> = LocalStateFinder
 
   /**
+   * Initialize the given entity field.
+   */
+  static initialize<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N): UpdateOperation {
+    return {
+      $set: {
+        [createDocumentPath('entities', entityName)]: {}
+      }
+    }
+  }
+
+  /**
    * Commit the operation of entity to LocalState.
    * Error is thrown when no entity is registered.
    */
@@ -51,10 +64,10 @@ export class LocalStateUpdater<TM: TypeMap> {
     const newEntity = assign(entity, operation)
     return {
       $push: {
-        [`entities.${entityName}.${id}.commits`]: operation
+        [createDocumentPath('entities', entityName, id, 'commits')]: operation
       },
       $set: {
-        [`entities.${entityName}.${id}.head`]: newEntity,
+        [createDocumentPath('entities', entityName, id, 'head')]: newEntity,
       }
     }
   }
@@ -74,8 +87,8 @@ export class LocalStateUpdater<TM: TypeMap> {
     const restoredHead = assign(entityInfo.origin, ...commits)
     return {
       $set: {
-        [`entities.${entityName}.${id}.commits`]: commits,
-        [`entities.${entityName}.${id}.head`]: restoredHead,
+        [createDocumentPath('entities', entityName, id, 'commits')]: commits,
+        [createDocumentPath('entities', entityName, id, 'head')]: restoredHead,
       }
     }
   }
@@ -84,10 +97,10 @@ export class LocalStateUpdater<TM: TypeMap> {
    * Register the entity info into LocalState.
    * Overwrite if already exists.
    */
-  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: Id): UpdateOperation {
+  static follow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, entity: EntityOf<TM, N>, versionId: ?Id): UpdateOperation {
     return {
       $set: {
-        [`entities.${entityName}.${entity.id}`]: {
+        [createDocumentPath('entities', entityName, entity.id)]: {
           origin: entity,
           versionId,
           commits: [],
@@ -103,7 +116,7 @@ export class LocalStateUpdater<TM: TypeMap> {
   static unfollow<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N, id: Id): UpdateOperation {
     return {
       $unset: {
-        [`entities.${entityName}.${id}`]: ''
+        [createDocumentPath('entities', entityName, id)]: ''
       }
     }
   }
@@ -113,7 +126,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static networkRequest(state: LocalStateOf<TM>, tag: ActionTag): UpdateOperation {
     return {
-      $push: { 'network.requests': tag }
+      $push: { [createDocumentPath('network', 'requests')]: tag }
     }
   }
 
@@ -122,7 +135,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static removeNetworkRequest(state: LocalStateOf<TM>, tag: ActionTag): UpdateOperation {
     return {
-      $set: { 'network.requests': removeOne(state.network.requests, tag) }
+      $set: { [createDocumentPath('network', 'requests')]: removeOne(state.network.requests, tag) }
     }
   }
 
@@ -144,9 +157,9 @@ export class LocalStateUpdater<TM: TypeMap> {
     const newHead = assign(newOrigin, ...entityInfo.commits)
     return {
       $set: {
-        [`entities.${entityName}.${id}.origin`]: newOrigin,
-        [`entities.${entityName}.${id}.versionId`]: versionId,
-        [`entities.${entityName}.${id}.head`]: newHead,
+        [createDocumentPath('entities', entityName, id, 'origin')]: newOrigin,
+        [createDocumentPath('entities', entityName, id, 'versionId')]: versionId,
+        [createDocumentPath('entities', entityName, id, 'head')]: newHead,
       }
     }
   }
@@ -164,9 +177,9 @@ export class LocalStateUpdater<TM: TypeMap> {
 
     return {
       $set: {
-        [`entities.${entityName}.${id}.origin`]: newOrigin,
-        [`entities.${entityName}.${id}.versionId`]: versionId,
-        [`entities.${entityName}.${id}.head`]: newHead,
+        [createDocumentPath('entities', entityName, id, 'origin')]: newOrigin,
+        [createDocumentPath('entities', entityName, id, 'versionId')]: versionId,
+        [createDocumentPath('entities', entityName, id, 'head')]: newHead,
       }
     }
   }
@@ -185,7 +198,7 @@ export class LocalStateUpdater<TM: TypeMap> {
 
     return {
       $set: {
-        [`entities.${entityName}.${id}`]: {
+        [createDocumentPath('entities', entityName, id)]: {
           origin: newOrigin,
           versionId,
           commits: newCommits,
@@ -203,7 +216,6 @@ export class LocalStateUpdater<TM: TypeMap> {
     const $setOp = {}
     for (const entity of entities) {
       const versionId = versionsById[entity.id]
-      if (versionId == null) throw new Error(`LocalStateUpdater.followAll(): No versionId was passed to the entityName: "${entityName}", id: "${entity.id}".`)
       const operation = this.follow(state, entityName, entity, versionId)
       Object.assign($setOp, operation.$set)
     }
@@ -256,7 +268,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static online(): UpdateOperation {
     return {
-      $set: { 'network.isOnline': true }
+      $set: { [createDocumentPath('network', 'isOnline')]: true }
     }
   }
 
@@ -265,7 +277,7 @@ export class LocalStateUpdater<TM: TypeMap> {
    */
   static offline(): UpdateOperation {
     return {
-      $set: { 'network.isOnline': false }
+      $set: { [createDocumentPath('network', 'isOnline')]: false }
     }
   }
 }

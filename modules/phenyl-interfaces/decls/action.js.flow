@@ -73,6 +73,12 @@ export type ResetAction = {|
   tag: ActionTag,
 |}
 
+export type UseEntitiesAction = {|
+  type: 'phenyl/useEntities',
+  payload: Array<EntityName>,
+  tag: ActionTag,
+|}
+
 export type CommitAndPushAction<N: EntityName> = {|
   type: 'phenyl/commitAndPush',
   payload: IdUpdateCommand<N>,
@@ -176,4 +182,5 @@ export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
   UnfollowAction<$Keys<M>> |
   UnsetSessionAction |
   OnlineAction |
-  OfflineAction
+  OfflineAction |
+  UseEntitiesAction

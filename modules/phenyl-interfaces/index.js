@@ -21,6 +21,7 @@ import type {
   UnsetSessionAction,
   OnlineAction,
   OfflineAction,
+  UseEntitiesAction,
 } from './decls/action.js.flow'
 
 import type {
@@ -457,6 +458,7 @@ export type {
   UpdateMultiResponseData,
   UpdateOneRequestData,
   UpdateOneResponseData,
+  UseEntitiesAction,
   UserDefinition,
   UserDefinitions,
   UserEntityNameOf,

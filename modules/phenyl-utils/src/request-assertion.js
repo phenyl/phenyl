@@ -119,7 +119,7 @@ export function assertValidPullQuery(q: any): void {
   const { entityName, id, versionId } = q
   assertValidEntityName(entityName, 'PullQuery')
   assertNonEmptyString(id, `PullQuery.id must be a non-empty string. "${id}" given.`)
-  assertNonEmptyString(versionId, `PullQuery.versionId must be a non-empty string. "${versionId}" given.`)
+  assertStringOrNull(versionId, `PullQuery.versionId must be a string or null. "${versionId}" given.`)
 }
 
 /**
@@ -207,7 +207,7 @@ export function assertValidPushCommand(com: any): void {
   const { entityName, operations, id, versionId } = com
   assertValidEntityName(entityName, 'PushCommand')
   assertNonEmptyString(id, `PushCommand.id must be a non-empty string. "${id}" given.`)
-  assertNonEmptyString(versionId, `PushCommand.versionId must be a non-empty string. "${versionId}" given.`)
+  assertStringOrNull(versionId, `PushCommand.versionId must be a non-empty string. "${versionId}" given.`)
 
   if (!Array.isArray(operations)) {
     throw new Error(`PushCommand.operations must be an array. "${typeof operations}" given.`)
@@ -358,6 +358,15 @@ export function assertValidCustomName(name: any, _dataName?: string) {
  */
 export function assertNonEmptyString(val: any, message: string) {
   if (typeof val !== 'string' || !val) {
+    throw new Error(message)
+  }
+}
+
+/**
+ *
+ */
+export function assertStringOrNull(val: any, message: string) {
+  if (typeof val !== 'string' && val != null) {
     throw new Error(message)
   }
 }
