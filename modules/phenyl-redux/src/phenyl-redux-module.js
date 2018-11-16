@@ -35,6 +35,8 @@ import type {
   ReplaceAction,
   ResetAction,
   SetSessionAction,
+  OnlineAction,
+  OfflineAction,
   Session,
   TypeMap,
   UnfollowAction,
@@ -195,6 +197,20 @@ export class PhenylReduxModule<TM: TypeMap> {
     return {
       type: 'phenyl/logout',
       payload: command,
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static online(): OnlineAction {
+    return {
+      type: 'phenyl/online',
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static offline(): OfflineAction {
+    return {
+      type: 'phenyl/offline',
       tag: randomStringWithTimeStamp(),
     }
   }

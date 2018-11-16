@@ -76,6 +76,10 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.unfollow(action)
           case 'phenyl/unsetSession':
             return handler.unsetSession()
+          case 'phenyl/online':
+            return handler.online()
+          case 'phenyl/offline':
+            return handler.offline()
           default:
             return next(action)
         }
@@ -343,6 +347,22 @@ export class MiddlewareHandler<TM: TypeMap, T> {
   async unsetSession(): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     return this.assignToState(LocalStateUpdater.unsetSession())
+  }
+
+  /**
+   * Mark as online.
+   */
+  async online(): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+    return this.assignToState(LocalStateUpdater.online())
+  }
+
+  /**
+   * Mark as offline.
+   */
+  async offline(): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+    return this.assignToState(LocalStateUpdater.offline())
   }
 }
 
