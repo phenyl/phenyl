@@ -19,6 +19,8 @@ import type {
   SetSessionAction,
   UnfollowAction,
   UnsetSessionAction,
+  OnlineAction,
+  OfflineAction,
   UseEntitiesAction,
 } from './decls/action.js.flow'
 
@@ -393,6 +395,8 @@ export type {
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
   NormalizedFunctionalGroup,
+  OfflineAction,
+  OnlineAction,
   OptionsOf,
   PatchAction,
   PathModifier,

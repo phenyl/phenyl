@@ -4,9 +4,13 @@
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
+  "scripts": {
+    "test": "nyc mocha test/*.js --color always"
+  },
   "devDependencies": {
+    "babel-register": "^6.24.1",
     "mocha": "^5.0.5",
-    "babel-register": "^6.24.1"
+    "nyc": "^11.6.0"
   },
   "files": [
     "src",
