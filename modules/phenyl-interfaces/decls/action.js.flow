@@ -79,6 +79,12 @@ export type UseEntitiesAction = {|
   tag: ActionTag,
 |}
 
+export type CommitAction<N: EntityName> = {|
+  type: 'phenyl/commit',
+  payload: IdUpdateCommand<N>,
+  tag: ActionTag,
+|}
+
 export type CommitAndPushAction<N: EntityName> = {|
   type: 'phenyl/commitAndPush',
   payload: IdUpdateCommand<N>,
@@ -169,6 +175,7 @@ export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
   AssignAction |
   ReplaceAction<M> |
   ResetAction |
+  CommitAction<$Keys<M>> |
   CommitAndPushAction<$Keys<M>> |
   DeleteAction<$Keys<M>> |
   FollowAction<$Keys<M>, M> |

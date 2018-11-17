@@ -7,6 +7,7 @@ import { LocalStateFinder } from './local-state-finder.js'
 
 import type {
   AuthCommandMapOf,
+  CommitAction,
   CommitAndPushAction,
   DeleteAction,
   EntityMapOf,
@@ -57,6 +58,8 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.useEntities(action)
           case 'phenyl/commitAndPush':
             return handler.commitAndPush(action)
+          case 'phenyl/commit':
+            return handler.commit(action)
           case 'phenyl/delete':
             return handler.delete(action)
           case 'phenyl/follow':
@@ -202,6 +205,17 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
     }
     return this.assignToState(...ops)
+  }
+
+  /**
+   * Commit to LocalState.
+   */
+  async commit<N: EntityNameOf<TM>>(action: CommitAction<N>): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+
+    return this.assignToState(
+      LocalStateUpdater.commit(this.state, action.payload)
+    )
   }
 
   /**

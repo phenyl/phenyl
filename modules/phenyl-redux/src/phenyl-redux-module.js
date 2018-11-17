@@ -10,6 +10,7 @@ import {
 import type {
   AssignAction,
   AuthCommandMapOf,
+  CommitAction,
   CommitAndPushAction,
   CredentialsOf,
   DeleteAction,
@@ -174,6 +175,14 @@ export class PhenylReduxModule<TM: TypeMap> {
   static pushAndCommit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): PushAndCommitAction<N> {
     return {
       type: 'phenyl/pushAndCommit',
+      payload: command,
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static commit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAction<N> {
+    return {
+      type: 'phenyl/commit',
       payload: command,
       tag: randomStringWithTimeStamp(),
     }

@@ -4,6 +4,7 @@ export * from 'mongolike-operations'
 import type {
   ActionTag,
   AssignAction,
+  CommitAction,
   CommitAndPushAction,
   DeleteAction,
   FollowAction,
@@ -283,6 +284,7 @@ export type {
   ClientPathModifier,
   CommandParamsOf,
   CommandResultOf,
+  CommitAction,
   CommitAndPushAction,
   CredentialsOf,
   CustomClient,
