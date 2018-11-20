@@ -1,6 +1,7 @@
 // @flow
 
 import type { Middleware } from 'redux'
+import { assign } from 'power-assign'
 import { PhenylReduxModule } from './phenyl-redux-module.js'
 import { LocalStateUpdater } from './local-state-updater.js'
 import { LocalStateFinder } from './local-state-finder.js'
@@ -258,8 +259,11 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'Authorization': {
-          commitsToPush.forEach((operation) => {
-            ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operation }))
+          let tmpState = this.state
+          commitsToPush.slice().reverse().forEach((operation) => {
+            const op = LocalStateUpdater.revert(tmpState, { id, entityName, operation })
+            tmpState = assign(tmpState, op)
+            ops.push(op)
           })
           break
         }
