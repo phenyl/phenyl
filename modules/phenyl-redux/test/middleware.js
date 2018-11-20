@@ -215,18 +215,14 @@ describe('MiddlewareCreator', () => {
           const action = actions.push({ entityName, id })
           const [actionsToDispatch, newStore] = await runActions(middleware, store, [
             actions.commit({ entityName, id, operation }),
+            actions.commit({ entityName, id, operation: { $set: { age: 32 } } }),
+            actions.commit({ entityName, id, operation: { $set: { emailVerified: true } } }),
             action
           ])
 
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].commits, [
-            {
-              "$set": {
-                "nickname": "John"
-              }
-            }
-          ])
+          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].commits, [])
           assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].origin, { nickname: 'Taro' })
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].head, { nickname: 'John' })
+          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].head, { nickname: 'Taro' })
         })
         it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
           const action = actions.push({ entityName, id })
