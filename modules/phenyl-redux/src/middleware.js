@@ -231,7 +231,8 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     const { LocalStateUpdater } = this.constructor
     const { id, entityName, until } = action.payload
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
-    if (commits.length === 0) {
+    const commitsToPush = until >= 0 ? commits.slice(0, until) : commits
+    if (commitsToPush.length === 0) {
       // Everything up-to-date
       return
     }
@@ -240,7 +241,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       LocalStateUpdater.networkRequest(this.state, action.tag)
     )
 
-    const pushCommand: PushCommand<N> = { id, operations: commits.slice(0, until), entityName, versionId }
+    const pushCommand: PushCommand<N> = { id, operations: commitsToPush, entityName, versionId }
     const ops = []
     try {
       const result = await this.client.push(pushCommand, this.sessionId)
@@ -257,7 +258,9 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'Authorization': {
-          ops.push(LocalStateUpdater.revert(this.state, action.payload))
+          commitsToPush.forEach((operation) => {
+            ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operation }))
+          })
           break
         }
         case 'NetworkFailed': {
