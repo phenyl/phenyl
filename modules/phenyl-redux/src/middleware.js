@@ -8,6 +8,7 @@ import { LocalStateFinder } from './local-state-finder.js'
 import type {
   AuthCommandMapOf,
   CommitAction,
+  PushAction,
   CommitAndPushAction,
   DeleteAction,
   EntityMapOf,
@@ -60,6 +61,8 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.commitAndPush(action)
           case 'phenyl/commit':
             return handler.commit(action)
+          case 'phenyl/push':
+            return handler.push(action)
           case 'phenyl/delete':
             return handler.delete(action)
           case 'phenyl/follow':
@@ -216,6 +219,60 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     return this.assignToState(
       LocalStateUpdater.commit(this.state, action.payload)
     )
+  }
+
+  /**
+   * Push to the CentralState.
+   * If failed, the commit is still applied.
+   * In such cases, pull the entity first.
+   * Only when Authorization Error occurred, it will be rollbacked.
+   */
+  async push<N: EntityNameOf<TM>>(action: PushAction<N>): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+    const { id, entityName, until } = action.payload
+    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
+    if (commits.length === 0) {
+      // Everything up-to-date
+      return
+    }
+
+    this.assignToState(
+      LocalStateUpdater.networkRequest(this.state, action.tag)
+    )
+
+    const pushCommand: PushCommand<N> = { id, operations: commits.slice(0, until), entityName, versionId }
+    const ops = []
+    try {
+      const result = await this.client.push(pushCommand, this.sessionId)
+      if (result.hasEntity) {
+        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+      }
+      else {
+        ops.push(
+          LocalStateUpdater.synchronize(this.state, { entityName, id, operations: result.operations, versionId: result.versionId }, commits),
+        )
+      }
+    }
+    catch (e) {
+      ops.push(LocalStateUpdater.error(e, action.tag))
+      switch (e.type) {
+        case 'Authorization': {
+          ops.push(LocalStateUpdater.revert(this.state, action.payload))
+          break
+        }
+        case 'NetworkFailed': {
+          ops.push(LocalStateUpdater.offline())
+          break
+        }
+        default: {
+          break
+        }
+      }
+    }
+    finally {
+      ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
+    }
+    return this.assignToState(...ops)
   }
 
   /**

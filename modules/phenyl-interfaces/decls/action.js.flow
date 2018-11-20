@@ -31,6 +31,7 @@ import type {
   IdDeleteCommand,
   LoginCommand,
   LogoutCommand,
+  PushCommand,
 } from './command.js.flow'
 
 import type {
@@ -82,6 +83,18 @@ export type UseEntitiesAction = {|
 export type CommitAction<N: EntityName> = {|
   type: 'phenyl/commit',
   payload: IdUpdateCommand<N>,
+  tag: ActionTag,
+|}
+
+export type PushActionPayload<N: EntityName> = {|
+  entityName: N,
+  id: Id,
+  until?: number, // Index of commits
+|}
+
+export type PushAction<N: EntityName> = {|
+  type: 'phenyl/push',
+  payload: PushActionPayload<N>,
   tag: ActionTag,
 |}
 
@@ -176,6 +189,7 @@ export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
   ReplaceAction<M> |
   ResetAction |
   CommitAction<$Keys<M>> |
+  PushAction<$Keys<M>> |
   CommitAndPushAction<$Keys<M>> |
   DeleteAction<$Keys<M>> |
   FollowAction<$Keys<M>, M> |
