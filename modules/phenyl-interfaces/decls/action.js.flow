@@ -94,7 +94,11 @@ export type PushActionPayload<N: EntityName> = {|
 
 export type PushAction<N: EntityName> = {|
   type: 'phenyl/push',
-  payload: PushActionPayload<N>,
+  payload: {
+    entityName: N,
+    id: Id,
+    until: number, // Index of commits
+  },
   tag: ActionTag,
 |}
 
