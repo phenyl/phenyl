@@ -192,7 +192,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Authorization': {
+        case 'Unauthorized': {
           ops.push(LocalStateUpdater.revert(this.state, action.payload))
           break
         }
@@ -258,7 +258,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Authorization': {
+        case 'Unauthorized': {
           let tmpState = this.state
           commitsToPush.slice().reverse().forEach((operation) => {
             const op = LocalStateUpdater.revert(tmpState, { id, entityName, operation })
