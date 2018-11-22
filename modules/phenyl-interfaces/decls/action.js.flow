@@ -102,6 +102,11 @@ export type PushAction<N: EntityName> = {|
   tag: ActionTag,
 |}
 
+export type RePushAction = {|
+  type: 'phenyl/repush',
+  tag: ActionTag,
+|}
+
 export type CommitAndPushAction<N: EntityName> = {|
   type: 'phenyl/commitAndPush',
   payload: IdUpdateCommand<N>,
@@ -194,6 +199,7 @@ export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
   ResetAction |
   CommitAction<$Keys<M>> |
   PushAction<$Keys<M>> |
+  RePushAction |
   CommitAndPushAction<$Keys<M>> |
   DeleteAction<$Keys<M>> |
   FollowAction<$Keys<M>, M> |

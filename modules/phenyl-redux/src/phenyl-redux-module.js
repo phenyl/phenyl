@@ -11,6 +11,7 @@ import type {
   AssignAction,
   AuthCommandMapOf,
   CommitAction,
+  RePushAction,
   PushAction,
   PushActionPayload,
   CommitAndPushAction,
@@ -195,6 +196,13 @@ export class PhenylReduxModule<TM: TypeMap> {
     return {
       type: 'phenyl/push',
       payload: assign({ until: -1 }, payload),
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static repush(): RePushAction {
+    return {
+      type: 'phenyl/repush',
       tag: randomStringWithTimeStamp(),
     }
   }

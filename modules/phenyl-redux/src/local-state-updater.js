@@ -27,6 +27,7 @@ import type {
   UpdateOperation,
   UserEntityNameOf,
   VersionDiff,
+  CommitAction,
 } from 'phenyl-interfaces'
 
 import { LocalStateFinder } from './local-state-finder.js'

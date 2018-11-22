@@ -373,5 +373,93 @@ describe('MiddlewareCreator', () => {
         }))
       })
     })
+
+    describe('Action phenyl/repush', () => {
+      const entityName = 'users'
+      const id = 'some-id'
+      const store = createMockStore({
+        network: { requests: [] },
+        unreachedCommits: [
+          actions.commit({ entityName, id, operation: { $set: { nickname: 'Tom' } } }).payload
+        ],
+        entities: {
+          [entityName]: {
+            [id]: {
+              origin: {
+                nickname: 'Taro'
+              },
+              head: null,
+              commits: []
+            }
+          }
+        }
+      })
+
+      describe('Network still failing', () => {
+        const middleware = createMiddleware({
+          storeKey: 'phenyl',
+          client: {
+            push: () => Promise.reject(createLocalError('Invalid value.', 'NetworkFailed'))
+          }
+        })
+        it('should keep unreachedCommits', async () => {
+          const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+
+          assert.deepStrictEqual(
+            newStore.getState().phenyl.unreachedCommits,
+            store.getState().phenyl.unreachedCommits
+          )
+        })
+      })
+      describe('Network recovered', () => {
+        const middleware = createMiddleware({
+          storeKey: 'phenyl',
+          client: {
+            push: async () => ({
+              hasEntity: false,
+              operations: [],
+              versionId: 'zzz'
+            })
+          }
+        })
+        it('should remove unreachedCommits', async () => {
+          const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+
+          assert.deepStrictEqual(
+            newStore.getState().phenyl.unreachedCommits,
+            []
+          )
+        })
+        describe('With local commits', () => {
+          const store = createMockStore({
+            network: { requests: [] },
+            unreachedCommits: [
+              actions.commit({ entityName, id, operation: { $set: { nickname: 'Tom' } } }).payload
+            ],
+            entities: {
+              [entityName]: {
+                [id]: {
+                  origin: {
+                    nickname: 'Taro'
+                  },
+                  head: null,
+                  commits: [
+                    { $set: { age: 25 } }
+                  ]
+                }
+              }
+            }
+          })
+          it('should keep local commits', async () => {
+            const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+
+            assert.deepStrictEqual(
+              newStore.getState().phenyl.entities[entityName][id].commits,
+              store.getState().phenyl.entities[entityName][id].commits
+            )
+          })
+        })
+      })
+    })
   })
 })

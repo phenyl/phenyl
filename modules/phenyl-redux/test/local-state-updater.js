@@ -1,21 +1,21 @@
 /* eslint-env mocha */
-// @flow
 import assert from 'assert'
 import { createDocumentPath } from 'oad-utils/jsnext'
 import { assign } from 'power-assign'
 import { LocalStateUpdater } from '../src/local-state-updater'
 import { PhenylReduxModule } from '../src/phenyl-redux-module'
+import { actions } from '../src/phenyl-redux-module'
 
 describe('LocalStateUpdater', () => {
 	describe('addUnreachedCommits', () => {
 		it('can append IdUpdateCommand to unreachedCommits', () => {
-			const command = {
+			const command = actions.commit({
 				id: 'hoge',
 				entityName: 'foo',
 				operation: {
 					$set: { bar: 'buzz' }
 				}
-			}
+			})
 			const state = PhenylReduxModule.createInitialState()
 			const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, command))
 
@@ -25,13 +25,13 @@ describe('LocalStateUpdater', () => {
 	})
 	describe('removeUnreachedCommits', () => {
 		it('can remove IdUpdateCommand from unreachedCommits', () => {
-			const command = {
+			const command = actions.commit({
 				id: 'hoge',
 				entityName: 'foo',
 				operation: {
 					$set: { bar: 'buzz' }
 				}
-			}
+			})
 			const initialState = PhenylReduxModule.createInitialState()
 			const state = assign(initialState, LocalStateUpdater.addUnreachedCommits(initialState, command))
 			const newState = assign(state, LocalStateUpdater.removeUnreachedCommits(state, command))
@@ -40,15 +40,15 @@ describe('LocalStateUpdater', () => {
 			assert.deepStrictEqual(newState.unreachedCommits, [])
 		})
 		it('can remove multiple IdUpdateCommand', () => {
-			const command1 = {
+			const command1 = actions.commit({
 				id: 'jacj',
 				entityName: 'users',
 				operation: {
 					$set: { name: 'Jack' }
 				}
-			}
-			const command2 = Object.assign({}, command1, { operation: { $set: { age: 35 } } })
-			const command3 = Object.assign({}, command1, { operation: { $set: { verified: true } } })
+			})
+			const command2 = actions.commit(Object.assign({}, command1, { operation: { $set: { age: 35 } } }))
+			const command3 = actions.commit(Object.assign({}, command1, { operation: { $set: { verified: true } } }))
 
 			const initialState = PhenylReduxModule.createInitialState()
 			const state = assign(initialState, LocalStateUpdater.addUnreachedCommits(initialState, command1, command2, command3))
