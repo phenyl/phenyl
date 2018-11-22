@@ -55,6 +55,7 @@ export class PhenylReduxModule<TM: TypeMap> {
   static createInitialState(): LocalState<EntityMapOf<TM>> {
     return {
       entities: {},
+      unreachedCommits: [],
       network: {
         requests: [],
         isOnline: true,

@@ -131,6 +131,24 @@ export class LocalStateUpdater<TM: TypeMap> {
   /**
    * Push network request promise.
    */
+  static addUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<IdUpdateCommand<N>>): UpdateOperation {
+    return {
+      $push: { [createDocumentPath('unreachedCommits')]: { $each: commits } }
+    }
+  }
+
+  /**
+   * Remove network request promise from the request queue.
+   */
+  static removeUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<IdUpdateCommand<N>>): UpdateOperation {
+    return {
+      $pull: { [createDocumentPath('unreachedCommits')]: { $in: commits } }
+    }
+  }
+
+  /**
+   * Push network request promise.
+   */
   static networkRequest(state: LocalStateOf<TM>, tag: ActionTag): UpdateOperation {
     return {
       $push: { [createDocumentPath('network', 'requests')]: tag }
