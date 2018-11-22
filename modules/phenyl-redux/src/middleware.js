@@ -234,8 +234,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
     const commitsToPush = until >= 0 ? commits.slice(0, until) : commits
     if (commitsToPush.length === 0) {
-      // Everything up-to-date
-      return
+      return this.next(action)
     }
 
     this.assignToState(
