@@ -193,7 +193,8 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'Unauthorized': {
-          ops.push(LocalStateUpdater.revert(this.state, action.payload))
+          const { entityName, id, operation } = action.payload
+          ops.push(LocalStateUpdater.revert(this.state, { entityName, id, operations: [operation] }))
           break
         }
         case 'NetworkFailed': {
@@ -258,12 +259,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'Unauthorized': {
-          let tmpState = this.state
-          commitsToPush.slice().reverse().forEach((operation) => {
-            const op = LocalStateUpdater.revert(tmpState, { id, entityName, operation })
-            tmpState = assign(tmpState, op)
-            ops.push(op)
-          })
+          ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations: commitsToPush }))
           break
         }
         case 'NetworkFailed': {

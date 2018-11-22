@@ -33,6 +33,14 @@ import { LocalStateFinder } from './local-state-finder.js'
 
 type LocalStateOf<TM: TypeMap> = LocalState<EntityMapOf<TM>>
 
+type EntityName = string
+type RevertCommand<N: EntityName = EntityName> = {|
+  entityName: N,
+  id: Id,
+  operations: Array<UpdateOperation>,
+|}
+
+
 /**
  *
  */
@@ -76,14 +84,13 @@ export class LocalStateUpdater<TM: TypeMap> {
    * Revert the already applied commit.
    * Error is thrown when no entity is registered.
    */
-  static revert<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, command: IdUpdateCommand<N>): UpdateOperation {
-    const { entityName, id, operation } = command
-
+  static revert<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, command: RevertCommand<N>): UpdateOperation {
+    const { entityName, id, operations } = command
     if (!LocalStateFinder.hasEntity(state, { entityName, id })) {
       throw new Error(`LocalStateUpdater.revert(). No entity found. entityName: "${entityName}", id: "${id}".`)
     }
     const entityInfo = LocalStateFinder.getEntityInfo(state, { id, entityName })
-    const commits = removeOne(entityInfo.commits, operation)
+    const commits = operations.reduce((restCommits, op) => removeOne(restCommits, op), entityInfo.commits)
     const restoredHead = assign(entityInfo.origin, ...commits)
     return {
       $set: {
