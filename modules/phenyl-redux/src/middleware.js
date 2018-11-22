@@ -198,6 +198,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
           break
         }
         case 'NetworkFailed': {
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, action.payload))
           ops.push(LocalStateUpdater.offline())
           break
         }
@@ -264,6 +265,8 @@ export class MiddlewareHandler<TM: TypeMap, T> {
           break
         }
         case 'NetworkFailed': {
+          const unreachedCommits = commitsToPush.map(operation => ({ id, entityName, operation }))
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, ...unreachedCommits))
           ops.push(LocalStateUpdater.offline())
           break
         }

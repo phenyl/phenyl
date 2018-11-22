@@ -71,6 +71,7 @@ describe('MiddlewareCreator', () => {
         network: {
           requests: []
         },
+        unreachedCommits: [],
         entities: {
           [entityName]: {
             [id]: {
@@ -180,6 +181,37 @@ describe('MiddlewareCreator', () => {
           client: {
             push: () => Promise.reject(createLocalError('Invalid value.', 'NetworkFailed'))
           }
+        })
+        it('Dispatch an operation that append to unreached commit', async () => {
+          const commitAction = actions.commit({ entityName, id, operation })
+          const pushAction = actions.push({ entityName, id })
+          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
+            commitAction,
+            pushAction
+          ])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction.payload])
+        })
+        it('Dispatch an operation that append to unreached commits', async () => {
+          const commitAction1 = actions.commit({ entityName, id, operation })
+          const commitAction2 = actions.commit({ entityName, id, operation: { $set: { age: 20 } } })
+          const pushAction = actions.push({ entityName, id })
+          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
+            commitAction1,
+            commitAction2,
+            pushAction
+          ])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction1.payload, commitAction2.payload])
+        })
+        it('Dispatch an operation that append to unreached commits up to specified index', async () => {
+          const commitAction1 = actions.commit({ entityName, id, operation })
+          const commitAction2 = actions.commit({ entityName, id, operation: { $set: { age: 20 } } })
+          const pushAction = actions.push({ entityName, id, until: 1 })
+          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
+            commitAction1,
+            commitAction2,
+            pushAction
+          ])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction1.payload])
         })
         it('Dispatch an operation that make isOnline to false', async () => {
           const action = actions.push({ entityName, id })
