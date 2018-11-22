@@ -86,11 +86,10 @@ describe('MiddlewareCreator', () => {
 
       it('Does nothing when commits are empty', async () => {
         const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
-        const next = () => assert.fail('Must not be called')
-        await middleware(store)(next)(actions.push({
-          entityName,
-          id,
-        }))
+        const next = (action) => assert.deepStrictEqual(action, pushAction)
+
+        const pushAction = actions.push({ entityName, id })
+        await middleware(store)(next)(pushAction)
       })
       it('Dispatch an operation that append tag to pending requests', async () => {
         const middleware = createMiddleware({
