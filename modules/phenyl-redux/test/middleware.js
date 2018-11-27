@@ -189,7 +189,7 @@ describe('MiddlewareCreator', () => {
             commitAction,
             pushAction
           ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction.payload])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
         it('Dispatch an operation that append to unreached commits', async () => {
           const commitAction1 = actions.commit({ entityName, id, operation })
@@ -200,7 +200,7 @@ describe('MiddlewareCreator', () => {
             commitAction2,
             pushAction
           ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction1.payload, commitAction2.payload])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 2 }])
         })
         it('Dispatch an operation that append to unreached commits up to specified index', async () => {
           const commitAction1 = actions.commit({ entityName, id, operation })
@@ -211,7 +211,7 @@ describe('MiddlewareCreator', () => {
             commitAction2,
             pushAction
           ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [commitAction1.payload])
+          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
         it('Dispatch an operation that make isOnline to false', async () => {
           const action = actions.push({ entityName, id })
@@ -346,7 +346,7 @@ describe('MiddlewareCreator', () => {
       const store = createMockStore({
         network: { requests: [] },
         unreachedCommits: [
-          actions.commit({ entityName, id, operation: { $set: { nickname: 'Tom' } } }).payload
+          actions.commit({ entityName, id, commitCount: 1 }).payload
         ],
         entities: {
           [entityName]: {
@@ -355,7 +355,9 @@ describe('MiddlewareCreator', () => {
                 nickname: 'Taro'
               },
               head: null,
-              commits: []
+              commits: [
+                { $set: { nickname: 'Tom' } },
+              ]
             }
           }
         }
@@ -400,7 +402,8 @@ describe('MiddlewareCreator', () => {
           const store = createMockStore({
             network: { requests: [] },
             unreachedCommits: [
-              actions.commit({ entityName, id, operation: { $set: { nickname: 'Tom' } } }).payload
+              actions.commit({ entityName, id, commitCount: 1 }).payload,
+              actions.commit({ entityName, id, commitCount: 2 }).payload
             ],
             entities: {
               [entityName]: {
@@ -410,18 +413,31 @@ describe('MiddlewareCreator', () => {
                   },
                   head: null,
                   commits: [
-                    { $set: { age: 25 } }
+                    { $set: { age: 25 } },
+                    { $set: { nickname: 'Tom' } },
+                    { $set: { age: 32 } },
+                    { $set: { nickname: 'Jack' } }
                   ]
                 }
               }
             }
           })
-          it('should keep local commits', async () => {
+          it('should remove pushed local commits and keep unpushed local commits', async () => {
             const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
 
             assert.deepStrictEqual(
+              newStore.getState().phenyl.entities[entityName][id].origin,
+              { nickname: 'Tom', age: 32 },
+            )
+            assert.deepStrictEqual(
+              newStore.getState().phenyl.entities[entityName][id].head,
+              { nickname: 'Jack', age: 32 },
+            )
+            assert.deepStrictEqual(
               newStore.getState().phenyl.entities[entityName][id].commits,
-              store.getState().phenyl.entities[entityName][id].commits
+              [
+                { $set: { nickname: 'Jack' } },
+              ]
             )
           })
         })

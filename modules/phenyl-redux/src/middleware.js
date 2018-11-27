@@ -196,7 +196,11 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'NetworkFailed': {
-          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, action.payload))
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, {
+            id,
+            entityName,
+            commitCount: commits.length,
+          }))
           ops.push(LocalStateUpdater.offline())
           break
         }
@@ -259,8 +263,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
         case 'NetworkFailed': {
-          const unreachedCommits = commitsToPush.map(operation => ({ id, entityName, operation }))
-          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, ...unreachedCommits))
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, { id, entityName, commitCount: commitsToPush.length }))
           ops.push(LocalStateUpdater.offline())
           break
         }
@@ -283,10 +286,24 @@ export class MiddlewareHandler<TM: TypeMap, T> {
   async repush<N: EntityNameOf<TM>>(action: RePushAction): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const ops = []
+    const alreadySubmittedCounts: {
+      [entityName: string]: {
+        [id: Id]: number
+      }
+    } = {}
     for (let unreachedCommit of this.state.unreachedCommits) {
-      const { entityName, id, operation } = unreachedCommit
-      const { versionId } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
-      const operations = [operation]
+      const { entityName, id, commitCount } = unreachedCommit
+      const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
+      const alreadySubmittedCount =
+        typeof alreadySubmittedCounts[entityName] !== 'undefined' && typeof alreadySubmittedCounts[entityName][id] !== 'undefined'
+          ? alreadySubmittedCounts[entityName][id]
+          : 0
+      const operations = commits.slice(alreadySubmittedCount, alreadySubmittedCount + commitCount)
+      const localCommits = commits.slice(alreadySubmittedCount + commitCount)
+
+      alreadySubmittedCounts[entityName] = alreadySubmittedCounts[entityName] || {}
+      alreadySubmittedCounts[entityName][id] = alreadySubmittedCounts[entityName][id] || 0
+      alreadySubmittedCounts[entityName][id] += commitCount
 
       this.assignToState(
         LocalStateUpdater.networkRequest(this.state, action.tag)
@@ -306,7 +323,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
               id,
               operations: result.operations,
               versionId: result.versionId
-            }, []),
+            }, commits.slice(0, alreadySubmittedCount + commitCount)),
           )
         }
       }

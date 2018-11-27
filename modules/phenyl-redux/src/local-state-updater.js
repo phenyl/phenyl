@@ -28,6 +28,7 @@ import type {
   UserEntityNameOf,
   VersionDiff,
   CommitAction,
+  UnreachedCommit,
 } from 'phenyl-interfaces'
 
 import { LocalStateFinder } from './local-state-finder.js'
@@ -132,7 +133,7 @@ export class LocalStateUpdater<TM: TypeMap> {
   /**
    * Push network request promise.
    */
-  static addUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<IdUpdateCommand<N>>): UpdateOperation {
+  static addUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<UnreachedCommit<N>>): UpdateOperation {
     return {
       $push: { [createDocumentPath('unreachedCommits')]: { $each: commits } }
     }
@@ -141,7 +142,7 @@ export class LocalStateUpdater<TM: TypeMap> {
   /**
    * Remove network request promise from the request queue.
    */
-  static removeUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<IdUpdateCommand<N>>): UpdateOperation {
+  static removeUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, ...commits: Array<UnreachedCommit<N>>): UpdateOperation {
     return {
       $pull: { [createDocumentPath('unreachedCommits')]: { $in: commits } }
     }
