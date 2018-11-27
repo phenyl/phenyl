@@ -1,12 +1,15 @@
 // @flow
 
 import type { Middleware } from 'redux'
+import { assign } from 'power-assign'
 import { PhenylReduxModule } from './phenyl-redux-module.js'
 import { LocalStateUpdater } from './local-state-updater.js'
 import { LocalStateFinder } from './local-state-finder.js'
 
 import type {
   AuthCommandMapOf,
+  CommitAction,
+  PushAction,
   CommitAndPushAction,
   DeleteAction,
   EntityMapOf,
@@ -57,6 +60,10 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.useEntities(action)
           case 'phenyl/commitAndPush':
             return handler.commitAndPush(action)
+          case 'phenyl/commit':
+            return handler.commit(action)
+          case 'phenyl/push':
+            return handler.push(action)
           case 'phenyl/delete':
             return handler.delete(action)
           case 'phenyl/follow':
@@ -185,8 +192,75 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Authorization': {
-          ops.push(LocalStateUpdater.revert(this.state, action.payload))
+        case 'Unauthorized': {
+          const { entityName, id, operation } = action.payload
+          ops.push(LocalStateUpdater.revert(this.state, { entityName, id, operations: [operation] }))
+          break
+        }
+        case 'NetworkFailed': {
+          ops.push(LocalStateUpdater.offline())
+          break
+        }
+        default: {
+          break
+        }
+      }
+    }
+    finally {
+      ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
+    }
+    return this.assignToState(...ops)
+  }
+
+  /**
+   * Commit to LocalState.
+   */
+  async commit<N: EntityNameOf<TM>>(action: CommitAction<N>): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+
+    return this.assignToState(
+      LocalStateUpdater.commit(this.state, action.payload)
+    )
+  }
+
+  /**
+   * Push to the CentralState.
+   * If failed, the commit is still applied.
+   * In such cases, pull the entity first.
+   * Only when Authorization Error occurred, it will be rollbacked.
+   */
+  async push<N: EntityNameOf<TM>>(action: PushAction<N>): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+    const { id, entityName, until } = action.payload
+    const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
+    const commitsToPush = until >= 0 ? commits.slice(0, until) : commits
+    if (commitsToPush.length === 0) {
+      // $FlowIssue(Cannot call this.next with action bound to action)
+      return this.next(action)
+    }
+
+    this.assignToState(
+      LocalStateUpdater.networkRequest(this.state, action.tag)
+    )
+
+    const pushCommand: PushCommand<N> = { id, operations: commitsToPush, entityName, versionId }
+    const ops = []
+    try {
+      const result = await this.client.push(pushCommand, this.sessionId)
+      if (result.hasEntity) {
+        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+      }
+      else {
+        ops.push(
+          LocalStateUpdater.synchronize(this.state, { entityName, id, operations: result.operations, versionId: result.versionId }, commits),
+        )
+      }
+    }
+    catch (e) {
+      ops.push(LocalStateUpdater.error(e, action.tag))
+      switch (e.type) {
+        case 'Unauthorized': {
+          ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations: commitsToPush }))
           break
         }
         case 'NetworkFailed': {

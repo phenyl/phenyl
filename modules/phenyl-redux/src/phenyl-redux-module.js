@@ -10,6 +10,9 @@ import {
 import type {
   AssignAction,
   AuthCommandMapOf,
+  CommitAction,
+  PushAction,
+  PushActionPayload,
   CommitAndPushAction,
   CredentialsOf,
   DeleteAction,
@@ -175,6 +178,22 @@ export class PhenylReduxModule<TM: TypeMap> {
     return {
       type: 'phenyl/pushAndCommit',
       payload: command,
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static commit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAction<N> {
+    return {
+      type: 'phenyl/commit',
+      payload: command,
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static push<N: EntityNameOf<TM>>(payload: PushActionPayload<N>): PushAction<N> {
+    return {
+      type: 'phenyl/push',
+      payload: assign({ until: -1 }, payload),
       tag: randomStringWithTimeStamp(),
     }
   }
