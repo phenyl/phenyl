@@ -195,11 +195,6 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Unauthorized': {
-          const { entityName, id, operation } = action.payload
-          ops.push(LocalStateUpdater.revert(this.state, { entityName, id, operations: [operation] }))
-          break
-        }
         case 'NetworkFailed': {
           ops.push(LocalStateUpdater.addUnreachedCommits(this.state, action.payload))
           ops.push(LocalStateUpdater.offline())
@@ -263,10 +258,6 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Unauthorized': {
-          ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations: commitsToPush }))
-          break
-        }
         case 'NetworkFailed': {
           const unreachedCommits = commitsToPush.map(operation => ({ id, entityName, operation }))
           ops.push(LocalStateUpdater.addUnreachedCommits(this.state, ...unreachedCommits))

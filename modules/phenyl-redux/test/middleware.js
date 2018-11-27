@@ -235,40 +235,6 @@ describe('MiddlewareCreator', () => {
           assert.deepStrictEqual(newStore.getState().phenyl.network.requests, [])
         })
       })
-      describe('Request fail with Authorization', () => {
-        const middleware = createMiddleware({
-          storeKey: 'phenyl',
-          client: {
-            push: () => Promise.reject(createServerError('Authorization Required.', 'Unauthorized'))
-          }
-        })
-        it('Dispatch an operation that revert local commits', async () => {
-          const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            actions.commit({ entityName, id, operation: { $set: { age: 32 } } }),
-            actions.commit({ entityName, id, operation: { $set: { emailVerified: true } } }),
-            action
-          ])
-
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].commits, [])
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].origin, { nickname: 'Taro' })
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].head, { nickname: 'Taro' })
-        })
-        it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
-          const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(actionsToDispatch[1].payload, [{
-            $push: {
-              'network.requests': action.tag,
-            }
-          }])
-          assert.deepStrictEqual(newStore.getState().phenyl.network.requests, [])
-        })
-      })
       describe('Request failed with unexpected error', () => {
         const middleware = createMiddleware({
           storeKey: 'phenyl',
