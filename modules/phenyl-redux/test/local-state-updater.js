@@ -38,6 +38,34 @@ describe('LocalStateUpdater', () => {
         commitCount: 3,
       })
     })
+    it('should not nothing when calculated commitCount is equal to 0', () => {
+      const unreachedCommit = {
+        entityName: 'foo',
+        id: 'hoge',
+        commitCount: 3,
+      }
+      const state = PhenylReduxModule.createInitialState()
+      state.unreachedCommits = [
+        { entityName: 'foo', id: 'hoge', commitCount: 3 }
+      ]
+      const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
+
+      assert.deepStrictEqual(newState.unreachedCommits, state.unreachedCommits)
+    })
+    it('should not nothing when calculated commitCount is less than 0', () => {
+      const unreachedCommit = {
+        entityName: 'foo',
+        id: 'hoge',
+        commitCount: 2,
+      }
+      const state = PhenylReduxModule.createInitialState()
+      state.unreachedCommits = [
+        { entityName: 'foo', id: 'hoge', commitCount: 3 }
+      ]
+      const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
+
+      assert.deepStrictEqual(newState.unreachedCommits, state.unreachedCommits)
+    })
   })
   describe('removeUnreachedCommits', () => {
     it('can remove UnreachedCommit from unreachedCommits', () => {

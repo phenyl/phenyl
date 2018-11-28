@@ -138,6 +138,11 @@ export class LocalStateUpdater<TM: TypeMap> {
     const enqueuedCount = state.unreachedCommits
       .filter((c) => c.entityName === entityName && c.id === id)
       .reduce((acc, c) => acc + c.commitCount, 0)
+
+    if (commitCount <= enqueuedCount) {
+      return {}
+    }
+
     return {
       $push: {
         [createDocumentPath('unreachedCommits')]: {
