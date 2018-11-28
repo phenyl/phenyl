@@ -1,6 +1,6 @@
 {
   "name": "phenyl-http-rules",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -25,7 +25,7 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-http-rules",
   "license": "Apache License 2.0",
   "dependencies": {
-    "phenyl-interfaces": "~0.4.1",
-    "phenyl-utils": "~0.4.1"
+    "phenyl-interfaces": "~0.4.2",
+    "phenyl-utils": "~0.4.2"
   }
 }
