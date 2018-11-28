@@ -20,12 +20,20 @@ export type LocalEntityInfoById<E: Entity> = {
 
 export type LocalEntityState<M: EntityMap> = $ObjMap<M, <T: Entity>(T) => LocalEntityInfoById<T>>
 
+export type UnreachedCommit<N: string = string> = {|
+  entityName: N, // "update" key in MongoDB reference
+  id: Id,
+  commitCount: number,
+|}
+
+
 export type LocalState<M: EntityMap> = {
   entities: LocalEntityState<M>,
   network: {
     requests: Array<ActionTag>,
     isOnline: boolean,
   },
+  unreachedCommits: Array<UnreachedCommit<$Keys<M>>>,
   error?: {
     type: PhenylErrorType,
     at: ErrorLocation,

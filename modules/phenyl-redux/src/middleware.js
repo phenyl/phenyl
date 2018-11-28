@@ -10,6 +10,7 @@ import type {
   AuthCommandMapOf,
   CommitAction,
   PushAction,
+  RePushAction,
   CommitAndPushAction,
   DeleteAction,
   EntityMapOf,
@@ -64,6 +65,8 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.commit(action)
           case 'phenyl/push':
             return handler.push(action)
+          case 'phenyl/repush':
+            return handler.repush(action)
           case 'phenyl/delete':
             return handler.delete(action)
           case 'phenyl/follow':
@@ -192,12 +195,12 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Unauthorized': {
-          const { entityName, id, operation } = action.payload
-          ops.push(LocalStateUpdater.revert(this.state, { entityName, id, operations: [operation] }))
-          break
-        }
         case 'NetworkFailed': {
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, {
+            id,
+            entityName,
+            commitCount: commits.length,
+          }))
           ops.push(LocalStateUpdater.offline())
           break
         }
@@ -259,11 +262,8 @@ export class MiddlewareHandler<TM: TypeMap, T> {
     catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
       switch (e.type) {
-        case 'Unauthorized': {
-          ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations: commitsToPush }))
-          break
-        }
         case 'NetworkFailed': {
+          ops.push(LocalStateUpdater.addUnreachedCommits(this.state, { id, entityName, commitCount: commitsToPush.length }))
           ops.push(LocalStateUpdater.offline())
           break
         }
@@ -276,6 +276,61 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
     }
     return this.assignToState(...ops)
+  }
+
+  /**
+   * Push unreached commits to the CentralState.
+   * If failed, the commit is still applied.
+   * Only when Authorization Error occurred, it will be rollbacked.
+   */
+  async repush<N: EntityNameOf<TM>>(action: RePushAction): Promise<T> {
+    const { LocalStateUpdater } = this.constructor
+    for (let unreachedCommit of this.state.unreachedCommits) {
+      const ops = []
+      const { entityName, id, commitCount } = unreachedCommit
+      const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
+      const operations = commits.slice(0, commitCount)
+
+      this.assignToState(
+        LocalStateUpdater.networkRequest(this.state, action.tag)
+      )
+
+      // $FlowIssue(Cannot assign object literal to pushCommand because string [1] is incompatible with N [2] in property entityName)
+      const pushCommand: PushCommand<N> = { id, operations, entityName, versionId }
+      try {
+        const result = await this.client.push(pushCommand, this.sessionId)
+        ops.push(LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit))
+        if (result.hasEntity) {
+          ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+        } else {
+          ops.push(
+            LocalStateUpdater.synchronize(this.state, {
+              entityName,
+              id,
+              operations: result.operations,
+              versionId: result.versionId
+            }, operations),
+          )
+        }
+      }
+      catch (e) {
+        ops.push(LocalStateUpdater.error(e, action.tag))
+        switch (e.type) {
+          case 'Unauthorized': {
+            ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations }))
+            break
+          }
+          default: {
+            break
+          }
+        }
+      }
+      finally {
+        ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
+        await this.assignToState(...ops)
+      }
+    }
+    return this.assignToState()
   }
 
   /**

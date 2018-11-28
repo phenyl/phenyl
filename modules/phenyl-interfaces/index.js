@@ -6,6 +6,7 @@ import type {
   AssignAction,
   CommitAction,
   PushAction,
+  RePushAction,
   PushActionPayload,
   CommitAndPushAction,
   DeleteAction,
@@ -136,6 +137,7 @@ import type {
   LocalEntityInfoById,
   LocalEntityState,
   LocalState,
+  UnreachedCommit,
 } from './decls/local-state.js.flow'
 import type {
   CustomQueryResult,
@@ -288,6 +290,7 @@ export type {
   CommandResultOf,
   CommitAction,
   PushAction,
+  RePushAction,
   PushActionPayload,
   CommitAndPushAction,
   CredentialsOf,
@@ -455,6 +458,7 @@ export type {
   SubscriptionResult,
   TypeMap,
   UnfollowAction,
+  UnreachedCommit,
   UnsetSessionAction,
   UpdateAndFetchRequestData,
   UpdateAndFetchResponseData,
