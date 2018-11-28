@@ -285,25 +285,11 @@ export class MiddlewareHandler<TM: TypeMap, T> {
    */
   async repush<N: EntityNameOf<TM>>(action: RePushAction): Promise<T> {
     const { LocalStateUpdater } = this.constructor
-    const ops = []
-    const alreadySubmittedCounts: {
-      [entityName: string]: {
-        [id: Id]: number
-      }
-    } = {}
     for (let unreachedCommit of this.state.unreachedCommits) {
+      const ops = []
       const { entityName, id, commitCount } = unreachedCommit
       const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, { entityName, id })
-      const alreadySubmittedCount =
-        typeof alreadySubmittedCounts[entityName] !== 'undefined' && typeof alreadySubmittedCounts[entityName][id] !== 'undefined'
-          ? alreadySubmittedCounts[entityName][id]
-          : 0
-      const operations = commits.slice(alreadySubmittedCount, alreadySubmittedCount + commitCount)
-      const localCommits = commits.slice(alreadySubmittedCount + commitCount)
-
-      alreadySubmittedCounts[entityName] = alreadySubmittedCounts[entityName] || {}
-      alreadySubmittedCounts[entityName][id] = alreadySubmittedCounts[entityName][id] || 0
-      alreadySubmittedCounts[entityName][id] += commitCount
+      const operations = commits.slice(0, commitCount)
 
       this.assignToState(
         LocalStateUpdater.networkRequest(this.state, action.tag)
@@ -323,7 +309,7 @@ export class MiddlewareHandler<TM: TypeMap, T> {
               id,
               operations: result.operations,
               versionId: result.versionId
-            }, commits.slice(0, alreadySubmittedCount + commitCount)),
+            }, operations),
           )
         }
       }
@@ -341,9 +327,10 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       }
       finally {
         ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
+        await this.assignToState(...ops)
       }
     }
-    return this.assignToState(...ops)
+    return this.assignToState()
   }
 
   /**

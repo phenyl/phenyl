@@ -8,54 +8,50 @@ import { actions } from '../src/phenyl-redux-module'
 
 describe('LocalStateUpdater', () => {
   describe('addUnreachedCommits', () => {
-    it('can append IdUpdateCommand to unreachedCommits', () => {
-      const command = actions.commit({
+    it('can append UnreachedCommit to unreachedCommits', () => {
+      const unreachedCommit = {
         id: 'hoge',
         entityName: 'foo',
-        operation: {
-          $set: { bar: 'buzz' }
-        }
-      })
+        commitCount: 1,
+      }
       const state = PhenylReduxModule.createInitialState()
-      const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, command))
+      const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
 
       assert.deepStrictEqual(state.unreachedCommits, [])
-      assert.deepStrictEqual(newState.unreachedCommits, [command])
+      assert.deepStrictEqual(newState.unreachedCommits, [unreachedCommit])
+    })
+    it('commitCount should be count of commit when unreachedCommits has same entityName and id', () => {
+      const unreachedCommit = {
+        entityName: 'foo',
+        id: 'hoge',
+        commitCount: 5,
+      }
+      const state = PhenylReduxModule.createInitialState()
+      state.unreachedCommits = [
+        { entityName: 'foo', id: 'hoge', commitCount: 2 }
+      ]
+      const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
+
+      assert.deepStrictEqual(newState.unreachedCommits[1], {
+        entityName: 'foo',
+        id: 'hoge',
+        commitCount: 3,
+      })
     })
   })
   describe('removeUnreachedCommits', () => {
-    it('can remove IdUpdateCommand from unreachedCommits', () => {
-      const command = actions.commit({
+    it('can remove UnreachedCommit from unreachedCommits', () => {
+      const unreachedCommit = {
         id: 'hoge',
         entityName: 'foo',
-        operation: {
-          $set: { bar: 'buzz' }
-        }
-      })
+        commitCount: 1,
+      }
       const initialState = PhenylReduxModule.createInitialState()
-      const state = assign(initialState, LocalStateUpdater.addUnreachedCommits(initialState, command))
-      const newState = assign(state, LocalStateUpdater.removeUnreachedCommits(state, command))
+      const state = assign(initialState, LocalStateUpdater.addUnreachedCommits(initialState, unreachedCommit))
+      const newState = assign(state, LocalStateUpdater.removeUnreachedCommits(state, unreachedCommit))
 
-      assert.deepStrictEqual(state.unreachedCommits, [command])
+      assert.deepStrictEqual(state.unreachedCommits, [unreachedCommit])
       assert.deepStrictEqual(newState.unreachedCommits, [])
-    })
-    it('can remove multiple IdUpdateCommand', () => {
-      const command1 = actions.commit({
-        id: 'jacj',
-        entityName: 'users',
-        operation: {
-          $set: { name: 'Jack' }
-        }
-      })
-      const command2 = actions.commit(Object.assign({}, command1, { operation: { $set: { age: 35 } } }))
-      const command3 = actions.commit(Object.assign({}, command1, { operation: { $set: { verified: true } } }))
-
-      const initialState = PhenylReduxModule.createInitialState()
-      const state = assign(initialState, LocalStateUpdater.addUnreachedCommits(initialState, command1, command2, command3))
-      const newState = assign(state, LocalStateUpdater.removeUnreachedCommits(state, command1, command3))
-
-      assert.deepStrictEqual(state.unreachedCommits, [command1, command2, command3])
-      assert.deepStrictEqual(newState.unreachedCommits, [command2])
     })
   })
 })
