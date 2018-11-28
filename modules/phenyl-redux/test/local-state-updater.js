@@ -8,7 +8,7 @@ import { actions } from '../src/phenyl-redux-module'
 
 describe('LocalStateUpdater', () => {
   describe('addUnreachedCommits', () => {
-    it('can append UnreachedCommit to unreachedCommits', () => {
+    it('appends to unreachedCommits', () => {
       const unreachedCommit = {
         id: 'hoge',
         entityName: 'foo',
@@ -20,7 +20,7 @@ describe('LocalStateUpdater', () => {
       assert.deepStrictEqual(state.unreachedCommits, [])
       assert.deepStrictEqual(newState.unreachedCommits, [unreachedCommit])
     })
-    it('commitCount should be count of commit when unreachedCommits has same entityName and id', () => {
+    it('calculates the commitCount correctly', () => {
       const unreachedCommit = {
         entityName: 'foo',
         id: 'hoge',
@@ -38,7 +38,7 @@ describe('LocalStateUpdater', () => {
         commitCount: 3,
       })
     })
-    it('should not nothing when calculated commitCount is equal to 0', () => {
+    it('should not assign new commit when the difference between commitCounts is equal to 0', () => {
       const unreachedCommit = {
         entityName: 'foo',
         id: 'hoge',
@@ -46,13 +46,14 @@ describe('LocalStateUpdater', () => {
       }
       const state = PhenylReduxModule.createInitialState()
       state.unreachedCommits = [
-        { entityName: 'foo', id: 'hoge', commitCount: 3 }
+        { entityName: 'foo', id: 'hoge', commitCount: 1 },
+        { entityName: 'foo', id: 'hoge', commitCount: 2 }
       ]
       const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
 
       assert.deepStrictEqual(newState.unreachedCommits, state.unreachedCommits)
     })
-    it('should not nothing when calculated commitCount is less than 0', () => {
+    it('should not assign new commit when the difference between commitCounts is invalid', () => {
       const unreachedCommit = {
         entityName: 'foo',
         id: 'hoge',
@@ -60,7 +61,8 @@ describe('LocalStateUpdater', () => {
       }
       const state = PhenylReduxModule.createInitialState()
       state.unreachedCommits = [
-        { entityName: 'foo', id: 'hoge', commitCount: 3 }
+        { entityName: 'foo', id: 'hoge', commitCount: 1 },
+        { entityName: 'foo', id: 'hoge', commitCount: 2 }
       ]
       const newState = assign(state, LocalStateUpdater.addUnreachedCommits(state, unreachedCommit))
 
@@ -68,7 +70,7 @@ describe('LocalStateUpdater', () => {
     })
   })
   describe('removeUnreachedCommits', () => {
-    it('can remove UnreachedCommit from unreachedCommits', () => {
+    it('removes a commit from unreachedCommits', () => {
       const unreachedCommit = {
         id: 'hoge',
         entityName: 'foo',

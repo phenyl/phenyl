@@ -23,7 +23,7 @@ describe('MiddlewareCreator', () => {
 
     describe('Action phenyl/online', () => {
       const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
-      it('Dispatch an operation that make isOnline to true', async () => {
+      it('dispatches an action that sets isOnline to true', async () => {
         const expected = {
           type: 'phenyl/assign',
           payload: [
@@ -38,7 +38,7 @@ describe('MiddlewareCreator', () => {
     })
     describe('Action phenyl/offline', () => {
       const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
-      it('Dispatch an operation that make isOnline to false', async () => {
+      it('dispatches an action that sets isOnline to false', async () => {
         const expected = {
           type: 'phenyl/assign',
           payload: [
@@ -77,7 +77,7 @@ describe('MiddlewareCreator', () => {
         }
       }
 
-      it('Does nothing when commits are empty', async () => {
+      it('does nothing when commits are empty', async () => {
         const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
         const store = storeCreator(initialState, middleware)
         const next = (action) => assert.deepStrictEqual(action, pushAction)
@@ -85,7 +85,7 @@ describe('MiddlewareCreator', () => {
         const pushAction = actions.push({ entityName, id })
         await middleware(store)(next)(pushAction)
       })
-      it('Dispatch an operation that append tag to pending requests', async () => {
+      it('dispatches an action that appends tag to pending requests', async () => {
         const dispatchedActions = []
         const middleware = createMiddleware({
           storeKey: 'phenyl',
@@ -124,7 +124,7 @@ describe('MiddlewareCreator', () => {
             })
           }
         })
-        it('Dispatch an operation that remove tag from pending requests when request success', async () => {
+        it('dispatches an action that removes a tag from pending requests when a request resolves', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -133,7 +133,7 @@ describe('MiddlewareCreator', () => {
 
           assert.deepStrictEqual(store.getState().phenyl.network.requests, [])
         })
-        it('Dispatch an operation that synchronize local state', async () => {
+        it('dispatches an action that syncs local state with entity', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -161,7 +161,7 @@ describe('MiddlewareCreator', () => {
             })
           }
         })
-        it('Dispatch an operation that synchronize local state', async () => {
+        it('dispatches an action that assigns an operation to local state', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -172,14 +172,14 @@ describe('MiddlewareCreator', () => {
           assert.deepStrictEqual(store.getState().phenyl.entities[entityName][id].head, null)
         })
       })
-      describe('Request failed with NetworkFailed', () => {
+      describe('Request rejected with NetworkFailed', () => {
         const middleware = createMiddleware({
           storeKey: 'phenyl',
           client: {
             push: () => Promise.reject(createLocalError('Invalid value.', 'NetworkFailed'))
           }
         })
-        it('Dispatch an operation that append to unreached commit', async () => {
+        it('dispatches an action that appends to unreached commit', async () => {
           const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id })
 
@@ -188,7 +188,7 @@ describe('MiddlewareCreator', () => {
 
           assert.deepStrictEqual(store.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
-        it('Dispatch an operation that append to unreached commits', async () => {
+        it('dispatches an action that appends to unreached commits', async () => {
           const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id })
 
@@ -203,7 +203,7 @@ describe('MiddlewareCreator', () => {
             { entityName, id, commitCount: 1 },
           ])
         })
-        it('Dispatch an operation that append to unreached commits up to specified index', async () => {
+        it('dispatches an action that appends to unreached commits up to specified index', async () => {
           const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id, until: 1 })
 
@@ -213,7 +213,7 @@ describe('MiddlewareCreator', () => {
 
           assert.deepStrictEqual(store.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
-        it('Dispatch an operation that make isOnline to false', async () => {
+        it('dispatches an action that sets isOnline to false', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -222,7 +222,7 @@ describe('MiddlewareCreator', () => {
 
           assert.deepStrictEqual(store.getState().phenyl.network.isOnline, false)
         })
-        it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
+        it('dispatches an action that removes a tag from pending requests when a request rejected', async () => {
           const dispatchedActions = []
           const store = storeCreator(initialState, middleware, createActionsLogMiddleware(dispatchedActions))
           const action = actions.push({ entityName, id })
@@ -237,14 +237,14 @@ describe('MiddlewareCreator', () => {
           }])
         })
       })
-      describe('Request failed with unexpected error', () => {
+      describe('Request rejected with unexpected error', () => {
         const middleware = createMiddleware({
           storeKey: 'phenyl',
           client: {
             push: () => Promise.reject(createServerError('Unexpected'))
           }
         })
-        it('Dispatch an operation that set error', async () => {
+        it('dispatches an action that sets error', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -258,7 +258,7 @@ describe('MiddlewareCreator', () => {
             type: 'BadRequest',
           })
         })
-        it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
+        it('dispatches an action that removes a tag from pending requests when a request rejected', async () => {
           const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
 
@@ -292,7 +292,7 @@ describe('MiddlewareCreator', () => {
       }
       const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
 
-      it('Dispatch an operation that create commit', async () => {
+      it('dispatches an action that creates commit', async () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
@@ -310,7 +310,7 @@ describe('MiddlewareCreator', () => {
           operation
         }))
       })
-      it('Dispatch an operation that update head state', async () => {
+      it('dispatches an action that updates head state', async () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
@@ -326,7 +326,7 @@ describe('MiddlewareCreator', () => {
           operation
         }))
       })
-      it('Dispatch an operation that don\'t update origin state', async () => {
+      it('dispatches an action that doesn\'t update origin state', async () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
@@ -364,7 +364,7 @@ describe('MiddlewareCreator', () => {
         }
       }
 
-      describe('Network still failing', () => {
+      describe('When the Network is rejected', () => {
         const middleware = createMiddleware({
           storeKey: 'phenyl',
           client: {
@@ -383,7 +383,7 @@ describe('MiddlewareCreator', () => {
           )
         })
       })
-      describe('Network recovered', () => {
+      describe('When the Network is recovered', () => {
         const middleware = createMiddleware({
           storeKey: 'phenyl',
           client: {
