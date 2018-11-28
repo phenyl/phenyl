@@ -161,6 +161,11 @@ export type PushAndCommitAction<N: EntityName> = {|
   tag: ActionTag,
 |}
 
+export type ResolveErrorAction = {|
+  type: 'phenyl/resolveError',
+  tag: ActionTag,
+|}
+
 export type SetSessionAction = {|
   type: 'phenyl/setSession',
   payload: {

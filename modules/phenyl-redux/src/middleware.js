@@ -25,6 +25,7 @@ import type {
   PatchAction,
   PhenylAction,
   PushAndCommitAction,
+  ResolveErrorAction,
   PushCommand,
   PullAction,
   RestApiClient,
@@ -83,6 +84,8 @@ export class MiddlewareCreator<TM: TypeMap> {
             return handler.pull(action)
           case 'phenyl/pushAndCommit':
             return handler.pushAndCommit(action)
+          case 'phenyl/resolveError':
+            return handler.resolveError(action)
           case 'phenyl/setSession':
             return handler.setSession(action)
           case 'phenyl/unfollow':
@@ -446,6 +449,13 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
     }
     return this.assignToState(...ops)
+  }
+
+  /**
+   * Unset error.
+   */
+  async resolveError(action: ResolveErrorAction): Promise<T> {
+    return this.assignToState(LocalStateUpdater.resolveError())
   }
 
   /**

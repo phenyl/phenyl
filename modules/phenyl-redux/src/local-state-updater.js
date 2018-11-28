@@ -322,4 +322,13 @@ export class LocalStateUpdater<TM: TypeMap> {
       $set: { [createDocumentPath('network', 'isOnline')]: false }
     }
   }
+
+  /**
+   * Unset error.
+   */
+  static resolveError(): UpdateOperation {
+    return {
+      $unset: { [createDocumentPath('error')]: '' }
+    }
+  }
 }
