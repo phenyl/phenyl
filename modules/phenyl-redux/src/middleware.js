@@ -318,15 +318,6 @@ export class MiddlewareHandler<TM: TypeMap, T> {
       }
       catch (e) {
         ops.push(LocalStateUpdater.error(e, action.tag))
-        switch (e.type) {
-          case 'Unauthorized': {
-            ops.push(LocalStateUpdater.revert(this.state, { id, entityName, operations }))
-            break
-          }
-          default: {
-            break
-          }
-        }
       }
       finally {
         ops.push(LocalStateUpdater.removeNetworkRequest(this.state, action.tag))
