@@ -136,8 +136,8 @@ export class LocalStateUpdater<TM: TypeMap> {
   static addUnreachedCommits<N: EntityNameOf<TM>>(state: LocalStateOf<TM>, commit: UnreachedCommit<N>): UpdateOperation {
     const { entityName, id, commitCount } = commit
     const enqueuedCount = state.unreachedCommits
-      .filter((c: UnreachedCommit<N>) => c.entityName === entityName && c.id === id)
-      .reduce((acc: number, c: UnreachedCommit<N>) => acc + c.commitCount, 0)
+      .filter((c) => c.entityName === entityName && c.id === id)
+      .reduce((acc, c) => acc + c.commitCount, 0)
     return {
       $push: {
         [createDocumentPath('unreachedCommits')]: {
