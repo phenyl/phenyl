@@ -1,33 +1,25 @@
 /* eslint-env mocha */
 import assert from 'assert'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { createDocumentPath } from 'oad-utils/jsnext'
 import { createServerError, createLocalError } from 'phenyl-utils/jsnext'
 import { assign } from 'power-assign'
 import { createMiddleware } from '../src/middleware'
-import { actions } from '../src/phenyl-redux-module'
+import reducer, { actions } from '../src/phenyl-redux-module'
 
 describe('MiddlewareCreator', () => {
   describe('create', () => {
-    const createMockStore = (phenylState) => ({
-      getState() {
-        return {
-          phenyl: phenylState,
-        }
-      }
-    })
-    const runActions = async (middleware, originStore, actions) => {
-      let store = originStore
-      const actionsToDispatch = []
-      for (let action of actions) {
-        await middleware(store)((action) => {
-          const newState = assign(store.getState().phenyl, ...action.payload)
-          actionsToDispatch.push(action)
-          store = createMockStore(newState)
-        })(action)
-      }
-
-      return [actionsToDispatch, store]
+    const createActionsLogMiddleware = log => () => next => action => {
+      log.push(action)
+      return next(action)
     }
+    const storeCreator = (initialState, ...middlewares) => createStore(
+      combineReducers({ phenyl: reducer }),
+      { phenyl: initialState },
+      applyMiddleware(
+        ...middlewares
+      )
+    )
 
     describe('Action phenyl/online', () => {
       const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
@@ -39,9 +31,9 @@ describe('MiddlewareCreator', () => {
           ],
         }
 
-        const store = createMockStore({})
+        const mockStore = { getState: () => ({}) }
         const next = ({ type, payload }) => assert.deepStrictEqual(expected, { type, payload })
-        await middleware(store)(next)(actions.online())
+        await middleware(mockStore)(next)(actions.online())
       })
     })
     describe('Action phenyl/offline', () => {
@@ -54,9 +46,9 @@ describe('MiddlewareCreator', () => {
           ],
         }
 
-        const store = createMockStore({})
+        const mockStore = { getState: () => ({}) }
         const next = ({ type, payload }) => assert.deepStrictEqual(expected, { type, payload })
-        await middleware(store)(next)(actions.offline())
+        await middleware(mockStore)(next)(actions.offline())
       })
     })
     describe('Action phenyl/push', () => {
@@ -67,7 +59,7 @@ describe('MiddlewareCreator', () => {
           [createDocumentPath('nickname')]: 'John'
         }
       }
-      const store = createMockStore({
+      const initialState = {
         network: {
           requests: []
         },
@@ -83,16 +75,18 @@ describe('MiddlewareCreator', () => {
             }
           }
         }
-      })
+      }
 
       it('Does nothing when commits are empty', async () => {
         const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
+        const store = storeCreator(initialState, middleware)
         const next = (action) => assert.deepStrictEqual(action, pushAction)
 
         const pushAction = actions.push({ entityName, id })
         await middleware(store)(next)(pushAction)
       })
       it('Dispatch an operation that append tag to pending requests', async () => {
+        const dispatchedActions = []
         const middleware = createMiddleware({
           storeKey: 'phenyl',
           client: {
@@ -103,13 +97,13 @@ describe('MiddlewareCreator', () => {
             })
           }
         })
-
+        const store = storeCreator(initialState, middleware, createActionsLogMiddleware(dispatchedActions))
         const action = actions.push({ entityName, id })
-        const [actionsToDispatch] = await runActions(middleware, store, [
-          actions.commit({ entityName, id, operation }),
-          action
-        ])
-        assert.deepStrictEqual(actionsToDispatch[1].payload, [{
+
+        await store.dispatch(actions.commit({ entityName, id, operation }))
+        await store.dispatch(action)
+
+        assert.deepStrictEqual(dispatchedActions[1].payload, [{
           $push: {
             'network.requests': action.tag
           }
@@ -131,21 +125,23 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('Dispatch an operation that remove tag from pending requests when request success', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.network.requests, [])
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.network.requests, [])
         })
         it('Dispatch an operation that synchronize local state', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].origin, { id, nickname: 'Jack' })
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].head, null)
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.entities[entityName][id].origin, { id, nickname: 'Jack' })
+          assert.deepStrictEqual(store.getState().phenyl.entities[entityName][id].head, null)
         })
       })
       describe('Response contains operations', () => {
@@ -166,13 +162,14 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('Dispatch an operation that synchronize local state', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].origin, { nickname: 'John', age: 35 })
-          assert.deepStrictEqual(newStore.getState().phenyl.entities[entityName][id].head, null)
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.entities[entityName][id].origin, { nickname: 'John', age: 35 })
+          assert.deepStrictEqual(store.getState().phenyl.entities[entityName][id].head, null)
         })
       })
       describe('Request failed with NetworkFailed', () => {
@@ -183,56 +180,61 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('Dispatch an operation that append to unreached commit', async () => {
-          const commitAction = actions.commit({ entityName, id, operation })
+          const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            commitAction,
-            pushAction
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(pushAction)
+
+          assert.deepStrictEqual(store.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
         it('Dispatch an operation that append to unreached commits', async () => {
-          const commitAction1 = actions.commit({ entityName, id, operation })
-          const commitAction2 = actions.commit({ entityName, id, operation: { $set: { age: 20 } } })
+          const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            commitAction1,
-            commitAction2,
-            pushAction
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(pushAction)
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(pushAction)
+
+          assert.deepStrictEqual(store.getState().phenyl.unreachedCommits, [
+            { entityName, id, commitCount: 2 },
+            { entityName, id, commitCount: 1 },
           ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 2 }])
         })
         it('Dispatch an operation that append to unreached commits up to specified index', async () => {
-          const commitAction1 = actions.commit({ entityName, id, operation })
-          const commitAction2 = actions.commit({ entityName, id, operation: { $set: { age: 20 } } })
+          const store = storeCreator(initialState, middleware)
           const pushAction = actions.push({ entityName, id, until: 1 })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            commitAction1,
-            commitAction2,
-            pushAction
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(actions.commit({ entityName, id, operation: { $set: { age: 20 } } }))
+          await store.dispatch(pushAction)
+
+          assert.deepStrictEqual(store.getState().phenyl.unreachedCommits, [{ entityName, id, commitCount: 1 }])
         })
         it('Dispatch an operation that make isOnline to false', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(newStore.getState().phenyl.network.isOnline, false)
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.network.isOnline, false)
         })
         it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
+          const dispatchedActions = []
+          const store = storeCreator(initialState, middleware, createActionsLogMiddleware(dispatchedActions))
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(actionsToDispatch[1].payload, [{
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(dispatchedActions[1].payload, [{
             $push: {
               'network.requests': action.tag,
             }
           }])
-          assert.deepStrictEqual(newStore.getState().phenyl.network.requests, [])
         })
       })
       describe('Request failed with unexpected error', () => {
@@ -243,13 +245,13 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('Dispatch an operation that set error', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
 
-          assert.deepStrictEqual(newStore.getState().phenyl.error, {
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.error, {
             actionTag: action.tag,
             at: 'server',
             message: 'Unexpected',
@@ -257,17 +259,13 @@ describe('MiddlewareCreator', () => {
           })
         })
         it('Dispatch an operation that remove tag from pending requests when request failed', async () => {
+          const store = storeCreator(initialState, middleware)
           const action = actions.push({ entityName, id })
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [
-            actions.commit({ entityName, id, operation }),
-            action
-          ])
-          assert.deepStrictEqual(actionsToDispatch[1].payload, [{
-            $push: {
-              'network.requests': action.tag,
-            }
-          }])
-          assert.deepStrictEqual(newStore.getState().phenyl.network.requests, [])
+
+          await store.dispatch(actions.commit({ entityName, id, operation }))
+          await store.dispatch(action)
+
+          assert.deepStrictEqual(store.getState().phenyl.network.requests, [])
         })
       })
     })
@@ -279,7 +277,7 @@ describe('MiddlewareCreator', () => {
           [createDocumentPath('nickname')]: 'John'
         }
       }
-      const store = createMockStore({
+      const initialState = {
         entities: {
           [entityName]: {
             [id]: {
@@ -291,10 +289,11 @@ describe('MiddlewareCreator', () => {
             }
           }
         }
-      })
+      }
       const middleware = createMiddleware({ storeKey: 'phenyl', client: null })
 
       it('Dispatch an operation that create commit', async () => {
+        const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
           const newState = assign(state, ...payload)
@@ -312,6 +311,7 @@ describe('MiddlewareCreator', () => {
         }))
       })
       it('Dispatch an operation that update head state', async () => {
+        const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
           const newState = assign(state, ...payload)
@@ -327,6 +327,7 @@ describe('MiddlewareCreator', () => {
         }))
       })
       it('Dispatch an operation that don\'t update origin state', async () => {
+        const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
           const newState = assign(state, ...payload)
@@ -343,7 +344,7 @@ describe('MiddlewareCreator', () => {
     describe('Action phenyl/repush', () => {
       const entityName = 'users'
       const id = 'some-id'
-      const store = createMockStore({
+      const initialState = {
         network: { requests: [] },
         unreachedCommits: [
           actions.commit({ entityName, id, commitCount: 1 }).payload
@@ -361,7 +362,7 @@ describe('MiddlewareCreator', () => {
             }
           }
         }
-      })
+      }
 
       describe('Network still failing', () => {
         const middleware = createMiddleware({
@@ -371,11 +372,14 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('should keep unreachedCommits', async () => {
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+          const store = storeCreator(initialState, middleware)
+
+          const oldState = store.getState()
+          await store.dispatch(actions.repush())
 
           assert.deepStrictEqual(
-            newStore.getState().phenyl.unreachedCommits,
-            store.getState().phenyl.unreachedCommits
+            store.getState().phenyl.unreachedCommits,
+            oldState.phenyl.unreachedCommits
           )
         })
       })
@@ -391,15 +395,17 @@ describe('MiddlewareCreator', () => {
           }
         })
         it('should remove unreachedCommits', async () => {
-          const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+          const store = storeCreator(initialState, middleware)
+
+          await store.dispatch(actions.repush())
 
           assert.deepStrictEqual(
-            newStore.getState().phenyl.unreachedCommits,
+            store.getState().phenyl.unreachedCommits,
             []
           )
         })
         describe('With local commits', () => {
-          const store = createMockStore({
+          const initialState = {
             network: { requests: [] },
             unreachedCommits: [
               actions.commit({ entityName, id, commitCount: 1 }).payload,
@@ -421,20 +427,22 @@ describe('MiddlewareCreator', () => {
                 }
               }
             }
-          })
+          }
           it('should remove pushed local commits and keep unpushed local commits', async () => {
-            const [actionsToDispatch, newStore] = await runActions(middleware, store, [actions.repush()])
+            const store = storeCreator(initialState, middleware)
+
+            await store.dispatch(actions.repush())
 
             assert.deepStrictEqual(
-              newStore.getState().phenyl.entities[entityName][id].origin,
+              store.getState().phenyl.entities[entityName][id].origin,
               { nickname: 'Tom', age: 32 },
             )
             assert.deepStrictEqual(
-              newStore.getState().phenyl.entities[entityName][id].head,
+              store.getState().phenyl.entities[entityName][id].head,
               { nickname: 'Jack', age: 32 },
             )
             assert.deepStrictEqual(
-              newStore.getState().phenyl.entities[entityName][id].commits,
+              store.getState().phenyl.entities[entityName][id].commits,
               [
                 { $set: { nickname: 'Jack' } },
               ]
