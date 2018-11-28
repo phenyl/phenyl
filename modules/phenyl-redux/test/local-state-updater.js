@@ -84,4 +84,18 @@ describe('LocalStateUpdater', () => {
       assert.deepStrictEqual(newState.unreachedCommits, [])
     })
   })
+  describe('resolveError', () => {
+    it('unsets an error', () => {
+      const state = PhenylReduxModule.createInitialState()
+      state.error = {
+        type: 'NetworkFailed',
+        at: 'Server',
+        message: 'An error occured',
+        actionTag: 'xxx',
+      }
+      const newState = assign(state, LocalStateUpdater.resolveError())
+
+      assert(typeof newState.error === 'undefined')
+    })
+  })
 })

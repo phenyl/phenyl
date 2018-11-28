@@ -161,6 +161,11 @@ export type PushAndCommitAction<N: EntityName> = {|
   tag: ActionTag,
 |}
 
+export type ResolveErrorAction = {|
+  type: 'phenyl/resolveError',
+  tag: ActionTag,
+|}
+
 export type SetSessionAction = {|
   type: 'phenyl/setSession',
   payload: {
@@ -209,6 +214,7 @@ export type PhenylAction<M: EntityMap, AM: AuthCommandMap> =
   PatchAction |
   PullAction<$Keys<M>> |
   PushAndCommitAction<$Keys<M>> |
+  ResolveErrorAction |
   SetSessionAction |
   UnfollowAction<$Keys<M>> |
   UnsetSessionAction |

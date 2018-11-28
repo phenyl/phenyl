@@ -37,6 +37,7 @@ import type {
   PhenylAction,
   PullAction,
   PushAndCommitAction,
+  ResolveErrorAction,
   ReplaceAction,
   ResetAction,
   SetSessionAction,
@@ -249,6 +250,13 @@ export class PhenylReduxModule<TM: TypeMap> {
   static offline(): OfflineAction {
     return {
       type: 'phenyl/offline',
+      tag: randomStringWithTimeStamp(),
+    }
+  }
+
+  static resolveError(): ResolveErrorAction {
+    return {
+      type: 'phenyl/resolveError',
       tag: randomStringWithTimeStamp(),
     }
   }
