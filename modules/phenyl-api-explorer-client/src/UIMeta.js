@@ -8,7 +8,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      where: [],
+      where: {},
       limit: 5,
     },
   },
@@ -20,7 +20,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      where: [],
+      where: {},
     },
   },
   {
@@ -127,7 +127,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      where: [],
+      where: {},
       operation: {
         xxx: 0,
       },
@@ -155,7 +155,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      where: [],
+      where: {},
       operation: {
         xxx: 0,
       },
