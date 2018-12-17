@@ -24,7 +24,7 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
    */
   static createPhenylApiMiddleware(restApiHandler: RestApiHandler, pathRegex: RegExp = /^\/api\/.*$/) {
     return async (req: $Request, res: $Response, next: NextFunction) => {
-      const { path, method, query, headers } = req
+      const { path, method, query, headers, body } = req
       if (!pathRegex.test(path)) {
         return next()
       }
@@ -34,7 +34,7 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
         headers,
         path,
         qsParams: query,
-        body: await getRawBody(req, true),
+        body: body || await getRawBody(req, true),
       }
       let responseData
       try {
@@ -54,7 +54,7 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
    */
   static createPhenylMiddleware(serverParams: ServerParams<TM>, pathRegex: RegExp = /^\/api\/.*$|^\/explorer($|\/.*$)/) {
     return async (req: $Request, res: $Response, next: NextFunction) => {
-      const { path, method, query, headers } = req
+      const { path, method, query, headers, body } = req
       if (!pathRegex.test(path)) {
         return next()
       }
@@ -65,7 +65,7 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
         headers,
         path,
         qsParams: query,
-        body: await getRawBody(req, true),
+        body: body || await getRawBody(req, true),
       }
       const response = await serverLogic.handleRequest(encodedHttpRequest)
       res
