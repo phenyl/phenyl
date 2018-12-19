@@ -99,11 +99,12 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
 function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
-    body
+    body,
+    parsedBody,
   } = request
 
-  if (!body) {
-    throw new Error(`Request body is empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+  if (!body && !parsedBody) {
+    throw new Error(`Request body is empty and parsedBody is also empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
   const payload = decodeBody(request)
@@ -158,11 +159,12 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
 function decodePUTRequest(request: EncodedHttpRequest): RequestData {
   const {
     path,
-    body
+    body,
+    parsedBody,
   } = request
 
-  if (!body) {
-    throw new Error(`Request body is empty in the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
+  if (!body && !parsedBody) {
+    throw new Error(`Request body is empty and parsedBody is also empty in the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
   const payload = decodeBody(request)
