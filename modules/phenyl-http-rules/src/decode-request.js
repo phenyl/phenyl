@@ -106,7 +106,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
     throw new Error(`Request body is empty in the given POST request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
-  const payload = decodeBody(body)
+  const payload = decodeBody(request)
   let { entityName, methodName } = parsePath(path)
 
   // CustomCommand or InsertCommand
@@ -165,7 +165,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
     throw new Error(`Request body is empty in the given PUT request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
   }
 
-  const payload = decodeBody(body)
+  const payload = decodeBody(request)
   let { entityName, methodName } = parsePath(path)
 
   // "updateById" method can be omitted
@@ -232,7 +232,11 @@ function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
   throw new Error(`Could not decode the given DELETE request. Request = \n${JSON.stringify(request, null, 2)}\n\n`)
 }
 
-function decodeBody(body: string): any { // return "any" type for suppressing flow error
+function decodeBody(request: EncodedHttpRequest): any { // return "any" type for suppressing flow error
+  const { body, parsedBody } = request
+
+  if (parsedBody) return parsedBody
+  if (!body) return {}
   return JSON.parse(body)
 }
 

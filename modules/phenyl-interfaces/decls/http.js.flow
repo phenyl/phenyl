@@ -11,6 +11,7 @@ export type EncodedHttpRequest = {
   path: string, // must start with "/"
   qsParams?: QueryStringParams,
   body?: string,
+  parsedBody?: Object,
 }
 
 export type EncodedHttpResponse = {
