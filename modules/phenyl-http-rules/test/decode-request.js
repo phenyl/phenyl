@@ -139,6 +139,30 @@ describe('POST request', () => {
     // $FlowIssue(payload.name-exists)
     assert(reqData.payload.name === 'user')
   })
+
+  it('when body is given. and it parse into payload', () => {
+    const request = {
+      headers: {},
+      body: JSON.stringify({ params: { firstName: 'John' } }),
+      path: '/api/user',
+      method: 'POST'
+    }
+    const reqData = decodeRequest(request)
+    // $FlowIssue(payload.params-exists)
+    assert(reqData.payload.params.firstName === 'John')
+  })
+
+  it('when parsedBody is given instead of body. and it set into payload', () => {
+    const request = {
+      headers: {},
+      parsedBody: { params: { firstName: 'John' } },
+      path: '/api/user',
+      method: 'POST'
+    }
+    const reqData = decodeRequest(request)
+    // $FlowIssue(payload.params-exists)
+    assert(reqData.payload.params.firstName === 'John')
+  })
 })
 
 describe('PUT request', () => {
@@ -156,6 +180,34 @@ describe('PUT request', () => {
     assert(reqData.method === 'updateById')
     // $FlowIssue(payload.entityName-exists)
     assert(reqData.payload.entityName === 'user')
+  })
+
+  it('when body is given and it parse into payload', () => {
+    const request = {
+      headers: {},
+      body: JSON.stringify({ id: 'john', operation: { $set: { firstName: 'John' } } }),
+      qsParams: {
+        sessionId: 'sessionId-in-querystring',
+      },
+      path: '/api/user',
+      method: 'PUT'
+    }
+    const reqData = decodeRequest(request)
+    // $FlowIssue(payload.id-exists)
+    assert(reqData.payload.id === 'john')
+  })
+
+  it('when body is given and it parse into payload', () => {
+    const request = {
+      headers: {},
+      parsedBody: { id: 'john', operation: { $set: { firstName: 'John' } } },
+      qsParams: {
+        sessionId: 'sessionId-in-querystring',
+      },
+      path: '/api/user',
+      method: 'PUT'
+    }
+    const reqData = decodeRequest(request)
     // $FlowIssue(payload.id-exists)
     assert(reqData.payload.id === 'john')
   })

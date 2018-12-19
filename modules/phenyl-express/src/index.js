@@ -34,8 +34,15 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
         headers,
         path,
         qsParams: query,
-        body: body || await getRawBody(req, true),
       }
+      if (!body) {
+        encodedHttpRequest.body = await getRawBody(req, true)
+      } else if (typeof body === 'object') {
+        encodedHttpRequest.parsedBody = body
+      } else {
+        encodedHttpRequest.body = body
+      }
+
       let responseData
       try {
         const requestData = decodeRequest(encodedHttpRequest)
@@ -65,8 +72,15 @@ export class PhenylExpressMiddlewareCreator<TM: TypeMap> {
         headers,
         path,
         qsParams: query,
-        body: body || await getRawBody(req, true),
       }
+      if (!body) {
+        encodedHttpRequest.body = await getRawBody(req, true)
+      } else if (typeof body === 'object') {
+        encodedHttpRequest.parsedBody = body
+      } else {
+        encodedHttpRequest.body = body
+      }
+
       const response = await serverLogic.handleRequest(encodedHttpRequest)
       res
         .status(response.statusCode)
