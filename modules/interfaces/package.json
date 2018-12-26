@@ -1,20 +1,34 @@
 {
-  "name": "phenyl-interfaces",
-  "version": "0.4.2",
+  "name": "@phenyl/interfaces",
+  "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "scripts": {},
   "files": [
-    "index.js",
-    "decls",
-    "package.json",
+    "lib",
     "LICENSE",
     "README.md"
   ],
   "dependencies": {
-    "mongolike-operations": "~0.1.5"
+    "@sp2/format": "~1.0.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/phenyl-interfaces",
+  "repository": "phenyl-js/phenyl",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "ci-test": "upbin nyc npm test --color always",
+    "clean": "upbin rimraf $(cat ../../.temporary-files)",
+    "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "type-check": "upbin tsc --noEmit",
+    "watch": "upbin tsc --declaration --watch"
+  },
+  "devDependencies": {
+    "upbin": "^0.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "Apache License 2.0"
 }
