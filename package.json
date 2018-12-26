@@ -14,13 +14,17 @@
   "license": "Apache License 2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "scripts": {
-    "bootstrap": "echo bootstrap command is to be implemented",
-    "build": "echo build command is to be implemented",
-    "ci-test": "echo ci-test command is to be implemented",
-    "clean": "echo clean command is to be implemented",
-    "clean-tmp": "echo clean-tmp command is to be implemented",
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "ci-test": "lerna run ci-test",
+    "clean": "lerna run clean && lerna clean --yes",
+    "clean-tmp": "lerna run clean",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",
-    "publish": "echo publish command is to be implemented"
+    "lint": "lerna run lint",
+    "publish": "echo publish command is to be implemented",
+    "test": "lerna run test",
+    "type-check": "lerna run type-check",
+    "watch": "lerna run watch --parallel"
   },
   "dependencies": {
     "eslint": "^5",
