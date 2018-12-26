@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/shinout/phenyl#readme",
+  "homepage": "https://github.com/phenyl-js/phenyl#readme",
   "bugs": {
-    "url": "https://github.com/shinout/phenyl/issues"
+    "url": "https://github.com/phenyl-js/phenyl/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shinout/phenyl.git"
+    "url": "git+https://github.com/phenyl-js/phenyl.git"
   },
   "license": "Apache License 2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
