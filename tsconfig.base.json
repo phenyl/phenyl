@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "Node",
+    "noUnusedLocals": true,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "target": "ES6"
+  },
+  "exclude": ["node_modules"]
+}
