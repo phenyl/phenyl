@@ -19,30 +19,24 @@
     "ci-test": "echo ci-test command is to be implemented",
     "clean": "echo clean command is to be implemented",
     "clean-tmp": "echo clean-tmp command is to be implemented",
-    "flow": "flow",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",
     "publish": "echo publish command is to be implemented"
   },
   "dependencies": {
-    "lerna": "3.8.0"
+    "eslint": "^5",
+    "eslint-plugin-prettier": "^3",
+    "eslint-plugin-typescript": "0.13.0",
+    "lerna": "3.8.0",
+    "prettier": "1.15.2",
+    "typescript-eslint-parser": "^21"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-strip-jsnext": "^2.0.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-power-assert": "^1.0.0",
-    "babel-register": "^6.26.0",
-    "chalk": "^2.3.0",
-    "eslint": "^4.10.0",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-react": "^7.5.1",
-    "flow-bin": "^0.68.0",
-    "mocha": "^5.0.5",
-    "nyc": "^11.6.0",
-    "power-assert": "^1.4.4",
-    "shelljs": "^0.7.8"
+    "@types/mocha": "^5",
+    "@types/node": "~8.10",
+    "mocha": "^5",
+    "nyc": "^13",
+    "rimraf": "^2.6.2",
+    "ts-node": "^7",
+    "typescript": "~3.1"
   }
 }
