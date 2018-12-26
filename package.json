@@ -1,6 +1,6 @@
 {
   "name": "phenyl",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "",
   "private": true,
   "scripts": {
@@ -36,5 +36,8 @@
     "nyc": "^11.6.0",
     "power-assert": "^1.4.4",
     "shelljs": "^0.7.8"
+  },
+  "dependencies": {
+    "lerna": "3.8.0"
   }
 }
