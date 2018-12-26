@@ -4,16 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
-    "postinstall": "babel tools/src -d tools/dist",
-    "test": "node tools/dist/cli.js test",
-    "build": "node tools/dist/cli.js build",
-    "load": "node tools/dist/cli.js load",
-    "clean": "node tools/dist/cli.js clean",
-    "publish": "node tools/dist/cli.js publish",
-    "bump": "node tools/dist/cli.js bump",
     "flow": "flow",
     "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh"
   },
   "repository": {
