@@ -1,0 +1,78 @@
+version: 2.1
+
+executors:
+  default:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:8.11.3
+
+commands:
+  prepare:
+    steps:
+      - checkout
+      - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
+      - run:
+          # https://yarnpkg.com/ja/docs/install#linux-tab
+          name: Install Yarn@1.12.3
+          command: |
+            sudo unlink $(which yarn)
+            sudo npm i -g yarn@1.12.3
+      - run:
+          name: Display version of Node.js, npm and Yarn
+          command: |
+            node -v
+            npm -v
+            yarn --version
+
+jobs:
+  test:
+    executor:
+      name: default
+    steps:
+      - prepare
+      - run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+          npm whoami
+      - restore_cache:
+          keys:
+            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
+      - run: yarn
+      - save_cache:
+          paths:
+            - node_modules
+            # FIXME Add all node_modules in submodules
+            - modules/phenyl-interfaces/node_modules
+          key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
+      - run: yarn bootstrap
+      - run: yarn build
+      - run: yarn ci-test
+  deploy:
+    executor:
+      name: default
+    steps:
+      - prepare
+      - restore_cache:
+          keys:
+            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
+      - run:
+          name: Clean tmp files
+          command: yarn clean-tmp
+      - run:
+          name: Build packages
+          command: yarn build
+      - run:
+          name: Publish packages
+          command: yarn run publish
+
+workflows:
+  version: 2.1
+  test_deploy:
+    jobs:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - /^(release)\/.*/
