@@ -59,7 +59,6 @@ import {
   UpdateMultiResponseData,
   UpdateOneResponseData
 } from "./response-data";
-import { EntityClient, SessionClient } from "./client";
 
 type Res<T> = Promise<T | ErrorResponseData>;
 
@@ -146,7 +145,3 @@ export interface RestApiHandler<TM extends GeneralTypeMap = GeneralTypeMap> {
 
   // handleRequestData(reqData: RequestData): Promise<ResponseData>;
 }
-export type PhenylRestApiParams<TM extends GeneralTypeMap = GeneralTypeMap> = {
-  client: EntityClient<EntityMapOf<TM>>;
-  sessionClient?: SessionClient;
-};
