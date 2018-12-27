@@ -1,74 +1,67 @@
-// @flow
-import type { UpdateOperation } from 'mongolike-operations'
-import type { Id } from './id.js.flow'
-import type { Entity } from './entity.js.flow'
-import type { EntityMap } from './type-map.js.flow'
-
-import type {
-  PushCommand
-} from './command.js.flow'
-
-type EntityName = string
+import { Entity } from "./entity";
+import { GeneralEntityMap } from "./type-map";
+import { GeneralUpdateOperation } from "@sp2/format";
+import { Key } from "./key";
+import { PushCommand } from "./command";
 
 export type EntityVersion = {
-  id: Id,
-  op: string, // stringified UpdateOperation
-}
+  id: string;
+  op: string; // stringified GeneralUpdateOperation
+};
 
 export type EntityMetaInfo = {
-  versions: Array<EntityVersion>,
-}
+  versions: Array<EntityVersion>;
+};
 
+export type EntityWithMetaInfo<T extends Entity> = T & {
+  _PhenylMeta: EntityMetaInfo;
+};
 
-export type EntityWithMetaInfo<T: Entity> = T & {
-  _PhenylMeta: EntityMetaInfo
-}
+export type VersionDiff = {
+  entityName: string;
+  id: string;
+  prevVersionId: string;
+  versionId: string;
+  operation: GeneralUpdateOperation;
+};
 
-export type VersionDiff = {|
-  entityName: EntityName,
-  id: Id,
-  prevVersionId: Id,
-  versionId: Id,
-  operation: UpdateOperation,
-|}
-
-export type SubscriptionRequest = {|
-  method: 'subscribe',
+export type SubscriptionRequest = {
+  method: "subscribe";
   payload: {
-    entityName: EntityName,
-    id: Id,
-  },
-  sessionId?: ?Id,
-|}
+    entityName: string;
+    id: string;
+  };
+  sessionId?: string | null;
+};
 
+export type SubscriptionResult = {
+  entityName: string;
+  id: string;
+  result: boolean;
+  ttl?: number;
+};
 
-export type SubscriptionResult = {|
-  entityName: EntityName,
-  id: Id,
-  result: boolean,
-  ttl?: number,
-|}
+export type SubscriptionInfo = {
+  entityName: string;
+  id: string;
+  ttl?: number;
+};
 
-export type SubscriptionInfo = {|
-  entityName: EntityName,
-  id: Id,
-  ttl?: number,
-|}
-
-export type VersionDiffListener = (versionDiff: VersionDiff) => any
+export type VersionDiffListener = (versionDiff: VersionDiff) => any;
 
 export interface VersionDiffSubscriber {
-  subscribeVersionDiff(listener: VersionDiffListener): any
+  subscribeVersionDiff(listener: VersionDiffListener): any;
 }
 
 export interface VersionDiffPublisher {
-  publishVersionDiff(versionDiff: VersionDiff): any
+  publishVersionDiff(versionDiff: VersionDiff): any;
 }
 
 /**
  * Validate PushCommand in PhenylEntityClient.
  */
-export type PushValidation<M: EntityMap> = <N: $Keys<M>>(
-  command: PushCommand<N>,
-  entity: $ElementType<M, N>,
-  masterOperations: ?Array<UpdateOperation>) => void
+export type PushValidation<EM extends GeneralEntityMap> = <EN extends Key<EM>>(
+  command: PushCommand<EN>,
+  entity: EM[EN],
+  masterOperations?: GeneralUpdateOperation[]
+) => void;

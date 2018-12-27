@@ -1,93 +1,152 @@
-// @flow
-import type {
-  AuthenticationHandler,
-  AuthorizationHandler,
-  CustomCommandHandler,
-  CustomQueryHandler,
-  ExecutionWrapper,
-  RequestNormalizationHandler,
-  ValidationHandler
-} from './handler.js.flow'
-import type { EntityClient, SessionClient } from './client.js.flow'
-import type { EntityMapOf, TypeMap } from './type-map.js.flow'
-import type {
-  RequestData
-  // FindRequestData,
-  // FindOneRequestData,
-  // GetRequestData,
-  // GetByIdsRequestData,
-  // PullRequestData,
-  // InsertOneRequestData,
-  // InsertMultiRequestData,
-  // InsertAndGetRequestData,
-  // InsertAndGetMultiRequestData,
-  // UpdateOneRequestData,
-  // UpdateMultiRequestData,
-  // UpdateAndGetRequestData,
-  // UpdateAndFetchRequestData,
-  // PushRequestData,
-  // DeleteRequestData,
-  // RunCustomQueryRequestData,
-  // RunCustomCommandRequestData,
-  // LoginRequestData,
-  // LogoutRequestData
-} from './request-data.js.flow'
-import type {
-  ResponseData
-  // FindResponseData,
-  // FindOneResponseData,
-  // GetResponseData,
-  // GetByIdsResponseData,
-  // PullResponseData,
-  // InsertOneResponseData,
-  // InsertMultiResponseData,
-  // InsertAndGetResponseData,
-  // InsertAndGetMultiResponseData,
-  // UpdateOneResponseData,
-  // UpdateMultiResponseData,
-  // UpdateAndGetResponseData,
-  // UpdateAndFetchResponseData,
-  // PushResponseData,
-  // DeleteResponseData,
-  // RunCustomQueryResponseData,
-  // RunCustomCommandResponseData,
-  // LoginResponseData,
-  // LogoutResponseData,
-  // ErrorResponseData
-} from './response-data.js.flow'
-import { VersionDiffPublisher } from './versioning.js.flow'
+import {
+  AuthCredentialsOf,
+  AuthEntityNameOf,
+  AuthOptionsOf,
+  AuthUserOf,
+  CustomCommandNameOf,
+  CustomCommandParamsOf,
+  CustomCommandResultValueOf,
+  CustomQueryNameOf,
+  CustomQueryParamsOf,
+  CustomQueryResultValueOf,
+  EntityMapOf,
+  EntityNameOf,
+  EntityOf,
+  GeneralTypeMap
+} from "./type-map";
+import {
+  DeleteRequestData,
+  FindOneRequestData,
+  FindRequestData,
+  GetByIdsRequestData,
+  GetRequestData,
+  InsertAndGetMultiRequestData,
+  InsertAndGetRequestData,
+  InsertMultiRequestData,
+  InsertOneRequestData,
+  LoginRequestData,
+  LogoutRequestData,
+  PullRequestData,
+  PushRequestData,
+  RequestData,
+  RunCustomCommandRequestData,
+  RunCustomQueryRequestData,
+  UpdateAndFetchRequestData,
+  UpdateAndGetRequestData,
+  UpdateMultiRequestData,
+  UpdateOneRequestData
+} from "./request-data";
+import {
+  DeleteResponseData,
+  ErrorResponseData,
+  FindOneResponseData,
+  FindResponseData,
+  GetByIdsResponseData,
+  GetResponseData,
+  InsertAndGetMultiResponseData,
+  InsertAndGetResponseData,
+  InsertMultiResponseData,
+  InsertOneResponseData,
+  LoginResponseData,
+  LogoutResponseData,
+  PullResponseData,
+  PushResponseData,
+  ResponseData,
+  RunCustomCommandResponseData,
+  RunCustomQueryResponseData,
+  UpdateAndFetchResponseData,
+  UpdateAndGetResponseData,
+  UpdateMultiResponseData,
+  UpdateOneResponseData
+} from "./response-data";
+import { EntityClient, SessionClient } from "./client";
 
-export interface RestApiHandler {
-  handleRequestData(reqData: RequestData): Promise<ResponseData>;
-  // handleRequestData(reqData: FindRequestData): Promise<FindResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: FindOneRequestData): Promise<FindOneResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: GetRequestData): Promise<GetResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: GetByIdsRequestData): Promise<GetByIdsResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: PullRequestData): Promise<PullResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: InsertOneRequestData): Promise<InsertOneResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: InsertMultiRequestData): Promise<InsertMultiResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: InsertAndGetRequestData): Promise<InsertAndGetResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: InsertAndGetMultiRequestData): Promise<InsertAndGetMultiResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: UpdateOneRequestData): Promise<UpdateOneResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: UpdateMultiRequestData): Promise<UpdateMultiResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: UpdateAndGetRequestData): Promise<UpdateAndGetResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: UpdateAndFetchRequestData): Promise<UpdateAndFetchResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: PushRequestData): Promise<PushResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: DeleteRequestData): Promise<DeleteResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: RunCustomQueryRequestData): Promise<RunCustomQueryResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: RunCustomCommandRequestData): Promise<RunCustomCommandResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: LoginRequestData): Promise<LoginResponseData | ErrorResponseData>,
-  // handleRequestData(reqData: LogoutRequestData): Promise<LogoutResponseData | ErrorResponseData>,
+type Res<T> = Promise<T | ErrorResponseData>;
+
+export interface RestApiHandler<TM extends GeneralTypeMap = GeneralTypeMap> {
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: FindRequestData<EN>
+  ): Res<FindResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: FindOneRequestData<EN>
+  ): Res<FindOneResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: GetRequestData<EN>
+  ): Res<GetResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: GetByIdsRequestData<EN>
+  ): Res<GetByIdsResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: PullRequestData<EN>
+  ): Res<PullResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: InsertOneRequestData<EN, EntityOf<TM, EN>>
+  ): Res<InsertOneResponseData>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: InsertMultiRequestData<EN, EntityOf<TM, EN>>
+  ): Res<InsertMultiResponseData>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: InsertAndGetRequestData<EN, EntityOf<TM, EN>>
+  ): Res<InsertAndGetResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: InsertAndGetMultiRequestData<EN, EntityOf<TM, EN>>
+  ): Res<InsertAndGetMultiResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: UpdateOneRequestData<EN>
+  ): Res<UpdateOneResponseData>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: UpdateMultiRequestData<EN>
+  ): Res<UpdateMultiResponseData>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: UpdateAndGetRequestData<EN>
+  ): Res<UpdateAndGetResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: UpdateAndFetchRequestData<EN>
+  ): Res<UpdateAndFetchResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: PushRequestData<EN>
+  ): Res<PushResponseData<EntityOf<TM, EN>>>;
+
+  handleRequestData<EN extends EntityNameOf<TM>>(
+    reqData: DeleteRequestData<EN>
+  ): Res<DeleteResponseData>;
+
+  handleRequestData<QN extends CustomQueryNameOf<TM>>(
+    reqData: RunCustomQueryRequestData<QN, CustomQueryParamsOf<TM, QN>>
+  ): Res<RunCustomQueryResponseData<CustomQueryResultValueOf<TM, QN>>>;
+
+  handleRequestData<CN extends CustomCommandNameOf<TM>>(
+    reqData: RunCustomCommandRequestData<CN, CustomCommandParamsOf<TM, CN>>
+  ): Res<RunCustomCommandResponseData<CustomCommandResultValueOf<TM, CN>>>;
+
+  handleRequestData<EN extends AuthEntityNameOf<TM>>(
+    reqData: LoginRequestData<
+      EN,
+      AuthCredentialsOf<TM, EN>,
+      AuthOptionsOf<TM, EN>
+    >
+  ): Res<LoginResponseData<AuthUserOf<TM, EN>>>;
+
+  handleRequestData<EN extends AuthEntityNameOf<TM>>(
+    reqData: LogoutRequestData<EN>
+  ): Res<LogoutResponseData>;
+
+  // handleRequestData(reqData: RequestData): Promise<ResponseData>;
 }
-export type PhenylRestApiParams<TM: TypeMap = TypeMap> = {
-  client: EntityClient<EntityMapOf<TM>>,
-  sessionClient?: SessionClient,
-  authorizationHandler?: AuthorizationHandler,
-  normalizationHandler?: RequestNormalizationHandler,
-  validationHandler?: ValidationHandler,
-  customQueryHandler?: CustomQueryHandler,
-  customCommandHandler?: CustomCommandHandler,
-  authenticationHandler?: AuthenticationHandler,
-  executionWrapper?: ExecutionWrapper,
-  versionDiffPublisher?: VersionDiffPublisher
-}
+export type PhenylRestApiParams<TM extends GeneralTypeMap = GeneralTypeMap> = {
+  client: EntityClient<EntityMapOf<TM>>;
+  sessionClient?: SessionClient;
+};

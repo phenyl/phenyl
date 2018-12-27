@@ -1,31 +1,28 @@
-// @flow
+import { Entity } from "./entity";
+import { GeneralUpdateOperation } from "@sp2/format";
 
-import type {
-  UpdateOperation,
-} from 'mongolike-operations'
-import type { Id } from './id.js.flow'
-import type { Entity } from './entity.js.flow'
+export type CustomQueryResult<QR extends Object> = {
+  ok: 1;
+  result: QR;
+};
 
-export type CustomQueryResult<R: Object = Object> = {
-  ok: 1,
-  result: R
-}
+export type QueryResult<E extends Entity> = {
+  ok: 1;
+  entities: E[];
+  versionsById: { [entityId: string]: string | null };
+};
 
-export type QueryResult<E: Entity = Entity> = {|
-  ok: 1,
-  entities: Array<E>,
-  versionsById: { [entityId: Id]: ?Id },
-|}
+export type SingleQueryResult<E extends Entity> = {
+  ok: 1;
+  entity: E;
+  versionId: string | null;
+};
 
-export type SingleQueryResult<E: Entity = Entity> = {|
-  ok: 1,
-  entity: E,
-  versionId: ?Id,
-|}
-
-export type PullQueryResult<E: Entity = Entity> = {|
-  ok: 1,
-  pulled: 1,
-  operations: Array<UpdateOperation>,
-  versionId: ?Id,
-|} | SingleQueryResult<E>
+export type PullQueryResult<E extends Entity> =
+  | {
+      ok: 1;
+      pulled: 1;
+      operations: GeneralUpdateOperation[];
+      versionId: string | null;
+    }
+  | SingleQueryResult<E>;

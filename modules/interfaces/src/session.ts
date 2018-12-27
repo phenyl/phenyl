@@ -1,12 +1,10 @@
-// @flow
-import type { Id } from './id.js.flow'
-import type { PreEntity } from './entity.js.flow'
+import { PreEntity } from "./entity";
 
 export type Session = {
-  id: Id,
-  expiredAt: string,
-  entityName: string,
-  userId: Id,
-}
+  id: string;
+  expiredAt: string;
+  entityName: string;
+  userId: string;
+};
 
-export type PreSession = PreEntity<Session>
+export type PreSession = PreEntity<Session>;

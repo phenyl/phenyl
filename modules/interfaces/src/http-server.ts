@@ -1,23 +1,14 @@
-// @flow
-import type {
-  EncodedHttpRequest,
-  EncodedHttpResponse
-} from './http.js.flow'
-import type {
-  RestApiClient
-} from './client.js.flow'
-import type {
-  RestApiHandler
-} from './rest-api-handler.js.flow'
-import type {
-  TypeMap
-} from './type-map.js.flow'
+import { EncodedHttpRequest, EncodedHttpResponse } from "./http";
 
-export type ServerParams<TM: TypeMap> = {
-  restApiHandler: RestApiHandler,
-  modifyPath?: PathModifier,
-  customRequestHandler?: CustomRequestHandler<TM>
-}
+import { GeneralTypeMap } from "./type-map";
+import { RestApiClient } from "./client";
+import { RestApiHandler } from "./rest-api-handler";
+
+export type ServerParams<TM extends GeneralTypeMap> = {
+  restApiHandler: RestApiHandler;
+  modifyPath?: PathModifier;
+  customRequestHandler?: CustomRequestHandler<TM>;
+};
 
 /**
  * (path: string) => string
@@ -26,7 +17,7 @@ export type ServerParams<TM: TypeMap> = {
  * e.g. (path) => path.slice(8)
  * e.g. (path) => path.split(/^\/path\/to/)[1]
  */
-export type PathModifier = (path: string) => string
+export type PathModifier = (path: string) => string;
 
 /**
  * Custom Request Handler.
@@ -39,4 +30,7 @@ export type PathModifier = (path: string) => string
  *
  * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
  */
-export type CustomRequestHandler<TM: TypeMap> = (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient<TM>) => Promise<EncodedHttpResponse>
+export type CustomRequestHandler<TM extends GeneralTypeMap> = (
+  encodedHttpRequest: EncodedHttpRequest,
+  restApiClient: RestApiClient<TM>
+) => Promise<EncodedHttpResponse>;

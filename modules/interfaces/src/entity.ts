@@ -1,21 +1,36 @@
-// @flow
-import type { Id } from './id.js.flow'
+/**
+ * Object containing id.
+ */
+export type Entity = { id: string };
 
-export type EntityName = string
+/**
+ * Object with or without id.
+ * If "id" property exists, it must be a string.
+ */
+export type ProEntity = { id?: string; [key: string]: any };
 
-export type Entity = $Subtype<{ id: Id }>
-export type ProEntity = $Subtype<$Rest<{ id: Id }, {| id: Id |}>>
+type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
 
-export type PreEntity<T: Entity> = T | $Subtype<$Rest<T, {| id: Id |}>>
+/**
+ * T(Entity) with or without id.
+ * If "id" property exists, it must be a string.
+ */
+export type PreEntity<T extends Entity> = T | (Omit<T, "id"> & { id?: string });
 
-export type EntityInfo<N: EntityName, T: Entity> = {
-  entityName: N,
-  entity: T,
-  versionId: Id,
-}
+/**
+ * Pair of entity and its entityName.
+ */
+export type EntityInfo<N extends string, T extends Entity> = {
+  entityName: N;
+  entity: T;
+  versionId: string;
+};
 
-export type EntitiesInfo<N: EntityName, T: Entity> = {
-  entityName: N,
-  entities: Array<T>,
-  versionsById: { [entityId: Id]: Id },
-}
+/**
+ * Pair of entities and its entityName.
+ */
+export type EntitiesInfo<N extends string, T extends Entity> = {
+  entityName: N;
+  entities: T[];
+  versionsById: { [entityId: string]: string };
+};

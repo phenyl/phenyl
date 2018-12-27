@@ -1,101 +1,172 @@
-// @flow
-import type {
-  Id
-} from './id.js.flow'
-import type {
-  TypeMap,
-  AuthCommandMap,
+import {
+  AuthCommandMapOf,
   AuthCredentials,
   AuthOptions,
-  CustomParams,
-  CustomResult,
-  CustomQueryMap,
-  CustomCommandMap,
-  EntityMap,
-  EntityMapOf,
-  CustomQueryMapOf,
+  AuthUser,
   CustomCommandMapOf,
-  AuthCommandMapOf,
-} from './type-map.js.flow'
-import type {
-  PreEntity,
-} from './entity.js.flow'
-import type {
-  WhereQuery,
-  IdQuery,
-  IdsQuery,
-  CustomQuery,
-  PullQuery,
-} from './query.js.flow'
-import type { KvsClient } from './kvs-client.js.flow'
-import type {
-  Session,
-} from './session.js.flow'
-import type {
-  CustomQueryResult,
-  SingleQueryResult,
-  QueryResult,
-  PullQueryResult,
-} from './query-result.js.flow'
-import type {
+  CustomCommandParams,
+  CustomCommandResultValue,
+  CustomQueryMapOf,
+  CustomQueryParams,
+  CustomQueryResultValue,
+  EntityMapOf,
+  GeneralAuthCommandMap,
+  GeneralCustomMap,
+  GeneralEntityMap,
+  GeneralTypeMap
+} from "./type-map";
+import {
+  CustomCommand,
+  DeleteCommand,
+  IdUpdateCommand,
+  LoginCommand,
+  LogoutCommand,
+  MultiInsertCommand,
+  MultiUpdateCommand,
+  PushCommand,
+  SingleInsertCommand
+} from "./command";
+import {
   CustomCommandResult,
   DeleteCommandResult,
   GetCommandResult,
   IdUpdateCommandResult,
+  LoginCommandResult,
+  LogoutCommandResult,
   MultiInsertCommandResult,
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
-  LoginCommandResult,
-  LogoutCommandResult,
   PushCommandResult,
-  SingleInsertCommandResult,
-} from './command-result.js.flow'
-import type {
-  SingleInsertCommand,
-  MultiInsertCommand,
-  IdUpdateCommand,
-  MultiUpdateCommand,
-  DeleteCommand,
-  CustomCommand,
-  LoginCommand,
-  LogoutCommand,
-  PushCommand,
-} from './command.js.flow'
-import type { RestApiHandler } from './rest-api-handler.js.flow'
+  SingleInsertCommandResult
+} from "./command-result";
+import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
+import {
+  CustomQueryResult,
+  PullQueryResult,
+  QueryResult,
+  SingleQueryResult
+} from "./query-result";
 
-export interface EntityClient<M: EntityMap = EntityMap> {
-  find<N: $Keys<M>>(query: WhereQuery<N>, sessionId?: ?Id): Promise<QueryResult<$ElementType<M, N>>>,
-  findOne<N: $Keys<M>>(query: WhereQuery<N>, sessionId?: ?Id): Promise<SingleQueryResult<$ElementType<M, N>>>,
-  get<N: $Keys<M>>(query: IdQuery<N>, sessionId?: ?Id): Promise<SingleQueryResult<$ElementType<M, N>>>,
-  getByIds<N: $Keys<M>>(query: IdsQuery<N>, sessionId?: ?Id): Promise<QueryResult<$ElementType<M, N>>>,
-  pull<N: $Keys<M>>(query: PullQuery<N>, sessionId?: ?Id): Promise<PullQueryResult<$ElementType<M, N>>>,
-  insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>, sessionId?: ?Id): Promise<SingleInsertCommandResult>,
-  insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>, sessionId?: ?Id): Promise<MultiInsertCommandResult>,
-  insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>, sessionId?: ?Id): Promise<GetCommandResult<$ElementType<M, N>>>,
-  insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>, sessionId?: ?Id): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>>,
-  updateById<N: $Keys<M>>(command: IdUpdateCommand<N>, sessionId?: ?Id): Promise<IdUpdateCommandResult>,
-  updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>, sessionId?: ?Id): Promise<MultiUpdateCommandResult<*>>,
-  updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>, sessionId?: ?Id): Promise<GetCommandResult<$ElementType<M, N>>>,
-  updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>, sessionId?: ?Id): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>>,
-  push<N: $Keys<M>>(command: PushCommand<N>, sessionId?: ?Id): Promise<PushCommandResult<$ElementType<M, N>>>,
-  delete<N: $Keys<M>>(command: DeleteCommand<N>, sessionId?: ?Id): Promise<DeleteCommandResult>,
-  createSessionClient(): SessionClient
+import { Key } from "./key";
+import { KvsClient } from "./kvs-client";
+import { PreEntity } from "./entity";
+import { RestApiHandler } from "./rest-api-handler";
+import { Session } from "./session";
+
+export interface EntityClient<M extends GeneralEntityMap> {
+  find<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<M[EN]>>;
+
+  findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<M[EN]>>;
+
+  get<EN extends Key<M>>(
+    query: IdQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<M[EN]>>;
+
+  getByIds<EN extends Key<M>>(
+    query: IdsQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<M[EN]>>;
+
+  pull<EN extends Key<M>>(
+    query: PullQuery<EN>,
+    sessionId?: string | null
+  ): Promise<PullQueryResult<M[EN]>>;
+
+  insertOne<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<SingleInsertCommandResult>;
+
+  insertMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<MultiInsertCommandResult>;
+
+  insertAndGet<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<M[EN]>>;
+
+  insertAndGetMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<M[EN]>>;
+
+  updateById<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<IdUpdateCommandResult>;
+
+  updateMulti<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiUpdateCommandResult>;
+
+  updateAndGet<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<M[EN]>>;
+
+  updateAndFetch<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<M[EN]>>;
+
+  push<EN extends Key<M>>(
+    command: PushCommand<EN>,
+    sessionId?: string | null
+  ): Promise<PushCommandResult<M[EN]>>;
+
+  delete<EN extends Key<M>>(
+    command: DeleteCommand<EN>,
+    sessionId?: string | null
+  ): Promise<DeleteCommandResult>;
+
+  createSessionClient(): SessionClient;
 }
 
-export interface CustomClient<QM: CustomQueryMap, CM: CustomCommandMap> {
-  runCustomQuery<N: $Keys<QM>>(query: CustomQuery<N, CustomParams<QM, N>>, sessionId?: ?Id): Promise<CustomQueryResult<CustomResult<QM, N>>>,
-  runCustomCommand<N: $Keys<CM>>(command: CustomCommand<N, CustomParams<CM, N>>, sessionId?: ?Id): Promise<CustomCommandResult<CustomResult<CM, N>>>,
+export interface CustomClient<
+  QM extends GeneralCustomMap,
+  CM extends GeneralCustomMap
+> {
+  runCustomQuery<QN extends Key<QM>>(
+    query: CustomQuery<QN, CustomQueryParams<QM, QN>>,
+    sessionId?: string | null
+  ): Promise<CustomQueryResult<CustomQueryResultValue<QM, QN>>>;
+
+  runCustomCommand<CN extends Key<CM>>(
+    command: CustomCommand<CN, CustomCommandParams<CM, CN>>,
+    sessionId?: string | null
+  ): Promise<CustomCommandResult<CustomCommandResultValue<CM, CN>>>;
 }
 
-export interface AuthClient<M: EntityMap, AM: AuthCommandMap> {
-  login<N: $Keys<M> & $Keys<AM>>(command: LoginCommand<N, AuthCredentials<AM, N>, AuthOptions<AM, N>>, sessionId?: ?Id): Promise<LoginCommandResult<$ElementType<M, N>>>,
-  logout<N: $Keys<M> & $Keys<AM>>(command: LogoutCommand<N>, sessionId?: ?Id): Promise<LogoutCommandResult>,
+export interface AuthClient<
+  M extends GeneralEntityMap,
+  AM extends GeneralAuthCommandMap
+> {
+  login<EN extends Key<AM>>(
+    command: LoginCommand<EN, AuthCredentials<AM, EN>, AuthOptions<AM, EN>>,
+    sessionId?: string | null
+  ): Promise<LoginCommandResult<AuthUser<AM, EN, M>>>;
+
+  logout<EN extends Key<AM>>(
+    command: LogoutCommand<EN>,
+    sessionId?: string | null
+  ): Promise<LogoutCommandResult>;
 }
 
-export type RestApiClient<TM: TypeMap> =
-  EntityClient<EntityMapOf<TM>> &
+export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
+  EntityMapOf<TM>
+> &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &
   AuthClient<EntityMapOf<TM>, AuthCommandMapOf<TM>> &
-  RestApiHandler
+  RestApiHandler;
 
-export type SessionClient = KvsClient<Session>
+export type SessionClient = KvsClient<Session>;

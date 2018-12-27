@@ -1,37 +1,46 @@
-// @flow
-import type {
-  PreEntity,
-} from './entity.js.flow'
-
-import type {
-  EntityMap,
-} from './type-map.js.flow'
-
-import type {
-  IdQuery,
-  IdsQuery,
-  WhereQuery,
-} from './query.js.flow'
-
-import type {
+import {
+  DeleteCommand,
   IdUpdateCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
-  SingleInsertCommand,
-  DeleteCommand,
-} from './command.js.flow'
+  SingleInsertCommand
+} from "./command";
+import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
+import { GeneralEntityMap } from "./type-map";
+import { Key } from "./key";
+import { PreEntity } from "./entity";
 
-export interface DbClient<M: EntityMap> {
-  find<N: $Keys<M>>(query: WhereQuery<N>): Promise<Array<$ElementType<M, N>>>,
-  findOne<N: $Keys<M>>(query: WhereQuery<N>): Promise<$ElementType<M, N>>,
-  get<N: $Keys<M>>(query: IdQuery<N>): Promise<$ElementType<M, N>>,
-  getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<Array<$ElementType<M, N>>>,
-  insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number>,
-  insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number>,
-  insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<$ElementType<M, N>>,
-  insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<Array<$ElementType<M, N>>>,
-  updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>>,
-  updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<Array<$ElementType<M, N>>>,
-  delete<N: $Keys<M>>(command: DeleteCommand<N>): Promise<number>,
+export interface DbClient<M extends GeneralEntityMap> {
+  find<EN extends Key<M>>(query: WhereQuery<EN>): Promise<Array<M[EN]>>;
+
+  findOne<EN extends Key<M>>(query: WhereQuery<EN>): Promise<M[EN]>;
+
+  get<EN extends Key<M>>(query: IdQuery<EN>): Promise<M[EN]>;
+
+  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): Promise<Array<M[EN]>>;
+
+  insertOne<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>
+  ): Promise<number>;
+
+  insertMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>
+  ): Promise<number>;
+
+  insertAndGet<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>
+  ): Promise<M[EN]>;
+
+  insertAndGetMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>
+  ): Promise<M[EN][]>;
+
+  updateAndGet<EN extends Key<M>>(command: IdUpdateCommand<EN>): Promise<M[EN]>;
+
+  updateAndFetch<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>
+  ): Promise<M[EN][]>;
+
+  delete<EN extends Key<M>>(command: DeleteCommand<EN>): Promise<number>;
 }

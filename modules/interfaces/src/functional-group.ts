@@ -1,19 +1,19 @@
-// @flow
-import type { CustomQueryDefinitions } from './custom-query-definition.js.flow'
-import type { CustomCommandDefinitions } from './custom-command-definition.js.flow'
-import type { EntityDefinitions } from './entity-definition.js.flow'
-import type { UserDefinitions } from './user-definition.js.flow'
+import {
+  GeneralAuthCommandMap,
+  GeneralCustomMap,
+  GeneralEntityMap
+} from "./type-map";
 
-export type FunctionalGroup = {
-  users?: UserDefinitions,
-  nonUsers?: EntityDefinitions,
-  customQueries?: CustomQueryDefinitions<*>,
-  customCommands?: CustomCommandDefinitions<*>,
-}
+import { CustomCommandDefinitions } from "./custom-command-definition";
+import { CustomQueryDefinitions } from "./custom-query-definition";
+import { EntityDefinitions } from "./entity-definition";
+import { UserDefinitions } from "./user-definition";
 
 export type NormalizedFunctionalGroup = {
-  users: UserDefinitions,
-  nonUsers: EntityDefinitions,
-  customQueries: CustomQueryDefinitions<*>,
-  customCommands: CustomCommandDefinitions<*>,
-}
+  users: UserDefinitions<GeneralAuthCommandMap, GeneralEntityMap>;
+  nonUsers: EntityDefinitions<GeneralEntityMap>;
+  customQueries: CustomQueryDefinitions<GeneralCustomMap>;
+  customCommands: CustomCommandDefinitions<GeneralCustomMap>;
+};
+
+export type FunctionalGroup = Partial<NormalizedFunctionalGroup>;

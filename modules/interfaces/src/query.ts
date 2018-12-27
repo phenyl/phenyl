@@ -1,36 +1,30 @@
-// @flow
-import type {
-  SortNotation,
-  FindOperation,
-} from 'mongolike-operations'
-import type { Id } from './id.js.flow' // string
-type EntityName = string
+import { FindOperation, SortNotation } from "@sp2/format";
 
-export interface WhereQuery<N: EntityName = EntityName> {
-  entityName: N,
-  +where: FindOperation,
-  skip?: number,
-  limit?: number,
-  sort?: SortNotation, // { [key: string]: 1 | -1 }
+export interface WhereQuery<EN extends string> {
+  entityName: EN;
+  where: FindOperation;
+  skip?: number;
+  limit?: number;
+  sort?: SortNotation;
 }
 
-export interface IdQuery<N: EntityName = EntityName> {
-  entityName: N,
-  id: Id
+export interface IdQuery<EN extends string> {
+  entityName: EN;
+  id: string;
 }
 
-export interface IdsQuery<N: EntityName = EntityName> {
-  entityName: N,
-  ids: Array<Id>
+export interface IdsQuery<EN extends string> {
+  entityName: EN;
+  ids: Array<string>;
 }
 
-export interface PullQuery<N: EntityName = EntityName> {
-  entityName: N,
-  id: Id,
-  +versionId: ?Id,
+export interface PullQuery<EN extends string> {
+  entityName: EN;
+  id: string;
+  versionId: string | null;
 }
 
-export interface CustomQuery<N: string = string, P: Object = Object> {
-  name: N, // custom query name
-  params: P,
+export interface CustomQuery<CQ extends string, QP extends Object> {
+  name: CQ;
+  params: QP;
 }

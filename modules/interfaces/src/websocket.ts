@@ -1,65 +1,55 @@
-// @flow
-import type {
-  RequestData
-} from './request-data.js.flow'
-
-import type {
-  ResponseData
-} from './response-data.js.flow'
-
-import type {
-  ServerError
-} from './error.js.flow'
-
-import type {
-  VersionDiff,
-  VersionDiffSubscriber,
+import {
   SubscriptionRequest,
   SubscriptionResult,
-} from './versioning.js.flow'
+  VersionDiff,
+  VersionDiffSubscriber
+} from "./versioning";
 
-import type {
-  RestApiHandler
-} from './rest-api-handler.js.flow'
+import { RequestData } from "./request-data";
+import { ResponseData } from "./response-data";
+import { RestApiHandler } from "./rest-api-handler";
+import { ServerError } from "./error";
 
-export type WebSocketClientMessage = WebSocketClientRequestDataMessage | WebSocketClientSubscriptionRequestMessage
+export type WebSocketClientMessage =
+  | WebSocketClientRequestDataMessage
+  | WebSocketClientSubscriptionRequestMessage;
 
-export type WebSocketClientRequestDataMessage = {|
-  reqData: RequestData,
-  tag: string,
-|}
+export type WebSocketClientRequestDataMessage = {
+  reqData: RequestData;
+  tag: string;
+};
 
-export type WebSocketClientSubscriptionRequestMessage = {|
-  subscription: SubscriptionRequest,
-  tag: string,
-|}
+export type WebSocketClientSubscriptionRequestMessage = {
+  subscription: SubscriptionRequest;
+  tag: string;
+};
 
 export type WebSocketServerMessage =
-  WebSocketServerResponseDataMessage |
-  WebSocketServerVersionDiffMessage |
-  WebSocketServerSubscriptionResultMessage |
-  WebSocketServerErrorMessage
+  | WebSocketServerResponseDataMessage
+  | WebSocketServerVersionDiffMessage
+  | WebSocketServerSubscriptionResultMessage
+  | WebSocketServerErrorMessage;
 
-export type WebSocketServerResponseDataMessage = {|
-  resData: ResponseData,
-  tag: string,
-|}
+export type WebSocketServerResponseDataMessage = {
+  resData: ResponseData;
+  tag: string;
+};
 
-export type WebSocketServerVersionDiffMessage = {|
-  versionDiff: VersionDiff,
-|}
+export type WebSocketServerVersionDiffMessage = {
+  versionDiff: VersionDiff;
+};
 
-export type WebSocketServerSubscriptionResultMessage = {|
-  subscriptionResult: SubscriptionResult,
-  tag: string,
-|}
+export type WebSocketServerSubscriptionResultMessage = {
+  subscriptionResult: SubscriptionResult;
+  tag: string;
+};
 
-export type WebSocketServerErrorMessage = {|
-  error: ServerError,
-  tag: ?string,
-|}
+export type WebSocketServerErrorMessage = {
+  error: ServerError;
+  tag: string | null;
+};
 
 export type WebSocketServerParams = {
-  restApiHandler: RestApiHandler,
-  versionDiffSubscriber?: VersionDiffSubscriber
-}
+  restApiHandler: RestApiHandler;
+  versionDiffSubscriber?: VersionDiffSubscriber;
+};

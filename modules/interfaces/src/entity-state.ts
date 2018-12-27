@@ -1,47 +1,45 @@
-// @flow
-import type {
-  UpdateOperation
-} from 'mongolike-operations'
+import { DeleteCommand, IdUpdateCommand, MultiUpdateCommand } from "./command";
+import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
-import type {
-  EntityMap,
-} from './type-map.js.flow'
+import { Entity } from "./entity";
+import { GeneralEntityMap } from "./type-map";
+import { GeneralUpdateOperation } from "@sp2/format";
+import { Key } from "./key";
 
-import type {
-  Entity,
-  EntityName,
-} from './entity.js.flow'
+export type EntityPool<M extends GeneralEntityMap> = {
+  [EN in Key<M>]: EntitiesById<M[EN]>
+};
+export type EntitiesById<T extends Entity> = { [id: string]: T };
 
-import type {
-  IdQuery,
-  IdsQuery,
-  WhereQuery,
-} from './query.js.flow'
-
-import type {
-  IdUpdateCommand,
-  MultiUpdateCommand,
-  DeleteCommand,
-} from './command.js.flow'
-
-export type EntityPool<M: EntityMap> = $ObjMap<M, <T: Entity>(T) => EntitiesById<T>>
-export type EntitiesById<T: Entity> = { [id: string]: T }
-
-export interface EntityState<M: EntityMap> {
-  pool: EntityPool<M>
+export interface EntityState<M extends GeneralEntityMap> {
+  pool: EntityPool<M>;
 }
 
-export interface EntityStateFinder<M: EntityMap> {
-  find<N: EntityName>(query: WhereQuery<N>): Array<$ElementType<M, N>>,
-  findOne<N: EntityName>(query: WhereQuery<N>): ?$ElementType<M, N>,
-  get<N: EntityName>(query: IdQuery<N>): $ElementType<M, N>,
-  getByIds<N: EntityName>(query: IdsQuery<N>): Array<$ElementType<M, N>>,
-  has<N: EntityName>(query: IdQuery<N>): boolean,
+export interface EntityStateFinder<M extends GeneralEntityMap> {
+  find<EN extends string>(query: WhereQuery<EN>): M[EN][];
+
+  findOne<EN extends string>(query: WhereQuery<EN>): M[EN] | null;
+
+  get<EN extends string>(query: IdQuery<EN>): M[EN];
+
+  getByIds<EN extends string>(query: IdsQuery<EN>): M[EN][];
+
+  has<EN extends string>(query: IdQuery<EN>): boolean;
 }
 
-export interface EntityStateUpdater<M: EntityMap> {
-  register<N: EntityName>(entityName: N, ...entities: Array<$ElementType<M, N>>): UpdateOperation,
-  updateById<N: EntityName>(command: IdUpdateCommand<N>): UpdateOperation,
-  updateMulti<N: EntityName>(command: MultiUpdateCommand<N>): UpdateOperation,
-  delete<N: EntityName>(command: DeleteCommand<N>): UpdateOperation,
+export interface EntityStateUpdater<M extends GeneralEntityMap> {
+  register<N extends string>(
+    entityName: N,
+    ...entities: Array<M[N]>
+  ): GeneralUpdateOperation;
+
+  updateById<N extends string>(
+    command: IdUpdateCommand<N>
+  ): GeneralUpdateOperation;
+
+  updateMulti<N extends string>(
+    command: MultiUpdateCommand<N>
+  ): GeneralUpdateOperation;
+
+  delete<N extends string>(command: DeleteCommand<N>): GeneralUpdateOperation;
 }

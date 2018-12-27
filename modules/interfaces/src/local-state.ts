@@ -1,44 +1,44 @@
-// @flow
-import type { UpdateOperation } from 'mongolike-operations'
-import type { EntityMap } from './type-map.js.flow'
-import type { Entity } from './entity.js.flow'
-import type { Id } from './id.js.flow'
-import type { Session } from './session.js.flow'
-import type { PhenylErrorType, ErrorLocation } from './error.js.flow'
-import type { ActionTag } from './action.js.flow'
+import { ErrorLocation, PhenylErrorType } from "./error";
 
-export type LocalEntityInfo<E: Entity> = {
-  origin: E,
-  +versionId: ?Id,
-  commits: Array<UpdateOperation>,
-  head: ?E,
-}
+import { Entity } from "./entity";
+import { GeneralEntityMap } from "./type-map";
+import { GeneralUpdateOperation } from "@sp2/format";
+import { Key } from "./key";
+import { Session } from "./session";
 
-export type LocalEntityInfoById<E: Entity> = {
-  [entityId: Id] : LocalEntityInfo<E>
-}
+export type LocalEntityInfo<E extends Entity> = {
+  origin: E;
+  versionId: string | null;
+  commits: Array<GeneralUpdateOperation>;
+  head: E | null;
+};
 
-export type LocalEntityState<M: EntityMap> = $ObjMap<M, <T: Entity>(T) => LocalEntityInfoById<T>>
+export type LocalEntityInfoById<E extends Entity> = {
+  [entityId: string]: LocalEntityInfo<E>;
+};
 
-export type UnreachedCommit<N: string = string> = {|
-  entityName: N, // "update" key in MongoDB reference
-  id: Id,
-  commitCount: number,
-|}
+export type LocalEntityState<M extends GeneralEntityMap> = {
+  [EN in Key<M>]: LocalEntityInfoById<M[EN]>
+};
 
+export type UnreachedCommit<EN extends string> = {
+  entityName: EN; // "update" key in MongoDB reference
+  id: string;
+  commitCount: number;
+};
 
-export type LocalState<M: EntityMap> = {
-  entities: LocalEntityState<M>,
+export type LocalState<M extends GeneralEntityMap> = {
+  entities: LocalEntityState<M>;
   network: {
-    requests: Array<ActionTag>,
-    isOnline: boolean,
-  },
-  unreachedCommits: Array<UnreachedCommit<$Keys<M>>>,
+    requests: Array<string>;
+    isOnline: boolean;
+  };
+  unreachedCommits: UnreachedCommit<Key<M>>[];
   error?: {
-    type: PhenylErrorType,
-    at: ErrorLocation,
-    message: string,
-    actionTag: ActionTag,
-  },
-  session?: ?Session,
-}
+    type: PhenylErrorType;
+    at: ErrorLocation;
+    message: string;
+    actionTag: string;
+  };
+  session?: Session | null;
+};

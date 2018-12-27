@@ -1,25 +1,45 @@
-// @flow
+import {
+  CustomCommandParams,
+  CustomCommandResultValue,
+  GeneralCustomCommandMap
+} from "./type-map";
 
-import type { Session } from './session.js.flow'
-import type {
-  CustomCommand,
-} from './command.js.flow'
-import type {
-  CustomCommandResult,
-} from './command-result.js.flow'
-import type {
-  CustomParams,
-  CustomResult,
-  CustomSetting,
-  CustomCommandMap,
-} from './type-map.js.flow'
+import { CustomCommand } from "./command";
+import { CustomCommandResult } from "./command-result";
+import { GeneralCustomCommandRequestData } from "./request-data";
+import { Key } from "./key";
+import { Session } from "./session";
 
-export interface CustomCommandDefinition<N: string, P: Object, R: Object> {
-  authorization(command: CustomCommand<N, P>, session: ?Session): Promise<boolean>,
-  +normalization?: (command: CustomCommand<N, P>, session: ?Session) => Promise<CustomCommand<N, P>>,
-  validation(command: CustomCommand<N, P>, session: ?Session): Promise<void>,
-  execution(command: CustomCommand<N, P>, session: ?Session): Promise<CustomCommandResult<R>>,
+export interface CustomCommandDefinition<
+  CN extends string = string,
+  CP extends Object = Object,
+  CR extends Object = Object
+> {
+  authorization?: (
+    reqData: GeneralCustomCommandRequestData<CN>,
+    session?: Session
+  ) => Promise<boolean>;
+
+  normalization?: (
+    reqData: GeneralCustomCommandRequestData<CN>,
+    session?: Session
+  ) => Promise<GeneralCustomCommandRequestData<CN>>;
+
+  validation?: (
+    reqData: GeneralCustomCommandRequestData<CN>,
+    session?: Session
+  ) => Promise<void>;
+
+  execution(
+    command: CustomCommand<CN, CP>,
+    session?: Session
+  ): Promise<CustomCommandResult<CR>>;
 }
 
-export type CustomCommandDefinitions<CM: CustomCommandMap = CustomCommandMap> =
-  $ObjMap<CM, <T, N: $Keys<CM>>(T: CustomSetting) => CustomCommandDefinition<N, CustomParams<CM, T>, CustomResult<CM, T>>>
+export type CustomCommandDefinitions<CM extends GeneralCustomCommandMap> = {
+  [CN in Key<CM>]: CustomCommandDefinition<
+    CN,
+    CustomCommandParams<CM, CN>,
+    CustomCommandResultValue<CM, CN>
+  >
+};

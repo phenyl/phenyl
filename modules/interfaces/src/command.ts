@@ -1,79 +1,121 @@
-// @flow
-import type {
-  FindOperation,
-  UpdateOperation,
-} from 'mongolike-operations'
-import type { Id } from './id.js.flow' // string
-import type { ProEntity } from './entity.js.flow'
+import { FindOperation, GeneralUpdateOperation } from "@sp2/format";
 
-type EntityName = string
+import { ProEntity } from "./entity";
 
-// see https://docs.mongodb.com/manual/reference/command/insert/
-export type SingleInsertCommand<N: EntityName = EntityName, P: ProEntity = ProEntity> = {|
-  entityName: N, // "insert" key in MongoDB reference
-  value: P, // "documents" key in MongoDB reference
-  ordered?: boolean,
-|}
+/**
+ * Type of a parameter for creating an entity.
+ * Value doesn't need to contain "id" property.
+ *
+ * See more for https://docs.mongodb.com/manual/reference/command/insert/
+ */
+export type SingleInsertCommand<EN extends string, PE extends ProEntity> = {
+  entityName: EN; // "insert" key in MongoDB reference
+  value: PE; // "documents" key in MongoDB reference
+  ordered?: boolean;
+};
 
-// see https://docs.mongodb.com/manual/reference/command/insert/
-export type MultiInsertCommand<N: EntityName = EntityName, P: ProEntity = ProEntity> = {|
-  entityName: N, // "insert" key in MongoDB reference
-  values: Array<P>, // "documents" key in MongoDB reference
-  ordered?: boolean,
-|}
+/**
+ * Type of a parameter for creating multiple entities.
+ * Values is an array containing entity which doesn't need to contain "id" property.
+ *
+ * See more for https://docs.mongodb.com/manual/reference/command/insert/
+ */
+export type MultiInsertCommand<EN extends string, PE extends ProEntity> = {
+  entityName: EN; // "insert" key in MongoDB reference
+  values: PE[]; // "documents" key in MongoDB reference
+  ordered?: boolean;
+};
 
-// see https://docs.mongodb.com/manual/reference/command/update/
-export type UpdateCommand<N: EntityName = EntityName> = IdUpdateCommand<N> | MultiUpdateCommand<N>
+/**
+ * Type of a parameter for updating entity(s).
+ *
+ * See more for https://docs.mongodb.com/manual/reference/command/update/
+ */
+export type UpdateCommand<EN extends string> =
+  | IdUpdateCommand<EN>
+  | MultiUpdateCommand<EN>;
 
-export type IdUpdateCommand<N: EntityName = EntityName> = {|
-  entityName: N, // "update" key in MongoDB reference
-  id: Id,
-  operation: UpdateOperation, // "u" key in MongoDB reference
-|}
+/**
+ * Type of a parameter for updating one entity.
+ *
+ * See more for https://docs.mongodb.com/manual/reference/command/update/
+ */
+export type IdUpdateCommand<EN extends string> = {
+  entityName: EN; // "update" key in MongoDB reference
+  id: string;
+  operation: GeneralUpdateOperation; // "u" key in MongoDB reference
+};
 
-export type MultiUpdateCommand<N: EntityName = EntityName> = {|
-  entityName: N, // "update" key in MongoDB reference
-  +where: FindOperation, // "q" key in MongoDB reference
-  operation: UpdateOperation, // "u" key in MongoDB reference
-  ordered?: boolean,
-|}
+/**
+ * Type of a parameter for updating multiple entities.
+ *
+ * See more for https://docs.mongodb.com/manual/reference/command/update/
+ */
+export type MultiUpdateCommand<EN extends string> = {
+  entityName: EN; // "update" key in MongoDB reference
+  where: FindOperation; // "q" key in MongoDB reference
+  operation: GeneralUpdateOperation; // "u" key in MongoDB reference
+  ordered?: boolean;
+};
 
-export type PushCommand<N: EntityName = EntityName> = {|
-  entityName: N,
-  id: Id,
-  operations: Array<UpdateOperation>,
-  +versionId: ?Id,
-|}
+/**
+ * Type of a parameter for push (like Git does) the difference expressed by operations.
+ */
+export type PushCommand<EN extends string> = {
+  entityName: EN;
+  id: string;
+  operations: GeneralUpdateOperation[];
+  versionId: string | null;
+};
 
-// see https://docs.mongodb.com/manual/reference/command/delete/
-export type DeleteCommand<N: EntityName = EntityName> = IdDeleteCommand<N> | MultiDeleteCommand<N>
+/**
+ * Type of a parameter for removing entity(s).
+ *
+ * see https://docs.mongodb.com/manual/reference/command/delete/
+ */
+export type DeleteCommand<EN extends string> =
+  | IdDeleteCommand<EN>
+  | MultiDeleteCommand<EN>;
 
-export type IdDeleteCommand<N: EntityName = EntityName> = {|
-  entityName: N, // "delete" key in MongoDB reference
-  id: Id,
-|}
+/**
+ * Type of a parameter for removing one entity.
+ *
+ * see https://docs.mongodb.com/manual/reference/command/delete/
+ */
+export type IdDeleteCommand<EN extends string> = {
+  entityName: EN; // "delete" key in MongoDB reference
+  id: string;
+};
 
-export type MultiDeleteCommand<N: EntityName = EntityName> = {|
-  entityName: N, // "delete" key in MongoDB reference
-  +where: FindOperation, // "q" key in MongoDB reference
-  limit?: number,
-  ordered?: boolean,
-|}
+/**
+ * Type of a parameter for removing multiple entities.
+ *
+ * see https://docs.mongodb.com/manual/reference/command/delete/
+ */
+export type MultiDeleteCommand<En extends string> = {
+  entityName: En; // "delete" key in MongoDB reference
+  where: FindOperation; // "q" key in MongoDB reference
+  limit?: number;
+  ordered?: boolean;
+};
 
-export interface CustomCommand<N: string = string, P: Object = Object> {
-  name: N, // custom insert command name
-  params: P
+export interface CustomCommand<CN extends string, CP extends Object> {
+  name: CN; // custom insert command name
+  params: CP;
 }
 
-
-export interface LoginCommand<N: EntityName = EntityName, C: Object = Object, O: Object = Object> {
-  credentials: C,
-  entityName: N,
-  options?: O,
+export interface LoginCommand<
+  EN extends string,
+  C extends Object,
+  O extends Object
+> {
+  entityName: EN;
+  credentials: C;
+  options?: O;
 }
 
-export interface LogoutCommand<N: EntityName = EntityName> {
-  sessionId: Id,
-  userId: Id,
-  entityName: N,
+export interface LogoutCommand<EN extends string> {
+  sessionId: string;
+  userId: string;
+  entityName: EN;
 }

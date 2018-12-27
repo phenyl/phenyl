@@ -1,15 +1,40 @@
-// @flow
+import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
 
-import type { Session } from './session.js.flow'
-import type { RequestData } from './request-data.js.flow'
-import type { ResponseData } from './response-data.js.flow'
-import type { RestApiExecution } from './handler.js.flow'
+import { Entity } from "./entity";
+import { GeneralEntityMap } from "./type-map";
+import { Key } from "./key";
+import { ResponseData } from "./response-data";
+import { Session } from "./session";
 
-export interface EntityDefinition {
-  authorization(reqData: RequestData, session: ?Session): Promise<boolean>, // AuthorizationHandler
-  +normalization?: (reqData: RequestData, session: ?Session) => Promise<RequestData>, // RequestNormalizationHandler
-  validation(reqData: RequestData, session: ?Session): Promise<void>, // ValidationHandler
-  +wrapExecution?: (reqData: RequestData, session: ?Session, execution: RestApiExecution) => Promise<ResponseData>, // ExecutionWrapper
+export interface EntityDefinition<
+  EN extends string = string,
+  E extends Entity = Entity
+> {
+  authorization?: (
+    reqData: GeneralEntityRequestData<EN>,
+    session?: Session
+  ) => Promise<boolean>;
+
+  normalization?: (
+    reqData: GeneralEntityRequestData<EN>,
+    session?: Session
+  ) => Promise<GeneralEntityRequestData<EN>>;
+
+  validation?: (
+    reqData: GeneralEntityRequestData<EN>,
+    session?: Session
+  ) => Promise<void>;
+
+  wrapExecution?: (
+    reqData: EntityRequestData<EN, E>,
+    session: Session | null,
+    execution: (
+      reqData: EntityRequestData<EN, E>,
+      session?: Session
+    ) => Promise<ResponseData>
+  ) => Promise<ResponseData>;
 }
 
-export type EntityDefinitions = { [entityName: string]: EntityDefinition }
+export type EntityDefinitions<M extends GeneralEntityMap> = {
+  [EN in Key<M>]: EntityDefinition<EN, M[EN]>
+};

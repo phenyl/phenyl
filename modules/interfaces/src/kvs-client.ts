@@ -1,11 +1,8 @@
-// @flow
+import { Entity, PreEntity } from "./entity";
 
-import type { Id } from './id.js.flow'
-import type { Entity, PreEntity } from './entity.js.flow'
-
-export interface KvsClient<T: Entity> {
-  get(id: ?Id): Promise<?T>,
-  create(value: PreEntity<T>): Promise<T>,
-  set(value: T): Promise<T>,
-  delete(id: ?Id): Promise<boolean>,
+export interface KvsClient<T extends Entity> {
+  get(id: string | null): Promise<T | null>;
+  create(value: PreEntity<T>): Promise<T>;
+  set(value: T): Promise<T>;
+  delete(id: string | null): Promise<boolean>;
 }
