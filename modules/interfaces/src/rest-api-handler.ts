@@ -9,7 +9,6 @@ import {
   CustomQueryNameOf,
   CustomQueryParamsOf,
   CustomQueryResultValueOf,
-  EntityMapOf,
   EntityNameOf,
   EntityOf,
   GeneralTypeMap
@@ -28,7 +27,6 @@ import {
   LogoutRequestData,
   PullRequestData,
   PushRequestData,
-  RequestData,
   RunCustomCommandRequestData,
   RunCustomQueryRequestData,
   UpdateAndFetchRequestData,
@@ -51,7 +49,6 @@ import {
   LogoutResponseData,
   PullResponseData,
   PushResponseData,
-  ResponseData,
   RunCustomCommandResponseData,
   RunCustomQueryResponseData,
   UpdateAndFetchResponseData,

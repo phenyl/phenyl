@@ -309,7 +309,11 @@ export type AuthOptionsOf<
 export type AuthOptions<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>
-> = "options" extends keyof AM[EN] ? AM[EN]["options"] : Object;
+> = "options" extends keyof AM[EN]
+  ? AM[EN]["options"] extends Object
+    ? AM[EN]["options"]
+    : Object
+  : Object;
 
 /**
  * Logined user type of given user entity name in given TypeMap.
@@ -341,9 +345,17 @@ export type AuthUser<
 type CustomParams<
   T extends GeneralCustomMap,
   N extends Key<T>
-> = "params" extends keyof T[N] ? T[N]["params"] : Object; // If "params" is not set, set Object.
+> = "params" extends keyof T[N]
+  ? T[N]["params"] extends Object
+    ? T[N]["params"]
+    : Object
+  : Object; // If "params" is not set, set Object.
 
 type CustomResultValue<
   T extends GeneralCustomMap,
   N extends Key<T>
-> = "result" extends keyof T[N] ? T[N]["result"] : Object; // If "result" is not set, set Object.
+> = "result" extends keyof T[N]
+  ? T[N]["result"] extends Object
+    ? T[N]["result"]
+    : Object
+  : Object; // If "result" is not set, set Object.
