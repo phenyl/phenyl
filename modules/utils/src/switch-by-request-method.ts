@@ -1,11 +1,8 @@
-// @flow
-import type {
-  RequestData,
-  RequestDataHandlers,
-  TypeMap,
-} from 'phenyl-interfaces'
-
-export async function switchByRequestMethod<TM: TypeMap, T>(reqData: RequestData, funcs: RequestDataHandlers<TM, T>): Promise<T> {
+import { RequestData, RequestDataHandlers, TypeMap } from 'phenyl-interfaces'
+export async function switchByRequestMethod<TM extends TypeMap, T>(
+  reqData: RequestData,
+  funcs: RequestDataHandlers<TM, T>,
+): Promise<T> {
   switch (reqData.method) {
     case 'find':
       return funcs.find ? await funcs.find(reqData.payload) : await funcs.handleDefault(reqData)
@@ -32,7 +29,9 @@ export async function switchByRequestMethod<TM: TypeMap, T>(reqData: RequestData
       return funcs.insertAndGet ? await funcs.insertAndGet(reqData.payload) : await funcs.handleDefault(reqData)
 
     case 'insertAndGetMulti':
-      return funcs.insertAndGetMulti ? await funcs.insertAndGetMulti(reqData.payload) : await funcs.handleDefault(reqData)
+      return funcs.insertAndGetMulti
+        ? await funcs.insertAndGetMulti(reqData.payload)
+        : await funcs.handleDefault(reqData)
 
     case 'updateById':
       return funcs.updateById ? await funcs.updateById(reqData.payload) : await funcs.handleDefault(reqData)
