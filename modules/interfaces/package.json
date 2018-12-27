@@ -2,19 +2,16 @@
   "name": "@phenyl/interfaces",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "types": "lib/index.d.js",
-  "scripts": {},
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache License 2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
   "files": [
     "lib",
     "LICENSE",
     "README.md"
   ],
-  "dependencies": {
-    "@sp2/format": "~1.0.0"
-  },
-  "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "phenyl-js/phenyl",
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "scripts": {
     "build": "upbin tsc --declaration",
     "ci-test": "upbin nyc npm test --color always",
@@ -24,11 +21,13 @@
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
+  "dependencies": {
+    "@sp2/format": "~1.0.0"
+  },
   "devDependencies": {
     "upbin": "^0.8.1"
   },
   "publishConfig": {
     "access": "public"
-  },
-  "license": "Apache License 2.0"
+  }
 }
