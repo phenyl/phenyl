@@ -1,22 +1,46 @@
-import { PhenylRestApiClient } from './phenyl-rest-api-client.js'
-import { RestApiHandler, RequestData, ResponseData, TypeMap } from 'phenyl-interfaces'
+/* eslint-disable no-dupe-class-members */
+import {
+  AuthEntityNameOf,
+  CustomCommandNameOf,
+  CustomQueryNameOf,
+  EntityNameOf,
+  GeneralTypeMap,
+  HandlerResult,
+  RequestDataWithTypeMap,
+  RequestMethodName,
+  ResponseDataWithTypeMap,
+  RestApiHandler
+} from "@phenyl/interfaces";
+
+import { PhenylRestApiClient } from "./phenyl-rest-api-client.js";
+
 /**
  * Client to access to the given RestApiHandler directly.
  */
 
-export class PhenylRestApiDirectClient<TM extends TypeMap> extends PhenylRestApiClient<TM> {
-  restApiHandler: RestApiHandler
+export class PhenylRestApiDirectClient<
+  TM extends GeneralTypeMap
+> extends PhenylRestApiClient<TM> {
+  restApiHandler: RestApiHandler;
 
   constructor(restApiHandler: RestApiHandler) {
-    super()
-    this.restApiHandler = restApiHandler
+    super();
+    this.restApiHandler = restApiHandler;
   }
+
   /**
    * @override
    * Access to PhenylRestApi directly.
    */
-
-  async handleRequestData(reqData: RequestData): Promise<ResponseData> {
-    return this.restApiHandler.handleRequestData(reqData)
+  handleRequestData<
+    MN extends RequestMethodName,
+    EN extends EntityNameOf<TM>,
+    QN extends CustomQueryNameOf<TM>,
+    CN extends CustomCommandNameOf<TM>,
+    AN extends AuthEntityNameOf<TM>
+  >(
+    reqData: RequestDataWithTypeMap<TM, MN, EN, QN, CN, AN>
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, EN, QN, CN, AN>> {
+    return this.restApiHandler.handleRequestData(reqData);
   }
 }

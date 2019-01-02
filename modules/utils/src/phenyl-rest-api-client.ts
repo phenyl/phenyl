@@ -1,53 +1,76 @@
-import { createServerError } from './create-error.js'
 import {
-  RestApiClient,
-  CommandParamsOf,
-  CommandResultOf,
-  CredentialsOf,
-  CustomQuery,
-  CustomQueryNameOf,
-  CustomQueryResult,
+  AuthCredentialsOf,
+  AuthEntityNameOf,
+  AuthOptionsOf,
+  AuthUserOf,
   CustomCommand,
   CustomCommandNameOf,
+  CustomCommandParamsOf,
   CustomCommandResult,
+  CustomCommandResultValueOf,
+  CustomQuery,
+  CustomQueryNameOf,
+  CustomQueryParamsOf,
+  CustomQueryResult,
+  CustomQueryResultValueOf,
   DeleteCommand,
   DeleteCommandResult,
+  DeleteRequestData,
   EntityNameOf,
   EntityOf,
-  MultiValuesCommandResult,
+  FindOneRequestData,
+  FindRequestData,
+  GeneralTypeMap,
+  GetByIdsRequestData,
   GetCommandResult,
-  Id,
+  GetRequestData,
+  HandlerResult,
   IdQuery,
-  IdsQuery,
   IdUpdateCommand,
   IdUpdateCommandResult,
-  MultiInsertCommand,
-  MultiInsertCommandResult,
-  MultiUpdateCommandResult,
+  IdsQuery,
+  InsertAndGetMultiRequestData,
+  InsertAndGetRequestData,
+  InsertMultiRequestData,
+  InsertOneRequestData,
   LoginCommand,
   LoginCommandResult,
+  LoginRequestData,
   LogoutCommand,
   LogoutCommandResult,
-  OptionsOf,
+  LogoutRequestData,
+  MultiInsertCommand,
+  MultiInsertCommandResult,
+  MultiUpdateCommand,
+  MultiUpdateCommandResult,
+  MultiValuesCommandResult,
   PreEntity,
   PullQuery,
   PullQueryResult,
+  PullRequestData,
   PushCommand,
   PushCommandResult,
-  QueryParamsOf,
+  PushRequestData,
   QueryResult,
-  QueryResultOf,
-  RequestData,
-  ResponseData,
+  RequestDataWithTypeMap,
+  RequestMethodName,
+  ResponseDataWithTypeMap,
+  RestApiClient,
+  RunCustomCommandRequestData,
+  RunCustomQueryRequestData,
   SessionClient,
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  TypeMap,
-  UserEntityNameOf,
-  MultiUpdateCommand,
-  WhereQuery,
-} from 'phenyl-interfaces'
+  UpdateAndFetchRequestData,
+  UpdateAndGetRequestData,
+  UpdateMultiRequestData,
+  UpdateOneRequestData,
+  WhereQuery
+} from "@phenyl/interfaces";
+
+import { createServerError } from "./create-error.js";
+
 /**
  * @abstract
  * Client to access to PhenylRestApi.
@@ -61,343 +84,355 @@ import {
  * Also, PhenylRestApiDirectClient is the direct client which contains PhenylRestApi instance.
  */
 
-export class PhenylRestApiClient<TM extends TypeMap> implements RestApiClient<TM> {
-  /**
-   * @abstract
-   */
-  async handleRequestData(reqData: RequestData): Promise<ResponseData> {
-    // eslint-disable-line no-unused-vars
-    throw new Error('No implementation')
-  }
+export abstract class PhenylRestApiClient<TM extends GeneralTypeMap>
+  implements RestApiClient<TM> {
+  abstract handleRequestData<
+    MN extends RequestMethodName,
+    EN extends EntityNameOf<TM>,
+    QN extends CustomQueryNameOf<TM>,
+    CN extends CustomCommandNameOf<TM>,
+    AN extends AuthEntityNameOf<TM>
+  >(
+    reqData: RequestDataWithTypeMap<TM, MN, EN, QN, CN, AN>
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, EN, QN, CN, AN>>;
   /**
    *
    */
-
   async find<N extends EntityNameOf<TM>>(
     query: WhereQuery<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<QueryResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'find',
+    const reqData: FindRequestData<N> = {
+      method: "find",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'find') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "find") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async findOne<N extends EntityNameOf<TM>>(
     query: WhereQuery<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<SingleQueryResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'findOne',
+    const reqData: FindOneRequestData<N> = {
+      method: "findOne",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'findOne') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "findOne") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async get<N extends EntityNameOf<TM>>(
     query: IdQuery<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<SingleQueryResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'get',
+    const reqData: GetRequestData<N> = {
+      method: "get",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'get') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "get") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async getByIds<N extends EntityNameOf<TM>>(
     query: IdsQuery<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<QueryResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'getByIds',
+    const reqData: GetByIdsRequestData<N> = {
+      method: "getByIds",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'getByIds') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "getByIds") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async pull<N extends EntityNameOf<TM>>(
     query: PullQuery<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<PullQueryResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'pull',
+    const reqData: PullRequestData<N> = {
+      method: "pull",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'pull') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "pull") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async insertOne<N extends EntityNameOf<TM>>(
     command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<SingleInsertCommandResult> {
-    const reqData = {
-      method: 'insertOne',
+    const reqData: InsertOneRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+      method: "insertOne",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insertOne') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "insertOne") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async insertMulti<N extends EntityNameOf<TM>>(
     command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<MultiInsertCommandResult> {
-    const reqData = {
-      method: 'insertMulti',
+    const reqData: InsertMultiRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+      method: "insertMulti",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insertMulti') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "insertMulti") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async insertAndGet<N extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<N, ProEntity>,
-    sessionId?: Id | undefined | null,
+    command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
+    sessionId?: string | undefined | null
   ): Promise<GetCommandResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'insertAndGet',
+    const reqData: InsertAndGetRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+      method: "insertAndGet",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insertAndGet') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "insertAndGet") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async insertAndGetMulti<N extends EntityNameOf<TM>>(
     command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
-    sessionId?: Id | undefined | null,
-  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>, any>> {
-    const reqData = {
-      method: 'insertAndGetMulti',
+    sessionId?: string | undefined | null
+  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>>> {
+    const reqData: InsertAndGetMultiRequestData<
+      N,
+      PreEntity<EntityOf<TM, N>>
+    > = {
+      method: "insertAndGetMulti",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'insertAndGetMulti') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "insertAndGetMulti") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async updateById<N extends EntityNameOf<TM>>(
     command: IdUpdateCommand<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<IdUpdateCommandResult> {
-    const reqData = {
-      method: 'updateById',
+    const reqData: UpdateOneRequestData<N> = {
+      method: "updateById",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'updateById') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "updateById") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async updateMulti<N extends EntityNameOf<TM>>(
     command: MultiUpdateCommand<N>,
-    sessionId?: Id | undefined | null,
-  ): Promise<MultiUpdateCommandResult<any>> {
-    const reqData = {
-      method: 'updateMulti',
+    sessionId?: string | undefined | null
+  ): Promise<MultiUpdateCommandResult> {
+    const reqData: UpdateMultiRequestData<N> = {
+      method: "updateMulti",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'updateMulti') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "updateMulti") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async updateAndGet<N extends EntityNameOf<TM>>(
     command: IdUpdateCommand<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<GetCommandResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'updateAndGet',
+    const reqData: UpdateAndGetRequestData<N> = {
+      method: "updateAndGet",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'updateAndGet') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "updateAndGet") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async updateAndFetch<N extends EntityNameOf<TM>>(
     command: MultiUpdateCommand<N>,
-    sessionId?: Id | undefined | null,
-  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>, any>> {
-    const reqData = {
-      method: 'updateAndFetch',
+    sessionId?: string | undefined | null
+  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>>> {
+    const reqData: UpdateAndFetchRequestData<N> = {
+      method: "updateAndFetch",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'updateAndFetch') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "updateAndFetch") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async push<N extends EntityNameOf<TM>>(
     command: PushCommand<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<PushCommandResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'push',
+    const reqData: PushRequestData<N> = {
+      method: "push",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'push') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "push") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async delete<N extends EntityNameOf<TM>>(
     command: DeleteCommand<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<DeleteCommandResult> {
-    const reqData = {
-      method: 'delete',
+    const reqData: DeleteRequestData<N> = {
+      method: "delete",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'delete') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "delete") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async runCustomQuery<N extends CustomQueryNameOf<TM>>(
-    query: CustomQuery<N, QueryParamsOf<TM, N>>,
-    sessionId?: Id | undefined | null,
-  ): Promise<CustomQueryResult<QueryResultOf<TM, N>>> {
-    const reqData = {
-      method: 'runCustomQuery',
+    query: CustomQuery<N, CustomQueryParamsOf<TM, N>>,
+    sessionId?: string | undefined | null
+  ): Promise<CustomQueryResult<CustomQueryResultValueOf<TM, N>>> {
+    const reqData: RunCustomQueryRequestData<N, CustomQueryParamsOf<TM, N>> = {
+      method: "runCustomQuery",
       payload: query,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'runCustomQuery') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "runCustomQuery") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
   async runCustomCommand<N extends CustomCommandNameOf<TM>>(
-    command: CustomCommand<N, CommandParamsOf<TM, N>>,
-    sessionId?: Id | undefined | null,
-  ): Promise<CustomCommandResult<CommandResultOf<TM, N>>> {
-    const reqData = {
-      method: 'runCustomCommand',
+    command: CustomCommand<N, CustomCommandParamsOf<TM, N>>,
+    sessionId?: string | undefined | null
+  ): Promise<CustomCommandResult<CustomCommandResultValueOf<TM, N>>> {
+    const reqData: RunCustomCommandRequestData<
+      N,
+      CustomCommandParamsOf<TM, N>
+    > = {
+      method: "runCustomCommand",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'runCustomCommand') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "runCustomCommand") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
-  async login<N extends UserEntityNameOf<TM>>(
-    command: LoginCommand<N, CredentialsOf<TM, N>, OptionsOf<TM, N>>,
-    sessionId?: Id | undefined | null,
-  ): Promise<LoginCommandResult<EntityOf<TM, N>>> {
-    const reqData = {
-      method: 'login',
+  async login<N extends AuthEntityNameOf<TM>>(
+    command: LoginCommand<N, AuthCredentialsOf<TM, N>, AuthOptionsOf<TM, N>>,
+    sessionId?: string | undefined | null
+  ): Promise<LoginCommandResult<AuthUserOf<TM, N>>> {
+    const reqData: LoginRequestData<
+      N,
+      AuthCredentialsOf<TM, N>,
+      AuthOptionsOf<TM, N>
+    > = {
+      method: "login",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'login') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "login") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    *
    */
-
-  async logout<N extends UserEntityNameOf<TM>>(
+  async logout<N extends AuthEntityNameOf<TM>>(
     command: LogoutCommand<N>,
-    sessionId?: Id | undefined | null,
+    sessionId?: string | undefined | null
   ): Promise<LogoutCommandResult> {
-    const reqData = {
-      method: 'logout',
+    const reqData: LogoutRequestData<N> = {
+      method: "logout",
       payload: command,
-      sessionId, // $FlowIssue(handleRequestData-is-imcomplete)
-    }
-    const resData = await this.handleRequestData(reqData)
-    if (resData.type === 'logout') return resData.payload
-    throw createServerError(resData.type === 'error' ? resData.payload : `Unexpected response type "${resData.type}".`)
+      sessionId
+    };
+    const resData = await this.handleRequestData(reqData);
+    if (resData.type === "logout") return resData.payload;
+    throw createServerError(resData.payload);
   }
+
   /**
    * Create session client.
    * RestApiClient cannot create SessionClient.
    */
-
   createSessionClient(): SessionClient {
-    throw new Error('Cannot create SessionClient from RestApiClient.')
+    throw new Error("Cannot create SessionClient from RestApiClient.");
   }
 }
