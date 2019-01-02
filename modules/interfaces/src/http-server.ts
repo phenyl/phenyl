@@ -5,7 +5,7 @@ import { RestApiClient } from "./client";
 import { RestApiHandler } from "./rest-api-handler";
 
 export type ServerParams<TM extends GeneralTypeMap> = {
-  restApiHandler: RestApiHandler;
+  restApiHandler: RestApiHandler<TM>;
   modifyPath?: PathModifier;
   customRequestHandler?: CustomRequestHandler<TM>;
 };

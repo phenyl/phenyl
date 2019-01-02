@@ -19,11 +19,11 @@ import { PhenylRestApiClient } from "./phenyl-rest-api-client.js";
  */
 
 export class PhenylRestApiDirectClient<
-  TM extends GeneralTypeMap
+  TM extends GeneralTypeMap = GeneralTypeMap
 > extends PhenylRestApiClient<TM> {
-  restApiHandler: RestApiHandler;
+  restApiHandler: RestApiHandler<TM>;
 
-  constructor(restApiHandler: RestApiHandler) {
+  constructor(restApiHandler: RestApiHandler<TM>) {
     super();
     this.restApiHandler = restApiHandler;
   }

@@ -84,8 +84,9 @@ import { createServerError } from "./create-error.js";
  * Also, PhenylRestApiDirectClient is the direct client which contains PhenylRestApi instance.
  */
 
-export abstract class PhenylRestApiClient<TM extends GeneralTypeMap>
-  implements RestApiClient<TM> {
+export abstract class PhenylRestApiClient<
+  TM extends GeneralTypeMap = GeneralTypeMap
+> implements RestApiClient<TM> {
   abstract handleRequestData<
     MN extends RequestMethodName,
     EN extends EntityNameOf<TM>,
