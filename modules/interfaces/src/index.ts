@@ -1,4 +1,5 @@
 export * from "./action";
+export * from "./bound-request-response";
 export * from "./client";
 export * from "./command-result";
 export * from "./command";
