@@ -1,105 +1,125 @@
 import {
+  ErrorDetail,
   ErrorLocation,
   LocalError,
   LocalErrorType,
-  ServerError,
-  ServerErrorType,
   PhenylError,
   PhenylErrorType,
-  ErrorDetail,
-} from 'phenyl-interfaces'
+  ServerError,
+  ServerErrorType
+} from "@phenyl/interfaces";
+
 const toJSONs = {
   server: function toServerErrorJSON(): ServerError {
     return {
       ok: 0,
-      at: 'server',
+      at: "server",
+      // @ts-ignore
       type: this.type,
+      // @ts-ignore
       message: this.message,
+      // @ts-ignore
       stack: this.stack,
-      detail: this.detail,
-    }
+      // @ts-ignore
+      detail: this.detail
+    };
   },
+
   local: function toLocalErrorJSON(): LocalError {
     return {
+      // @ts-ignore
       ok: 0,
-      at: 'local',
+      at: "local",
+      // @ts-ignore
       type: this.type,
+      // @ts-ignore
       message: this.message,
+      // @ts-ignore
       stack: this.stack,
-      detail: this.detail,
-    }
-  },
-}
+      // @ts-ignore
+      detail: this.detail
+    };
+  }
+};
+
 const guessErrorTypes = {
   server: function guessServerErrorType(error: Error): ServerErrorType {
     if (error.constructor === Error) {
-      return 'BadRequest'
+      return "BadRequest";
     }
 
-    return 'InternalServer'
+    return "InternalServer";
   },
   local: function guessLocalErrorType(error: Error): LocalErrorType {
     if (error.constructor === Error) {
-      return 'InvalidData'
+      return "InvalidData";
     }
 
-    return 'CodeProblem'
-  },
+    return "CodeProblem";
+  }
   /**
    * Create a PhenylError.
    * Phenyl error is instanceof Error.
    * Phenyl error implements interface of PhenylError.
    */
-}
+};
+
 export function createError(
-  error: $Supertype<Error | PhenylError | string | ErrorDetail>,
+  error: Error | PhenylError | string | ErrorDetail,
   _type?: PhenylErrorType | null,
-  defaultLocation?: ErrorLocation = 'local',
-): $Subtype<PhenylError> & Error {
-  // String to
-  if (typeof error === 'string') {
-    return createError(new Error(error), _type, defaultLocation)
+  defaultLocation: ErrorLocation = "local"
+): PhenylError & Error {
+  if (typeof error === "string") {
+    return createError(new Error(error), _type, defaultLocation);
   }
 
-  const e = error instanceof Error ? error : new Error(error.message) // $FlowIssue(e is Error obj )
+  const e = error instanceof Error ? error : new Error(error.message);
 
-  if (error.stack) e.stack = error.stack // $FlowIssue(Error-can-have-prop)
+  // @ts-ignore
+  if (error.stack) e.stack = error.stack;
 
-  e.ok = 0 // $FlowIssue(Error-can-have-prop)
+  // @ts-ignore
+  e.ok = 0;
 
-  e.at = error.at || defaultLocation // $FlowIssue(Error-can-have-prop)
+  // @ts-ignore
+  e.at = error.at || defaultLocation;
 
-  e.type = error.type || _type || guessErrorTypes[e.at](e) // $FlowIssue(Error-can-have-prop)
+  // @ts-ignore
+  e.type = error.type || _type || guessErrorTypes[e.at](e);
 
+  // @ts-ignore
   if (e.toJSON == null) {
-    // $FlowIssue(Error-can-have-prop)
-    Object.defineProperty(e, 'toJSON', {
-      // $FlowIssue(at-is-ErrorLocation)
-      value: toJSONs[e.at],
-    })
-  } // $FlowIssue(Error-can-have-prop)
+    Object.defineProperty(e, "toJSON", {
+      // @ts-ignore
+      value: toJSONs[e.at]
+    });
+  }
 
-  if (error.detail) e.detail = error.detail // $FlowIssue(compatible)
+  // @ts-ignore
+  if (error.detail) e.detail = error.detail;
 
-  return e
+  // @ts-ignore
+  return e;
 }
+
 /**
  * Create a ServerError (Error in Node.js).
  */
-
 export function createServerError(
-  error: $Supertype<Error | ServerError | string>,
-  _type?: ServerErrorType,
-): $Subtype<ServerError> & Error {
-  return createError(error, _type, 'server')
+  error: Error | ServerError | string,
+  _type?: ServerErrorType
+): ServerError & Error {
+  // @ts-ignore
+  return createError(error, _type, "server");
 }
+
 /**
  * Create a LocalError (Error in browser, React Native, etc...).
  */
-
 export function createLocalError(
-  error: $Supertype<Error | ServerError | string>,
-  _type?: LocalErrorType,
-): $Subtype<LocalError> & Error {
-  return createError(error, _type, 'local')
+  error: Error | ServerError | string,
+  _type?: LocalErrorType
+): LocalError & Error {
+  // @ts-ignore
+  return createError(error, _type, "local");
 }
