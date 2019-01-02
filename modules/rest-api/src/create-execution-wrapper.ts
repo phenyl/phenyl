@@ -1,5 +1,4 @@
-// @flow
-import type {
+import {
   RestApiExecution,
   ExecutionWrapper,
   NormalizedFunctionalGroup,
@@ -9,16 +8,22 @@ import type {
 } from 'phenyl-interfaces'
 
 function assertWrapExecution(fn: any, name: string, methodName: string) {
-  if (typeof fn !== 'function') throw new Error(`No "wrapExecution" function found for ${name} (methodName = ${methodName})`)
+  if (typeof fn !== 'function')
+    throw new Error(`No "wrapExecution" function found for ${name} (methodName = ${methodName})`)
 }
-
 /**
  *
  */
+
 export function createExecutionWrapper(fg: NormalizedFunctionalGroup): ExecutionWrapper {
   const { users, nonUsers } = fg
-  return async function executionWrapper(reqData: RequestData, session: ?Session, execution: RestApiExecution) :Promise<ResponseData> {
+  return async function executionWrapper(
+    reqData: RequestData,
+    session: Session | undefined | null,
+    execution: RestApiExecution,
+  ): Promise<ResponseData> {
     const { method } = reqData
+
     switch (reqData.method) {
       case 'find':
       case 'findOne':
@@ -40,11 +45,13 @@ export function createExecutionWrapper(fg: NormalizedFunctionalGroup): Execution
         const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
+
         if (entityDefinition.wrapExecution == null) {
           return execution(reqData, session)
         }
-        assertWrapExecution(entityDefinition.wrapExecution, data.entityName, method)
-        // $FlowIssue(not-null)
+
+        assertWrapExecution(entityDefinition.wrapExecution, data.entityName, method) // $FlowIssue(not-null)
+
         return entityDefinition.wrapExecution(reqData, session, execution)
       }
 

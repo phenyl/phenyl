@@ -1,6 +1,4 @@
-// @flow
-
-import type {
+import {
   RequestData,
   ResponseData,
   VersionDiff,
@@ -12,10 +10,10 @@ import type {
   PushCommandResult,
   MultiValuesCommandResult,
 } from 'phenyl-interfaces'
-
 /**
  *
  */
+
 export function createVersionDiff(reqData: RequestData, resData: ResponseData): Array<VersionDiff> {
   if (resData.type === 'error') return []
 
@@ -29,8 +27,8 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
 
     case 'updateMulti': {
       // $FlowIssue(resData.payload-is-MultiValuesCommandResult)
-      const result: MultiValuesCommandResult = resData.payload
-      // $FlowIssue(null-value-is-filtered)
+      const result: MultiValuesCommandResult = resData.payload // $FlowIssue(null-value-is-filtered)
+
       return createVersionDiffByMultiUpdateCommand(reqData.payload, result).filter(v => v != null)
     }
 
@@ -42,8 +40,8 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
 
     case 'updateAndFetch': {
       // $FlowIssue(resData.payload-is-MultiValuesCommandResult)
-      const result: MultiValuesCommandResult = resData.payload
-      // $FlowIssue(null-value-is-filtered)
+      const result: MultiValuesCommandResult = resData.payload // $FlowIssue(null-value-is-filtered)
+
       return createVersionDiffByMultiUpdateCommand(reqData.payload, result).filter(v => v)
     }
 
@@ -53,41 +51,74 @@ export function createVersionDiff(reqData: RequestData, resData: ResponseData): 
       const versionDiff = createVersionDiffByPushCommand(reqData.payload, result)
       return versionDiff ? [versionDiff] : []
     }
+
     default:
       return []
   }
 }
 
-function createVersionDiffByIdUpdateCommand(command: IdUpdateCommand<>, result: IdUpdateCommandResult | GetCommandResult<>): ?VersionDiff {
+function createVersionDiffByIdUpdateCommand(
+  command: IdUpdateCommand<>,
+  result: IdUpdateCommandResult | GetCommandResult<>,
+): VersionDiff | undefined | null {
   const { versionId, prevVersionId } = result
+
   if (versionId && prevVersionId) {
     const { entityName, id, operation } = command
-    return { entityName, id, operation, versionId, prevVersionId }
+    return {
+      entityName,
+      id,
+      operation,
+      versionId,
+      prevVersionId,
+    }
   }
+
   return null
 }
 
-function createVersionDiffByMultiUpdateCommand(command: MultiUpdateCommand<>, result: MultiValuesCommandResult<>): Array<?VersionDiff> {
+function createVersionDiffByMultiUpdateCommand(
+  command: MultiUpdateCommand<>,
+  result: MultiValuesCommandResult<>,
+): Array<VersionDiff | undefined | null> {
   const { versionsById, prevVersionsById } = result
   if (!versionsById || !prevVersionsById) return []
+  const { entityName, operation } = command // $FlowIssue(returns-non-null-value-with-filter(v => v))
 
-  const { entityName, operation } = command
-  // $FlowIssue(returns-non-null-value-with-filter(v => v))
   return Object.keys(versionsById).map(entityId => {
     const versionId = versionsById[entityId]
     const prevVersionId = prevVersionsById[entityId]
+
     if (versionId && prevVersionId) {
-      return { entityName, id: entityId, operation, versionId, prevVersionId }
+      return {
+        entityName,
+        id: entityId,
+        operation,
+        versionId,
+        prevVersionId,
+      }
     }
+
     return null
   })
 }
 
-function createVersionDiffByPushCommand(command: PushCommand<>, result: PushCommandResult<>): ?VersionDiff {
+function createVersionDiffByPushCommand(
+  command: PushCommand<>,
+  result: PushCommandResult<>,
+): VersionDiff | undefined | null {
   const { versionId, prevVersionId, newOperation } = result
+
   if (versionId && prevVersionId) {
     const { entityName, id } = command
-    return { entityName, id, operation: newOperation, versionId, prevVersionId }
+    return {
+      entityName,
+      id,
+      operation: newOperation,
+      versionId,
+      prevVersionId,
+    }
   }
+
   return null
 }

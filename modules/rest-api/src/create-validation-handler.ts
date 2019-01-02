@@ -1,22 +1,17 @@
-// @flow
-import type {
-  AuthorizationHandler,
-  NormalizedFunctionalGroup,
-  RequestData,
-  Session,
-} from 'phenyl-interfaces'
+import { ValidationHandler, NormalizedFunctionalGroup, RequestData, Session } from 'phenyl-interfaces'
 
-function assertAuthorizationFunction(fn: any, name: string, methodName: string) {
-  if (typeof fn !== 'function') throw new Error(`No authorization function found for ${name} (methodName = ${methodName})`)
+function assertValidationFunction(fn: any, name: string, methodName: string) {
+  if (typeof fn !== 'function') throw new Error(`No validation function found for ${name} (methodName = ${methodName})`)
 }
-
 /**
  *
  */
-export function createAuthorizationHandler(fg: NormalizedFunctionalGroup): AuthorizationHandler {
+
+export function createValidationHandler(fg: NormalizedFunctionalGroup): ValidationHandler {
   const { users, nonUsers, customQueries, customCommands } = fg
-  return async function authorizationHandler(reqData: RequestData, session: ?Session) :Promise<boolean> {
+  return async function validationHandler(reqData: RequestData, session: Session | undefined | null): Promise<void> {
     const { method } = reqData
+
     switch (reqData.method) {
       case 'find':
       case 'findOne':
@@ -36,34 +31,35 @@ export function createAuthorizationHandler(fg: NormalizedFunctionalGroup): Autho
         const data = reqData.payload
         const entityDefinition = nonUsers[data.entityName] || users[data.entityName]
         if (entityDefinition == null) throw new Error(`Unkown entity name "${data.entityName}".`)
-        assertAuthorizationFunction(entityDefinition.authorization, data.entityName, method)
-        return entityDefinition.authorization(reqData, session)
+        assertValidationFunction(entityDefinition.validation, data.entityName, method)
+        return entityDefinition.validation(reqData, session)
       }
 
       case 'runCustomQuery': {
         const { payload } = reqData
         const customQueryDefinition = customQueries[payload.name]
         if (customQueryDefinition == null) throw new Error(`Unknown custom query name "${payload.name}".`)
-        assertAuthorizationFunction(customQueryDefinition.authorization, payload.name, method)
-        return customQueryDefinition.authorization(payload, session)
+        assertValidationFunction(customQueryDefinition.validation, payload.name, method)
+        return customQueryDefinition.validation(payload, session)
       }
 
       case 'runCustomCommand': {
         const { payload } = reqData
         const customCommandDefinition = customCommands[payload.name]
         if (customCommandDefinition == null) throw new Error(`Unknown custom command name "${payload.name}".`)
-        assertAuthorizationFunction(customCommandDefinition.authorization, payload.name, method)
-        return customCommandDefinition.authorization(payload, session)
+        assertValidationFunction(customCommandDefinition.validation, payload.name, method)
+        return customCommandDefinition.validation(payload, session)
       }
 
-      case 'logout':
-      case 'login': {
+      case 'login':
+      case 'logout': {
         const { payload } = reqData
         const userEntityDefinition = users[payload.entityName]
         if (userEntityDefinition == null) throw new Error(`Unknown entity name "${payload.entityName}".`)
-        assertAuthorizationFunction(userEntityDefinition.authorization, payload.entityName, method)
-        return userEntityDefinition.authorization(reqData, session)
+        assertValidationFunction(userEntityDefinition.validation, payload.entityName, method)
+        return userEntityDefinition.validation(reqData, session)
       }
+
       default:
         throw new Error(`Unknown method "${method}" given in RequestData.`)
     }
