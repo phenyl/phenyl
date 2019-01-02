@@ -167,6 +167,6 @@ export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
 > &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &
   AuthClient<EntityMapOf<TM>, AuthCommandMapOf<TM>> &
-  RestApiHandler;
+  RestApiHandler<TM>;
 
 export type SessionClient = KvsClient<Session>;
