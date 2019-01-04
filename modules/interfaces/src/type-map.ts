@@ -369,10 +369,26 @@ export type AuthOptions<
  * If not given in AuthCommandMap, entity in EntityMap is selected.
  * If neither exist, parsed as "Object".
  */
-export type BroaderAuthUserOf<
+export type NarrowAuthUserOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["auths"]>
 > = NarrowAuthUser<AuthCommandMapOf<TM>, EN, BroaderEntityMapOf<TM>>;
+
+type EntityOfAuth<
+  AM extends GeneralAuthCommandMap,
+  EN extends Key<AM>,
+  EM extends GeneralEntityMap = GeneralEntityMap
+> = EN extends Key<EM> ? BroaderEntity<EM, EN> : Entity;
+
+type UserOrT<
+  T,
+  AM extends GeneralAuthCommandMap,
+  EN extends Key<AM>
+> = "user" extends keyof AM[EN]
+  ? AM[EN]["user"] extends Entity
+    ? AM[EN]["user"]
+    : T
+  : T;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -383,13 +399,7 @@ export type BroaderAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = "user" extends keyof AM[EN]
-  ? AM[EN]["user"] extends Entity
-    ? AM[EN]["user"]
-    : EN extends Key<EM>
-    ? BroaderEntity<EM, EN>
-    : Entity
-  : Entity;
+> = UserOrT<EntityOfAuth<AM, EN, EM>, AM, EN>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -400,13 +410,7 @@ export type NarrowAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = "user" extends keyof AM[EN]
-  ? AM[EN]["user"] extends Entity
-    ? AM[EN]["user"]
-    : EN extends Key<EM>
-    ? NarrowEntity<EM, EN>
-    : Entity
-  : Entity;
+> = UserOrT<Narrow<EntityOfAuth<AM, EN, EM>>, AM, EN>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -417,20 +421,14 @@ export type BroadAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = "user" extends keyof AM[EN]
-  ? AM[EN]["user"] extends Entity
-    ? AM[EN]["user"]
-    : EN extends Key<EM>
-    ? BroadEntity<EM, EN>
-    : Entity
-  : Entity;
+> = UserOrT<Broad<EntityOfAuth<AM, EN, EM>>, AM, EN>;
 
 type CustomParams<
   T extends GeneralCustomMap,
   N extends Key<T>
 > = "params" extends Key<T[N]>
   ? T[N]["params"] extends Object
-    ? T[N]["params"]
+    ? Exclude<T[N]["params"], undefined>
     : Object
   : Object; // If "params" is not set, set Object.
 
@@ -439,7 +437,7 @@ type CustomResultValue<
   N extends Key<T>
 > = "result" extends Key<T[N]>
   ? T[N]["result"] extends Object
-    ? T[N]["result"]
+    ? Exclude<T[N]["result"], undefined>
     : Object
   : Object; // If "result" is not set, set Object.
 
