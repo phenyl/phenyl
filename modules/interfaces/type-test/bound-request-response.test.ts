@@ -12,7 +12,6 @@ import {
 import { IsExtends, TypeEq, assertNotType, assertType } from "./helpers";
 
 import { SampleTypeMap } from "./helpers/sample-type-map";
-import { ValueOf } from "./helpers/value-of";
 
 /**
  * Tests for RequestDataTypeMap.
@@ -84,7 +83,10 @@ import { ValueOf } from "./helpers/value-of";
  */
 {
   /**
-   * "find" RequestDataWithTypeMap and FindRequestData are identical.
+   * "find" RequestDataWithTypeMap
+   *  and
+   * FindRequestData
+   *  are identical.
    */
   {
     type FindReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
@@ -101,7 +103,10 @@ import { ValueOf } from "./helpers/value-of";
   }
 
   /**
-   * "findOne" RequestDataWithTypeMap and FindOneRequestData are identical.
+   * "findOne" RequestDataWithTypeMap
+   *  and
+   * FindOneRequestData
+   *  are identical.
    */
   {
     type FindOneReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
@@ -118,26 +123,28 @@ import { ValueOf } from "./helpers/value-of";
   }
 
   /**
-   * RequestDataWithTypeMap with GeneralTypeMap and RequestData are identical.
+   * RequestDataWithTypeMap with GeneralTypeMap
+   *  and
+   * RequestData
+   *  are identical.
    */
   {
-    type RequestDataWithGeneralTypeMap = ValueOf<
-      {
-        [K in RequestMethodName]: RequestDataWithTypeMap<
-          GeneralTypeMap,
-          K,
-          string,
-          string,
-          string,
-          string
-        >
-      }
+    type RequestDataWithGeneralTypeMap = RequestDataWithTypeMap<
+      GeneralTypeMap,
+      RequestMethodName,
+      string,
+      string,
+      string,
+      string
     >;
     assertType<TypeEq<RequestDataWithGeneralTypeMap, RequestData>>();
   }
 
   /**
-   * ResponseDataWithTypeMap with GeneralTypeMap and ResponseData are identical.
+   * ResponseDataWithTypeMap with GeneralTypeMap
+   *  and
+   * ResponseData
+   *  are identical.
    */
   {
     type ResponseDataWithGeneralTypeMap = ResponseDataWithTypeMap<

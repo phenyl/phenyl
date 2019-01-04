@@ -31,8 +31,8 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
   class ApiHandler<TM extends GeneralTypeMap = GeneralTypeMap>
     implements RestApiHandler<TM> {
     handleRequestData<
-      EN extends EntityNameOf<TM>,
       MN extends RequestMethodName,
+      EN extends EntityNameOf<TM>,
       QN extends CustomQueryNameOf<TM>,
       CN extends CustomCommandNameOf<TM>,
       AN extends AuthEntityNameOf<TM>
