@@ -1,45 +1,30 @@
-import {
-  CustomQueryParams,
-  CustomQueryResultValue,
-  GeneralCustomQueryMap
-} from "./type-map";
-
 import { CustomQuery } from "./query";
 import { CustomQueryResult } from "./query-result";
 import { GeneralCustomQueryRequestData } from "./request-data";
-import { Key } from "./key";
 import { Session } from "./session";
 
 export interface CustomQueryDefinition<
-  QN extends string,
-  QP extends Object,
-  QR extends Object
+  QN extends string = string,
+  QP extends Object = Object,
+  QR extends Object = Object
 > {
-  authorization(
+  authorize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
     session?: Session
-  ): Promise<boolean>;
+  ) => Promise<boolean>;
 
-  normalization?: (
+  normalize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
     session?: Session
   ) => Promise<GeneralCustomQueryRequestData<QN>>;
 
-  validation(
+  validate?: (
     reqData: GeneralCustomQueryRequestData<QN>,
     session?: Session
-  ): Promise<void>;
+  ) => Promise<void>;
 
-  execution(
+  execute(
     query: CustomQuery<QN, QP>,
     session?: Session
   ): Promise<CustomQueryResult<QR>>;
 }
-
-export type CustomQueryDefinitions<QM extends GeneralCustomQueryMap> = {
-  [QN in Key<QM>]: CustomQueryDefinition<
-    QN,
-    CustomQueryParams<QM, QN>,
-    CustomQueryResultValue<QM, QN>
-  >
-};

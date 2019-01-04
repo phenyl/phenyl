@@ -1,16 +1,7 @@
-import {
-  AuthCredentials,
-  AuthOptions,
-  Broader,
-  BroaderAuthUser,
-  GeneralAuthCommandMap,
-  GeneralEntityMap,
-  Narrow
-} from "./type-map";
+import { Broader, Narrow } from "./type-map";
 
 import { Entity } from "./entity";
 import { EntityDefinition } from "./entity-definition";
-import { Key } from "./key";
 import { LoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
@@ -28,7 +19,7 @@ export interface AuthDefinition<
   C extends Object = Object,
   O extends Object = Object
 > {
-  authentication(
+  authenticate(
     loginCommand: LoginCommand<EN, C, O>,
     session?: Session
   ): Promise<AuthenticationResult<Narrow<Ebroader>>>;
@@ -40,15 +31,3 @@ export interface UserDefinition<
   C extends Object = Object,
   O extends Object = Object
 > extends AuthDefinition<EN, Ebroader, C, O>, EntityDefinition<EN, Ebroader> {}
-
-export type UserDefinitions<
-  AM extends GeneralAuthCommandMap,
-  EM extends GeneralEntityMap
-> = {
-  [EN in Key<AM>]: UserDefinition<
-    EN,
-    BroaderAuthUser<AM, EN, EM>,
-    AuthCredentials<AM, EN>,
-    AuthOptions<AM, EN>
-  >
-};

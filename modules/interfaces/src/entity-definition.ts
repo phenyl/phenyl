@@ -1,14 +1,7 @@
-import {
-  Broad,
-  Broader,
-  BroaderEntity,
-  GeneralEntityMap,
-  Narrow
-} from "./type-map";
+import { Broad, Broader, Narrow } from "./type-map";
 import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
 
 import { Entity } from "./entity";
-import { Key } from "./key";
 import { ResponseData } from "./response-data";
 import { Session } from "./session";
 
@@ -16,17 +9,17 @@ export interface EntityDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity]
 > {
-  authorization?: (
+  authorize?: (
     reqData: GeneralEntityRequestData<EN>,
     session?: Session
   ) => Promise<boolean>;
 
-  normalization?: (
+  normalize?: (
     reqData: EntityRequestData<EN, Broad<Ebroader>>,
     session?: Session
   ) => Promise<EntityRequestData<EN, Broad<Ebroader>>>;
 
-  validation?: (
+  validate?: (
     reqData: GeneralEntityRequestData<EN>,
     session?: Session
   ) => Promise<void>;
@@ -34,13 +27,9 @@ export interface EntityDefinition<
   wrapExecution?: (
     reqData: EntityRequestData<EN, Narrow<Ebroader>>,
     session: Session | null,
-    execution: (
+    executeFn: (
       reqData: EntityRequestData<EN, Narrow<Ebroader>>,
       session?: Session
     ) => Promise<ResponseData>
   ) => Promise<ResponseData>;
 }
-
-export type EntityDefinitions<M extends GeneralEntityMap> = {
-  [EN in Key<M>]: EntityDefinition<EN, BroaderEntity<M, EN>>
-};
