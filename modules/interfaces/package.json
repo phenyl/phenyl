@@ -14,10 +14,10 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "upbin nyc npm test --color always",
+    "ci-test": "npm test",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
-    "test": "echo no test",
+    "test": "upbin tsc --noEmit $(find type-test -name '*.test.ts' -type f)",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
