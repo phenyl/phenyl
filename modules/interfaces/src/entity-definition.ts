@@ -9,6 +9,7 @@ export interface EntityDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity]
 > {
+  entity: Ebroader;
   authorize?: (
     reqData: GeneralEntityRequestData<EN>,
     session?: Session

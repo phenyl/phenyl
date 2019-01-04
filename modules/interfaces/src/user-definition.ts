@@ -7,7 +7,6 @@ import { PreSession } from "./session";
 import { Session } from "./session";
 
 export type AuthenticationResult<E extends Entity> = {
-  ok: 1;
   preSession: PreSession;
   user: E | null;
   versionId: string | null;
