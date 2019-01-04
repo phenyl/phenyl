@@ -3,7 +3,6 @@ import {
   AuthEntityNameOf,
   AuthOptionsOf,
   BroadEntityOf,
-  BroaderAuthUserOf,
   CustomCommandNameOf,
   CustomCommandParamsOf,
   CustomCommandResultValueOf,
@@ -12,6 +11,7 @@ import {
   CustomQueryResultValueOf,
   EntityNameOf,
   GeneralTypeMap,
+  NarrowAuthUserOf,
   NarrowEntityOf
 } from "./type-map";
 import {
@@ -118,6 +118,89 @@ export type RequestDataWithTypeMap<
   sessionId?: string | null | undefined;
 };
 
+type ResponseDataMapWithTypeMap<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>,
+  QN extends CustomQueryNameOf<TM>,
+  CN extends CustomCommandNameOf<TM>,
+  AN extends AuthEntityNameOf<TM>
+> = {
+  find: {
+    type: "find";
+    payload: FindResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  findOne: {
+    type: "findOne";
+    payload: FindOneResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  get: {
+    type: "get";
+    payload: GetResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  getByIds: {
+    type: "getByIds";
+    payload: GetByIdsResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  pull: {
+    type: "pull";
+    payload: PullResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  insertOne: {
+    type: "insertOne";
+    payload: InsertOneResponseData["payload"];
+  };
+  insertMulti: {
+    type: "insertMulti";
+    payload: InsertMultiResponseData["payload"];
+  };
+  insertAndGet: {
+    type: "insertAndGet";
+    payload: InsertAndGetResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  insertAndGetMulti: {
+    type: "insertAndGetMulti";
+    payload: InsertAndGetMultiResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  updateById: {
+    type: "updateById";
+    payload: UpdateOneResponseData["payload"];
+  };
+  updateMulti: {
+    type: "updateMulti";
+    payload: UpdateMultiResponseData["payload"];
+  };
+  updateAndGet: {
+    type: "updateAndGet";
+    payload: UpdateAndGetResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  updateAndFetch: {
+    type: "updateAndFetch";
+    payload: UpdateAndFetchResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  push: {
+    type: "push";
+    payload: PushResponseData<NarrowEntityOf<TM, EN>>["payload"];
+  };
+  delete: { type: "delete"; payload: DeleteResponseData["payload"] };
+  runCustomQuery: {
+    type: "runCustomQuery";
+    payload: RunCustomQueryResponseData<
+      CustomQueryResultValueOf<TM, QN>
+    >["payload"];
+  };
+  runCustomCommand: {
+    type: "runCustomCommand";
+    payload: RunCustomCommandResponseData<
+      CustomCommandResultValueOf<TM, CN>
+    >["payload"];
+  };
+  login: {
+    type: "login";
+    payload: LoginResponseData<NarrowAuthUserOf<TM, AN>>["payload"];
+  };
+  logout: { type: "logout"; payload: LogoutResponseData["payload"] };
+};
+
 export type ResponseDataWithTypeMap<
   TM extends GeneralTypeMap,
   MN extends RequestMethodName,
@@ -125,47 +208,4 @@ export type ResponseDataWithTypeMap<
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
   AN extends AuthEntityNameOf<TM>
-> = {
-  type: MN;
-  payload: MN extends "find"
-    ? FindResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "findOne"
-    ? FindOneResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "get"
-    ? GetResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "getByIds"
-    ? GetByIdsResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "pull"
-    ? PullResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "insertOne"
-    ? InsertOneResponseData["payload"]
-    : MN extends "insertMulti"
-    ? InsertMultiResponseData["payload"]
-    : MN extends "insertAndGet"
-    ? InsertAndGetResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "insertAndGetMulti"
-    ? InsertAndGetMultiResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "updateById"
-    ? UpdateOneResponseData["payload"]
-    : MN extends "updateMulti"
-    ? UpdateMultiResponseData["payload"]
-    : MN extends "updateAndGet"
-    ? UpdateAndGetResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "updateAndFetch"
-    ? UpdateAndFetchResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends "push"
-    ? PushResponseData<NarrowEntityOf<TM, EN>>["payload"]
-    : MN extends ("delete")
-    ? DeleteResponseData["payload"]
-    : MN extends ("runCustomQuery")
-    ? RunCustomQueryResponseData<CustomQueryResultValueOf<TM, QN>>["payload"]
-    : MN extends ("runCustomCommand")
-    ? RunCustomCommandResponseData<
-        CustomCommandResultValueOf<TM, CN>
-      >["payload"]
-    : MN extends ("login")
-    ? LoginResponseData<BroaderAuthUserOf<TM, AN>>["payload"]
-    : MN extends ("logout")
-    ? LogoutResponseData["payload"]
-    : never;
-};
+> = ResponseDataMapWithTypeMap<TM, EN, QN, CN, AN>[MN];
