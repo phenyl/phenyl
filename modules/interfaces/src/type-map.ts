@@ -106,8 +106,6 @@ type GeneralCustomInOut = {
  *
  * Library users implement concrete CustomMap in TypeMap.
  * "options" are optional and "Object" is set by default if not set in TypeMap.
- * "user" is also optional. If not set and if an entity with the same name exists in EntityMap in TypeMap, that entity is used.
- * If not, "Entity" is set.
  * See description of TypeMap.
  */
 export type GeneralAuthCommandMap = {
@@ -116,7 +114,6 @@ export type GeneralAuthCommandMap = {
 type GeneralAuthSetting = {
   credentials: Object;
   options?: Object;
-  user?: Entity;
 };
 
 /**
@@ -378,17 +375,7 @@ type EntityOfAuth<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = EN extends Key<EM> ? BroaderEntity<EM, EN> : Entity;
-
-type UserOrT<
-  T,
-  AM extends GeneralAuthCommandMap,
-  EN extends Key<AM>
-> = "user" extends keyof AM[EN]
-  ? AM[EN]["user"] extends Entity
-    ? AM[EN]["user"]
-    : T
-  : T;
+> = EN extends Key<EM> ? BroaderEntity<EM, EN> : [Entity, Entity];
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -399,7 +386,7 @@ export type BroaderAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = UserOrT<EntityOfAuth<AM, EN, EM>, AM, EN>;
+> = EntityOfAuth<AM, EN, EM>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -410,7 +397,7 @@ export type NarrowAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = UserOrT<Narrow<EntityOfAuth<AM, EN, EM>>, AM, EN>;
+> = Narrow<EntityOfAuth<AM, EN, EM>>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -421,7 +408,7 @@ export type BroadAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = UserOrT<Broad<EntityOfAuth<AM, EN, EM>>, AM, EN>;
+> = Broad<EntityOfAuth<AM, EN, EM>>;
 
 type CustomParams<
   T extends GeneralCustomMap,
