@@ -18,6 +18,7 @@ export * from "./index";
 export * from "./key";
 export * from "./kvs-client";
 export * from "./local-state";
+export * from "./older-functional-group";
 export * from "./query-result";
 export * from "./query";
 export * from "./request-data-handlers";

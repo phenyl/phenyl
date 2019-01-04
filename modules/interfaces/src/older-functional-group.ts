@@ -22,7 +22,7 @@ import { Entity } from "./entity";
 import { EntityDefinition } from "./entity-definition";
 import { Key } from "./key";
 
-interface OlderEntityDefinition<
+export interface OlderEntityDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity]
 > {
@@ -38,7 +38,7 @@ type OlderEntityDefinitions<M extends GeneralEntityMap> = {
     | EntityDefinition<EN, BroaderEntity<M, EN>>
 };
 
-interface OlderCustomQueryDefinition<
+export interface OlderCustomQueryDefinition<
   QN extends string = string,
   QP extends Object = Object,
   QR extends Object = Object
@@ -63,7 +63,7 @@ type OlderCustomQueryDefinitions<QM extends GeneralCustomQueryMap> = {
       >
 };
 
-interface OlderCustomCommandDefinition<
+export interface OlderCustomCommandDefinition<
   CN extends string = string,
   CP extends Object = Object,
   CR extends Object = Object
@@ -88,7 +88,7 @@ type OlderCustomCommandDefinitions<CM extends GeneralCustomCommandMap> = {
       >
 };
 
-interface OlderUserDefinition<
+export interface OlderUserDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
   C extends Object = Object,
