@@ -2,12 +2,12 @@ import {
   AuthCredentialsOf,
   AuthEntityNameOf,
   AuthOptionsOf,
+  BroadEntityOf,
   CustomCommandNameOf,
   CustomCommandOf,
   CustomQueryNameOf,
   CustomQueryOf,
   EntityNameOf,
-  EntityOf,
   GeneralTypeMap
 } from "./type-map";
 import {
@@ -40,19 +40,19 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
   pull<EN extends EntityNameOf<TM>>(query: PullQuery<EN>): Promise<T>;
 
   insertOne<EN extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<EN, PreEntity<EntityOf<TM, EN>>>
+    command: SingleInsertCommand<EN, PreEntity<BroadEntityOf<TM, EN>>>
   ): Promise<T>;
 
   insertMulti<EN extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<EN, PreEntity<EntityOf<TM, EN>>>
+    command: MultiInsertCommand<EN, PreEntity<BroadEntityOf<TM, EN>>>
   ): Promise<T>;
 
   insertAndGet<EN extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<EN, PreEntity<EntityOf<TM, EN>>>
+    command: SingleInsertCommand<EN, PreEntity<BroadEntityOf<TM, EN>>>
   ): Promise<T>;
 
   insertAndGetMulti<EN extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<EN, PreEntity<EntityOf<TM, EN>>>
+    command: MultiInsertCommand<EN, PreEntity<BroadEntityOf<TM, EN>>>
   ): Promise<T>;
 
   updateById<EN extends EntityNameOf<TM>>(

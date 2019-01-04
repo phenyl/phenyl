@@ -1,7 +1,7 @@
 import { ErrorLocation, PhenylErrorType } from "./error";
+import { GeneralEntityMap, NarrowEntity } from "./type-map";
 
 import { Entity } from "./entity";
-import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "@sp2/format";
 import { Key } from "./key";
 import { Session } from "./session";
@@ -18,7 +18,7 @@ export type LocalEntityInfoById<E extends Entity> = {
 };
 
 export type LocalEntityState<M extends GeneralEntityMap> = {
-  [EN in Key<M>]: LocalEntityInfoById<M[EN]>
+  [EN in Key<M>]: LocalEntityInfoById<NarrowEntity<M, EN>>
 };
 
 export type UnreachedCommit<EN extends string> = {

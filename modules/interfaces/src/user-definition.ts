@@ -1,9 +1,11 @@
 import {
   AuthCredentials,
   AuthOptions,
-  AuthUser,
+  Broader,
+  BroaderAuthUser,
   GeneralAuthCommandMap,
-  GeneralEntityMap
+  GeneralEntityMap,
+  Narrow
 } from "./type-map";
 
 import { Entity } from "./entity";
@@ -22,22 +24,22 @@ export type AuthenticationResult<E extends Entity> = {
 
 export interface AuthDefinition<
   EN extends string = string,
-  E extends Entity = Entity,
+  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
   C extends Object = Object,
   O extends Object = Object
 > {
   authentication(
     loginCommand: LoginCommand<EN, C, O>,
     session?: Session
-  ): Promise<AuthenticationResult<E>>;
+  ): Promise<AuthenticationResult<Narrow<Ebroader>>>;
 }
 
 export interface UserDefinition<
   EN extends string = string,
-  E extends Entity = Entity,
+  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
   C extends Object = Object,
   O extends Object = Object
-> extends AuthDefinition<EN, E, C, O>, EntityDefinition<EN, E> {}
+> extends AuthDefinition<EN, Ebroader, C, O>, EntityDefinition<EN, Ebroader> {}
 
 export type UserDefinitions<
   AM extends GeneralAuthCommandMap,
@@ -45,7 +47,7 @@ export type UserDefinitions<
 > = {
   [EN in Key<AM>]: UserDefinition<
     EN,
-    AuthUser<AM, EN, EM>,
+    BroaderAuthUser<AM, EN, EM>,
     AuthCredentials<AM, EN>,
     AuthOptions<AM, EN>
   >

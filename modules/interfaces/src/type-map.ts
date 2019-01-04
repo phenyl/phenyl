@@ -56,7 +56,7 @@ export interface GeneralTypeMap {
  * See description of TypeMap.
  */
 export interface GeneralEntityMap {
-  [entityName: string]: Entity;
+  [entityName: string]: Broader<Entity, Entity>;
 }
 
 /**
@@ -122,17 +122,66 @@ type GeneralAuthSetting = {
 /**
  * Key-value map of entities in given TypeMap.
  * - Key: name of entity
- * - Value: type of its entity
+ * - Value: type of its narrow and broad entity
  */
-export type EntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
+export type BroaderEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
+
+/**
+ * Key-value map of entities in given TypeMap.
+ * - Key: name of entity
+ * - Value: type of its narrow entity
+ */
+export type NarrowEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Narrow<TM["entities"][K]>
+};
+
+/**
+ * Key-value map of entities in given TypeMap.
+ * - Key: name of entity
+ * - Value: type of its narrow entity
+ */
+export type BroadEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Broad<TM["entities"][K]>
+};
 
 /**
  * Entity of given entity name in given TypeMap.
  */
-export type EntityOf<
+export type BroaderEntityOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>
-> = TM["entities"][EN];
+> = BroaderEntity<TM["entities"], EN>;
+
+export type BroaderEntity<
+  EM extends GeneralEntityMap,
+  EN extends Key<EM>
+> = EM[EN];
+
+/**
+ * Entity of given entity name in given TypeMap.
+ */
+export type NarrowEntityOf<
+  TM extends GeneralTypeMap,
+  EN extends Key<TM["entities"]>
+> = NarrowEntity<TM["entities"], EN>;
+
+export type NarrowEntity<
+  EM extends GeneralEntityMap,
+  EN extends Key<EM>
+> = Narrow<EM[EN]>;
+
+/**
+ * Entity of given entity name in given TypeMap.
+ */
+export type BroadEntityOf<
+  TM extends GeneralTypeMap,
+  EN extends Key<TM["entities"]>
+> = BroadEntity<TM["entities"], EN>;
+
+export type BroadEntity<
+  EM extends GeneralEntityMap,
+  EN extends Key<EM>
+> = Broad<EM[EN]>;
 
 /**
  * Name of entities in given TypeMap.
@@ -320,32 +369,66 @@ export type AuthOptions<
  * If not given in AuthCommandMap, entity in EntityMap is selected.
  * If neither exist, parsed as "Object".
  */
-export type AuthUserOf<
+export type BroaderAuthUserOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["auths"]>
-> = AuthUser<AuthCommandMapOf<TM>, EN, EntityMapOf<TM>>;
+> = NarrowAuthUser<AuthCommandMapOf<TM>, EN, BroaderEntityMapOf<TM>>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type AuthUser<
+export type BroaderAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
 > = "user" extends keyof AM[EN]
   ? AM[EN]["user"] extends Entity
     ? AM[EN]["user"]
-    : EN extends keyof EM
-    ? EM[EN]
+    : EN extends Key<EM>
+    ? BroaderEntity<EM, EN>
+    : Entity
+  : Entity;
+
+/**
+ * Logined user type of given user entity name in given AuthCommandMap.
+ * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
+ * If neither exist, parsed as "Entity".
+ */
+export type NarrowAuthUser<
+  AM extends GeneralAuthCommandMap,
+  EN extends Key<AM>,
+  EM extends GeneralEntityMap = GeneralEntityMap
+> = "user" extends keyof AM[EN]
+  ? AM[EN]["user"] extends Entity
+    ? AM[EN]["user"]
+    : EN extends Key<EM>
+    ? NarrowEntity<EM, EN>
+    : Entity
+  : Entity;
+
+/**
+ * Logined user type of given user entity name in given AuthCommandMap.
+ * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
+ * If neither exist, parsed as "Entity".
+ */
+export type BroadAuthUser<
+  AM extends GeneralAuthCommandMap,
+  EN extends Key<AM>,
+  EM extends GeneralEntityMap = GeneralEntityMap
+> = "user" extends keyof AM[EN]
+  ? AM[EN]["user"] extends Entity
+    ? AM[EN]["user"]
+    : EN extends Key<EM>
+    ? BroadEntity<EM, EN>
     : Entity
   : Entity;
 
 type CustomParams<
   T extends GeneralCustomMap,
   N extends Key<T>
-> = "params" extends keyof T[N]
+> = "params" extends Key<T[N]>
   ? T[N]["params"] extends Object
     ? T[N]["params"]
     : Object
@@ -354,8 +437,17 @@ type CustomParams<
 type CustomResultValue<
   T extends GeneralCustomMap,
   N extends Key<T>
-> = "result" extends keyof T[N]
+> = "result" extends Key<T[N]>
   ? T[N]["result"] extends Object
     ? T[N]["result"]
     : Object
   : Object; // If "result" is not set, set Object.
+
+export type Broader<
+  Base,
+  Tnarrow extends Base,
+  Tbroad extends Base = Tnarrow
+> = Tnarrow | [Tnarrow, Tbroad];
+
+export type Narrow<T> = T extends [infer U, any] ? U : T;
+export type Broad<T> = T extends [any, infer U] ? U : T;
