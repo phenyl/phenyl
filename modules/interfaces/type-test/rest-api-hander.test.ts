@@ -338,7 +338,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       payload: LoginCommandResult<
         "member",
         { id: string; name: string },
-        Object
+        { externalId: string; ttl: number }
       >;
     };
     assertType<TypeEq<typeof response, HandlerResult<ExpectedResponseData>>>();
