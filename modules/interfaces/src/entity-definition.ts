@@ -12,31 +12,32 @@ export type TypeProp<T> = TypeOnly<
 
 export interface EntityDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity]
+  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
+  SS extends Session<string, Object> = Session<string, Object>
 > {
   entityName: TypeProp<EN>;
   entity: TypeProp<Ebroader>;
   authorize?: (
     reqData: GeneralEntityRequestData<EN>,
-    session?: Session
+    session?: SS
   ) => Promise<boolean>;
 
   normalize?: (
     reqData: EntityRequestData<EN, Broad<Ebroader>>,
-    session?: Session
+    session?: SS
   ) => Promise<EntityRequestData<EN, Narrow<Ebroader>>>;
 
   validate?: (
     reqData: GeneralEntityRequestData<EN>,
-    session?: Session
+    session?: SS
   ) => Promise<void>;
 
   wrapExecution?: (
     reqData: EntityRequestData<EN, Narrow<Ebroader>>,
-    session: Session | null,
+    session: SS | null | undefined,
     executeFn: (
       reqData: EntityRequestData<EN, Narrow<Ebroader>>,
-      session?: Session
+      session?: SS
     ) => Promise<ResponseData>
   ) => Promise<ResponseData>;
 }

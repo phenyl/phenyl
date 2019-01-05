@@ -1,10 +1,14 @@
+import {
+  AllSessions,
+  GeneralAuthCommandMap,
+  GeneralEntityMap,
+  NarrowEntity
+} from "./type-map";
 import { ErrorLocation, PhenylErrorType } from "./error";
-import { GeneralEntityMap, NarrowEntity } from "./type-map";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
 import { Key } from "./key";
-import { Session } from "./session";
 
 export type LocalEntityInfo<E extends Entity> = {
   origin: E;
@@ -27,7 +31,10 @@ export type UnreachedCommit<EN extends string> = {
   commitCount: number;
 };
 
-export type LocalState<M extends GeneralEntityMap> = {
+export type LocalState<
+  M extends GeneralEntityMap,
+  AM extends GeneralAuthCommandMap
+> = {
   entities: LocalEntityState<M>;
   network: {
     requests: Array<string>;
@@ -40,5 +47,5 @@ export type LocalState<M extends GeneralEntityMap> = {
     message: string;
     actionTag: string;
   };
-  session?: Session | null;
+  session?: AllSessions<AM> | null;
 };

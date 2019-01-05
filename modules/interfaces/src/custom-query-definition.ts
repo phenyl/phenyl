@@ -6,25 +6,26 @@ import { Session } from "./session";
 export interface CustomQueryDefinition<
   QN extends string = string,
   QP extends Object = Object,
-  QR extends Object = Object
+  QR extends Object = Object,
+  SS extends Session<string, Object> = Session<string, Object>
 > {
   authorize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: Session
+    session?: SS
   ) => Promise<boolean>;
 
   normalize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: Session
+    session?: SS
   ) => Promise<GeneralCustomQueryRequestData<QN>>;
 
   validate?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: Session
+    session?: SS
   ) => Promise<void>;
 
   execute(
     query: CustomQuery<QN, QP>,
-    session?: Session
+    session?: SS
   ): Promise<CustomQueryResult<QR>>;
 }

@@ -1,4 +1,5 @@
 import {
+  AllSessions,
   AuthCommandMapOf,
   AuthCredentials,
   AuthSessions,
@@ -52,7 +53,6 @@ import { Key } from "./key";
 import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";
-import { Session } from "./session";
 
 export interface EntityClient<M extends GeneralEntityMap> {
   find<EN extends Key<M>>(
@@ -129,8 +129,6 @@ export interface EntityClient<M extends GeneralEntityMap> {
     command: DeleteCommand<EN>,
     sessionId?: string | null
   ): Promise<DeleteCommandResult>;
-
-  createSessionClient(): SessionClient;
 }
 
 export interface CustomClient<
@@ -163,6 +161,8 @@ export interface AuthClient<
     command: LogoutCommand<EN>,
     sessionId?: string | null
   ): Promise<LogoutCommandResult>;
+
+  createSessionClient(): SessionClient<AM>;
 }
 
 export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
@@ -172,4 +172,6 @@ export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
   AuthClient<BroadEntityMapOf<TM>, AuthCommandMapOf<TM>> &
   RestApiHandler<TM>;
 
-export type SessionClient = KvsClient<Session>;
+export type SessionClient<AM extends GeneralAuthCommandMap> = KvsClient<
+  AllSessions<AM>
+>;

@@ -1,4 +1,5 @@
 import {
+  AllSessions,
   AuthCredentials,
   AuthSessions,
   BroaderAuthUser,
@@ -9,7 +10,6 @@ import {
   CustomQueryResultValue,
   GeneralAuthCommandMap,
   GeneralCustomCommandMap,
-  GeneralCustomMap,
   GeneralCustomQueryMap,
   GeneralEntityMap
 } from "./type-map";
@@ -20,23 +20,34 @@ import { EntityDefinition } from "./entity-definition";
 import { Key } from "./key";
 import { UserDefinition } from "./user-definition";
 
-export type EntityDefinitions<M extends GeneralEntityMap> = {
-  [EN in Key<M>]: EntityDefinition<EN, BroaderEntity<M, EN>>
+export type EntityDefinitions<
+  M extends GeneralEntityMap,
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> = {
+  [EN in Key<M>]: EntityDefinition<EN, BroaderEntity<M, EN>, AllSessions<AM>>
 };
 
-export type CustomQueryDefinitions<QM extends GeneralCustomQueryMap> = {
+export type CustomQueryDefinitions<
+  QM extends GeneralCustomQueryMap,
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> = {
   [QN in Key<QM>]: CustomQueryDefinition<
     QN,
     CustomQueryParams<QM, QN>,
-    CustomQueryResultValue<QM, QN>
+    CustomQueryResultValue<QM, QN>,
+    AllSessions<AM>
   >
 };
 
-export type CustomCommandDefinitions<CM extends GeneralCustomCommandMap> = {
+export type CustomCommandDefinitions<
+  CM extends GeneralCustomCommandMap,
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> = {
   [CN in Key<CM>]: CustomCommandDefinition<
     CN,
     CustomCommandParams<CM, CN>,
-    CustomCommandResultValue<CM, CN>
+    CustomCommandResultValue<CM, CN>,
+    AllSessions<AM>
   >
 };
 
@@ -48,15 +59,21 @@ export type UserDefinitions<
     EN,
     BroaderAuthUser<AM, EN, EM>,
     AuthCredentials<AM, EN>,
-    AuthSessions<AM, EN>
+    AuthSessions<AM, EN>,
+    AllSessions<AM>
   >
 };
 
-export type NormalizedFunctionalGroup = {
-  users: UserDefinitions<GeneralAuthCommandMap, GeneralEntityMap>;
-  nonUsers: EntityDefinitions<GeneralEntityMap>;
-  customQueries: CustomQueryDefinitions<GeneralCustomMap>;
-  customCommands: CustomCommandDefinitions<GeneralCustomMap>;
+export type NormalizedFunctionalGroup<
+  EM extends GeneralEntityMap = GeneralEntityMap,
+  QM extends GeneralCustomQueryMap = GeneralCustomQueryMap,
+  CM extends GeneralCustomCommandMap = GeneralCustomCommandMap,
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> = {
+  users: UserDefinitions<AM, EM>;
+  nonUsers: EntityDefinitions<EM, AM>;
+  customQueries: CustomQueryDefinitions<QM, AM>;
+  customCommands: CustomCommandDefinitions<CM, AM>;
 };
 
 export type FunctionalGroup = Partial<NormalizedFunctionalGroup>;

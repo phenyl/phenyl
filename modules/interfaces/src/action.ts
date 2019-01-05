@@ -133,11 +133,11 @@ export type ResolveErrorAction = {
 export type SetSessionAction<
   EN extends string,
   E extends Entity,
-  Tsession = {}
+  S extends Object = Object
 > = {
   type: "phenyl/setSession";
   payload: {
-    session: Session<EN, Tsession>;
+    session: Session<EN, S>;
     user?: E;
     versionId?: string;
   };
@@ -181,7 +181,7 @@ export type PhenylAction =
   | PullAction<string>
   | PushAndCommitAction<string>
   | ResolveErrorAction
-  | SetSessionAction<string, Entity>
+  | SetSessionAction<string, Entity, Object>
   | UnfollowAction<string>
   | UnsetSessionAction
   | OnlineAction

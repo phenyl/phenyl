@@ -1,5 +1,6 @@
 import { Entity } from "./entity";
 import { Key } from "./key";
+import { Session } from "./session";
 
 /**
  * This type includes all the types in API.
@@ -360,6 +361,14 @@ export type AuthSessions<
     ? AM[EN]["session"]
     : Object
   : Object;
+
+type ValueOf<T> = T[keyof T];
+/**
+ * All possible sessions by given AuthCommandMap.
+ */
+export type AllSessions<AM extends GeneralAuthCommandMap> = ValueOf<
+  { [EN in Key<AM>]: Session<EN, AM[EN]> }
+>;
 
 /**
  * Logined user type of given user entity name in given TypeMap.
