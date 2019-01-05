@@ -1,6 +1,6 @@
 import {
   AuthCredentials,
-  AuthOptions,
+  AuthSessions,
   BroaderAuthUser,
   BroaderEntity,
   CustomCommandParams,
@@ -48,7 +48,7 @@ export type UserDefinitions<
     EN,
     BroaderAuthUser<AM, EN, EM>,
     AuthCredentials<AM, EN>,
-    AuthOptions<AM, EN>
+    AuthSessions<AM, EN>
   >
 };
 

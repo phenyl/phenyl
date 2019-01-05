@@ -75,8 +75,8 @@ export type EntityResponseData<E extends Entity> =
 export type AuthResponseData<
   EN extends string,
   E extends Entity,
-  SO extends Object
-> = LoginResponseData<EN, E, SO> | LogoutResponseData | ErrorResponseData;
+  S extends Object
+> = LoginResponseData<EN, E, S> | LogoutResponseData | ErrorResponseData;
 
 /**
  * ResponseData handled by UserDefinition (EntityResponseData | AuthResponseData).
@@ -85,8 +85,8 @@ export type AuthResponseData<
 export type UserEntityResponseData<
   EN extends string,
   E extends Entity,
-  SO extends Object
-> = EntityResponseData<E> | AuthResponseData<EN, E, SO>;
+  S extends Object
+> = EntityResponseData<E> | AuthResponseData<EN, E, S>;
 
 /**
  * ResponseData handled by CustomQueryDefinition.
@@ -192,10 +192,10 @@ export type RunCustomCommandResponseData<CR extends Object> = {
 export type LoginResponseData<
   EN extends string,
   E extends Entity,
-  SO extends Object
+  S extends Object
 > = {
   type: "login";
-  payload: LoginCommandResult<EN, E, SO>;
+  payload: LoginCommandResult<EN, E, S>;
 };
 
 export type LogoutResponseData = {

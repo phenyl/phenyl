@@ -93,7 +93,7 @@ export type AuthRequestData<EN extends string, C extends Object> =
 
 /**
  * RequestData handled by authentication.
- * Credentials and options are not validated and any objects can be passed.
+ * Credentials are not validated and any objects can be passed.
  */
 export type GeneralAuthRequestData<EN extends string> = AuthRequestData<
   EN,
@@ -112,7 +112,7 @@ export type UserEntityRequestData<
 
 /**
  * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
- * Credentials and options are not validated and any objects can be passed.
+ * Credentials are not validated and any objects can be passed.
  */
 export type GeneralUserEntityRequestData<EN extends string> =
   | GeneralEntityRequestData<EN>

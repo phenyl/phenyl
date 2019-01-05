@@ -1,7 +1,7 @@
 import {
   AuthCredentialsOf,
   AuthEntityNameOf,
-  AuthOptionsOf,
+  AuthSessionOf,
   BroadEntityOf,
   CustomCommandNameOf,
   CustomCommandParamsOf,
@@ -116,7 +116,7 @@ type ResponseDataMapWithTypeMap<
   runCustomCommand: RunCustomCommandResponseData<
     CustomCommandResultValueOf<TM, CN>
   >;
-  login: LoginResponseData<AN, NarrowAuthUserOf<TM, AN>, AuthOptionsOf<TM, AN>>;
+  login: LoginResponseData<AN, NarrowAuthUserOf<TM, AN>, AuthSessionOf<TM, AN>>;
   logout: LogoutResponseData;
 };
 

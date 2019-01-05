@@ -1,6 +1,6 @@
 import {
   AuthCredentials,
-  AuthOptions,
+  AuthSessions,
   Broader,
   BroaderAuthUser,
   BroaderEntity,
@@ -92,9 +92,9 @@ export interface OlderUserDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
   C extends Object = Object,
-  SO extends Object = Object
+  S extends Object = Object
 > extends OlderEntityDefinition<EN, Ebroader> {
-  authentication: AuthDefinition<EN, Ebroader, C, SO>["authenticate"];
+  authentication: AuthDefinition<EN, Ebroader, C, S>["authenticate"];
 }
 
 type OlderUserDefinitions<
@@ -106,13 +106,13 @@ type OlderUserDefinitions<
         EN,
         BroaderAuthUser<AM, EN, EM>,
         AuthCredentials<AM, EN>,
-        AuthOptions<AM, EN>
+        AuthSessions<AM, EN>
       >
     | UserDefinition<
         EN,
         BroaderAuthUser<AM, EN, EM>,
         AuthCredentials<AM, EN>,
-        AuthOptions<AM, EN>
+        AuthSessions<AM, EN>
       >
 };
 

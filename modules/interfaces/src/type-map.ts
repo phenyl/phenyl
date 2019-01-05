@@ -35,7 +35,7 @@ import { Key } from "./key";
  *      auths: {
  *        member: {
  *          credentials: { email: string; password: string };
- *          // options: {} // optional
+ *          // session: {} // optional
  *        };
  *      };
  *    }
@@ -105,7 +105,7 @@ type GeneralCustomInOut = {
  * - Value: Auth setting
  *
  * Library users implement concrete CustomMap in TypeMap.
- * "options" are optional and "Object" is set by default if not set in TypeMap.
+ * "session" is optional and "Object" is set by default if not set in TypeMap.
  * See description of TypeMap.
  */
 export type GeneralAuthCommandMap = {
@@ -113,7 +113,7 @@ export type GeneralAuthCommandMap = {
 };
 type GeneralAuthSetting = {
   credentials: Object;
-  options?: Object;
+  session?: Object;
 };
 
 /**
@@ -340,24 +340,24 @@ export type AuthCredentials<
 > = AM[EN]["credentials"];
 
 /**
- * Login options of given user entity name in given TypeMap.
- * If options is not set, parsed as "Object".
+ * Additional session values of given user entity name in given TypeMap.
+ * If session is not set, parsed as "Object".
  */
-export type AuthOptionsOf<
+export type AuthSessionOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["auths"]>
-> = AuthOptions<AuthCommandMapOf<TM>, EN>;
+> = AuthSessions<AuthCommandMapOf<TM>, EN>;
 
 /**
- * Login options of given user entity name in given AuthCommandMap.
- * If options is not set, parsed as "Object".
+ * Additional session values of given user entity name in given TypeMap.
+ * If session is not set, parsed as "Object".
  */
-export type AuthOptions<
+export type AuthSessions<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>
-> = "options" extends keyof AM[EN]
-  ? AM[EN]["options"] extends Object
-    ? AM[EN]["options"]
+> = "session" extends keyof AM[EN]
+  ? AM[EN]["session"] extends Object
+    ? AM[EN]["session"]
     : Object
   : Object;
 

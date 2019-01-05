@@ -1,7 +1,7 @@
 import {
   AuthCommandMapOf,
   AuthCredentials,
-  AuthOptions,
+  AuthSessions,
   BroadEntityMapOf,
   CustomCommandMapOf,
   CustomCommandParams,
@@ -156,7 +156,7 @@ export interface AuthClient<
     command: LoginCommand<EN, AuthCredentials<AM, EN>>,
     sessionId?: string | null
   ): Promise<
-    LoginCommandResult<EN, NarrowAuthUser<AM, EN, M>, AuthOptions<AM, EN>>
+    LoginCommandResult<EN, NarrowAuthUser<AM, EN, M>, AuthSessions<AM, EN>>
   >;
 
   logout<EN extends Key<AM>>(

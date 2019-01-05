@@ -69,9 +69,9 @@ export type CustomCommandResult<CR extends Object> = {
 export type LoginCommandResult<
   EN extends string,
   E extends Entity,
-  SO extends Object
+  S extends Object
 > = {
-  session: Session<EN, SO>;
+  session: Session<EN, S>;
   user: E | null;
   versionId: string | null;
 };
