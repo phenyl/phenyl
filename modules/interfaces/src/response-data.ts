@@ -43,7 +43,7 @@ export type ResponseData =
   | DeleteResponseData
   | RunCustomQueryResponseData<Object>
   | RunCustomCommandResponseData<Object>
-  | LoginResponseData<Entity>
+  | LoginResponseData<string, Entity, Object>
   | LogoutResponseData
   | ErrorResponseData;
 
@@ -72,18 +72,21 @@ export type EntityResponseData<E extends Entity> =
  * ResponseData handled by authentication.
  * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
  */
-export type AuthResponseData<E extends Entity> =
-  | LoginResponseData<E>
-  | LogoutResponseData
-  | ErrorResponseData;
+export type AuthResponseData<
+  EN extends string,
+  E extends Entity,
+  SO extends Object
+> = LoginResponseData<EN, E, SO> | LogoutResponseData | ErrorResponseData;
 
 /**
  * ResponseData handled by UserDefinition (EntityResponseData | AuthResponseData).
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
-export type UserEntityResponseData<E extends Entity> =
-  | EntityResponseData<E>
-  | AuthResponseData<E>;
+export type UserEntityResponseData<
+  EN extends string,
+  E extends Entity,
+  SO extends Object
+> = EntityResponseData<E> | AuthResponseData<EN, E, SO>;
 
 /**
  * ResponseData handled by CustomQueryDefinition.
@@ -186,9 +189,13 @@ export type RunCustomCommandResponseData<CR extends Object> = {
   payload: CustomCommandResult<CR>;
 };
 
-export type LoginResponseData<E extends Entity> = {
+export type LoginResponseData<
+  EN extends string,
+  E extends Entity,
+  SO extends Object
+> = {
   type: "login";
-  payload: LoginCommandResult<E>;
+  payload: LoginCommandResult<EN, E, SO>;
 };
 
 export type LogoutResponseData = {

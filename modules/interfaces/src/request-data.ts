@@ -34,7 +34,7 @@ export type RequestData =
   | DeleteRequestData<string>
   | RunCustomQueryRequestData<string, Object>
   | RunCustomCommandRequestData<string, Object>
-  | LoginRequestData<string, Object, Object>
+  | LoginRequestData<string, Object>
   | LogoutRequestData<string>;
 
 /**
@@ -87,11 +87,9 @@ export type GeneralEntityRequestData<N extends string> =
  * RequestData handled by authentication.
  * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
  */
-export type AuthRequestData<
-  EN extends string,
-  C extends Object,
-  O extends Object
-> = LoginRequestData<EN, C, O> | LogoutRequestData<EN>;
+export type AuthRequestData<EN extends string, C extends Object> =
+  | LoginRequestData<EN, C>
+  | LogoutRequestData<EN>;
 
 /**
  * RequestData handled by authentication.
@@ -99,7 +97,6 @@ export type AuthRequestData<
  */
 export type GeneralAuthRequestData<EN extends string> = AuthRequestData<
   EN,
-  Object,
   Object
 >;
 
@@ -110,9 +107,8 @@ export type GeneralAuthRequestData<EN extends string> = AuthRequestData<
 export type UserEntityRequestData<
   EN extends string,
   E extends Entity,
-  C extends Object,
-  O extends Object
-> = EntityRequestData<EN, E> | AuthRequestData<EN, C, O>;
+  C extends Object
+> = EntityRequestData<EN, E> | AuthRequestData<EN, C>;
 
 /**
  * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
@@ -261,13 +257,9 @@ export type RunCustomCommandRequestData<N extends string, P extends Object> = {
   sessionId?: string | null;
 };
 
-export type LoginRequestData<
-  N extends string,
-  C extends Object,
-  O extends Object
-> = {
+export type LoginRequestData<N extends string, C extends Object> = {
   method: "login";
-  payload: LoginCommand<N, C, O>;
+  payload: LoginCommand<N, C>;
   sessionId?: string | null;
 };
 

@@ -92,9 +92,9 @@ export interface OlderUserDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
   C extends Object = Object,
-  O extends Object = Object
+  SO extends Object = Object
 > extends OlderEntityDefinition<EN, Ebroader> {
-  authentication: AuthDefinition<EN, Ebroader, C, O>["authenticate"];
+  authentication: AuthDefinition<EN, Ebroader, C, SO>["authenticate"];
 }
 
 type OlderUserDefinitions<

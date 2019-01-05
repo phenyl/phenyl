@@ -317,11 +317,12 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
   /**
    * It returns
    *   responseData
-   *     whose payload isn't CustomCommandResult of "register"
+   *     whose type is "login" and
+   *     whose payload is LoginCommandResult of "member"
    *   when
    *   requestData
-   *     whose method is "runCustomCommand" and
-   *     whose payload.name is "register"
+   *     whose method is "login" and
+   *     whose payload.entityName is "member"
    *   is given.
    */
   {
@@ -334,7 +335,11 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     });
     type ExpectedResponseData = {
       type: "login";
-      payload: LoginCommandResult<{ id: string; name: string }>;
+      payload: LoginCommandResult<
+        "member",
+        { id: string; name: string },
+        Object
+      >;
     };
     assertType<TypeEq<typeof response, HandlerResult<ExpectedResponseData>>>();
   }

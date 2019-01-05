@@ -96,13 +96,9 @@ export type FollowAllAction<EN extends string, E extends Entity> = {
   tag: string;
 };
 
-export type LoginAction<
-  EN extends string,
-  C extends Object,
-  O extends Object
-> = {
+export type LoginAction<EN extends string, C extends Object> = {
   type: "phenyl/login";
-  payload: LoginCommand<EN, C, O>;
+  payload: LoginCommand<EN, C>;
   tag: string;
 };
 
@@ -134,10 +130,14 @@ export type ResolveErrorAction = {
   type: "phenyl/resolveError";
 };
 
-export type SetSessionAction<E extends Entity> = {
+export type SetSessionAction<
+  EN extends string,
+  E extends Entity,
+  Tsession = {}
+> = {
   type: "phenyl/setSession";
   payload: {
-    session: Session;
+    session: Session<EN, Tsession>;
     user?: E;
     versionId?: string;
   };
@@ -175,13 +175,13 @@ export type PhenylAction =
   | DeleteAction<string>
   | FollowAction<string, Entity>
   | FollowAllAction<string, Entity>
-  | LoginAction<string, Object, Object>
+  | LoginAction<string, Object>
   | LogoutAction<string>
   | PatchAction
   | PullAction<string>
   | PushAndCommitAction<string>
   | ResolveErrorAction
-  | SetSessionAction<Entity>
+  | SetSessionAction<string, Entity>
   | UnfollowAction<string>
   | UnsetSessionAction
   | OnlineAction

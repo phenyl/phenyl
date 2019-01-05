@@ -153,9 +153,11 @@ export interface AuthClient<
   AM extends GeneralAuthCommandMap
 > {
   login<EN extends Key<AM>>(
-    command: LoginCommand<EN, AuthCredentials<AM, EN>, AuthOptions<AM, EN>>,
+    command: LoginCommand<EN, AuthCredentials<AM, EN>>,
     sessionId?: string | null
-  ): Promise<LoginCommandResult<NarrowAuthUser<AM, EN, M>>>;
+  ): Promise<
+    LoginCommandResult<EN, NarrowAuthUser<AM, EN, M>, AuthOptions<AM, EN>>
+  >;
 
   logout<EN extends Key<AM>>(
     command: LogoutCommand<EN>,

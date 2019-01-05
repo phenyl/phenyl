@@ -104,14 +104,9 @@ export interface CustomCommand<CN extends string, CP extends Object> {
   params: CP;
 }
 
-export interface LoginCommand<
-  EN extends string,
-  C extends Object,
-  O extends Object
-> {
+export interface LoginCommand<EN extends string, C extends Object> {
   entityName: EN;
   credentials: C;
-  options?: O;
 }
 
 export interface LogoutCommand<EN extends string> {

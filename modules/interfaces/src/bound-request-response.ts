@@ -85,7 +85,7 @@ export type RequestDataWithTypeMap<
   | DeleteRequestData<EN>
   | RunCustomQueryRequestData<QN, CustomQueryParamsOf<TM, QN>>
   | RunCustomCommandRequestData<CN, CustomCommandParamsOf<TM, CN>>
-  | LoginRequestData<AN, AuthCredentialsOf<TM, AN>, AuthOptionsOf<TM, AN>>
+  | LoginRequestData<AN, AuthCredentialsOf<TM, AN>>
   | LogoutRequestData<AN>,
   { method: MN }
 >;
@@ -116,7 +116,7 @@ type ResponseDataMapWithTypeMap<
   runCustomCommand: RunCustomCommandResponseData<
     CustomCommandResultValueOf<TM, CN>
   >;
-  login: LoginResponseData<NarrowAuthUserOf<TM, AN>>;
+  login: LoginResponseData<AN, NarrowAuthUserOf<TM, AN>, AuthOptionsOf<TM, AN>>;
   logout: LogoutResponseData;
 };
 

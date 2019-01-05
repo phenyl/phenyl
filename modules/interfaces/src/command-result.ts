@@ -66,8 +66,12 @@ export type CustomCommandResult<CR extends Object> = {
   result: CR;
 };
 
-export type LoginCommandResult<E extends Entity> = {
-  session: Session;
+export type LoginCommandResult<
+  EN extends string,
+  E extends Entity,
+  SO extends Object
+> = {
+  session: Session<EN, SO>;
   user: E | null;
   versionId: string | null;
 };
