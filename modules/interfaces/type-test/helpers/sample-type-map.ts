@@ -23,6 +23,7 @@ export interface SampleTypeMap extends GeneralTypeMap {
   auths: {
     member: {
       credentials: { email: string; password: string };
+      session: { externalId: string; ttl: number };
     };
   };
 }
