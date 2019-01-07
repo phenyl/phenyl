@@ -1,5 +1,5 @@
 import { $bind, update } from "@sp2/updater";
-import { Entity, ResponseData } from "@phenyl/interfaces";
+import { Entity, GeneralResponseData } from "@phenyl/interfaces";
 
 export type EntityVisitor = (entity: Entity) => Entity;
 
@@ -7,9 +7,9 @@ export type EntityVisitor = (entity: Entity) => Entity;
  *
  */
 export function visitEntitiesInResponseData(
-  resData: ResponseData,
+  resData: GeneralResponseData,
   visitor: EntityVisitor
-): ResponseData {
+): GeneralResponseData {
   switch (resData.type) {
     case "get":
     case "findOne":

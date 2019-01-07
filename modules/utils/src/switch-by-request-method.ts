@@ -1,10 +1,18 @@
 import {
+  EveryNameOf,
   GeneralTypeMap,
-  RequestData,
-  RequestDataHandlers
+  RequestDataHandlers,
+  RequestDataWithTypeMap,
+  RequestMethodName
 } from "@phenyl/interfaces";
-export async function switchByRequestMethod<TM extends GeneralTypeMap, T>(
-  reqData: RequestData,
+
+export async function switchByRequestMethod<
+  TM extends GeneralTypeMap,
+  MN extends RequestMethodName,
+  N extends EveryNameOf<TM, MN>,
+  T
+>(
+  reqData: RequestDataWithTypeMap<TM, MN, N>,
   funcs: RequestDataHandlers<TM, T>
 ): Promise<T> {
   // prettier-ignore

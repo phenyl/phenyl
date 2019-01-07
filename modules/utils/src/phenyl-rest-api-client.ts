@@ -1,8 +1,9 @@
 import {
+  AuthCommandMapOf,
   AuthCredentialsOf,
   AuthEntityNameOf,
-  AuthOptionsOf,
-  AuthUserOf,
+  AuthSessionOf,
+  BroadEntityOf,
   CustomCommand,
   CustomCommandNameOf,
   CustomCommandParamsOf,
@@ -15,57 +16,40 @@ import {
   CustomQueryResultValueOf,
   DeleteCommand,
   DeleteCommandResult,
-  DeleteRequestData,
   EntityNameOf,
-  EntityOf,
-  FindOneRequestData,
-  FindRequestData,
+  EveryNameOf,
   GeneralTypeMap,
-  GetByIdsRequestData,
   GetCommandResult,
-  GetRequestData,
   HandlerResult,
   IdQuery,
   IdUpdateCommand,
   IdUpdateCommandResult,
   IdsQuery,
-  InsertAndGetMultiRequestData,
-  InsertAndGetRequestData,
-  InsertMultiRequestData,
-  InsertOneRequestData,
   LoginCommand,
   LoginCommandResult,
-  LoginRequestData,
   LogoutCommand,
   LogoutCommandResult,
-  LogoutRequestData,
   MultiInsertCommand,
   MultiInsertCommandResult,
   MultiUpdateCommand,
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
+  NarrowAuthUserOf,
+  NarrowEntityOf,
   PreEntity,
   PullQuery,
   PullQueryResult,
-  PullRequestData,
   PushCommand,
   PushCommandResult,
-  PushRequestData,
   QueryResult,
   RequestDataWithTypeMap,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiClient,
-  RunCustomCommandRequestData,
-  RunCustomQueryRequestData,
   SessionClient,
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  UpdateAndFetchRequestData,
-  UpdateAndGetRequestData,
-  UpdateMultiRequestData,
-  UpdateOneRequestData,
   WhereQuery
 } from "@phenyl/interfaces";
 
@@ -89,26 +73,22 @@ export abstract class PhenylRestApiClient<
 > implements RestApiClient<TM> {
   abstract handleRequestData<
     MN extends RequestMethodName,
-    EN extends EntityNameOf<TM>,
-    QN extends CustomQueryNameOf<TM>,
-    CN extends CustomCommandNameOf<TM>,
-    AN extends AuthEntityNameOf<TM>
+    N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMap<TM, MN, EN, QN, CN, AN>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, EN, QN, CN, AN>>;
+    reqData: RequestDataWithTypeMap<TM, MN, N>
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
   /**
    *
    */
   async find<N extends EntityNameOf<TM>>(
     query: WhereQuery<N>,
     sessionId?: string | undefined | null
-  ): Promise<QueryResult<EntityOf<TM, N>>> {
-    const reqData: FindRequestData<N> = {
+  ): Promise<QueryResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "find",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "find") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -119,13 +99,12 @@ export abstract class PhenylRestApiClient<
   async findOne<N extends EntityNameOf<TM>>(
     query: WhereQuery<N>,
     sessionId?: string | undefined | null
-  ): Promise<SingleQueryResult<EntityOf<TM, N>>> {
-    const reqData: FindOneRequestData<N> = {
+  ): Promise<SingleQueryResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "findOne",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "findOne") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -136,13 +115,12 @@ export abstract class PhenylRestApiClient<
   async get<N extends EntityNameOf<TM>>(
     query: IdQuery<N>,
     sessionId?: string | undefined | null
-  ): Promise<SingleQueryResult<EntityOf<TM, N>>> {
-    const reqData: GetRequestData<N> = {
+  ): Promise<SingleQueryResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "get",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "get") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -153,13 +131,12 @@ export abstract class PhenylRestApiClient<
   async getByIds<N extends EntityNameOf<TM>>(
     query: IdsQuery<N>,
     sessionId?: string | undefined | null
-  ): Promise<QueryResult<EntityOf<TM, N>>> {
-    const reqData: GetByIdsRequestData<N> = {
+  ): Promise<QueryResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "getByIds",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "getByIds") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -170,13 +147,12 @@ export abstract class PhenylRestApiClient<
   async pull<N extends EntityNameOf<TM>>(
     query: PullQuery<N>,
     sessionId?: string | undefined | null
-  ): Promise<PullQueryResult<EntityOf<TM, N>>> {
-    const reqData: PullRequestData<N> = {
+  ): Promise<PullQueryResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "pull",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "pull") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -185,15 +161,14 @@ export abstract class PhenylRestApiClient<
    *
    */
   async insertOne<N extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
+    command: SingleInsertCommand<N, PreEntity<BroadEntityOf<TM, N>>>,
     sessionId?: string | undefined | null
   ): Promise<SingleInsertCommandResult> {
-    const reqData: InsertOneRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+    const resData = await this.handleRequestData({
       method: "insertOne",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "insertOne") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -202,15 +177,14 @@ export abstract class PhenylRestApiClient<
    *
    */
   async insertMulti<N extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
+    command: MultiInsertCommand<N, PreEntity<BroadEntityOf<TM, N>>>,
     sessionId?: string | undefined | null
   ): Promise<MultiInsertCommandResult> {
-    const reqData: InsertMultiRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+    const resData = await this.handleRequestData({
       method: "insertMulti",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "insertMulti") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -219,15 +193,14 @@ export abstract class PhenylRestApiClient<
    *
    */
   async insertAndGet<N extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
+    command: SingleInsertCommand<N, PreEntity<BroadEntityOf<TM, N>>>,
     sessionId?: string | undefined | null
-  ): Promise<GetCommandResult<EntityOf<TM, N>>> {
-    const reqData: InsertAndGetRequestData<N, PreEntity<EntityOf<TM, N>>> = {
+  ): Promise<GetCommandResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "insertAndGet",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "insertAndGet") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -236,18 +209,14 @@ export abstract class PhenylRestApiClient<
    *
    */
   async insertAndGetMulti<N extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<N, PreEntity<EntityOf<TM, N>>>,
+    command: MultiInsertCommand<N, PreEntity<BroadEntityOf<TM, N>>>,
     sessionId?: string | undefined | null
-  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>>> {
-    const reqData: InsertAndGetMultiRequestData<
-      N,
-      PreEntity<EntityOf<TM, N>>
-    > = {
+  ): Promise<MultiValuesCommandResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "insertAndGetMulti",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "insertAndGetMulti") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -259,12 +228,11 @@ export abstract class PhenylRestApiClient<
     command: IdUpdateCommand<N>,
     sessionId?: string | undefined | null
   ): Promise<IdUpdateCommandResult> {
-    const reqData: UpdateOneRequestData<N> = {
+    const resData = await this.handleRequestData({
       method: "updateById",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "updateById") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -276,12 +244,11 @@ export abstract class PhenylRestApiClient<
     command: MultiUpdateCommand<N>,
     sessionId?: string | undefined | null
   ): Promise<MultiUpdateCommandResult> {
-    const reqData: UpdateMultiRequestData<N> = {
+    const resData = await this.handleRequestData({
       method: "updateMulti",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "updateMulti") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -292,13 +259,12 @@ export abstract class PhenylRestApiClient<
   async updateAndGet<N extends EntityNameOf<TM>>(
     command: IdUpdateCommand<N>,
     sessionId?: string | undefined | null
-  ): Promise<GetCommandResult<EntityOf<TM, N>>> {
-    const reqData: UpdateAndGetRequestData<N> = {
+  ): Promise<GetCommandResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "updateAndGet",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "updateAndGet") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -309,13 +275,12 @@ export abstract class PhenylRestApiClient<
   async updateAndFetch<N extends EntityNameOf<TM>>(
     command: MultiUpdateCommand<N>,
     sessionId?: string | undefined | null
-  ): Promise<MultiValuesCommandResult<EntityOf<TM, N>>> {
-    const reqData: UpdateAndFetchRequestData<N> = {
+  ): Promise<MultiValuesCommandResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "updateAndFetch",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "updateAndFetch") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -326,13 +291,12 @@ export abstract class PhenylRestApiClient<
   async push<N extends EntityNameOf<TM>>(
     command: PushCommand<N>,
     sessionId?: string | undefined | null
-  ): Promise<PushCommandResult<EntityOf<TM, N>>> {
-    const reqData: PushRequestData<N> = {
+  ): Promise<PushCommandResult<NarrowEntityOf<TM, N>>> {
+    const resData = await this.handleRequestData({
       method: "push",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "push") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -344,12 +308,11 @@ export abstract class PhenylRestApiClient<
     command: DeleteCommand<N>,
     sessionId?: string | undefined | null
   ): Promise<DeleteCommandResult> {
-    const reqData: DeleteRequestData<N> = {
+    const resData = await this.handleRequestData({
       method: "delete",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "delete") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -361,12 +324,11 @@ export abstract class PhenylRestApiClient<
     query: CustomQuery<N, CustomQueryParamsOf<TM, N>>,
     sessionId?: string | undefined | null
   ): Promise<CustomQueryResult<CustomQueryResultValueOf<TM, N>>> {
-    const reqData: RunCustomQueryRequestData<N, CustomQueryParamsOf<TM, N>> = {
+    const resData = await this.handleRequestData({
       method: "runCustomQuery",
       payload: query,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "runCustomQuery") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -378,15 +340,11 @@ export abstract class PhenylRestApiClient<
     command: CustomCommand<N, CustomCommandParamsOf<TM, N>>,
     sessionId?: string | undefined | null
   ): Promise<CustomCommandResult<CustomCommandResultValueOf<TM, N>>> {
-    const reqData: RunCustomCommandRequestData<
-      N,
-      CustomCommandParamsOf<TM, N>
-    > = {
+    const resData = await this.handleRequestData({
       method: "runCustomCommand",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "runCustomCommand") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -395,19 +353,16 @@ export abstract class PhenylRestApiClient<
    *
    */
   async login<N extends AuthEntityNameOf<TM>>(
-    command: LoginCommand<N, AuthCredentialsOf<TM, N>, AuthOptionsOf<TM, N>>,
+    command: LoginCommand<N, AuthCredentialsOf<TM, N>>,
     sessionId?: string | undefined | null
-  ): Promise<LoginCommandResult<AuthUserOf<TM, N>>> {
-    const reqData: LoginRequestData<
-      N,
-      AuthCredentialsOf<TM, N>,
-      AuthOptionsOf<TM, N>
-    > = {
+  ): Promise<
+    LoginCommandResult<N, NarrowAuthUserOf<TM, N>, AuthSessionOf<TM, N>>
+  > {
+    const resData = await this.handleRequestData({
       method: "login",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "login") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -419,12 +374,11 @@ export abstract class PhenylRestApiClient<
     command: LogoutCommand<N>,
     sessionId?: string | undefined | null
   ): Promise<LogoutCommandResult> {
-    const reqData: LogoutRequestData<N> = {
+    const resData = await this.handleRequestData({
       method: "logout",
       payload: command,
       sessionId
-    };
-    const resData = await this.handleRequestData(reqData);
+    });
     if (resData.type === "logout") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -433,7 +387,7 @@ export abstract class PhenylRestApiClient<
    * Create session client.
    * RestApiClient cannot create SessionClient.
    */
-  createSessionClient(): SessionClient {
+  createSessionClient(): SessionClient<AuthCommandMapOf<TM>> {
     throw new Error("Cannot create SessionClient from RestApiClient.");
   }
 }
