@@ -56,8 +56,6 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     entity: TypeProp<[NarrowMessage, BroadMessage]>;
   }
 
-  const xx = new MessageDefinition();
-
   type MedicalRecord = { id: string; body: string; createdAt: string };
   type N = "medicalRecord";
   type E = MedicalRecord;
