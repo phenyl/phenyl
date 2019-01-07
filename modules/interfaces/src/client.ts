@@ -3,7 +3,8 @@ import {
   AuthCommandMapOf,
   AuthCredentials,
   AuthSessions,
-  BroadEntityMapOf,
+  BroadEntity,
+  BroaderEntityMapOf,
   CustomCommandMapOf,
   CustomCommandParams,
   CustomCommandResultValue,
@@ -81,22 +82,22 @@ export interface EntityClient<M extends GeneralEntityMap> {
   ): Promise<PullQueryResult<NarrowEntity<M, EN>>>;
 
   insertOne<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<NarrowEntity<M, EN>>>,
+    command: SingleInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<SingleInsertCommandResult>;
 
   insertMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<NarrowEntity<M, EN>>>,
+    command: MultiInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<MultiInsertCommandResult>;
 
   insertAndGet<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<NarrowEntity<M, EN>>>,
+    command: SingleInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<GetCommandResult<NarrowEntity<M, EN>>>;
 
   insertAndGetMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<NarrowEntity<M, EN>>>,
+    command: MultiInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<MultiValuesCommandResult<NarrowEntity<M, EN>>>;
 
@@ -166,10 +167,10 @@ export interface AuthClient<
 }
 
 export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
-  BroadEntityMapOf<TM>
+  BroaderEntityMapOf<TM>
 > &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &
-  AuthClient<BroadEntityMapOf<TM>, AuthCommandMapOf<TM>> &
+  AuthClient<BroaderEntityMapOf<TM>, AuthCommandMapOf<TM>> &
   RestApiHandler<TM>;
 
 export type SessionClient<AM extends GeneralAuthCommandMap> = KvsClient<
