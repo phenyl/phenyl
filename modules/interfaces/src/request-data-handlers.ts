@@ -3,9 +3,9 @@ import {
   AuthEntityNameOf,
   BroadEntityOf,
   CustomCommandNameOf,
-  CustomCommandOf,
+  CustomCommandParamsOf,
   CustomQueryNameOf,
-  CustomQueryOf,
+  CustomQueryParamsOf,
   EntityNameOf,
   GeneralTypeMap
 } from "./type-map";
@@ -75,11 +75,11 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
   delete<N extends EntityNameOf<TM>>(command: DeleteCommand<N>): Promise<T>;
 
   runCustomQuery<QN extends CustomQueryNameOf<TM>>(
-    query: CustomQuery<QN, CustomQueryOf<TM, QN>>
+    query: CustomQuery<QN, CustomQueryParamsOf<TM, QN>>
   ): Promise<T>;
 
   runCustomCommand<CN extends CustomCommandNameOf<TM>>(
-    command: CustomCommand<CN, CustomCommandOf<TM, CN>>
+    command: CustomCommand<CN, CustomCommandParamsOf<TM, CN>>
   ): Promise<T>;
 
   login<EN extends AuthEntityNameOf<TM>>(
