@@ -8,7 +8,7 @@ import {
   LoginCommandResult,
   PushCommandResult,
   QueryResult,
-  RequestDataWithTypeMap,
+  RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiHandler
@@ -31,7 +31,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       MN extends RequestMethodName,
       N extends EveryNameOf<TM, MN>
     >(
-      reqData: RequestDataWithTypeMap<TM, MN, N>
+      reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
     ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
       // @ts-ignore
       return reqData;

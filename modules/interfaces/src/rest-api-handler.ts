@@ -1,6 +1,6 @@
 import {
   EveryNameOf,
-  RequestDataWithTypeMap,
+  RequestDataWithTypeMapForResponse,
   ResponseDataWithTypeMap
 } from "./bound-request-response";
 
@@ -15,6 +15,6 @@ export interface RestApiHandler<TM extends GeneralTypeMap = GeneralTypeMap> {
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMap<TM, MN, N>
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
   ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
 }

@@ -1,20 +1,23 @@
 import {
   ErrorResponseData,
+  EveryNameOf,
   FindOneRequestData,
   FindRequestData,
   GeneralRequestData,
   GeneralResponseData,
   GeneralTypeMap,
   RequestDataWithTypeMap,
+  RequestDataWithTypeMapForResponse,
   RequestMethodName,
-  ResponseDataWithTypeMap
+  ResponseDataWithTypeMap,
+  WhereQuery
 } from "../src";
 import { IsExtends, TypeEq, assertNotType, assertType } from "./helpers";
 
 import { SampleTypeMap } from "./helpers/sample-type-map";
 
 /**
- * Tests for RequestDataTypeMap.
+ * Tests for RequestDataTypeMapForResponse.
  */
 {
   /**
@@ -35,7 +38,11 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     assertType<
       IsExtends<
         InsertAndGetRequest,
-        RequestDataWithTypeMap<SampleTypeMap, "insertAndGet", "message">
+        RequestDataWithTypeMapForResponse<
+          SampleTypeMap,
+          "insertAndGet",
+          "message"
+        >
       >
     >();
   }
@@ -58,7 +65,11 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     assertNotType<
       IsExtends<
         InsertAndGetRequest,
-        RequestDataWithTypeMap<SampleTypeMap, "insertAndGet", "message">
+        RequestDataWithTypeMapForResponse<
+          SampleTypeMap,
+          "insertAndGet",
+          "message"
+        >
       >
     >();
   }
@@ -69,13 +80,13 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
  */
 {
   /**
-   * "find" RequestDataWithTypeMap
+   * "find" RequestDataWithTypeMapForResponse
    *  and
    * FindRequestData
    *  are identical.
    */
   {
-    type FindReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
+    type FindReqDataWithGeneralTypeMap = RequestDataWithTypeMapForResponse<
       GeneralTypeMap,
       "find",
       string
@@ -86,13 +97,13 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
   }
 
   /**
-   * "findOne" RequestDataWithTypeMap
+   * "findOne" RequestDataWithTypeMapForResponse
    *  and
    * FindOneRequestData
    *  are identical.
    */
   {
-    type FindOneReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
+    type FindOneReqDataWithGeneralTypeMap = RequestDataWithTypeMapForResponse<
       GeneralTypeMap,
       "findOne",
       string
@@ -100,6 +111,21 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     assertType<
       TypeEq<FindOneReqDataWithGeneralTypeMap, FindOneRequestData<string>>
     >();
+  }
+
+  /**
+   * RequestDataWithTypeMapForResponse with GeneralTypeMap
+   *  and
+   * RequestData
+   *  are identical.
+   */
+  {
+    type RequestDataWithGeneralTypeMap = RequestDataWithTypeMapForResponse<
+      GeneralTypeMap,
+      RequestMethodName,
+      string
+    >;
+    assertType<TypeEq<RequestDataWithGeneralTypeMap, GeneralRequestData>>();
   }
 
   /**
@@ -111,7 +137,6 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
   {
     type RequestDataWithGeneralTypeMap = RequestDataWithTypeMap<
       GeneralTypeMap,
-      RequestMethodName,
       string
     >;
     assertType<TypeEq<RequestDataWithGeneralTypeMap, GeneralRequestData>>();

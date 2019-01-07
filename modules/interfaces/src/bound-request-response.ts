@@ -60,11 +60,37 @@ import {
 
 import { PreEntity } from "./entity";
 
-export type RequestDataWithTypeMap<
+/**
+ * All possible `RequestData` from the given `TypeMap`.
+ * `method` property is inferred to specify `ResponseData`'s type.
+ *
+ * ### Notice
+ * TypeScript cannot infer adequete method name from this type
+ * when `reqData.method` is used in `switch` or `if` condition when `reqData` is function argument.
+ * Use `ResponseDataWithTypeMap` instead.
+ *
+ *     const concreteReqData: ResponseDataWithTypeMap<TM, N> = reqData; // RequestDataWithTypeMapForResponse<TM, MN, N>
+ *     switch (concreteReqData.method) {
+ *     // This will go well
+ *     }
+ */
+export type RequestDataWithTypeMapForResponse<
   TM extends GeneralTypeMap,
   MN extends RequestMethodName,
   N extends EveryNameOf<TM, MN>
-> = { method: MN } & Extract<
+> = { method: MN } & Extract<RequestDataWithTypeMap<TM, N>, { method: MN }>;
+
+/**
+ * All possible `RequestData` from the given `TypeMap`.
+ * The difference from `RequestDataWithTypeMapForResponse` is that this type doesn't have type parameter of method name.
+ * Thus, `reqData.method` used in `switch` or `if` condition will be statically inferred when `reqData` is function argument.
+ * However, this type cannot specify corresponding `ResponseData`.
+ * To do so, use `RequestDataWithTypeMapForResponse`.
+ */
+export type RequestDataWithTypeMap<
+  TM extends GeneralTypeMap,
+  N extends EveryNameOf<TM, RequestMethodName>
+> =
   | FindRequestData<N>
   | FindOneRequestData<N>
   | GetRequestData<N>
@@ -98,10 +124,11 @@ export type RequestDataWithTypeMap<
       CustomCommandParamsOf<TM, N & CustomCommandNameOf<TM>>
     >
   | LoginRequestData<N, AuthCredentialsOf<TM, N & AuthEntityNameOf<TM>>>
-  | LogoutRequestData<N>,
-  { method: MN }
->;
+  | LogoutRequestData<N>;
 
+/**
+ * All possible `ResponseData` from the given `TypeMap`, `RequestMethodName` and `EveryNameOf<TM, MN>`.
+ */
 export type ResponseDataWithTypeMap<
   TM extends GeneralTypeMap,
   MN extends RequestMethodName,
