@@ -3,7 +3,7 @@ import {
   EveryNameOf,
   GeneralTypeMap,
   HandlerResult,
-  RequestDataWithTypeMap,
+  RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiHandler
@@ -33,7 +33,7 @@ export class PhenylRestApiDirectClient<
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMap<TM, MN, N>
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
   ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
     return this.restApiHandler.handleRequestData(reqData);
   }

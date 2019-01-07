@@ -42,7 +42,7 @@ import {
   PushCommand,
   PushCommandResult,
   QueryResult,
-  RequestDataWithTypeMap,
+  RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiClient,
@@ -75,7 +75,7 @@ export abstract class PhenylRestApiClient<
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMap<TM, MN, N>
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
   ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
   /**
    *
