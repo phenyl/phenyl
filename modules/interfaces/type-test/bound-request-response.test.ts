@@ -35,14 +35,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     assertType<
       IsExtends<
         InsertAndGetRequest,
-        RequestDataWithTypeMap<
-          SampleTypeMap,
-          "insertAndGet",
-          "message",
-          any,
-          any,
-          any
-        >
+        RequestDataWithTypeMap<SampleTypeMap, "insertAndGet", "message">
       >
     >();
   }
@@ -65,14 +58,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     assertNotType<
       IsExtends<
         InsertAndGetRequest,
-        RequestDataWithTypeMap<
-          SampleTypeMap,
-          "insertAndGet",
-          "message",
-          any,
-          any,
-          any
-        >
+        RequestDataWithTypeMap<SampleTypeMap, "insertAndGet", "message">
       >
     >();
   }
@@ -92,9 +78,6 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     type FindReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
       GeneralTypeMap,
       "find",
-      string,
-      string,
-      string,
       string
     >;
     assertType<
@@ -112,9 +95,6 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     type FindOneReqDataWithGeneralTypeMap = RequestDataWithTypeMap<
       GeneralTypeMap,
       "findOne",
-      string,
-      string,
-      string,
       string
     >;
     assertType<
@@ -132,9 +112,6 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     type RequestDataWithGeneralTypeMap = RequestDataWithTypeMap<
       GeneralTypeMap,
       RequestMethodName,
-      string,
-      string,
-      string,
       string
     >;
     assertType<TypeEq<RequestDataWithGeneralTypeMap, GeneralRequestData>>();
@@ -150,9 +127,6 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     type ResponseDataWithGeneralTypeMap = ResponseDataWithTypeMap<
       GeneralTypeMap,
       RequestMethodName,
-      string,
-      string,
-      string,
       string
     >;
     assertType<

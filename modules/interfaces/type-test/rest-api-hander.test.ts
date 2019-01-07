@@ -1,10 +1,7 @@
 import {
-  AuthEntityNameOf,
-  CustomCommandNameOf,
   CustomCommandResult,
-  CustomQueryNameOf,
   CustomQueryResult,
-  EntityNameOf,
+  EveryNameOf,
   GeneralTypeMap,
   GetCommandResult,
   HandlerResult,
@@ -32,13 +29,10 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     implements RestApiHandler<TM> {
     handleRequestData<
       MN extends RequestMethodName,
-      EN extends EntityNameOf<TM>,
-      QN extends CustomQueryNameOf<TM>,
-      CN extends CustomCommandNameOf<TM>,
-      AN extends AuthEntityNameOf<TM>
+      N extends EveryNameOf<TM, MN>
     >(
-      reqData: RequestDataWithTypeMap<TM, MN, EN, QN, CN, AN>
-    ): HandlerResult<ResponseDataWithTypeMap<TM, MN, EN, QN, CN, AN>> {
+      reqData: RequestDataWithTypeMap<TM, MN, N>
+    ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
       // @ts-ignore
       return reqData;
     }
