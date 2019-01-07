@@ -78,7 +78,16 @@ export type RequestDataWithTypeMapForResponse<
   TM extends GeneralTypeMap,
   MN extends RequestMethodName,
   N extends EveryNameOf<TM, MN>
-> = { method: MN } & Extract<RequestDataWithTypeMap<TM, N>, { method: MN }>;
+> = { method: MN } & Extract<
+  RequestDataWithTypeMap<
+    TM,
+    N & EntityNameOf<TM>,
+    N & CustomQueryNameOf<TM>,
+    N & CustomCommandNameOf<TM>,
+    N & AuthEntityNameOf<TM>
+  >,
+  { method: MN }
+>;
 
 /**
  * All possible `RequestData` from the given `TypeMap`.
@@ -89,42 +98,48 @@ export type RequestDataWithTypeMapForResponse<
  */
 export type RequestDataWithTypeMap<
   TM extends GeneralTypeMap,
-  N extends EveryNameOf<TM, RequestMethodName>
+  EN extends EntityNameOf<TM>,
+  QN extends CustomQueryNameOf<TM>,
+  CN extends CustomCommandNameOf<TM>,
+  AN extends AuthEntityNameOf<TM>
 > =
-  | FindRequestData<N>
-  | FindOneRequestData<N>
-  | GetRequestData<N>
-  | GetByIdsRequestData<N>
-  | PullRequestData<N>
-  | InsertOneRequestData<N, PreEntity<BroadEntityOf<TM, N & EntityNameOf<TM>>>>
+  | FindRequestData<EN>
+  | FindOneRequestData<EN>
+  | GetRequestData<EN>
+  | GetByIdsRequestData<EN>
+  | PullRequestData<EN>
+  | InsertOneRequestData<
+      EN,
+      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
+    >
   | InsertAndGetRequestData<
-      N,
-      PreEntity<BroadEntityOf<TM, N & EntityNameOf<TM>>>
+      EN,
+      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | InsertMultiRequestData<
-      N,
-      PreEntity<BroadEntityOf<TM, N & EntityNameOf<TM>>>
+      EN,
+      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | InsertAndGetMultiRequestData<
-      N,
-      PreEntity<BroadEntityOf<TM, N & EntityNameOf<TM>>>
+      EN,
+      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
     >
-  | UpdateOneRequestData<N>
-  | UpdateAndGetRequestData<N>
-  | UpdateMultiRequestData<N>
-  | UpdateAndFetchRequestData<N>
-  | PushRequestData<N>
-  | DeleteRequestData<N>
+  | UpdateOneRequestData<EN>
+  | UpdateAndGetRequestData<EN>
+  | UpdateMultiRequestData<EN>
+  | UpdateAndFetchRequestData<EN>
+  | PushRequestData<EN>
+  | DeleteRequestData<EN>
   | RunCustomQueryRequestData<
-      N,
-      CustomQueryParamsOf<TM, N & CustomQueryNameOf<TM>>
+      QN,
+      CustomQueryParamsOf<TM, QN & CustomQueryNameOf<TM>>
     >
   | RunCustomCommandRequestData<
-      N,
-      CustomCommandParamsOf<TM, N & CustomCommandNameOf<TM>>
+      CN,
+      CustomCommandParamsOf<TM, CN & CustomCommandNameOf<TM>>
     >
-  | LoginRequestData<N, AuthCredentialsOf<TM, N & AuthEntityNameOf<TM>>>
-  | LogoutRequestData<N>;
+  | LoginRequestData<AN, AuthCredentialsOf<TM, AN & AuthEntityNameOf<TM>>>
+  | LogoutRequestData<AN>;
 
 /**
  * All possible `ResponseData` from the given `TypeMap`, `RequestMethodName` and `EveryNameOf<TM, MN>`.

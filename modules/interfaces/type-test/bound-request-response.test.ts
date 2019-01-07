@@ -137,6 +137,9 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
   {
     type RequestDataWithGeneralTypeMap = RequestDataWithTypeMap<
       GeneralTypeMap,
+      string,
+      string,
+      string,
       string
     >;
     assertType<TypeEq<RequestDataWithGeneralTypeMap, GeneralRequestData>>();
