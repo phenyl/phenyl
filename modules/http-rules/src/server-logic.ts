@@ -3,9 +3,9 @@ import {
   CustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
+  GeneralResponseData,
   GeneralTypeMap,
   PathModifier,
-  RestApiClient,
   RestApiHandler,
   ServerParams
 } from "@phenyl/interfaces";
@@ -23,7 +23,7 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
    * Instance containing API logic invoked via run().
    * PhenylRestApi instance is expected.
    */
-  restApiHandler: RestApiHandler;
+  restApiHandler: RestApiHandler<TM>;
 
   /**
    * (path: string) => string
@@ -78,20 +78,24 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
    * Invoke RestApiHandler#run().
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
-    let responseData;
+    let responseData: GeneralResponseData;
+    // This line casts restApiHandler to supertype so that it should receive pre-sanitized data.
+    const restApiHandler: RestApiHandler<GeneralTypeMap> = this.restApiHandler;
 
     try {
       // 1. Decoding Request
-      const requestData = decodeRequest(encodedHttpRequest); // 2. Invoking PhenylRestApi
+      const requestData = decodeRequest(encodedHttpRequest);
 
-      responseData = await this.restApiHandler.handleRequestData(requestData);
+      // 2. Invoking PhenylRestApi
+      responseData = await restApiHandler.handleRequestData(requestData);
     } catch (err) {
       responseData = {
         type: "error",
         payload: createServerError(err)
       };
-    } // 3. Encoding Response
+    }
 
+    // 3. Encoding Response
     return encodeResponse(responseData);
   }
 
@@ -121,11 +125,9 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
  * Default value of ServerLogic#handleCustomRequest().
  * Return 404 response.
  */
-async function notFoundHandler<TM extends GeneralTypeMap>(
-  encodedHttpRequest: EncodedHttpRequest,
-  client: RestApiClient<TM>
+async function notFoundHandler(
+  encodedHttpRequest: EncodedHttpRequest
 ): Promise<EncodedHttpResponse> {
-  // eslint-disable-line no-unused-vars
   const { path } = encodedHttpRequest;
   const body = `Not Found.\nThe requested URL "${path}" is not found on this server.`;
   return createPlainTextResponse(body, 404);

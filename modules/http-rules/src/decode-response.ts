@@ -1,4 +1,4 @@
-import { EncodedHttpResponse, ResponseData } from "@phenyl/interfaces";
+import { EncodedHttpResponse, GeneralResponseData } from "@phenyl/interfaces";
 
 /**
  * Decode HTTP Response into ResponseData.
@@ -6,7 +6,7 @@ import { EncodedHttpResponse, ResponseData } from "@phenyl/interfaces";
  */
 export default function decodeResponse(
   encodedResponse: EncodedHttpResponse
-): ResponseData {
+): GeneralResponseData {
   const { body } = encodedResponse;
 
   if (typeof body === "string") {

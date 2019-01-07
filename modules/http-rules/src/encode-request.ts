@@ -1,7 +1,7 @@
 import {
   EncodedHttpRequest,
-  QueryStringParams,
-  RequestData
+  GeneralRequestData,
+  QueryStringParams
 } from "@phenyl/interfaces";
 
 import { assertValidRequestData } from "@phenyl/utils";
@@ -10,7 +10,7 @@ import { assertValidRequestData } from "@phenyl/utils";
  *
  */
 export default function encodeRequest(
-  reqData: RequestData
+  reqData: GeneralRequestData
 ): EncodedHttpRequest {
   assertValidRequestData(reqData);
   const { sessionId } = reqData;
@@ -151,11 +151,11 @@ export default function encodeRequest(
       data = reqData.payload;
       headers["Content-Type"] = "application/json"; // single deletion
 
-      if (data.id != null) {
+      if (data.hasOwnProperty("id")) {
         return {
           method: "DELETE",
           headers,
-          path: addPrefix(`/${data.entityName}/${data.id}`)
+          path: addPrefix(`/${data.entityName}/${(<{ id: string }>data).id}`)
         };
       } // multi deletion
 

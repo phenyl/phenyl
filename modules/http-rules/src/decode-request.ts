@@ -1,7 +1,7 @@
 import {
   EncodedHttpRequest,
-  QueryStringParams,
-  RequestData
+  GeneralRequestData,
+  QueryStringParams
 } from "@phenyl/interfaces";
 
 /**
@@ -9,8 +9,8 @@ import {
  */
 export default function decodeRequest(
   request: EncodedHttpRequest
-): RequestData {
-  let reqData: RequestData;
+): GeneralRequestData {
+  let reqData: GeneralRequestData;
   const sessionId = decodeSessionId(request);
 
   switch (request.method) {
@@ -48,7 +48,7 @@ export default function decodeRequest(
 /**
  * @private
  */
-function decodeGETRequest(request: EncodedHttpRequest): RequestData {
+function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
   const { path, qsParams } = request;
   const payload = decodeDataInQsParams(qsParams);
   let { entityName, methodName } = parsePath(path); // CustomQuery or WhereQuery?
@@ -130,7 +130,7 @@ function decodeGETRequest(request: EncodedHttpRequest): RequestData {
 /**
  * @private
  */
-function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
+function decodePOSTRequest(request: EncodedHttpRequest): GeneralRequestData {
   const { path, body, parsedBody } = request;
 
   if (!body && !parsedBody) {
@@ -211,7 +211,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): RequestData {
 /**
  * @private
  */
-function decodePUTRequest(request: EncodedHttpRequest): RequestData {
+function decodePUTRequest(request: EncodedHttpRequest): GeneralRequestData {
   const { path, body, parsedBody } = request;
 
   if (!body && !parsedBody) {
@@ -284,7 +284,7 @@ function decodePUTRequest(request: EncodedHttpRequest): RequestData {
 /**
  * @private
  */
-function decodeDELETERequest(request: EncodedHttpRequest): RequestData {
+function decodeDELETERequest(request: EncodedHttpRequest): GeneralRequestData {
   const { path, qsParams } = request;
   const payload = decodeDataInQsParams(qsParams);
   let { entityName, methodName } = parsePath(path); // multi deletion

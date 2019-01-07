@@ -1,9 +1,9 @@
-import { EncodedHttpResponse, ResponseData } from "@phenyl/interfaces";
+import { EncodedHttpResponse, GeneralResponseData } from "@phenyl/interfaces";
 
 import getStatusCode from "./get-status-code";
 
 export default function encodeResponse(
-  responseData: ResponseData
+  responseData: GeneralResponseData
 ): EncodedHttpResponse {
   const json = JSON.stringify(responseData);
   return {

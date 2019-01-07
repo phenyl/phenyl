@@ -1,5 +1,5 @@
-import { ResponseData, ServerError } from "@phenyl/interfaces";
-export default function getStatusCode(resData: ResponseData): number {
+import { GeneralResponseData, ServerError } from "@phenyl/interfaces";
+export default function getStatusCode(resData: GeneralResponseData): number {
   if (resData.type === "error") {
     return getErrorStatusCode(resData.payload);
   } // insert
