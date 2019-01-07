@@ -2,7 +2,7 @@ import { Broad, Broader, Narrow } from "./type-map";
 import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
 
 import { Entity } from "./entity";
-import { ResponseData } from "./response-data";
+import { EntityResponseData } from "./response-data";
 import { Session } from "./session";
 import { TypeOnly } from "./type-only";
 
@@ -38,6 +38,6 @@ export interface EntityDefinition<
     executeFn: (
       reqData: EntityRequestData<EN, Narrow<Ebroader>>,
       session?: SS
-    ) => Promise<ResponseData>
-  ) => Promise<ResponseData>;
+    ) => Promise<EntityResponseData<Narrow<Ebroader>>>
+  ) => Promise<EntityResponseData<Narrow<Ebroader>>>;
 }

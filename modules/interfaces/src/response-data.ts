@@ -25,7 +25,7 @@ import { ServerError } from "./error";
  * Type of response data handled in servers and clients.
  * This is a union type of all specific ResponseData, so parameters cannot be inferred using this type.
  */
-export type ResponseData =
+export type GeneralResponseData =
   | FindResponseData<Entity>
   | FindOneResponseData<Entity>
   | GetResponseData<Entity>

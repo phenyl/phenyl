@@ -5,8 +5,8 @@ import {
   VersionDiffSubscriber
 } from "./versioning";
 
-import { RequestData } from "./request-data";
-import { ResponseData } from "./response-data";
+import { GeneralRequestData } from "./request-data";
+import { GeneralResponseData } from "./response-data";
 import { RestApiHandler } from "./rest-api-handler";
 import { ServerError } from "./error";
 
@@ -15,7 +15,7 @@ export type WebSocketClientMessage =
   | WebSocketClientSubscriptionRequestMessage;
 
 export type WebSocketClientRequestDataMessage = {
-  reqData: RequestData;
+  reqData: GeneralRequestData;
   tag: string;
 };
 
@@ -31,7 +31,7 @@ export type WebSocketServerMessage =
   | WebSocketServerErrorMessage;
 
 export type WebSocketServerResponseDataMessage = {
-  resData: ResponseData;
+  resData: GeneralResponseData;
   tag: string;
 };
 

@@ -2,11 +2,11 @@ import {
   ErrorResponseData,
   FindOneRequestData,
   FindRequestData,
+  GeneralRequestData,
+  GeneralResponseData,
   GeneralTypeMap,
-  RequestData,
   RequestDataWithTypeMap,
   RequestMethodName,
-  ResponseData,
   ResponseDataWithTypeMap
 } from "../src";
 import { IsExtends, TypeEq, assertNotType, assertType } from "./helpers";
@@ -137,7 +137,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       string,
       string
     >;
-    assertType<TypeEq<RequestDataWithGeneralTypeMap, RequestData>>();
+    assertType<TypeEq<RequestDataWithGeneralTypeMap, GeneralRequestData>>();
   }
 
   /**
@@ -156,7 +156,10 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       string
     >;
     assertType<
-      TypeEq<ResponseDataWithGeneralTypeMap | ErrorResponseData, ResponseData>
+      TypeEq<
+        ResponseDataWithGeneralTypeMap | ErrorResponseData,
+        GeneralResponseData
+      >
     >();
   }
 }

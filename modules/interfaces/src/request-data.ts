@@ -16,7 +16,7 @@ import { Entity, PreEntity, ProEntity } from "./entity";
  * Type of request data handled in servers and clients.
  * This is a union type of all specific RequestData, so parameters cannot be inferred using this type.
  */
-export type RequestData =
+export type GeneralRequestData =
   | FindRequestData<string>
   | FindOneRequestData<string>
   | GetRequestData<string>
@@ -40,7 +40,7 @@ export type RequestData =
 /**
  * Acceptable method name in RequestData.
  */
-export type RequestMethodName = RequestData["method"];
+export type RequestMethodName = GeneralRequestData["method"];
 
 /**
  * RequestData handled by EntityDefinition.

@@ -22,11 +22,11 @@ import {
 } from "./command";
 import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
 
+import { GeneralRequestData } from "./request-data";
 import { PreEntity } from "./entity";
-import { RequestData } from "./request-data";
 
 export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
-  handleDefault(reqData: RequestData): Promise<T>;
+  handleDefault(reqData: GeneralRequestData): Promise<T>;
 } & Partial<{
   find<EN extends EntityNameOf<TM>>(query: WhereQuery<EN>): Promise<T>;
 
@@ -90,5 +90,5 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
     command: LogoutCommand<EN>
   ): Promise<T>;
 
-  notMatch(reqData: RequestData): Promise<T>;
+  notMatch(reqData: GeneralRequestData): Promise<T>;
 }>;
