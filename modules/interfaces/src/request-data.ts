@@ -16,26 +16,11 @@ import { Entity, PreEntity, ProEntity } from "./entity";
  * Type of request data handled in servers and clients.
  * This is a union type of all specific RequestData, so parameters cannot be inferred using this type.
  */
-export type GeneralRequestData =
-  | FindRequestData<string>
-  | FindOneRequestData<string>
-  | GetRequestData<string>
-  | GetByIdsRequestData<string>
-  | PullRequestData<string>
-  | InsertOneRequestData<string, ProEntity>
-  | InsertMultiRequestData<string, ProEntity>
-  | InsertAndGetRequestData<string, ProEntity>
-  | InsertAndGetMultiRequestData<string, ProEntity>
-  | UpdateOneRequestData<string>
-  | UpdateMultiRequestData<string>
-  | UpdateAndGetRequestData<string>
-  | UpdateAndFetchRequestData<string>
-  | PushRequestData<string>
-  | DeleteRequestData<string>
-  | RunCustomQueryRequestData<string, Object>
-  | RunCustomCommandRequestData<string, Object>
-  | LoginRequestData<string, Object>
-  | LogoutRequestData<string>;
+export type GeneralRequestData<N extends string = string> =
+  | GeneralEntityRequestData<N>
+  | GeneralCustomQueryRequestData<N>
+  | GeneralCustomCommandRequestData<N>
+  | GeneralAuthRequestData<N>;
 
 /**
  * Acceptable method name in RequestData.
@@ -66,7 +51,7 @@ export type EntityRequestData<EN extends string, E extends Entity> =
  * RequestData handled by EntityDefinition.
  * Pre-entity values in isnert data are not validated and any objects can be passed.
  */
-export type GeneralEntityRequestData<N extends string> =
+export type GeneralEntityRequestData<N extends string = string> =
   | FindRequestData<N>
   | FindOneRequestData<N>
   | GetRequestData<N>
@@ -95,10 +80,9 @@ export type AuthRequestData<EN extends string, C extends Object> =
  * RequestData handled by authentication.
  * Credentials are not validated and any objects can be passed.
  */
-export type GeneralAuthRequestData<EN extends string> = AuthRequestData<
-  EN,
-  Object
->;
+export type GeneralAuthRequestData<
+  EN extends string = string
+> = AuthRequestData<EN, Object>;
 
 /**
  * RequestData handled by UserDefinition (EntityRequestData | AuthRequestData).
@@ -114,7 +98,7 @@ export type UserEntityRequestData<
  * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
  * Credentials are not validated and any objects can be passed.
  */
-export type GeneralUserEntityRequestData<EN extends string> =
+export type GeneralUserEntityRequestData<EN extends string = string> =
   | GeneralEntityRequestData<EN>
   | GeneralAuthRequestData<EN>;
 
@@ -132,7 +116,7 @@ export type CustomQueryRequestData<
  * Params are not validated and any objects can be passed.
  */
 export type GeneralCustomQueryRequestData<
-  QN extends string
+  QN extends string = string
 > = CustomQueryRequestData<QN, Object>;
 
 /**
@@ -149,7 +133,7 @@ export type CustomCommandRequestData<
  * Params are not validated and any objects can be passed.
  */
 export type GeneralCustomCommandRequestData<
-  CN extends string
+  CN extends string = string
 > = CustomCommandRequestData<CN, Object>;
 
 export type FindRequestData<N extends string> = {
