@@ -8,28 +8,29 @@ export type ServerErrorType =
   | "InternalServer";
 export type LocalErrorType = "NetworkFailed" | "InvalidData" | "CodeProblem";
 
-export type PhenylError = ServerError | LocalError;
+export type PhenylError<D> = ServerError<D> | LocalError<D>;
 
 export type ErrorLocation = "server" | "local";
 
-export type ErrorDetail = {
+export type ErrorDetail<D extends Object> = {
   message: string;
-  detail: Object;
+  detail: D;
 };
 
-export interface ServerError {
+export type ServerError<D = any> = {
   ok: 0;
   at: "server";
   type: ServerErrorType;
   message: string;
   stack?: string;
-  detail?: Object;
-}
+  toJSON?: () => ServerError<D>;
+} & (D extends Object ? { detail: D } : {});
 
-export interface LocalError {
+export type LocalError<D = any> = {
+  ok: 0;
   at: "local";
   type: LocalErrorType;
   message: string;
   stack?: string;
-  detail?: Object;
-}
+  toJSON?: () => LocalError<D>;
+} & (D extends Object ? { detail: D } : {});

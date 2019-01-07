@@ -64,11 +64,11 @@ const guessErrorTypes = {
    */
 };
 
-export function createError(
-  error: Error | PhenylError | string | ErrorDetail,
+export function createError<D extends Object = Object>(
+  error: Error | PhenylError<D> | string | ErrorDetail<D>,
   _type?: PhenylErrorType | null,
   defaultLocation: ErrorLocation = "local"
-): PhenylError & Error {
+): PhenylError<D> & Error {
   if (typeof error === "string") {
     return createError(new Error(error), _type, defaultLocation);
   }
@@ -105,10 +105,10 @@ export function createError(
 /**
  * Create a ServerError (Error in Node.js).
  */
-export function createServerError(
-  error: Error | ServerError | string,
+export function createServerError<D extends Object = Object>(
+  error: Error | ServerError<D> | string,
   _type?: ServerErrorType
-): ServerError & Error {
+): ServerError<D> & Error {
   // @ts-ignore
   return createError(error, _type, "server");
 }
@@ -116,10 +116,10 @@ export function createServerError(
 /**
  * Create a LocalError (Error in browser, React Native, etc...).
  */
-export function createLocalError(
-  error: Error | ServerError | string,
+export function createLocalError<D extends Object = Object>(
+  error: Error | LocalError<D> | string,
   _type?: LocalErrorType
-): LocalError & Error {
+): LocalError<D> & Error {
   // @ts-ignore
   return createError(error, _type, "local");
 }
