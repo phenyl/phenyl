@@ -55,7 +55,7 @@ import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";
 
-export interface EntityClient<M extends GeneralEntityMap> {
+export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
@@ -173,6 +173,6 @@ export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
   AuthClient<BroaderEntityMapOf<TM>, AuthCommandMapOf<TM>> &
   RestApiHandler<TM>;
 
-export type SessionClient<AM extends GeneralAuthCommandMap> = KvsClient<
-  AllSessions<AM>
->;
+export type SessionClient<
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> = KvsClient<AllSessions<AM>>;

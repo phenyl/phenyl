@@ -68,6 +68,8 @@ export type EntityResponseData<E extends Entity> =
   | DeleteResponseData
   | ErrorResponseData;
 
+export type GeneralEntityResponseData = EntityResponseData<Entity>;
+
 /**
  * ResponseData handled by authentication.
  * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
@@ -88,6 +90,12 @@ export type UserEntityResponseData<
   S extends Object
 > = EntityResponseData<E> | AuthResponseData<EN, E, S>;
 
+export type GeneralUserEntityResponseData = UserEntityResponseData<
+  string,
+  Entity,
+  Object
+>;
+
 /**
  * ResponseData handled by CustomQueryDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -96,6 +104,8 @@ export type CustomQueryResponseData<
   QR extends Object
 > = RunCustomQueryResponseData<QR>;
 
+export type GeneralCustomQueryResponseData = CustomQueryResponseData<Object>;
+
 /**
  * ResponseData handled by CustomCommandDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -103,6 +113,10 @@ export type CustomQueryResponseData<
 export type CustomCommandResponseData<
   CR extends Object
 > = RunCustomCommandResponseData<CR>;
+
+export type GeneralCustomCommandResponseData = CustomCommandResponseData<
+  Object
+>;
 
 export type FindResponseData<E extends Entity> = {
   type: "find";

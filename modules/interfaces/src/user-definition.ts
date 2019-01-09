@@ -1,10 +1,16 @@
-import { Broader, Narrow } from "./type-map";
+import { Broad, Broader, Narrow } from "./type-map";
+import {
+  GeneralUserEntityRequestData,
+  UserEntityRequestData
+} from "./request-data";
 
 import { Entity } from "./entity";
-import { EntityDefinition } from "./entity-definition";
 import { LoginCommand } from "./command";
+import { Nullable } from "./utils";
 import { PreSession } from "./session";
 import { Session } from "./session";
+import { TypeProp } from "./entity-definition";
+import { UserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
   EN extends string,
@@ -25,7 +31,7 @@ export interface AuthDefinition<
 > {
   authenticate(
     loginCommand: LoginCommand<EN, C>,
-    session?: SS
+    session?: Nullable<SS>
   ): Promise<AuthenticationResult<EN, Narrow<Ebroader>, S>>;
 }
 
@@ -35,6 +41,30 @@ export interface UserDefinition<
   C extends Object = Object,
   S extends Object = Object,
   SS extends Session<string, Object> = Session<string, Object>
->
-  extends AuthDefinition<EN, Ebroader, C, S, SS>,
-    EntityDefinition<EN, Ebroader, SS> {}
+> extends AuthDefinition<EN, Ebroader, C, S, SS> {
+  entityName: TypeProp<EN>;
+  entity: TypeProp<Ebroader>;
+  authorize?: (
+    reqData: GeneralUserEntityRequestData<EN>,
+    session?: Nullable<SS>
+  ) => Promise<boolean>;
+
+  normalize?: (
+    reqData: UserEntityRequestData<EN, Broad<Ebroader>, C>,
+    session?: Nullable<SS>
+  ) => Promise<UserEntityRequestData<EN, Narrow<Ebroader>, C>>;
+
+  validate?: (
+    reqData: GeneralUserEntityRequestData<EN>,
+    session?: Nullable<SS>
+  ) => Promise<void>;
+
+  wrapExecution?: (
+    reqData: UserEntityRequestData<EN, Narrow<Ebroader>, C>,
+    session: Nullable<SS>,
+    executeFn: (
+      reqData: UserEntityRequestData<EN, Narrow<Ebroader>, C>,
+      session?: Nullable<SS>
+    ) => Promise<UserEntityResponseData<EN, Narrow<Ebroader>, S>>
+  ) => Promise<UserEntityResponseData<EN, Narrow<Ebroader>, S>>;
+}

@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { Key } from "./key";
+import { Key } from "./utils";
 import { Session } from "./session";
 
 /**
@@ -367,7 +367,16 @@ type ValueOf<T> = T[keyof T];
  * All possible sessions by given AuthCommandMap.
  */
 export type AllSessions<AM extends GeneralAuthCommandMap> = ValueOf<
-  { [EN in Key<AM>]: Session<EN, AM[EN]> }
+  {
+    [EN in Key<AM>]: Session<
+      EN,
+      "session" extends keyof AM[EN]
+        ? AM[EN]["session"] extends Object
+          ? AM[EN]["session"]
+          : Object
+        : Object
+    >
+  }
 >;
 
 /**

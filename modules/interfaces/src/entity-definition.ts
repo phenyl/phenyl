@@ -3,6 +3,7 @@ import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
 
 import { Entity } from "./entity";
 import { EntityResponseData } from "./response-data";
+import { Nullable } from "./utils";
 import { Session } from "./session";
 import { TypeOnly } from "./type-only";
 
@@ -13,31 +14,31 @@ export type TypeProp<T> = TypeOnly<
 export interface EntityDefinition<
   EN extends string = string,
   Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
-  SS extends Session<string, Object> = Session<string, Object>
+  SS extends Session = Session
 > {
   entityName: TypeProp<EN>;
   entity: TypeProp<Ebroader>;
   authorize?: (
     reqData: GeneralEntityRequestData<EN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<boolean>;
 
   normalize?: (
     reqData: EntityRequestData<EN, Broad<Ebroader>>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<EntityRequestData<EN, Narrow<Ebroader>>>;
 
   validate?: (
     reqData: GeneralEntityRequestData<EN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<void>;
 
   wrapExecution?: (
     reqData: EntityRequestData<EN, Narrow<Ebroader>>,
-    session: SS | null | undefined,
+    session: Nullable<SS>,
     executeFn: (
       reqData: EntityRequestData<EN, Narrow<Ebroader>>,
-      session?: SS
+      session?: Nullable<SS>
     ) => Promise<EntityResponseData<Narrow<Ebroader>>>
   ) => Promise<EntityResponseData<Narrow<Ebroader>>>;
 }

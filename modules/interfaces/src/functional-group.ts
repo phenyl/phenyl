@@ -18,7 +18,7 @@ import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
 import { EntityDefinition } from "./entity-definition";
 import { InverseTypeOnly } from "./type-only";
-import { Key } from "./key";
+import { Key } from "./utils";
 import { UserDefinition } from "./user-definition";
 
 export type EntityDefinitions<
