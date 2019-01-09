@@ -1,329 +1,228 @@
-import { assertValidRequestData, createServerError, PhenylRestApiDirectClient } from 'phenyl-utils/jsnext'
 import {
-  passThroughHandler,
-  noOperationHandler,
-  noHandler,
-  simpleExecutionWrapper,
-  simpleNormalizationHandler,
-} from './default-handlers.js'
-import { createParamsByFunctionalGroup } from './create-params-by-functional-group.js'
-import { createVersionDiff } from './create-version-diff.js'
-import {
-  RequestData,
-  ResponseData,
-  FunctionalGroup,
-  NormalizedFunctionalGroup,
-  RequestNormalizationHandler,
+  AuthCommandMapOf,
+  BroaderEntityMapOf,
   EntityClient,
-  SessionClient,
+  EveryNameOf,
+  FunctionalGroup,
+  GeneralRequestData,
+  GeneralResponseData,
+  GeneralTypeMap,
+  HandlerResult,
+  Nullable,
+  RequestDataWithTypeMapForResponse,
+  RequestMethodName,
+  ResponseDataWithTypeMap,
   RestApiHandler,
-  Session,
-  AuthorizationHandler,
-  ValidationHandler,
-  CustomQueryHandler,
-  CustomCommandHandler,
-  AuthenticationHandler,
-  ExecutionWrapper,
-  LoginCommand,
-  LoginCommandResult,
-  LogoutCommand,
-  LogoutCommandResult,
-  VersionDiffPublisher,
-  TypeMap,
-  EntityMapOf,
-  PhenylRestApiParams,
-} from 'phenyl-interfaces'
+  SessionClient,
+  VersionDiffPublisher
+} from "@phenyl/interfaces";
+import {
+  CustomCommandDefinitionExecutor,
+  CustomQueryDefinitionExecutor,
+  DefinitionExecutor,
+  EntityDefinitionExecutor,
+  UserDefinitionExecutor
+} from "./definition-executor";
+import {
+  PhenylRestApiDirectClient,
+  assertValidRequestData,
+  createServerError
+} from "@phenyl/utils";
+
+import { createVersionDiff } from "./create-version-diff";
+
+type DefinitionExecutorMap = {
+  user: { [key: string]: UserDefinitionExecutor };
+  entity: { [key: string]: EntityDefinitionExecutor };
+  customQuery: { [key: string]: CustomQueryDefinitionExecutor };
+  customCommand: { [key: string]: CustomCommandDefinitionExecutor };
+};
+
 /**
  *
  */
+export class PhenylRestApi<TM extends GeneralTypeMap>
+  implements RestApiHandler<TM> {
+  readonly client: EntityClient<BroaderEntityMapOf<TM>>;
+  readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+  readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
+  private readonly definitionExecutors: DefinitionExecutorMap;
 
-export class PhenylRestApi<TM extends TypeMap> implements RestApiHandler {
-  client: EntityClient<EntityMapOf<TM>>
-  sessionClient: SessionClient
-  authorizationHandler: AuthorizationHandler
-  normalizationHandler: RequestNormalizationHandler
-  validationHandler: ValidationHandler
-  customQueryHandler: CustomQueryHandler
-  customCommandHandler: CustomCommandHandler
-  authenticationHandler: AuthenticationHandler
-  executionWrapper: ExecutionWrapper
-  versionDiffPublisher: VersionDiffPublisher | undefined | null
-
-  constructor(params: PhenylRestApiParams<TM>) {
-    this.client = params.client
-    this.sessionClient = params.sessionClient || this.createSessionClient()
-    this.authorizationHandler = params.authorizationHandler || passThroughHandler
-    this.normalizationHandler = params.normalizationHandler || simpleNormalizationHandler
-    this.validationHandler = params.validationHandler || noOperationHandler
-    this.customQueryHandler = params.customQueryHandler || noHandler
-    this.customCommandHandler = params.customCommandHandler || noHandler
-    this.authenticationHandler = params.authenticationHandler || noHandler
-    this.executionWrapper = params.executionWrapper || simpleExecutionWrapper
-    this.versionDiffPublisher = params.versionDiffPublisher
-  }
-  /**
-   * Create instance from FunctionalGroup.
-   * "client" params must be set in 2nd argument.
-   *
-   * @example
-   *   const restApiHandler = PhenylRestApi.createFromFunctionalGroup({
-   *     customQueries: {}, customCommands: {}, users: {}, nonUsers: {}
-   *   }, { client: new PhenylMemoryClient() })
-   */
-
-  static createFromFunctionalGroup<T extends TypeMap>(
+  constructor(
     fg: FunctionalGroup,
-    params: PhenylRestApiParams<T>,
-  ): PhenylRestApi<T> {
-    const fgParams = createParamsByFunctionalGroup(normalizeFunctionalGroup(fg))
-    const newParams = Object.assign({}, params, fgParams)
-    return new PhenylRestApi(newParams)
+    params: {
+      client: EntityClient<BroaderEntityMapOf<TM>>;
+      sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+    }
+  ) {
+    this.client = params.client;
+    this.sessionClient = params.sessionClient;
+    this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
+
   /**
-   * @public
+   *
    */
-
-  async handleRequestData(reqData: RequestData): Promise<ResponseData> {
+  public async handleRequestData<
+    MN extends RequestMethodName,
+    N extends EveryNameOf<TM, MN>
+  >(
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
     try {
-      // 0. Request data validation
-      assertValidRequestData(reqData) // 1. Get session information
-
-      const session = await this.sessionClient.get(reqData.sessionId) // 2. Authorization
-
-      const isAccessible = await this.authorizationHandler(reqData, session)
-
+      assertValidRequestData(reqData);
+      const session = await this.sessionClient.get(reqData.sessionId!);
+      const executor = this.getExecutor(
+        reqData.method,
+        this.extractName(reqData)
+      );
+      const isAccessible = await executor.authorize(reqData, session);
       if (!isAccessible) {
         return {
-          type: 'error',
-          payload: createServerError('Authorization Required.', 'Unauthorized'),
-        }
+          type: "error",
+          payload: createServerError("Authorization Required.", "Unauthorized")
+        };
       }
-
-      const normalizedReqData = await this.normalizationHandler(reqData, session) // 4. Validation
+      const normalizedReqData = await executor.normalize(reqData, session);
 
       try {
-        await this.validationHandler(normalizedReqData, session)
+        await executor.validate(normalizedReqData, session);
       } catch (validationError) {
-        validationError.message = `Validation Failed. ${validationError.mesage}`
+        validationError.message = `Validation Failed. ${
+          validationError.mesage
+        }`;
         return {
-          type: 'error',
-          payload: createServerError(validationError, 'BadRequest'),
-        }
-      } // 5. Execution
+          type: "error",
+          payload: createServerError(validationError, "BadRequest")
+        };
+      }
 
-      const resData = await this.executionWrapper(normalizedReqData, session, this.execute.bind(this)) // 5. Publish VersionDiff (Side-Effect)
+      const resData = await executor.execute(normalizedReqData, session);
 
-      this.publishVersionDiff(normalizedReqData, resData)
-      return resData
+      this.publishVersionDiff(normalizedReqData, resData);
+      return resData as ResponseDataWithTypeMap<TM, MN, N>;
     } catch (e) {
       return {
-        type: 'error',
-        payload: createServerError(e),
-      }
+        type: "error",
+        payload: createServerError(e)
+      };
     }
   }
-  /**
-   * @public
-   */
 
-  createDirectClient(): PhenylRestApiDirectClient<TM> {
-    return new PhenylRestApiDirectClient(this)
-  }
   /**
    *
    */
+  public createDirectClient(): PhenylRestApiDirectClient<TM> {
+    return new PhenylRestApiDirectClient<TM>(this);
+  }
 
-  async execute(reqData: RequestData, session: Session | undefined | null): Promise<ResponseData> {
-    switch (reqData.method) {
-      case 'find':
-        return {
-          type: 'find',
-          payload: await this.client.find(reqData.payload),
-        }
-
-      case 'findOne':
-        return {
-          type: 'findOne',
-          payload: await this.client.findOne(reqData.payload),
-        }
-
-      case 'get':
-        return {
-          type: 'get',
-          payload: await this.client.get(reqData.payload),
-        }
-
-      case 'getByIds':
-        return {
-          type: 'getByIds',
-          payload: await this.client.getByIds(reqData.payload),
-        }
-
-      case 'pull':
-        return {
-          type: 'pull',
-          payload: await this.client.pull(reqData.payload),
-        }
-
-      case 'insertOne':
-        return {
-          type: 'insertOne',
-          payload: await this.client.insertOne(reqData.payload),
-        }
-
-      case 'insertMulti':
-        return {
-          type: 'insertMulti',
-          payload: await this.client.insertMulti(reqData.payload),
-        }
-
-      case 'insertAndGet':
-        return {
-          type: 'insertAndGet',
-          payload: await this.client.insertAndGet(reqData.payload),
-        }
-
-      case 'insertAndGetMulti':
-        return {
-          type: 'insertAndGetMulti',
-          payload: await this.client.insertAndGetMulti(reqData.payload),
-        }
-
-      case 'updateById':
-        return {
-          type: 'updateById',
-          payload: await this.client.updateById(reqData.payload),
-        }
-
-      case 'updateMulti':
-        return {
-          type: 'updateMulti',
-          payload: await this.client.updateMulti(reqData.payload),
-        }
-
-      case 'updateAndGet':
-        return {
-          type: 'updateAndGet',
-          payload: await this.client.updateAndGet(reqData.payload),
-        }
-
-      case 'updateAndFetch':
-        return {
-          type: 'updateAndFetch',
-          payload: await this.client.updateAndFetch(reqData.payload),
-        }
-
-      case 'push':
-        return {
-          type: 'push',
-          payload: await this.client.push(reqData.payload),
-        }
-
-      case 'delete':
-        return {
-          type: 'delete',
-          payload: await this.client.delete(reqData.payload),
-        }
-
-      case 'runCustomQuery':
-        return {
-          type: 'runCustomQuery',
-          payload: await this.customQueryHandler(reqData.payload, session),
-        }
-
-      case 'runCustomCommand':
-        return {
-          type: 'runCustomCommand',
-          payload: await this.customCommandHandler(reqData.payload, session),
-        }
-
-      case 'login':
-        return {
-          type: 'login',
-          payload: await this.login(reqData.payload, session),
-        }
-
-      case 'logout':
-        return {
-          type: 'logout',
-          payload: await this.logout(reqData.payload, session),
-        }
-
-      default: {
-        return {
-          type: 'error',
-          payload: createServerError('Invalid method name.', 'NotFound'),
-        }
+  private getExecutor(
+    methodName: RequestMethodName,
+    name: string
+  ): DefinitionExecutor {
+    if (methodName === "login" || methodName === "logout") {
+      if (this.definitionExecutors.user[name]) {
+        return this.definitionExecutors.user[name];
       }
+      throw createServerError(
+        `No user entity name found: "${name}"`,
+        "NotFound"
+      );
     }
-  }
-  /**
-   * create Session
-   */
+    if (methodName === "runCustomQuery") {
+      if (this.definitionExecutors.customQuery[name]) {
+        return this.definitionExecutors.customQuery[name];
+      }
+      throw createServerError(
+        `No user custom query name found: "${name}"`,
+        "NotFound"
+      );
+    }
+    if (methodName === "runCustomCommand") {
+      if (this.definitionExecutors.customCommand[name]) {
+        return this.definitionExecutors.customCommand[name];
+      }
+      throw createServerError(
+        `No user custom command name found: "${name}"`,
+        "NotFound"
+      );
+    }
 
-  async login(loginCommand: LoginCommand<>, session: Session | undefined | null): Promise<LoginCommandResult<>> {
-    const result = await this.authenticationHandler(loginCommand, session)
-    const newSession = await this.sessionClient.create(result.preSession)
-    return {
-      ok: 1,
-      user: result.user,
-      versionId: result.versionId,
-      session: newSession,
+    if (this.definitionExecutors.entity[name]) {
+      return this.definitionExecutors.entity[name];
     }
+    if (this.definitionExecutors.user[name]) {
+      return this.definitionExecutors.user[name];
+    }
+    throw createServerError(`No entity name found: "${name}"`, "NotFound");
   }
+
   /**
    * Publish entity version diffs.
    */
-
-  publishVersionDiff(reqData: RequestData, resData: ResponseData) {
-    const { versionDiffPublisher } = this
-    if (versionDiffPublisher == null) return
-    const versionDiffs = createVersionDiff(reqData, resData)
+  private publishVersionDiff(
+    reqData: GeneralRequestData,
+    resData: GeneralResponseData
+  ) {
+    if (this.versionDiffPublisher == null) return;
+    const versionDiffs = createVersionDiff(reqData, resData);
 
     for (const versionDiff of versionDiffs) {
-      versionDiffPublisher.publishVersionDiff(versionDiff)
+      this.versionDiffPublisher.publishVersionDiff(versionDiff);
     }
   }
-  /**
-   * delete Session by sessionId if exists.
-   */
 
-  async logout(logoutCommand: LogoutCommand<>, session: Session | undefined | null): Promise<LogoutCommandResult> {
-    // eslint-disable-line no-unused-vars
-    const { sessionId } = logoutCommand
-    const result = await this.sessionClient.delete(sessionId) // sessionId not found
-
-    if (!result) {
-      throw createServerError('sessionId not found', 'BadRequest')
-    }
-
-    return {
-      ok: 1,
-    }
+  private extractName(
+    reqData: GeneralRequestData
+  ): EveryNameOf<TM, RequestMethodName> {
+    if (reqData.method === "runCustomQuery") return reqData.payload.name;
+    if (reqData.method === "runCustomCommand") return reqData.payload.name;
+    return reqData.payload.entityName;
   }
-  /**
-   * @private
-   */
 
-  createSessionClient(): SessionClient {
-    try {
-      return this.client.createSessionClient()
-    } catch (e) {
-      throw new Error(
-        '"sessionClient" is missing in 1st argument of constructor "new PhenylRestApi()". SessionClient can be created by EntityClient ("client" property in argument), but the given client couldn\'t.',
-      )
-    }
+  private createDefinitionExecutors(
+    fg: FunctionalGroup
+  ): DefinitionExecutorMap {
+    const user = fg.users
+      ? Object.entries(fg.users).reduce(
+          (acc, [name, def]) => ({
+            ...acc,
+            [name]: new UserDefinitionExecutor(
+              def,
+              this.client,
+              this.sessionClient
+            )
+          }),
+          {}
+        )
+      : {};
+    const entity = fg.nonUsers
+      ? Object.entries(fg.nonUsers).reduce(
+          (acc, [name, def]) => ({
+            ...acc,
+            [name]: new EntityDefinitionExecutor(def, this.client)
+          }),
+          {}
+        )
+      : {};
+    const customQuery = fg.customQueries
+      ? Object.entries(fg.customQueries).reduce(
+          (acc, [name, def]) => ({
+            ...acc,
+            [name]: new CustomQueryDefinitionExecutor(def, this.client)
+          }),
+          {}
+        )
+      : {};
+    const customCommand = fg.customCommands
+      ? Object.entries(fg.customCommands).reduce(
+          (acc, [name, def]) => ({
+            ...acc,
+            [name]: new CustomCommandDefinitionExecutor(def, this.client)
+          }),
+          {}
+        )
+      : {};
+    return { user, entity, customQuery, customCommand };
   }
-}
-
-function normalizeFunctionalGroup(fg: FunctionalGroup): NormalizedFunctionalGroup {
-  return Object.assign(
-    {
-      users: {},
-      nonUsers: {},
-      customQueries: {},
-      customCommands: {},
-    },
-    fg,
-  )
 }
