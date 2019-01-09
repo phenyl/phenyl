@@ -1,16 +1,15 @@
 import {
   ErrorResponseData,
-  EveryNameOf,
   FindOneRequestData,
   FindRequestData,
   GeneralRequestData,
   GeneralResponseData,
   GeneralTypeMap,
+  Narrow,
   RequestDataWithTypeMap,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
-  ResponseDataWithTypeMap,
-  WhereQuery
+  ResponseDataWithTypeMap
 } from "../src";
 import { IsExtends, TypeEq, assertNotType, assertType } from "./helpers";
 
@@ -157,6 +156,29 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       RequestMethodName,
       string
     >;
+    assertType<
+      TypeEq<
+        ResponseDataWithGeneralTypeMap | ErrorResponseData,
+        GeneralResponseData
+      >
+    >();
+  }
+  /**
+   * ResponseDataWithTypeMap with GeneralTypeMap
+   *  and
+   * ResponseData
+   *  are identical.
+   */
+  {
+    type ResponseDataWithGeneralTypeMap = ResponseDataWithTypeMap<
+      GeneralTypeMap,
+      RequestMethodName,
+      string
+    >;
+    type TM = GeneralTypeMap;
+    type N = string;
+    type EE = Narrow<TM["entities"][N & Extract<keyof TM["entities"], string>]>;
+
     assertType<
       TypeEq<
         ResponseDataWithGeneralTypeMap | ErrorResponseData,
