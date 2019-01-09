@@ -1,6 +1,7 @@
 import { CustomQuery } from "./query";
 import { CustomQueryResult } from "./query-result";
 import { GeneralCustomQueryRequestData } from "./request-data";
+import { Nullable } from "./utils";
 import { Session } from "./session";
 
 export interface CustomQueryDefinition<
@@ -11,21 +12,21 @@ export interface CustomQueryDefinition<
 > {
   authorize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<boolean>;
 
   normalize?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<GeneralCustomQueryRequestData<QN>>;
 
   validate?: (
     reqData: GeneralCustomQueryRequestData<QN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<void>;
 
   execute(
     query: CustomQuery<QN, QP>,
-    session?: SS
+    session?: Nullable<SS>
   ): Promise<CustomQueryResult<QR>>;
 }

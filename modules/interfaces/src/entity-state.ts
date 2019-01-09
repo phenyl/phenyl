@@ -4,7 +4,7 @@ import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
-import { Key } from "./key";
+import { Key } from "./utils";
 
 export type EntityPool<M extends GeneralEntityMap> = {
   [EN in Key<M>]: EntitiesById<NarrowEntity<M, EN>>

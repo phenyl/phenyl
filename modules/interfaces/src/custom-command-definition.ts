@@ -1,6 +1,7 @@
 import { CustomCommand } from "./command";
 import { CustomCommandResult } from "./command-result";
 import { GeneralCustomCommandRequestData } from "./request-data";
+import { Nullable } from "./utils";
 import { Session } from "./session";
 
 export interface CustomCommandDefinition<
@@ -11,21 +12,21 @@ export interface CustomCommandDefinition<
 > {
   authorize?: (
     reqData: GeneralCustomCommandRequestData<CN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<boolean>;
 
   normalize?: (
     reqData: GeneralCustomCommandRequestData<CN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<GeneralCustomCommandRequestData<CN>>;
 
   validate?: (
     reqData: GeneralCustomCommandRequestData<CN>,
-    session?: SS
+    session?: Nullable<SS>
   ) => Promise<void>;
 
   execute(
     command: CustomCommand<CN, CP>,
-    session?: SS
+    session?: Nullable<SS>
   ): Promise<CustomCommandResult<CR>>;
 }

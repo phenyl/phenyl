@@ -50,7 +50,7 @@ import {
   SingleQueryResult
 } from "./query-result";
 
-import { Key } from "./key";
+import { Key } from "./utils";
 import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";

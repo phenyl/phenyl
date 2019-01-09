@@ -20,7 +20,7 @@ import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
 import { Entity } from "./entity";
 import { EntityDefinition } from "./entity-definition";
-import { Key } from "./key";
+import { Key } from "./utils";
 
 export interface OlderEntityDefinition<
   EN extends string = string,

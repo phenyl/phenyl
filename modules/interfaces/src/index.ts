@@ -15,7 +15,7 @@ export * from "./http-client";
 export * from "./http-server";
 export * from "./http";
 export * from "./index";
-export * from "./key";
+export * from "./utils";
 export * from "./kvs-client";
 export * from "./local-state";
 export * from "./older-functional-group";

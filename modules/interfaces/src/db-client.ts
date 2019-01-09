@@ -8,7 +8,7 @@ import {
 import { GeneralEntityMap, NarrowEntity } from "./type-map";
 import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
-import { Key } from "./key";
+import { Key } from "./utils";
 import { PreEntity } from "./entity";
 
 export interface DbClient<M extends GeneralEntityMap> {

@@ -1,7 +1,7 @@
 import { Entity } from "./entity";
 import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "@sp2/format";
-import { Key } from "./key";
+import { Key } from "./utils";
 import { PushCommand } from "./command";
 
 export type EntityVersion = {

@@ -8,7 +8,7 @@ import { ErrorLocation, PhenylErrorType } from "./error";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
-import { Key } from "./key";
+import { Key } from "./utils";
 
 export type LocalEntityInfo<E extends Entity> = {
   origin: E;
