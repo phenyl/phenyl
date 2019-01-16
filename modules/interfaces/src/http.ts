@@ -1,4 +1,5 @@
 import { GeneralResponseData } from "./response-data";
+import { IncomingHttpHeaders } from "http";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -6,7 +7,7 @@ export type QueryStringParams = { [name: string]: string };
 
 export type EncodedHttpRequest = {
   method: HttpMethod;
-  headers: { [name: string]: string };
+  headers: IncomingHttpHeaders;
   path: string; // must start with "/"
   qsParams?: QueryStringParams;
   body?: string;
