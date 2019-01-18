@@ -1,7 +1,7 @@
 # Phenyl - State Synchronization over Environments [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl-js/phenyl)
 **WORK IN PROGRESS**
 
-Phenyl is a **series of JavaScript libraries** for both client-side and server-side, which focusus on **State Synchronization over Environments(SSoE)**.
+Phenyl is a **series of JavaScript libraries** for both client-side and server-side, which focuses on **State Synchronization over Environments(SSoE)**.
 
 ServerSide Phenyl provides an API server like MBaaS(Mobile Backend as a server).
 ClientSide Phenyl provides [Redux](https://redux.js.org) module system.
