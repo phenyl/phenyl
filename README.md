@@ -5,7 +5,7 @@ Phenyl is a **series of JavaScript libraries** for both client-side and server-s
 
 ServerSide Phenyl provides an API server like MBaaS(Mobile Backend as a server).
 ClientSide Phenyl provides [Redux](https://redux.js.org) module system.
-Within these two environments, State are Synchronized in various ways.
+Within these two environments, States are Synchronized in various ways.
 
 # State Synchronization over Environments (SSoE)
 TBD
