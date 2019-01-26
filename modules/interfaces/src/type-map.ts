@@ -42,10 +42,14 @@ import { Session } from "./session";
  *    }
  */
 export interface GeneralTypeMap {
-  entities: GeneralEntityMap;
+  entities: GeneralReqResEntityMap;
   customQueries: GeneralCustomMap;
   customCommands: GeneralCustomMap;
   auths: GeneralAuthCommandMap;
+}
+
+export interface GeneralEntityMap {
+  [entityName: string]: Entity;
 }
 
 /**
@@ -56,7 +60,7 @@ export interface GeneralTypeMap {
  * Library users implement concrete EntityMap in TypeMap.
  * See description of TypeMap.
  */
-export interface GeneralEntityMap {
+export interface GeneralReqResEntityMap {
   [entityName: string]: ReqRes<Entity, Entity>;
 }
 
@@ -143,7 +147,7 @@ export type RequestEntityMapOf<TM extends GeneralTypeMap> = {
 };
 
 /**
- * Entity of given entity name in given TypeMap.
+ * ReqResEntity of given entity name in given TypeMap.
  */
 export type ReqResEntityOf<
   TM extends GeneralTypeMap,
@@ -151,7 +155,7 @@ export type ReqResEntityOf<
 > = ReqResEntity<TM["entities"], EN>;
 
 export type ReqResEntity<
-  EM extends GeneralEntityMap,
+  EM extends GeneralReqResEntityMap,
   EN extends Key<EM>
 > = EM[EN];
 
@@ -164,7 +168,7 @@ export type ResponseEntityOf<
 > = ResponseEntity<TM["entities"], EN>;
 
 export type ResponseEntity<
-  EM extends GeneralEntityMap,
+  EM extends GeneralReqResEntityMap,
   EN extends Key<EM>
 > = Narrow<EM[EN]>;
 
@@ -177,7 +181,7 @@ export type RequestEntityOf<
 > = RequestEntity<TM["entities"], EN>;
 
 export type RequestEntity<
-  EM extends GeneralEntityMap,
+  EM extends GeneralReqResEntityMap,
   EN extends Key<EM>
 > = Broad<EM[EN]>;
 
@@ -392,7 +396,7 @@ export type ResponseAuthUserOf<
 type EntityOfAuth<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralEntityMap = GeneralEntityMap
+  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
 > = EN extends Key<EM> ? ReqResEntity<EM, EN> : ReqRes<Entity>;
 
 /**
@@ -403,7 +407,7 @@ type EntityOfAuth<
 export type ReqResAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralEntityMap = GeneralEntityMap
+  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
 > = EntityOfAuth<AM, EN, EM>;
 
 /**
@@ -414,7 +418,7 @@ export type ReqResAuthUser<
 export type ResponseAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralEntityMap = GeneralEntityMap
+  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
 > = Narrow<EntityOfAuth<AM, EN, EM>>;
 
 /**
@@ -425,7 +429,7 @@ export type ResponseAuthUser<
 export type RequestAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralEntityMap = GeneralEntityMap
+  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
 > = Broad<EntityOfAuth<AM, EN, EM>>;
 
 type CustomParams<
@@ -447,9 +451,9 @@ type CustomResultValue<
   : Object; // If "result" is not set, set Object.
 
 export type ReqRes<
-Trequest extends Entity,
-Tresponse extends Entity = Trequest
-> = {request: Trequest, response: Tresponse} ;
+  Trequest extends Entity,
+  Tresponse extends Entity = Trequest
+> = { request: Trequest; response: Tresponse };
 
-type Narrow<T extends ReqRes<Entity>> = T['response'];
-type Broad<T extends ReqRes<Entity>> = T['request'];
+type Narrow<T extends ReqRes<Entity>> = T["response"];
+type Broad<T extends ReqRes<Entity>> = T["request"];

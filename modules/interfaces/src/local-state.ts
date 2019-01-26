@@ -1,7 +1,7 @@
 import {
   AllSessions,
   GeneralAuthCommandMap,
-  GeneralEntityMap,
+  GeneralReqResEntityMap,
   ResponseEntity
 } from "./type-map";
 import { ErrorLocation, PhenylErrorType } from "./error";
@@ -21,7 +21,7 @@ export type LocalEntityInfoById<E extends Entity> = {
   [entityId: string]: LocalEntityInfo<E>;
 };
 
-export type LocalEntityState<M extends GeneralEntityMap> = {
+export type LocalEntityState<M extends GeneralReqResEntityMap> = {
   [EN in Key<M>]: LocalEntityInfoById<ResponseEntity<M, EN>>
 };
 
@@ -32,7 +32,7 @@ export type UnreachedCommit<EN extends string> = {
 };
 
 export type LocalState<
-  M extends GeneralEntityMap,
+  M extends GeneralReqResEntityMap,
   AM extends GeneralAuthCommandMap
 > = {
   entities: LocalEntityState<M>;

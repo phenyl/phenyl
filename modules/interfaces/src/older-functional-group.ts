@@ -12,7 +12,7 @@ import {
   GeneralCustomCommandMap,
   GeneralCustomMap,
   GeneralCustomQueryMap,
-  GeneralEntityMap
+  GeneralReqResEntityMap
 } from "./type-map";
 import { AuthDefinition, UserDefinition } from "./user-definition";
 
@@ -32,7 +32,7 @@ export interface OlderEntityDefinition<
   wrapExecution?: EntityDefinition<EN, Ebroader>["wrapExecution"];
 }
 
-type OlderEntityDefinitions<M extends GeneralEntityMap> = {
+type OlderEntityDefinitions<M extends GeneralReqResEntityMap> = {
   [EN in Key<M>]:
     | OlderEntityDefinition<EN, ReqResEntity<M, EN>>
     | EntityDefinition<EN, ReqResEntity<M, EN>>
@@ -99,7 +99,7 @@ export interface OlderUserDefinition<
 
 type OlderUserDefinitions<
   AM extends GeneralAuthCommandMap,
-  EM extends GeneralEntityMap
+  EM extends GeneralReqResEntityMap
 > = {
   [EN in Key<AM>]:
     | OlderUserDefinition<
@@ -117,8 +117,8 @@ type OlderUserDefinitions<
 };
 
 export type OlderFunctionalGroup = Partial<{
-  users: OlderUserDefinitions<GeneralAuthCommandMap, GeneralEntityMap>;
-  nonUsers: OlderEntityDefinitions<GeneralEntityMap>;
+  users: OlderUserDefinitions<GeneralAuthCommandMap, GeneralReqResEntityMap>;
+  nonUsers: OlderEntityDefinitions<GeneralReqResEntityMap>;
   customQueries: OlderCustomQueryDefinitions<GeneralCustomMap>;
   customCommands: OlderCustomCommandDefinitions<GeneralCustomMap>;
 }>;

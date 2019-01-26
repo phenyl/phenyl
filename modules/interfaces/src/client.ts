@@ -13,7 +13,7 @@ import {
   CustomQueryResultValue,
   GeneralAuthCommandMap,
   GeneralCustomMap,
-  GeneralEntityMap,
+  GeneralReqResEntityMap,
   GeneralTypeMap,
   ResponseAuthUser,
   ResponseEntity
@@ -55,7 +55,9 @@ import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";
 
-export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
+export interface EntityClient<
+  M extends GeneralReqResEntityMap = GeneralReqResEntityMap
+> {
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
@@ -148,7 +150,7 @@ export interface CustomClient<
 }
 
 export interface AuthClient<
-  M extends GeneralEntityMap,
+  M extends GeneralReqResEntityMap,
   AM extends GeneralAuthCommandMap
 > {
   login<EN extends Key<AM>>(

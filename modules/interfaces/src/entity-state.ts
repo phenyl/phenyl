@@ -1,24 +1,26 @@
 import { DeleteCommand, IdUpdateCommand, MultiUpdateCommand } from "./command";
-import { GeneralEntityMap, ResponseEntity } from "./type-map";
+import { GeneralReqResEntityMap, ResponseEntity } from "./type-map";
 import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
 import { Key } from "./utils";
 
-export type EntityPool<M extends GeneralEntityMap> = {
+export type EntityPool<M extends GeneralReqResEntityMap> = {
   [EN in Key<M>]: EntitiesById<ResponseEntity<M, EN>>
 };
 export type EntitiesById<T extends Entity> = { [id: string]: T };
 
-export interface EntityState<M extends GeneralEntityMap> {
+export interface EntityState<M extends GeneralReqResEntityMap> {
   pool: EntityPool<M>;
 }
 
-export interface EntityStateFinder<M extends GeneralEntityMap> {
+export interface EntityStateFinder<M extends GeneralReqResEntityMap> {
   find<EN extends Key<M>>(query: WhereQuery<EN>): ResponseEntity<M, EN>[];
 
-  findOne<EN extends Key<M>>(query: WhereQuery<EN>): ResponseEntity<M, EN> | null;
+  findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>
+  ): ResponseEntity<M, EN> | null;
 
   get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN>;
 
@@ -27,7 +29,7 @@ export interface EntityStateFinder<M extends GeneralEntityMap> {
   has<EN extends Key<M>>(query: IdQuery<EN>): boolean;
 }
 
-export interface EntityStateUpdater<M extends GeneralEntityMap> {
+export interface EntityStateUpdater<M extends GeneralReqResEntityMap> {
   register<N extends string>(
     entityName: N,
     ...entities: Array<M[N]>
