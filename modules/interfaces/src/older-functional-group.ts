@@ -1,9 +1,9 @@
 import {
   AuthCredentials,
   AuthSessions,
-  Broader,
-  BroaderAuthUser,
-  BroaderEntity,
+  ReqRes,
+  ReqResAuthUser,
+  ReqResEntity,
   CustomCommandParams,
   CustomCommandResultValue,
   CustomQueryParams,
@@ -24,7 +24,7 @@ import { Key } from "./utils";
 
 export interface OlderEntityDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity]
+  Ebroader extends ReqRes<Entity> = ReqRes<Entity>
 > {
   authorization?: EntityDefinition<EN, Ebroader>["authorize"];
   normalization?: EntityDefinition<EN, Ebroader>["normalize"];
@@ -34,8 +34,8 @@ export interface OlderEntityDefinition<
 
 type OlderEntityDefinitions<M extends GeneralEntityMap> = {
   [EN in Key<M>]:
-    | OlderEntityDefinition<EN, BroaderEntity<M, EN>>
-    | EntityDefinition<EN, BroaderEntity<M, EN>>
+    | OlderEntityDefinition<EN, ReqResEntity<M, EN>>
+    | EntityDefinition<EN, ReqResEntity<M, EN>>
 };
 
 export interface OlderCustomQueryDefinition<
@@ -90,7 +90,7 @@ type OlderCustomCommandDefinitions<CM extends GeneralCustomCommandMap> = {
 
 export interface OlderUserDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
+  Ebroader extends ReqRes<Entity> = ReqRes<Entity>,
   C extends Object = Object,
   S extends Object = Object
 > extends OlderEntityDefinition<EN, Ebroader> {
@@ -104,13 +104,13 @@ type OlderUserDefinitions<
   [EN in Key<AM>]:
     | OlderUserDefinition<
         EN,
-        BroaderAuthUser<AM, EN, EM>,
+        ReqResAuthUser<AM, EN, EM>,
         AuthCredentials<AM, EN>,
         AuthSessions<AM, EN>
       >
     | UserDefinition<
         EN,
-        BroaderAuthUser<AM, EN, EM>,
+        ReqResAuthUser<AM, EN, EM>,
         AuthCredentials<AM, EN>,
         AuthSessions<AM, EN>
       >

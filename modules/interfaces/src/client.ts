@@ -3,8 +3,8 @@ import {
   AuthCommandMapOf,
   AuthCredentials,
   AuthSessions,
-  BroadEntity,
-  BroaderEntityMapOf,
+  RequestEntity,
+  ReqResEntityMapOf,
   CustomCommandMapOf,
   CustomCommandParams,
   CustomCommandResultValue,
@@ -15,8 +15,8 @@ import {
   GeneralCustomMap,
   GeneralEntityMap,
   GeneralTypeMap,
-  NarrowAuthUser,
-  NarrowEntity
+  ResponseAuthUser,
+  ResponseEntity
 } from "./type-map";
 import {
   CustomCommand,
@@ -59,47 +59,47 @@ export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
-  ): Promise<QueryResult<NarrowEntity<M, EN>>>;
+  ): Promise<QueryResult<ResponseEntity<M, EN>>>;
 
   findOne<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
-  ): Promise<SingleQueryResult<NarrowEntity<M, EN>>>;
+  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>>;
 
   get<EN extends Key<M>>(
     query: IdQuery<EN>,
     sessionId?: string | null
-  ): Promise<SingleQueryResult<NarrowEntity<M, EN>>>;
+  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>>;
 
   getByIds<EN extends Key<M>>(
     query: IdsQuery<EN>,
     sessionId?: string | null
-  ): Promise<QueryResult<NarrowEntity<M, EN>>>;
+  ): Promise<QueryResult<ResponseEntity<M, EN>>>;
 
   pull<EN extends Key<M>>(
     query: PullQuery<EN>,
     sessionId?: string | null
-  ): Promise<PullQueryResult<NarrowEntity<M, EN>>>;
+  ): Promise<PullQueryResult<ResponseEntity<M, EN>>>;
 
   insertOne<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
+    command: SingleInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<SingleInsertCommandResult>;
 
   insertMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
+    command: MultiInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
     sessionId?: string | null
   ): Promise<MultiInsertCommandResult>;
 
   insertAndGet<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
+    command: SingleInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
     sessionId?: string | null
-  ): Promise<GetCommandResult<NarrowEntity<M, EN>>>;
+  ): Promise<GetCommandResult<ResponseEntity<M, EN>>>;
 
   insertAndGetMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<BroadEntity<M, EN>>>,
+    command: MultiInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
     sessionId?: string | null
-  ): Promise<MultiValuesCommandResult<NarrowEntity<M, EN>>>;
+  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>>;
 
   updateById<EN extends Key<M>>(
     command: IdUpdateCommand<EN>,
@@ -114,17 +114,17 @@ export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
   updateAndGet<EN extends Key<M>>(
     command: IdUpdateCommand<EN>,
     sessionId?: string | null
-  ): Promise<GetCommandResult<NarrowEntity<M, EN>>>;
+  ): Promise<GetCommandResult<ResponseEntity<M, EN>>>;
 
   updateAndFetch<EN extends Key<M>>(
     command: MultiUpdateCommand<EN>,
     sessionId?: string | null
-  ): Promise<MultiValuesCommandResult<NarrowEntity<M, EN>>>;
+  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>>;
 
   push<EN extends Key<M>>(
     command: PushCommand<EN>,
     sessionId?: string | null
-  ): Promise<PushCommandResult<NarrowEntity<M, EN>>>;
+  ): Promise<PushCommandResult<ResponseEntity<M, EN>>>;
 
   delete<EN extends Key<M>>(
     command: DeleteCommand<EN>,
@@ -155,7 +155,7 @@ export interface AuthClient<
     command: LoginCommand<EN, AuthCredentials<AM, EN>>,
     sessionId?: string | null
   ): Promise<
-    LoginCommandResult<EN, NarrowAuthUser<AM, EN, M>, AuthSessions<AM, EN>>
+    LoginCommandResult<EN, ResponseAuthUser<AM, EN, M>, AuthSessions<AM, EN>>
   >;
 
   logout<EN extends Key<AM>>(
@@ -167,10 +167,10 @@ export interface AuthClient<
 }
 
 export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
-  BroaderEntityMapOf<TM>
+  ReqResEntityMapOf<TM>
 > &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &
-  AuthClient<BroaderEntityMapOf<TM>, AuthCommandMapOf<TM>> &
+  AuthClient<ReqResEntityMapOf<TM>, AuthCommandMapOf<TM>> &
   RestApiHandler<TM>;
 
 export type SessionClient<

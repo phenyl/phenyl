@@ -1,4 +1,4 @@
-import { Broad, Broader, Narrow } from "./type-map";
+import { Broad, ReqRes, Narrow } from "./type-map";
 import {
   GeneralUserEntityRequestData,
   UserEntityRequestData
@@ -24,7 +24,7 @@ export type AuthenticationResult<
 
 export interface AuthDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
+  Ebroader extends ReqRes<Entity> = ReqRes<Entity>,
   C extends Object = Object,
   S extends Object = Object,
   SS extends Session<string, Object> = Session<string, Object>
@@ -37,7 +37,7 @@ export interface AuthDefinition<
 
 export interface UserDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
+  Ebroader extends ReqRes<Entity> = ReqRes<Entity>,
   C extends Object = Object,
   S extends Object = Object,
   SS extends Session<string, Object> = Session<string, Object>

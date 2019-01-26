@@ -57,7 +57,7 @@ export interface GeneralTypeMap {
  * See description of TypeMap.
  */
 export interface GeneralEntityMap {
-  [entityName: string]: Broader<Entity, Entity>;
+  [entityName: string]: ReqRes<Entity, Entity>;
 }
 
 /**
@@ -122,14 +122,14 @@ type GeneralAuthSetting = {
  * - Key: name of entity
  * - Value: type of its narrow and broad entity
  */
-export type BroaderEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
+export type ReqResEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
 
 /**
  * Key-value map of entities in given TypeMap.
  * - Key: name of entity
  * - Value: type of its narrow entity
  */
-export type NarrowEntityMapOf<TM extends GeneralTypeMap> = {
+export type ResponseEntityMapOf<TM extends GeneralTypeMap> = {
   [K in Key<TM["entities"]>]: Narrow<TM["entities"][K]>
 };
 
@@ -138,19 +138,19 @@ export type NarrowEntityMapOf<TM extends GeneralTypeMap> = {
  * - Key: name of entity
  * - Value: type of its narrow entity
  */
-export type BroadEntityMapOf<TM extends GeneralTypeMap> = {
+export type RequestEntityMapOf<TM extends GeneralTypeMap> = {
   [K in Key<TM["entities"]>]: Broad<TM["entities"][K]>
 };
 
 /**
  * Entity of given entity name in given TypeMap.
  */
-export type BroaderEntityOf<
+export type ReqResEntityOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>
-> = BroaderEntity<TM["entities"], EN>;
+> = ReqResEntity<TM["entities"], EN>;
 
-export type BroaderEntity<
+export type ReqResEntity<
   EM extends GeneralEntityMap,
   EN extends Key<EM>
 > = EM[EN];
@@ -158,12 +158,12 @@ export type BroaderEntity<
 /**
  * Entity of given entity name in given TypeMap.
  */
-export type NarrowEntityOf<
+export type ResponseEntityOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>
-> = NarrowEntity<TM["entities"], EN>;
+> = ResponseEntity<TM["entities"], EN>;
 
-export type NarrowEntity<
+export type ResponseEntity<
   EM extends GeneralEntityMap,
   EN extends Key<EM>
 > = Narrow<EM[EN]>;
@@ -171,12 +171,12 @@ export type NarrowEntity<
 /**
  * Entity of given entity name in given TypeMap.
  */
-export type BroadEntityOf<
+export type RequestEntityOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>
-> = BroadEntity<TM["entities"], EN>;
+> = RequestEntity<TM["entities"], EN>;
 
-export type BroadEntity<
+export type RequestEntity<
   EM extends GeneralEntityMap,
   EN extends Key<EM>
 > = Broad<EM[EN]>;
@@ -384,23 +384,23 @@ export type AllSessions<AM extends GeneralAuthCommandMap> = ValueOf<
  * If not given in AuthCommandMap, entity in EntityMap is selected.
  * If neither exist, parsed as "Object".
  */
-export type NarrowAuthUserOf<
+export type ResponseAuthUserOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["auths"]>
-> = NarrowAuthUser<AuthCommandMapOf<TM>, EN, BroaderEntityMapOf<TM>>;
+> = ResponseAuthUser<AuthCommandMapOf<TM>, EN, ReqResEntityMapOf<TM>>;
 
 type EntityOfAuth<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
-> = EN extends Key<EM> ? BroaderEntity<EM, EN> : [Entity, Entity];
+> = EN extends Key<EM> ? ReqResEntity<EM, EN> : ReqRes<Entity>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type BroaderAuthUser<
+export type ReqResAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
@@ -411,7 +411,7 @@ export type BroaderAuthUser<
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type NarrowAuthUser<
+export type ResponseAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
@@ -422,7 +422,7 @@ export type NarrowAuthUser<
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type BroadAuthUser<
+export type RequestAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralEntityMap = GeneralEntityMap
@@ -446,11 +446,10 @@ type CustomResultValue<
     : Object
   : Object; // If "result" is not set, set Object.
 
-export type Broader<
-  Base,
-  Tnarrow extends Base,
-  Tbroad extends Base = Tnarrow
-> = Tnarrow | [Tnarrow, Tbroad];
+export type ReqRes<
+  Tresponse extends Entity,
+  Trequest extends Entity = Tresponse
+> = {request: Trequest, response: Tresponse} ;
 
-export type Narrow<T> = T extends [infer U, any] ? U : T;
-export type Broad<T> = T extends [any, infer U] ? U : T;
+export type Narrow<T extends ReqRes<Entity>> = T['response'];
+export type Broad<T extends ReqRes<Entity>> = T['request'];

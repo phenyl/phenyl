@@ -1,4 +1,4 @@
-import { Broad, Broader, Narrow } from "./type-map";
+import { Broad, ReqRes, Narrow } from "./type-map";
 import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
 
 import { Entity } from "./entity";
@@ -13,7 +13,7 @@ export type TypeProp<T> = TypeOnly<
 
 export interface EntityDefinition<
   EN extends string = string,
-  Ebroader extends Broader<Entity, Entity> = [Entity, Entity],
+  Ebroader extends ReqRes<Entity> = ReqRes<Entity>,
   SS extends Session = Session
 > {
   entityName: TypeProp<EN>;

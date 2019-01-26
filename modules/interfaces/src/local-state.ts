@@ -2,7 +2,7 @@ import {
   AllSessions,
   GeneralAuthCommandMap,
   GeneralEntityMap,
-  NarrowEntity
+  ResponseEntity
 } from "./type-map";
 import { ErrorLocation, PhenylErrorType } from "./error";
 
@@ -22,7 +22,7 @@ export type LocalEntityInfoById<E extends Entity> = {
 };
 
 export type LocalEntityState<M extends GeneralEntityMap> = {
-  [EN in Key<M>]: LocalEntityInfoById<NarrowEntity<M, EN>>
+  [EN in Key<M>]: LocalEntityInfoById<ResponseEntity<M, EN>>
 };
 
 export type UnreachedCommit<EN extends string> = {

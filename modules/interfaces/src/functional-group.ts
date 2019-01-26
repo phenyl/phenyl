@@ -2,8 +2,8 @@ import {
   AllSessions,
   AuthCredentials,
   AuthSessions,
-  BroaderAuthUser,
-  BroaderEntity,
+  ReqResAuthUser,
+  ReqResEntity,
   CustomCommandParams,
   CustomCommandResultValue,
   CustomQueryParams,
@@ -25,7 +25,7 @@ export type EntityDefinitions<
   M extends GeneralEntityMap,
   AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
 > = {
-  [EN in Key<M>]: EntityDefinition<EN, BroaderEntity<M, EN>, AllSessions<AM>>
+  [EN in Key<M>]: EntityDefinition<EN, ReqResEntity<M, EN>, AllSessions<AM>>
 };
 
 export type CustomQueryDefinitions<
@@ -58,7 +58,7 @@ export type UserDefinitions<
 > = {
   [EN in Key<AM>]: UserDefinition<
     EN,
-    BroaderAuthUser<AM, EN, EM>,
+    ReqResAuthUser<AM, EN, EM>,
     AuthCredentials<AM, EN>,
     AuthSessions<AM, EN>,
     AllSessions<AM>
