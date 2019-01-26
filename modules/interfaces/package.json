@@ -16,7 +16,7 @@
     "build": "upbin tsc --declaration",
     "ci-test": "npm test",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
-    "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "lint": "upbin eslint 'src/**/*.ts' 'type-test/**/*.ts' --fix",
     "test": "upbin tsc --noEmit $(find type-test -name '*.test.ts' -type f)",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
