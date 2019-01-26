@@ -5,7 +5,6 @@ import {
   GeneralRequestData,
   GeneralResponseData,
   GeneralTypeMap,
-  Narrow,
   RequestDataWithTypeMap,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
@@ -175,10 +174,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       RequestMethodName,
       string
     >;
-    type TM = GeneralTypeMap;
-    type N = string;
-    type EE = Narrow<TM["entities"][N & Extract<keyof TM["entities"], string>]>;
-
+    
     assertType<
       TypeEq<
         ResponseDataWithGeneralTypeMap | ErrorResponseData,

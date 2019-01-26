@@ -1,12 +1,12 @@
-import { GeneralTypeMap } from "../../src";
+import { GeneralTypeMap, ReqRes } from "../../src";
 
 export interface SampleTypeMap extends GeneralTypeMap {
   entities: {
-    member: { id: string; name: string };
-    message: {
+    member: ReqRes<{ id: string; name: string }>;
+    message: ReqRes<{
       id: string;
       body: string;
-    };
+    }>;
   };
   customQueries: {
     countMessagesOfMember: {

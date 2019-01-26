@@ -9,8 +9,9 @@ import {
   GeneralTypeMap,
   LoginCommand,
   TypeMapFromFunctionalGroup,
-  TypeProp,
-  UserDefinition
+  TypeOnly,
+  UserDefinition,
+  ReqRes
 } from "../src";
 import { IsExtends, TypeEq, assertType } from "./helpers";
 
@@ -24,8 +25,8 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type MemberSessionValue = { externalId: string; ttl: number };
 
   class MemberDefinition implements UserDefinition {
-    entityName: TypeProp<"member">;
-    entity: TypeProp<[NarrowMember, BroadMember]>;
+    entityName: TypeOnly<"member">;
+    entity: TypeOnly<ReqRes<BroadMember,NarrowMember>>;
 
     async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
       const { entityName, credentials } = loginCommand;
@@ -52,8 +53,8 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type NarrowMessage = { id: string; body: string; createdAt: string };
   type BroadMessage = { id: string; body: string };
   class MessageDefinition implements EntityDefinition {
-    entityName: TypeProp<"message">;
-    entity: TypeProp<[NarrowMessage, BroadMessage]>;
+    entityName: TypeOnly<"message">;
+    entity: TypeOnly<ReqRes<BroadMessage,NarrowMessage>>;
   }
 
   type MedicalRecord = { id: string; body: string; createdAt: string };
@@ -61,8 +62,8 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type E = MedicalRecord;
 
   class MedicalRecordDefinition implements EntityDefinition {
-    entityName: TypeProp<N>;
-    entity: TypeProp<E>;
+    entityName: TypeOnly<N>;
+    entity: TypeOnly<ReqRes<E>>;
 
     async normalize(reqData: EntityRequestData<N, E>, session) {
       return reqData;
@@ -122,9 +123,9 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
       TypeEq<
         MyEntities,
         {
-          member: [NarrowMember, BroadMember];
-          message: [NarrowMessage, BroadMessage];
-          medicalRecord: [MedicalRecord, MedicalRecord];
+          member: { request: BroadMember, response: NarrowMember};
+          message: { request:  BroadMessage, response: NarrowMessage};
+          medicalRecord: { request: MedicalRecord, response: MedicalRecord};
         }
       >
     >();

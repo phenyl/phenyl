@@ -447,9 +447,9 @@ type CustomResultValue<
   : Object; // If "result" is not set, set Object.
 
 export type ReqRes<
-  Tresponse extends Entity,
-  Trequest extends Entity = Tresponse
+Trequest extends Entity,
+Tresponse extends Entity = Trequest
 > = {request: Trequest, response: Tresponse} ;
 
-export type Narrow<T extends ReqRes<Entity>> = T['response'];
-export type Broad<T extends ReqRes<Entity>> = T['request'];
+type Narrow<T extends ReqRes<Entity>> = T['response'];
+type Broad<T extends ReqRes<Entity>> = T['request'];
