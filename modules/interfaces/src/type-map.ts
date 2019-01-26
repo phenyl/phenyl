@@ -13,11 +13,21 @@ import { Session } from "./session";
  *
  *    interface MyTypeMap extends GeneralTypeMap {
  *      entities: {
- *        member: { id: string; name: string };
+ *        member: {
+ *          request: { id: string; name: string };
+ *          response: { id: string; name: string };
+ *        };
  *        message: {
- *          id: string;
- *          body: string;
- *          ...
+ *          request: {
+ *            id: string;
+ *            body: string;
+ *            ...
+ *          };
+ *          response: {
+ *            id: string;
+ *            body: string;
+ *            ...
+ *          };
  *        };
  *      };
  *      customQueries: {
@@ -41,6 +51,7 @@ import { Session } from "./session";
  *      };
  *    }
  */
+
 export interface GeneralTypeMap {
   entities: GeneralReqResEntityMap;
   customQueries: GeneralCustomMap;
@@ -51,6 +62,37 @@ export interface GeneralTypeMap {
 export interface GeneralEntityMap {
   [entityName: string]: Entity;
 }
+
+/**
+ * Request and Response of a given Entity
+ *
+ * Request and Response may have different types, for example, when making an authorization
+ * request, a request of entity will need an `name`, `id`, and `password`, but response entity will only contain `name` and `id`.
+ *
+ * In such cases, you will need to provide different types to request and response entities.
+ *
+ * `ReqRes` provides you with both types by grouping them together.
+ *
+ * If request and response have the same type, you can omit the second type argument and provide a single Entity.
+ *
+ * See the following example:
+ *
+ *    interface MyTypeMap extends GeneralTypeMap {
+ *      entities: {
+ *        member: ReqRes<
+ *          { id: string; name: string; password: string }, // request
+ *          { id: string; name: string } // response
+ *        >;
+ *        message: ReqRes<{ id: string; body: string }>; // both request and response have the same type
+ *      };
+ *      ...
+ *    }
+ */
+
+export type ReqRes<
+  Trequest extends Entity,
+  Tresponse extends Entity = Trequest
+> = { request: Trequest; response: Tresponse };
 
 /**
  * Key-value map of entities.
@@ -124,26 +166,26 @@ type GeneralAuthSetting = {
 /**
  * Key-value map of entities in given TypeMap.
  * - Key: name of entity
- * - Value: type of its narrow and broad entity
+ * - Value: types of given entity's request and response
  */
 export type ReqResEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
 
 /**
  * Key-value map of entities in given TypeMap.
  * - Key: name of entity
- * - Value: type of its narrow entity
+ * - Value: type of given entity's request
  */
-export type ResponseEntityMapOf<TM extends GeneralTypeMap> = {
-  [K in Key<TM["entities"]>]: Narrow<TM["entities"][K]>
+export type RequestEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Request<TM["entities"][K]>
 };
 
 /**
  * Key-value map of entities in given TypeMap.
  * - Key: name of entity
- * - Value: type of its narrow entity
+ * - Value: type of given entity's response
  */
-export type RequestEntityMapOf<TM extends GeneralTypeMap> = {
-  [K in Key<TM["entities"]>]: Broad<TM["entities"][K]>
+export type ResponseEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Response<TM["entities"][K]>
 };
 
 /**
@@ -160,20 +202,7 @@ export type ReqResEntity<
 > = EM[EN];
 
 /**
- * Entity of given entity name in given TypeMap.
- */
-export type ResponseEntityOf<
-  TM extends GeneralTypeMap,
-  EN extends Key<TM["entities"]>
-> = ResponseEntity<TM["entities"], EN>;
-
-export type ResponseEntity<
-  EM extends GeneralReqResEntityMap,
-  EN extends Key<EM>
-> = Narrow<EM[EN]>;
-
-/**
- * Entity of given entity name in given TypeMap.
+ * Request Entity of given entity name in given TypeMap.
  */
 export type RequestEntityOf<
   TM extends GeneralTypeMap,
@@ -183,7 +212,20 @@ export type RequestEntityOf<
 export type RequestEntity<
   EM extends GeneralReqResEntityMap,
   EN extends Key<EM>
-> = Broad<EM[EN]>;
+> = Request<EM[EN]>;
+
+/**
+ * Response Entity of given entity name in given TypeMap.
+ */
+export type ResponseEntityOf<
+  TM extends GeneralTypeMap,
+  EN extends Key<TM["entities"]>
+> = ResponseEntity<TM["entities"], EN>;
+
+export type ResponseEntity<
+  EM extends GeneralReqResEntityMap,
+  EN extends Key<EM>
+> = Response<EM[EN]>;
 
 /**
  * Name of entities in given TypeMap.
@@ -415,22 +457,22 @@ export type ReqResAuthUser<
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type ResponseAuthUser<
+export type RequestAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = Narrow<EntityOfAuth<AM, EN, EM>>;
+> = Request<EntityOfAuth<AM, EN, EM>>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type RequestAuthUser<
+export type ResponseAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
   EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = Broad<EntityOfAuth<AM, EN, EM>>;
+> = Response<EntityOfAuth<AM, EN, EM>>;
 
 type CustomParams<
   T extends GeneralCustomMap,
@@ -450,10 +492,5 @@ type CustomResultValue<
     : Object
   : Object; // If "result" is not set, set Object.
 
-export type ReqRes<
-  Trequest extends Entity,
-  Tresponse extends Entity = Trequest
-> = { request: Trequest; response: Tresponse };
-
-type Narrow<T extends ReqRes<Entity>> = T["response"];
-type Broad<T extends ReqRes<Entity>> = T["request"];
+type Request<T extends ReqRes<Entity>> = T["request"];
+type Response<T extends ReqRes<Entity>> = T["response"];
