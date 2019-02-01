@@ -11,17 +11,20 @@ import { shallowMap, pkgDir } from './utils'
 
 export type ExplorerParams = {|
   path: string,
+  phenylApiUrlBase: string,
 |}
 
 export default class PhenylApiExplorer {
   functionalGroup: FunctionalGroup;
   path: string;
+  phenylApiUrlBase: string;
   handler: any;
   html: string;
 
   constructor (functionalGroup: FunctionalGroup, params: ExplorerParams) {
     this.functionalGroup = functionalGroup
     this.path = params.path
+    this.phenylApiUrlBase = params.phenylApiUrlBase || ''
     this.handler = this.handler.bind(this)
     this.html = this.getClientHtml()
   }
@@ -30,6 +33,7 @@ export default class PhenylApiExplorer {
     const templatePath = path.join(pkgDir('phenyl-api-explorer-client'), 'build', 'index.html')
     const template = fs.readFileSync(templatePath, 'utf8')
     const data = {
+      phenylApiUrlBase: this.phenylApiUrlBase,
       functionalGroup: {
         users: shallowMap(this.functionalGroup.users, ({ accountPropName, passwordPropName }) => {
           if (!accountPropName || !passwordPropName) {
