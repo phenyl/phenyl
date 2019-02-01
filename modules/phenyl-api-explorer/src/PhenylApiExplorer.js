@@ -11,7 +11,7 @@ import { shallowMap, pkgDir } from './utils'
 
 export type ExplorerParams = {|
   path: string,
-  phenylApiUrlBase: string,
+  phenylApiUrlBase?: string,
 |}
 
 export default class PhenylApiExplorer {
