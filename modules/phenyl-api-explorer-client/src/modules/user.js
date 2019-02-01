@@ -1,5 +1,5 @@
 /* global PhenylFunctionalGroupSkeleton */
-import PhenylHttpClient from 'phenyl-http-client'
+import getPhenylHttpClient from '../lib/phenylClient'
 
 const LOGIN = 'user/LOGIN'
 const LOGIN_AS_ANONYMOUS = 'user/LOGIN_AS_ANONYMOUS'
@@ -68,7 +68,7 @@ export const reducer = (state = initialState, action) => {
 }
 
 export const login = (entityName, credentials) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+  const client = getPhenylHttpClient()
 
   try {
     dispatch(loginRequest())

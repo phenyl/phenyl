@@ -1,5 +1,5 @@
-import PhenylHttpClient from 'phenyl-http-client'
 import type { PhenylError } from 'phenyl-interfaces'
+import getPhenylHttpClient from '../lib/phenylClient'
 
 const EXECUTE_START = 'operation/EXECUTE_START'
 const EXECUTE_FINISHED = 'operation/EXECUTE_FINISHED'
@@ -56,7 +56,7 @@ export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
 })
 
 export const execute = ({ sessionId, entityName, method, payload: payloadStr }) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+  const client = getPhenylHttpClient()
   dispatch(startExecute())
 
   const start = new Date()
@@ -139,7 +139,7 @@ export const execute = ({ sessionId, entityName, method, payload: payloadStr }) 
 }
 
 export const runCustomQuery = ({ sessionId, name, params: paramsStr }) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+  const client = getPhenylHttpClient()
   dispatch(startExecute())
 
   const start = new Date()
@@ -153,7 +153,7 @@ export const runCustomQuery = ({ sessionId, name, params: paramsStr }) => async 
 }
 
 export const runCustomCommand = ({ sessionId, name, params: paramsStr }) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+  const client = getPhenylHttpClient()
   dispatch(startExecute())
 
   const start = new Date()
