@@ -1,4 +1,4 @@
-/* global PhenylFunctionalGroupSkeleton */
+/* global phenylApiExplorerClientGlobals */
 import getPhenylHttpClient from '../lib/phenylClient'
 
 const LOGIN = 'user/LOGIN'
@@ -8,6 +8,7 @@ const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
 const LOGIN_FAILED = 'user/LOGIN_FAILED'
 const LOGOUT = 'user/LOGOUT'
 
+const { PhenylFunctionalGroupSkeleton } = phenylApiExplorerClientGlobals
 const initialState = {
   busy: false,
   displayName: '',

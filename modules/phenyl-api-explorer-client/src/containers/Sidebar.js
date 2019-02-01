@@ -1,4 +1,4 @@
-/* global PhenylFunctionalGroupSkeleton */
+/* global phenylApiExplorerClientGlobals */
 import React from 'react'
 import { Sidebar as SemanticSidebar, Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -12,6 +12,8 @@ type Props = {
   userName: string,
   logout: () => void,
 }
+
+const { PhenylFunctionalGroupSkeleton } = phenylApiExplorerClientGlobals
 
 export const Sidebar = ({ version, userName, logout }: Props) => (
   <SemanticSidebar as={Menu} visible icon='labeled' vertical inverted className="fixed">
