@@ -1,4 +1,4 @@
-/* global PhenylFunctionalGroupSkeleton */
+/* global phenylApiExplorerClientGlobals */
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Message, Form, Button, Header, Icon, Modal } from 'semantic-ui-react'
@@ -17,6 +17,8 @@ type Props = {
 type State = {
 
 }
+
+const { PhenylFunctionalGroupSkeleton } = phenylApiExplorerClientGlobals
 
 class LoginModal extends Component<Props, State> {
   state = {

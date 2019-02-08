@@ -1,5 +1,5 @@
-/* global PhenylFunctionalGroupSkeleton */
-import PhenylHttpClient from 'phenyl-http-client'
+/* global phenylApiExplorerClientGlobals */
+import getPhenylHttpClient from '../lib/phenylClient'
 
 const LOGIN = 'user/LOGIN'
 const LOGIN_AS_ANONYMOUS = 'user/LOGIN_AS_ANONYMOUS'
@@ -8,6 +8,7 @@ const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
 const LOGIN_FAILED = 'user/LOGIN_FAILED'
 const LOGOUT = 'user/LOGOUT'
 
+const { PhenylFunctionalGroupSkeleton } = phenylApiExplorerClientGlobals
 const initialState = {
   busy: false,
   displayName: '',
@@ -68,7 +69,7 @@ export const reducer = (state = initialState, action) => {
 }
 
 export const login = (entityName, credentials) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+  const client = getPhenylHttpClient()
 
   try {
     dispatch(loginRequest())
