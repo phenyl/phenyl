@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { GeneralEntityMap } from "./type-map";
+import { GeneralReqResEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "@sp2/format";
 import { Key } from "./utils";
 import { PushCommand } from "./command";
@@ -60,7 +60,9 @@ export interface VersionDiffPublisher {
 /**
  * Validate PushCommand in PhenylEntityClient.
  */
-export type PushValidation<EM extends GeneralEntityMap> = <EN extends Key<EM>>(
+export type PushValidation<EM extends GeneralReqResEntityMap> = <
+  EN extends Key<EM>
+>(
   command: PushCommand<EN>,
   entity: EM[EN],
   masterOperations?: GeneralUpdateOperation[]

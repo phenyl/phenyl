@@ -1,6 +1,6 @@
 import {
   AuthCommandMapOf,
-  BroaderEntityMapOf,
+  ReqResEntityMapOf,
   EntityClient,
   EveryNameOf,
   FunctionalGroup,
@@ -43,7 +43,7 @@ type DefinitionExecutorMap = {
  */
 export class PhenylRestApi<TM extends GeneralTypeMap>
   implements RestApiHandler<TM> {
-  readonly client: EntityClient<BroaderEntityMapOf<TM>>;
+  readonly client: EntityClient<ReqResEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
   private readonly definitionExecutors: DefinitionExecutorMap;
@@ -51,7 +51,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   constructor(
     fg: FunctionalGroup,
     params: {
-      client: EntityClient<BroaderEntityMapOf<TM>>;
+      client: EntityClient<ReqResEntityMapOf<TM>>;
       sessionClient: SessionClient<AuthCommandMapOf<TM>>;
     }
   ) {

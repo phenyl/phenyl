@@ -2,7 +2,7 @@ import {
   AuthCredentialsOf,
   AuthEntityNameOf,
   AuthSessionOf,
-  BroadEntityOf,
+  RequestEntityOf,
   CustomCommandNameOf,
   CustomCommandParamsOf,
   CustomCommandResultValueOf,
@@ -11,8 +11,8 @@ import {
   CustomQueryResultValueOf,
   EntityNameOf,
   GeneralTypeMap,
-  NarrowAuthUserOf,
-  NarrowEntityOf
+  ResponseAuthUserOf,
+  ResponseEntityOf
 } from "./type-map";
 import {
   DeleteRequestData,
@@ -110,19 +110,19 @@ export type RequestDataWithTypeMap<
   | PullRequestData<EN>
   | InsertOneRequestData<
       EN,
-      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | InsertAndGetRequestData<
       EN,
-      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | InsertMultiRequestData<
       EN,
-      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | InsertAndGetMultiRequestData<
       EN,
-      PreEntity<BroadEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
     >
   | UpdateOneRequestData<EN>
   | UpdateAndGetRequestData<EN>
@@ -163,26 +163,26 @@ type ResponseDataMapWithTypeMap<
   CN extends CustomCommandNameOf<TM>,
   AN extends AuthEntityNameOf<TM>
 > = {
-  find: FindResponseData<NarrowEntityOf<TM, EN>>;
-  findOne: FindOneResponseData<NarrowEntityOf<TM, EN>>;
-  get: GetResponseData<NarrowEntityOf<TM, EN>>;
-  getByIds: GetByIdsResponseData<NarrowEntityOf<TM, EN>>;
-  pull: PullResponseData<NarrowEntityOf<TM, EN>>;
+  find: FindResponseData<ResponseEntityOf<TM, EN>>;
+  findOne: FindOneResponseData<ResponseEntityOf<TM, EN>>;
+  get: GetResponseData<ResponseEntityOf<TM, EN>>;
+  getByIds: GetByIdsResponseData<ResponseEntityOf<TM, EN>>;
+  pull: PullResponseData<ResponseEntityOf<TM, EN>>;
   insertOne: InsertOneResponseData;
   insertMulti: InsertMultiResponseData;
-  insertAndGet: InsertAndGetResponseData<NarrowEntityOf<TM, EN>>;
-  insertAndGetMulti: InsertAndGetMultiResponseData<NarrowEntityOf<TM, EN>>;
+  insertAndGet: InsertAndGetResponseData<ResponseEntityOf<TM, EN>>;
+  insertAndGetMulti: InsertAndGetMultiResponseData<ResponseEntityOf<TM, EN>>;
   updateById: UpdateOneResponseData;
   updateMulti: UpdateMultiResponseData;
-  updateAndGet: UpdateAndGetResponseData<NarrowEntityOf<TM, EN>>;
-  updateAndFetch: UpdateAndFetchResponseData<NarrowEntityOf<TM, EN>>;
-  push: PushResponseData<NarrowEntityOf<TM, EN>>;
+  updateAndGet: UpdateAndGetResponseData<ResponseEntityOf<TM, EN>>;
+  updateAndFetch: UpdateAndFetchResponseData<ResponseEntityOf<TM, EN>>;
+  push: PushResponseData<ResponseEntityOf<TM, EN>>;
   delete: DeleteResponseData;
   runCustomQuery: RunCustomQueryResponseData<CustomQueryResultValueOf<TM, QN>>;
   runCustomCommand: RunCustomCommandResponseData<
     CustomCommandResultValueOf<TM, CN>
   >;
-  login: LoginResponseData<AN, NarrowAuthUserOf<TM, AN>, AuthSessionOf<TM, AN>>;
+  login: LoginResponseData<AN, ResponseAuthUserOf<TM, AN>, AuthSessionOf<TM, AN>>;
   logout: LogoutResponseData;
 };
 
