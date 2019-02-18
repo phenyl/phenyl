@@ -1,12 +1,9 @@
-// @flow
-
-import type {
+import {
   VersionDiff,
   VersionDiffListener,
   VersionDiffPublisher,
-  VersionDiffSubscriber,
-} from 'phenyl-interfaces'
-
+  VersionDiffSubscriber
+} from "@phenyl/interfaces";
 /**
  * Direct VersionDiff Pub/Sub between PhenylRestApi and PhenylWebSocketServer.
  * This class is designed for test or small cases, thus non-scalable.
@@ -21,18 +18,20 @@ import type {
  *  const wsServer = new PhenylWebSocketServer(http.createServer(), { restApiHandler, versionDiffSubscriber: pubsub })
  *  wsServer.listen(8081)
  */
-export class DirectVersionDiffPubSub implements VersionDiffPublisher, VersionDiffSubscriber {
-  listeners: Array<VersionDiffListener>
+
+export class DirectVersionDiffPubSub
+  implements VersionDiffPublisher, VersionDiffSubscriber {
+  listeners: Array<VersionDiffListener>;
 
   constructor() {
-    this.listeners = []
+    this.listeners = [];
   }
 
   subscribeVersionDiff(listener: VersionDiffListener) {
-    this.listeners.push(listener)
+    this.listeners.push(listener);
   }
 
   publishVersionDiff(versionDiff: VersionDiff) {
-    this.listeners.forEach(listener => listener(versionDiff))
+    this.listeners.forEach(listener => listener(versionDiff));
   }
 }
