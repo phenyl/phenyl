@@ -1,11 +1,11 @@
 // @flow
 import {
   ServerLogic,
-} from 'phenyl-http-rules/jsnext'
+} from '@phenyl/http-rules'
 
-import type {
+import {
   ServerParams,
-} from 'phenyl-interfaces'
+} from '@phenyl/interfaces'
 
 import type {
   LambdaEvent,
