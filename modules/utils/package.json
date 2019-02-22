@@ -11,7 +11,7 @@
     "README.md"
   ],
   "main": "lib/index.js",
-  "types": "lib/index.d.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
     "ci-test": "upbin nyc npm test --color always",
