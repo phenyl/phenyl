@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Menu } from "semantic-ui-react";
+import { Button, Menu } from "semantic-ui-react/index";
 
 type Props = {
   version: string;

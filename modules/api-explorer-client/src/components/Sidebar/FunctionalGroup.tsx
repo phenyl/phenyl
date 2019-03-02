@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu } from "semantic-ui-react";
+import { Menu } from "semantic-ui-react/index";
 import { Link } from "react-router-dom";
 
 type Props = {
