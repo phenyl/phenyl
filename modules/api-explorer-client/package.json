@@ -8,7 +8,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.js",
   "scripts": {
-    "build": "node scripts/build.js && node scripts/prepare-assets.js"
+    "build": "node scripts/build.js && node scripts/prepare-assets.js",
+    "type-check": "upbin tsc --noEmit"
   },
   "files": [
     "src",
@@ -20,6 +21,9 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "@types/react": "^16.8.6",
+    "@types/react-redux": "^7.0.1",
+    "@types/react-router-dom": "^4.3.1",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
@@ -58,6 +62,7 @@
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "0.6.2",
+    "upbin": "^0.8.1",
     "webpack": "3.8.1"
   },
   "babel": {
