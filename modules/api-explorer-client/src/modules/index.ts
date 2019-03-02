@@ -1,24 +1,22 @@
-import { compose, combineReducers, createStore, applyMiddleware } from 'redux'
-import thunkMiddleware from 'redux-thunk'
-import persistState from 'redux-localstorage'
-import { reducer as operation, Operation } from './operation'
-import { reducer as user, User } from './user'
+import { compose, combineReducers, createStore, applyMiddleware } from "redux";
+import thunkMiddleware from "redux-thunk";
+import persistState from "redux-localstorage";
+import { reducer as operation, Operation } from "./operation";
+import { reducer as user, User } from "./user";
 
 export type State = {
-  user: User,
-  operation: Operation
-}
+  user: User;
+  operation: Operation;
+};
 
 export const reducers = combineReducers({
   operation,
-  user,
-})
+  user
+});
 
 const enhancer = compose(
-  applyMiddleware(
-    thunkMiddleware
-  ),
-  persistState(['user'])
-)
+  applyMiddleware(thunkMiddleware),
+  persistState(["user"])
+);
 
-export default createStore(reducers, enhancer)
+export default createStore(reducers, enhancer);

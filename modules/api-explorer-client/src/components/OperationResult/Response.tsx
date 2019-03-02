@@ -1,35 +1,33 @@
-import React from 'react'
-import { Segment, Tab, Message } from 'semantic-ui-react'
-import JSONTree from 'react-json-tree'
+import React from "react";
+import { Segment, Tab, Message } from "semantic-ui-react/index";
+import JSONTree from "react-json-tree";
 
 type Props = {
   loading: boolean,
   expanded: boolean,
   response: any,
-  error: ?Error,
-}
+  error: ?Error
+};
 
 const Response = ({ loading, expanded, response, error }: Props) => {
   if (loading) {
-    return (
-      <Segment loading className='result' />
-    )
+    return <Segment loading className="result" />;
   } else if (error != null) {
     return (
-      <Segment className='result'>
+      <Segment className="result">
         <Message negative>
           <Message.Header>{error.message}</Message.Header>
           <pre>{error.stack}</pre>
         </Message>
       </Segment>
-    )
+    );
   } else if (response != null) {
     return (
       <Tab
-        className='result'
+        className="result"
         panes={[
           {
-            menuItem: 'Tree view',
+            menuItem: "Tree view",
             // eslint-disable-next-line react/display-name
             render: () => (
               <Tab.Pane>
@@ -42,20 +40,20 @@ const Response = ({ loading, expanded, response, error }: Props) => {
             )
           },
           {
-            menuItem: 'Raw JSON',
+            menuItem: "Raw JSON",
             // eslint-disable-next-line react/display-name
             render: () => (
               <Tab.Pane>
                 <pre>{JSON.stringify(response, null, 2)}</pre>
               </Tab.Pane>
             )
-          },
+          }
         ]}
       />
-    )
+    );
   }
 
-  return null
-}
+  return null;
+};
 
-export default Response
+export default Response;

@@ -1,73 +1,73 @@
-import React, { Component } from 'react'
-import { Form } from 'semantic-ui-react'
+import React, { Component } from "react";
+import { Form } from "semantic-ui-react/index";
 
 type Props = {
-  match: any,
-  isFetching: boolean,
-  sessionId: string,
-  operations: Array<string>,
-  defaultPayloads: { [string]: Object },
-  execute: ({ entityName: string, method: string, payload: string }) => any,
-}
+  match: any;
+  isFetching: boolean;
+  sessionId: string;
+  operations: Array<string>;
+  defaultPayloads: { [string]: Object };
+  execute: ({ entityName: string, method: string, payload: string }) => any;
+};
 
 type State = {
-  method: string, // FIXME: enum
-  payload: string,
-}
+  method: string; // FIXME: enum
+  payload: string;
+};
 
 class OperationEditor extends Component<Props, State> {
   state: State = {
     method: null,
-    payload: null,
-  }
+    payload: null
+  };
 
   handleChangeOperation = (event, { value }) => {
     if (!this.props.defaultPayloads[value]) {
-      throw new Error(`Unknown method: ${value}`)
+      throw new Error(`Unknown method: ${value}`);
     }
 
-    const payload = this.props.defaultPayloads[value]
+    const payload = this.props.defaultPayloads[value];
 
     this.setState({
       method: value,
-      payload: JSON.stringify(payload, null, 2),
-    })
-  }
+      payload: JSON.stringify(payload, null, 2)
+    });
+  };
 
   handleChangePayload = (event, { value }) => {
-    this.setState({ payload: value })
-  }
+    this.setState({ payload: value });
+  };
 
   handleRun = () => {
-    const { match, execute } = this.props
+    const { match, execute } = this.props;
 
     execute({
       sessionId: this.props.sessionId,
       entityName: match.params.entityName,
       method: this.state.method,
-      payload: this.state.payload,
-    })
-  }
+      payload: this.state.payload
+    });
+  };
 
   componentDidMount() {
-    const { operations } = this.props
+    const { operations } = this.props;
 
-    this.handleChangeOperation(null, { value: operations[0] })
+    this.handleChangeOperation(null, { value: operations[0] });
   }
 
-  render () {
-    const { operations, isFetching } = this.props
+  render() {
+    const { operations, isFetching } = this.props;
     return (
       <div>
         <Form>
           <Form.Group>
             <Form.Select
               disabled={isFetching}
-              label='Operation'
+              label="Operation"
               options={operations.map(op => ({
                 key: op,
                 text: op,
-                value: op,
+                value: op
               }))}
               defaultValue={operations[0]}
               onChange={this.handleChangeOperation}
@@ -76,21 +76,17 @@ class OperationEditor extends Component<Props, State> {
           <Form.TextArea
             disabled={isFetching}
             rows={4}
-            label='Payload'
+            label="Payload"
             value={this.state.payload}
             onChange={this.handleChangePayload}
           />
-          <Form.Button
-            disabled={isFetching}
-            positive
-            onClick={this.handleRun}
-          >
+          <Form.Button disabled={isFetching} positive onClick={this.handleRun}>
             Run
           </Form.Button>
         </Form>
       </div>
-    )
+    );
   }
 }
 
-export default OperationEditor
+export default OperationEditor;

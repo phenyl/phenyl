@@ -1,32 +1,32 @@
 /* global PhenylFunctionalGroupSkeleton */
-import { Id } from "@phenyl/interfaces"
-import PhenylHttpClient from 'phenyl-http-client'
+import { Id } from "@phenyl/interfaces";
+import PhenylHttpClient from "phenyl-http-client";
 
-const LOGIN = 'user/LOGIN'
-const LOGIN_AS_ANONYMOUS = 'user/LOGIN_AS_ANONYMOUS'
-const LOGIN_REQUEST = 'user/LOGIN_REQUEST'
-const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
-const LOGIN_FAILED = 'user/LOGIN_FAILED'
-const LOGOUT = 'user/LOGOUT'
+const LOGIN = "user/LOGIN";
+const LOGIN_AS_ANONYMOUS = "user/LOGIN_AS_ANONYMOUS";
+const LOGIN_REQUEST = "user/LOGIN_REQUEST";
+const LOGIN_SUCCESS = "user/LOGIN_SUCCESS";
+const LOGIN_FAILED = "user/LOGIN_FAILED";
+const LOGOUT = "user/LOGOUT";
 
 // @TODO: define session/user/error type
 export type User = {
-  busy: boolean,
-  displayName: string,
-  session: Id,
-  anonymous: boolean,
-  user: any,
-  error: any,
-}
+  busy: boolean;
+  displayName: string;
+  session: Id;
+  anonymous: boolean;
+  user: any;
+  error: any;
+};
 
 const initialState = {
   busy: false,
-  displayName: '',
+  displayName: "",
   session: null,
   anonymous: false,
   user: null,
-  error: null,
-}
+  error: null
+};
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -36,8 +36,8 @@ export const reducer = (state = initialState, action) => {
         anonymous: false,
         session: null,
         user: null,
-        error: null,
-      }
+        error: null
+      };
     case LOGIN_AS_ANONYMOUS:
       return {
         ...state,
@@ -45,76 +45,80 @@ export const reducer = (state = initialState, action) => {
         anonymous: true,
         session: null,
         user: null,
-        error: null,
-      }
+        error: null
+      };
     case LOGIN_REQUEST:
       return {
         ...state,
         busy: true
-      }
+      };
     case LOGIN_SUCCESS:
-      const { accountPropName } = PhenylFunctionalGroupSkeleton.users[action.session.entityName]
+      const { accountPropName } = PhenylFunctionalGroupSkeleton.users[
+        action.session.entityName
+      ];
       return {
         ...state,
         busy: false,
         error: null,
         displayName: action.user[accountPropName],
         session: action.session,
-        user: action.user,
-      }
+        user: action.user
+      };
     case LOGIN_FAILED:
       return {
         ...state,
         busy: false,
-        error: action.error,
-      }
+        error: action.error
+      };
     case LOGOUT:
       return {
         ...state,
-        ...initialState,
-      }
+        ...initialState
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export const login = (entityName, credentials) => async (dispatch) => {
-  const client = new PhenylHttpClient({ url: window.location.origin })
+export const login = (entityName, credentials) => async dispatch => {
+  const client = new PhenylHttpClient({ url: window.location.origin });
 
   try {
-    dispatch(loginRequest())
+    dispatch(loginRequest());
     const { ok, user, session } = await client.login({
       entityName,
-      credentials,
-    })
+      credentials
+    });
     if (!ok) {
-      throw new Error('Unknown error: ok=0')
+      throw new Error("Unknown error: ok=0");
     }
-    dispatch(loginSuccess({
-      user,
-      session,
-    }))
+    dispatch(
+      loginSuccess({
+        user,
+        session
+      })
+    );
   } catch (error) {
-    dispatch(loginFailed(error))
+    dispatch(loginFailed(error));
   }
-}
+};
 
 export const loginAsAnonymous = () => {
-  return { type: LOGIN_AS_ANONYMOUS }
-}
+  return { type: LOGIN_AS_ANONYMOUS };
+};
 
 export const logout = () => {
-  return { type: LOGOUT }
-}
+  return { type: LOGOUT };
+};
 
 export const loginRequest = () => ({
-  type: LOGIN_REQUEST,
-})
+  type: LOGIN_REQUEST
+});
 
 export const loginSuccess = ({ user, session }) => {
-  return { type: LOGIN_SUCCESS, user, session }
-}
+  return { type: LOGIN_SUCCESS, user, session };
+};
 
-export const loginFailed = (error) => {
-  return { type: LOGIN_FAILED, error }
-}
+export const loginFailed = error => {
+  return { type: LOGIN_FAILED, error };
+};
