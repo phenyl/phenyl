@@ -19,7 +19,9 @@
     "scripts",
     "package.json"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@phenyl/interfaces": "~1.0.0"
+  },
   "devDependencies": {
     "@types/react": "^16.8.6",
     "@types/react-dom": "^16.8.2",
