@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react";
+import { Id } from "@phenyl/interfaces";
+import { Form } from "semantic-ui-react/index";
 
 type Props = {
   match: any;
   isFetching: boolean;
-  sessionId: string;
-  execute: ({ name: string, params: string }) => any;
+  sessionId: Id;
+  execute: (params: { sessionId: Id; name: string; params: string }) => any;
 };
 
 type State = {
@@ -17,8 +18,8 @@ class OperationEditor extends Component<Props, State> {
     params: ""
   };
 
-  handleChangePayload = (event, { value }) => {
-    this.setState({ params: value });
+  handleChangePayload = (event: any, payload: { value: string }) => {
+    this.setState({ params: payload.value });
   };
 
   handleRun = () => {
