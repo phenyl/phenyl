@@ -1,16 +1,19 @@
 /* global PhenylFunctionalGroupSkeleton */
 import React from "react";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import { Sidebar as SemanticSidebar, Menu } from "semantic-ui-react/index";
 import { connect } from "react-redux";
 import Information from "../components/Sidebar/Information";
 import FunctionalGroup from "../components/Sidebar/FunctionalGroup";
 import { logout } from "../modules/user";
 import { State } from "../modules";
+// @ts-ignore webpack
 import pkg from "../../package.json";
 
 type Props = {
   version: string;
-  userName: string;
+  userName: string | null | undefined;
   logout: () => void;
 };
 
@@ -26,26 +29,32 @@ export const Sidebar = ({ version, userName, logout }: Props) => (
     <Information version={version} userName={userName} onLogout={logout} />
     <FunctionalGroup
       groupName={"users"}
+      // @ts-ignore: global PhenylFunctionalGroupSkeleton
       functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.users)}
     />
     <FunctionalGroup
       groupName={"nonUsers"}
+      // @ts-ignore: global PhenylFunctionalGroupSkeleton
       functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.nonUsers)}
     />
     <FunctionalGroup
       groupName={"customQueries"}
+      // @ts-ignore: global PhenylFunctionalGroupSkeleton
       functionalNames={Object.keys(PhenylFunctionalGroupSkeleton.customQueries)}
     />
     <FunctionalGroup
       groupName={"customCommands"}
       functionalNames={Object.keys(
+        // @ts-ignore: global PhenylFunctionalGroupSkeleton
         PhenylFunctionalGroupSkeleton.customCommands
       )}
     />
   </SemanticSidebar>
 );
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (
+  state: State
+): { version: string; userName: string | null | undefined } => {
   let displayName = null;
   if (state.user.anonymous) {
     displayName = "(anonymous)";
@@ -59,7 +68,7 @@ const mapStateToProps = (state: State): Props => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
   logout() {
     dispatch(logout());
   }

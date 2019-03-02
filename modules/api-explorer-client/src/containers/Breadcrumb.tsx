@@ -4,14 +4,14 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 type Props = {
-  match: any;
+  match?: any;
 };
 
 export const Breadcrumb = ({ match }: Props) => (
   <SemanticBreadcrumb>
     {match.url
       .split("/")
-      .reduce((acc: Array<SemanticBreadcrumb>, path: string, i: number) => {
+      .reduce((acc: Array<any>, path: string, i: number) => {
         if (i === 0) {
           return acc.concat([
             <SemanticBreadcrumb.Section key={`${path}-section`} link>
@@ -35,4 +35,5 @@ export const Breadcrumb = ({ match }: Props) => (
 
 const mapStateToProps = (): Props => ({});
 
+// @ts-ignore: something wrong with react-router-dom
 export default withRouter(connect(mapStateToProps)(Breadcrumb));

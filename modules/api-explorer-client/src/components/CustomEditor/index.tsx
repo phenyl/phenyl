@@ -6,7 +6,7 @@ type Props = {
   match: any;
   isFetching: boolean;
   sessionId: Id;
-  execute: (params: { sessionId: Id; name: string; params: string }) => any;
+  execute: (params: { sessionId: Id, name: string; params: string }) => any;
 };
 
 type State = {

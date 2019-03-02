@@ -2,6 +2,7 @@ import { Action } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { ThunkDispatch } from "redux-thunk";
+// @ts-ignore
 import { Id } from "@phenyl/interfaces";
 import CustomEditor from "../components/CustomEditor";
 import { runCustomCommand } from "../modules/operation";
@@ -13,12 +14,13 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
-  execute({ sessionId, name, params }) {
-    dispatch(runCustomCommand({ sessionId, name, params }));
+  execute(_params: { sessionId: Id; name: string; params: string }) {
+    dispatch(runCustomCommand(_params));
   }
 });
 
 export default withRouter(
+  // @ts-ignore: something wrong with react-router-dom
   connect(
     mapStateToProps,
     mapDispatchToProps

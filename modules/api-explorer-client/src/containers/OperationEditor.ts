@@ -1,5 +1,7 @@
+import { Action } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { ThunkDispatch } from "redux-thunk";
 import OperationEditor from "../components/OperationEditor";
 import { operations } from "../UIMeta";
 import { execute } from "../modules/operation";
@@ -18,13 +20,19 @@ const mapStateToProps = (state: State) => ({
   )
 });
 
-const mapDispatchToProps = dispatch => ({
-  execute({ sessionId, entityName, method, payload }) {
-    dispatch(execute({ sessionId, entityName, method, payload }));
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
+  execute(params: {
+    sessionId: string;
+    entityName: string;
+    method: string;
+    payload: string;
+  }) {
+    dispatch(execute(params));
   }
 });
 
 export default withRouter(
+  // @ts-ignore: something wrong with react-router-dom
   connect(
     mapStateToProps,
     mapDispatchToProps

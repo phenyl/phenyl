@@ -1,5 +1,5 @@
 import PhenylHttpClient from "phenyl-http-client";
-import { PhenylError } from "phenyl-interfaces";
+import { PhenylError } from "@phenyl/interfaces";
 
 const EXECUTE_START = "operation/EXECUTE_START";
 const EXECUTE_FINISHED = "operation/EXECUTE_FINISHED";
