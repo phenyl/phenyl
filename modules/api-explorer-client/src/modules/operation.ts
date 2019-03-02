@@ -1,6 +1,8 @@
+// @ts-ignore
 import PhenylHttpClient from "phenyl-http-client";
 // @ts-ignore remove this comment after @phenyl/interfaces release
 import { PhenylError } from "@phenyl/interfaces";
+import { ThunkDispatch } from "redux-thunk";
 
 const EXECUTE_START = "operation/EXECUTE_START";
 const EXECUTE_FINISHED = "operation/EXECUTE_FINISHED";
@@ -21,7 +23,14 @@ export type Operation = {
   error: any;
 };
 
-export const reducer = (state = initialState, action) => {
+type Action = {
+  type: string;
+  spent: number;
+  response: any;
+  error: any;
+};
+
+export const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case EXECUTE_START:
       return {
@@ -64,147 +73,174 @@ export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
   error
 });
 
-export const execute = ({
-  sessionId,
-  entityName,
-  method,
-  payload: payloadStr
-}) => async dispatch => {
+export const execute = (params: {
+  sessionId: string;
+  entityName: string;
+  method: string;
+  payload: string;
+  // @TODO: define those any typs
+}) => async (dispatch: ThunkDispatch<any, any, any>) => {
+  const { sessionId, entityName, method, payload } = params;
   const client = new PhenylHttpClient({ url: window.location.origin });
   dispatch(startExecute());
 
   const start = new Date();
   let response = null;
   try {
-    const payload = JSON.parse(payloadStr);
+    const payloadJSON = JSON.parse(payload);
     switch (method) {
       case "find":
-        response = await client.find({ entityName, ...payload }, sessionId);
+        response = await client.find({ entityName, ...payloadJSON }, sessionId);
         break;
 
       case "findOne":
-        response = await client.findOne({ entityName, ...payload }, sessionId);
+        response = await client.findOne(
+          { entityName, ...payloadJSON },
+          sessionId
+        );
         break;
 
       case "get":
-        response = await client.get({ entityName, ...payload }, sessionId);
+        response = await client.get({ entityName, ...payloadJSON }, sessionId);
         break;
 
       case "getByIds":
-        response = await client.getByIds({ entityName, ...payload }, sessionId);
+        response = await client.getByIds(
+          { entityName, ...payloadJSON },
+          sessionId
+        );
         break;
 
       case "pull":
-        response = await client.pull({ entityName, ...payload }, sessionId);
+        response = await client.pull({ entityName, ...payloadJSON }, sessionId);
         break;
 
       case "insertOne":
         response = await client.insertOne(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "insertAndGet":
         response = await client.insertAndGet(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "insertAndGetMulti":
         response = await client.insertAndGetMulti(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "updateById":
         response = await client.updateById(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "updateAndGet":
         response = await client.updateAndGet(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "updateMulti":
         response = await client.updateMulti(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "updateAndFetch":
         response = await client.updateAndFetch(
-          { entityName, ...payload },
+          { entityName, ...payloadJSON },
           sessionId
         );
         break;
 
       case "push":
-        response = await client.push({ entityName, ...payload }, sessionId);
+        response = await client.push({ entityName, ...payloadJSON }, sessionId);
         break;
 
       case "delete":
-        response = await client.delete({ entityName, ...payload }, sessionId);
+        response = await client.delete(
+          { entityName, ...payloadJSON },
+          sessionId
+        );
         break;
 
       case "login":
-        response = await client.login({ entityName, ...payload }, sessionId);
+        response = await client.login(
+          { entityName, ...payloadJSON },
+          sessionId
+        );
         break;
 
       case "logout":
-        response = await client.logout({ entityName, ...payload }, sessionId);
+        response = await client.logout(
+          { entityName, ...payloadJSON },
+          sessionId
+        );
         break;
 
       default:
         throw new Error(`Unknown method: ${method}`);
     }
 
-    dispatch(receiveResponse(response, new Date() - start));
+    // https://github.com/Microsoft/TypeScript/issues/5710
+    dispatch(receiveResponse(response, +(new Date()) - (+start)));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, new Date() - start));
+    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
   }
 };
 
-export const runCustomQuery = ({
-  sessionId,
-  name,
-  params: paramsStr
-}) => async dispatch => {
+export const runCustomQuery = (_params: {
+  sessionId: string;
+  name: string;
+  params: string;
+  // @TODO: define those any typs
+}) => async (dispatch: ThunkDispatch<any, any, any>) => {
+  const { sessionId, name, params } = _params;
   const client = new PhenylHttpClient({ url: window.location.origin });
   dispatch(startExecute());
 
   const start = new Date();
   try {
-    const params = JSON.parse(paramsStr);
-    const response = await client.runCustomQuery({ name, params }, sessionId);
-    dispatch(receiveResponse(response, new Date() - start));
+    const paramsJSON = JSON.parse(params);
+    const response = await client.runCustomQuery(
+      { name, paramsJSON },
+      sessionId
+    );
+    // https://github.com/Microsoft/TypeScript/issues/5710
+    dispatch(receiveResponse(response, +(new Date()) - (+start)));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, new Date() - start));
+    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
   }
 };
 
-export const runCustomCommand = ({
-  sessionId,
-  name,
-  params: paramsStr
-}) => async dispatch => {
+export const runCustomCommand = (_params: {
+  sessionId: string;
+  name: string;
+  params: string;
+  // @TODO: define those any typs
+}) => async (dispatch: ThunkDispatch<any, any, any>) => {
+  const { sessionId, name, params } = _params;
   const client = new PhenylHttpClient({ url: window.location.origin });
   dispatch(startExecute());
 
   const start = new Date();
   try {
-    const params = JSON.parse(paramsStr);
-    const response = await client.runCustomCommand({ name, params }, sessionId);
-    dispatch(receiveResponse(response, new Date() - start));
+    const paramsJSON = JSON.parse(params);
+    const response = await client.runCustomCommand({ name, paramsJSON }, sessionId);
+    // https://github.com/Microsoft/TypeScript/issues/5710
+    dispatch(receiveResponse(response, +(new Date()) - (+start)));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, new Date() - start));
+    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
   }
 };
