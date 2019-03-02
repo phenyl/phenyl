@@ -1,24 +1,22 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { withRouter, Route, Switch } from 'react-router-dom'
+import React from "react";
+import { connect } from "react-redux";
+import { withRouter, Route, Switch } from "react-router-dom";
 import {
   Sidebar as SemanticSidebar,
   Segment,
-  Divider,
-} from 'semantic-ui-react/index'
-import LoginModal from './containers/LoginModal'
-import Sidebar from './containers/Sidebar'
-import Breadcrumb from './containers/Breadcrumb'
-import OperationEditor from './containers/OperationEditor'
-import OperationResult from './containers/OperationResult'
-import CustomQueryEditor from './containers/CustomQueryEditor'
-import CustomCommandEditor from './containers/CustomCommandEditor'
-import { State } from './modules'
-import './App.css'
+  Divider
+} from "semantic-ui-react/index";
+import LoginModal from "./containers/LoginModal";
+import Sidebar from "./containers/Sidebar";
+import Breadcrumb from "./containers/Breadcrumb";
+import OperationEditor from "./containers/OperationEditor";
+import OperationResult from "./containers/OperationResult";
+import CustomQueryEditor from "./containers/CustomQueryEditor";
+import CustomCommandEditor from "./containers/CustomCommandEditor";
+import { State } from "./modules";
+import "./App.css";
 
-const Home = () => (
-  null
-)
+const Home = () => null;
 const Users = () => (
   <div>
     <Breadcrumb />
@@ -27,7 +25,7 @@ const Users = () => (
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
-)
+);
 const NonUsers = () => (
   <div>
     <Breadcrumb />
@@ -36,7 +34,7 @@ const NonUsers = () => (
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
-)
+);
 const CustomQuery = () => (
   <div>
     <Breadcrumb />
@@ -45,7 +43,7 @@ const CustomQuery = () => (
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
-)
+);
 const CustomCommand = () => (
   <div>
     <Breadcrumb />
@@ -54,16 +52,16 @@ const CustomCommand = () => (
     <Divider horizontal>Result</Divider>
     <OperationResult />
   </div>
-)
+);
 const NotFound = () => (
   <div>
     <span>Not found</span>
   </div>
-)
+);
 
 type Props = {
-  mustLogin: boolean
-}
+  mustLogin: boolean;
+};
 
 const App = ({ mustLogin }: Props) => (
   <SemanticSidebar.Pushable as={Segment} className="no-border">
@@ -72,20 +70,20 @@ const App = ({ mustLogin }: Props) => (
     <SemanticSidebar.Pusher style={{ maxWidth: window.outerWidth - 260 - 20 }}>
       <Segment basic className="no-border">
         <Switch>
-          <Route exact path='/' component={Home} />
-          <Route path='/users/:entityName' component={Users} />
-          <Route path='/nonUsers/:entityName' component={NonUsers} />
-          <Route path='/customQueries/:name' component={CustomQuery} />
-          <Route path='/customCommands/:name' component={CustomCommand} />
+          <Route exact path="/" component={Home} />
+          <Route path="/users/:entityName" component={Users} />
+          <Route path="/nonUsers/:entityName" component={NonUsers} />
+          <Route path="/customQueries/:name" component={CustomQuery} />
+          <Route path="/customCommands/:name" component={CustomCommand} />
           <Route component={NotFound} />
         </Switch>
       </Segment>
     </SemanticSidebar.Pusher>
   </SemanticSidebar.Pushable>
-)
+);
 
 const mapStateToProps = (state: State) => ({
   mustLogin: !state.user.anonymous && !state.user.session
-})
+});
 
-export default withRouter(connect(mapStateToProps)(App))
+export default withRouter(connect(mapStateToProps)(App));

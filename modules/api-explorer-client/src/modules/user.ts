@@ -1,4 +1,5 @@
 /* global PhenylFunctionalGroupSkeleton */
+import { Id } from "@phenyl/interfaces"
 import PhenylHttpClient from 'phenyl-http-client'
 
 const LOGIN = 'user/LOGIN'
@@ -12,7 +13,7 @@ const LOGOUT = 'user/LOGOUT'
 export type User = {
   busy: boolean,
   displayName: string,
-  session: any,
+  session: Id,
   anonymous: boolean,
   user: any,
   error: any,

@@ -12,6 +12,14 @@ const initialState = {
   error: null,
 }
 
+// @TODO: implement response/error type
+export type Operation = {
+  isFetching: boolean,
+  spent: number,
+  response: any,
+  error: any,
+}
+
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
     case EXECUTE_START:

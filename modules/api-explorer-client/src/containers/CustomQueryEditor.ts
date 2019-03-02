@@ -1,17 +1,23 @@
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
-import CustomEditor from '../components/CustomEditor'
-import { runCustomQuery } from '../modules/operation'
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import CustomEditor from "../components/CustomEditor";
+import { runCustomQuery } from "../modules/operation";
+import { State } from "../modules";
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   sessionId: state.user.session ? state.user.session.id : null,
-  isFetching: state.operation.isFetching,
-})
+  isFetching: state.operation.isFetching
+});
 
-const mapDispatchToProps = (dispatch) => ({
-  execute ({ sessionId, name, params }) {
-    dispatch(runCustomQuery({ sessionId, name, params }))
-  },
-})
+const mapDispatchToProps = dispatch => ({
+  execute({ sessionId, name, params }) {
+    dispatch(runCustomQuery({ sessionId, name, params }));
+  }
+});
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CustomEditor))
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CustomEditor)
+);
