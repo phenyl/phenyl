@@ -1,4 +1,5 @@
 /* global PhenylFunctionalGroupSkeleton */
+// @ts-ignore remove this comment after @phenyl/interfaces release
 import { Id } from "@phenyl/interfaces";
 import PhenylHttpClient from "phenyl-http-client";
 

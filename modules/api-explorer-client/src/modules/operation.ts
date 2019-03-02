@@ -1,4 +1,5 @@
 import PhenylHttpClient from "phenyl-http-client";
+// @ts-ignore remove this comment after @phenyl/interfaces release
 import { PhenylError } from "@phenyl/interfaces";
 
 const EXECUTE_START = "operation/EXECUTE_START";

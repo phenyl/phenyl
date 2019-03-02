@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// @ts-ignore remove this comment after @phenyl/interfaces release
 import { Id } from "@phenyl/interfaces";
 import { Form } from "semantic-ui-react/index";
 

@@ -86,4 +86,5 @@ const mapStateToProps = (state: State) => ({
   mustLogin: !state.user.anonymous && !state.user.session
 });
 
+// @ts-ignore something wrong with withRouter
 export default withRouter(connect(mapStateToProps)(App));
