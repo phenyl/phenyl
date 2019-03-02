@@ -1,6 +1,7 @@
 /* global PhenylFunctionalGroupSkeleton */
 // @ts-ignore remove this comment after @phenyl/interfaces release
 import { Id } from "@phenyl/interfaces";
+// @ts-ignore
 import PhenylHttpClient from "phenyl-http-client";
 
 const LOGIN = "user/LOGIN";
