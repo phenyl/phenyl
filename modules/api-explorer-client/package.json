@@ -27,7 +27,6 @@
     "@types/react-dom": "^16.8.2",
     "@types/react-redux": "^7.0.1",
     "@types/react-router-dom": "^4.3.1",
-    "@types/redux-localstorage": "^1.0.8",
     "@types/react-json-tree": "^0.6.11",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
