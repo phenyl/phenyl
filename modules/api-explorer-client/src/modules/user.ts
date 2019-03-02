@@ -8,6 +8,16 @@ const LOGIN_SUCCESS = 'user/LOGIN_SUCCESS'
 const LOGIN_FAILED = 'user/LOGIN_FAILED'
 const LOGOUT = 'user/LOGOUT'
 
+// @TODO: define session/user/error type
+export type User = {
+  busy: boolean,
+  displayName: string,
+  session: any,
+  anonymous: boolean,
+  user: any,
+  error: any,
+}
+
 const initialState = {
   busy: false,
   displayName: '',

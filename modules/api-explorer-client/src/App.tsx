@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter, Route, Switch } from 'react-router-dom'
@@ -6,7 +5,7 @@ import {
   Sidebar as SemanticSidebar,
   Segment,
   Divider,
-} from 'semantic-ui-react'
+} from 'semantic-ui-react/index'
 import LoginModal from './containers/LoginModal'
 import Sidebar from './containers/Sidebar'
 import Breadcrumb from './containers/Breadcrumb'
@@ -14,6 +13,7 @@ import OperationEditor from './containers/OperationEditor'
 import OperationResult from './containers/OperationResult'
 import CustomQueryEditor from './containers/CustomQueryEditor'
 import CustomCommandEditor from './containers/CustomCommandEditor'
+import { State } from './modules'
 import './App.css'
 
 const Home = () => (
@@ -84,7 +84,7 @@ const App = ({ mustLogin }: Props) => (
   </SemanticSidebar.Pushable>
 )
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   mustLogin: !state.user.anonymous && !state.user.session
 })
 
