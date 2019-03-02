@@ -6,36 +6,43 @@ type Props = {
   isFetching: boolean;
   sessionId: string;
   operations: Array<string>;
-  defaultPayloads: { [string]: Object };
-  execute: ({ entityName: string, method: string, payload: string }) => any;
+  defaultPayloads: { [key: string]: Object };
+  execute: (
+    params: {
+      sessionId: string;
+      entityName: string;
+      method: string;
+      payload: string;
+    }
+  ) => any;
 };
 
 type State = {
-  method: string; // FIXME: enum
+  method: string;
   payload: string;
 };
 
 class OperationEditor extends Component<Props, State> {
   state: State = {
-    method: null,
-    payload: null
+    method: "",
+    payload: ""
   };
 
-  handleChangeOperation = (event, { value }) => {
-    if (!this.props.defaultPayloads[value]) {
-      throw new Error(`Unknown method: ${value}`);
+  handleChangeOperation = (event: any, _payload: { value: string }) => {
+    if (!this.props.defaultPayloads[_payload.value]) {
+      throw new Error(`Unknown method: ${_payload.value}`);
     }
 
-    const payload = this.props.defaultPayloads[value];
+    const payload = this.props.defaultPayloads[_payload.value];
 
     this.setState({
-      method: value,
+      method: _payload.value,
       payload: JSON.stringify(payload, null, 2)
     });
   };
 
-  handleChangePayload = (event, { value }) => {
-    this.setState({ payload: value });
+  handleChangePayload = (event: any, _payload: { value: string }) => {
+    this.setState({ payload: _payload.value });
   };
 
   handleRun = () => {
