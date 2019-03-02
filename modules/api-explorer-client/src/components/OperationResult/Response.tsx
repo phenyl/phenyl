@@ -3,10 +3,10 @@ import { Segment, Tab, Message } from "semantic-ui-react/index";
 import JSONTree from "react-json-tree";
 
 type Props = {
-  loading: boolean,
-  expanded: boolean,
-  response: any,
-  error: ?Error
+  loading: boolean;
+  expanded: boolean;
+  response: any;
+  error: Error | null | undefined;
 };
 
 const Response = ({ loading, expanded, response, error }: Props) => {
