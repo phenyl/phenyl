@@ -1,8 +1,9 @@
 /* global PhenylFunctionalGroupSkeleton */
 // @ts-ignore remove this comment after @phenyl/interfaces release
-import { Id } from "@phenyl/interfaces";
+import { Id, Credentials } from "@phenyl/interfaces";
 // @ts-ignore
 import PhenylHttpClient from "phenyl-http-client";
+import { ThunkDispatch } from "redux-thunk";
 
 const LOGIN = "user/LOGIN";
 const LOGIN_AS_ANONYMOUS = "user/LOGIN_AS_ANONYMOUS";
@@ -30,7 +31,15 @@ const initialState = {
   error: null
 };
 
-export const reducer = (state = initialState, action) => {
+// @TODO: define this any type
+type Action = {
+  type: string;
+  session: any;
+  user: any;
+  error: any;
+};
+
+export const reducer = (state = initialState, action: Action) => {
   switch (action.type) {
     case LOGIN:
       return {
@@ -55,6 +64,7 @@ export const reducer = (state = initialState, action) => {
         busy: true
       };
     case LOGIN_SUCCESS:
+      // @ts-ignore global PhenylFunctionalGroupSkeleton
       const { accountPropName } = PhenylFunctionalGroupSkeleton.users[
         action.session.entityName
       ];
@@ -82,7 +92,11 @@ export const reducer = (state = initialState, action) => {
   }
 };
 
-export const login = (entityName, credentials) => async dispatch => {
+export const login = (
+  entityName: string,
+  credentials: Credentials
+  // @TODO: define those any typs
+) => async (dispatch: ThunkDispatch<any, any, any>) => {
   const client = new PhenylHttpClient({ url: window.location.origin });
 
   try {
@@ -117,10 +131,13 @@ export const loginRequest = () => ({
   type: LOGIN_REQUEST
 });
 
-export const loginSuccess = ({ user, session }) => {
+// @TODO: define those any types
+export const loginSuccess = (params: { user: any; session: any }) => {
+  const { user, session } = params;
   return { type: LOGIN_SUCCESS, user, session };
 };
 
-export const loginFailed = error => {
+// @TODO: define those any types
+export const loginFailed = (error: any) => {
   return { type: LOGIN_FAILED, error };
 };
