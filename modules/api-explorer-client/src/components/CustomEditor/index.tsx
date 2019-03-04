@@ -19,8 +19,8 @@ class OperationEditor extends Component<Props, State> {
     params: ""
   };
 
-  handleChangePayload = (event: any, payload: { value: string }) => {
-    this.setState({ params: payload.value });
+  handleChangePayload = (event: any, { value }: { value: string }) => {
+    this.setState({ params: value });
   };
 
   handleRun = () => {
