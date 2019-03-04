@@ -153,6 +153,9 @@ module.exports = {
           {
             test: /\.(ts|tsx|d.ts)$/,
             use: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
             exclude: /node_modules/
           },
           // The notation here is somewhat confusing.
