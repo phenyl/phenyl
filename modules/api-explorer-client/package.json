@@ -9,6 +9,7 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "node scripts/build.js && node scripts/prepare-assets.js",
+    "build:type": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit"
   },
   "files": [
@@ -58,9 +59,9 @@
     "react-json-tree": "^0.11.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.3.1",
-    "redux": "^3.7.2",
+    "redux": "^4.0.1",
     "redux-localstorage": "^0.4.1",
-    "redux-thunk": "^2.2.0",
+    "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.77.0",
     "style-loader": "0.19.0",
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
