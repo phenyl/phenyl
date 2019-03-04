@@ -28,21 +28,21 @@ class OperationEditor extends Component<Props, State> {
     payload: ""
   };
 
-  handleChangeOperation = (event: any, _payload: { value: string }) => {
-    if (!this.props.defaultPayloads[_payload.value]) {
-      throw new Error(`Unknown method: ${_payload.value}`);
+  handleChangeOperation = (event: any, { value }: { value: string }) => {
+    if (!this.props.defaultPayloads[value]) {
+      throw new Error(`Unknown method: ${value}`);
     }
 
-    const payload = this.props.defaultPayloads[_payload.value];
+    const payload = this.props.defaultPayloads[value];
 
     this.setState({
-      method: _payload.value,
+      method: value,
       payload: JSON.stringify(payload, null, 2)
     });
   };
 
-  handleChangePayload = (event: any, _payload: { value: string }) => {
-    this.setState({ payload: _payload.value });
+  handleChangePayload = (event: any, { value }: { value: string }) => {
+    this.setState({ payload: value });
   };
 
   handleRun = () => {
