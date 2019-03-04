@@ -9,7 +9,6 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "node scripts/build.js && node scripts/prepare-assets.js",
-    "build:type": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit"
   },
   "files": [
