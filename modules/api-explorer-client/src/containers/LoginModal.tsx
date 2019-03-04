@@ -34,19 +34,19 @@ class LoginModal extends Component<Props> {
     passwordPropValue: ""
   };
 
-  handleChangeEntity = (event: any, payload: { value: string }) => {
+  handleChangeEntity = (event: any, { value }: { value: string }) => {
     // @ts-ignore global PhenylFunctionalGroupSkeleton
-    if (!PhenylFunctionalGroupSkeleton.users[payload.value]) {
-      throw new Error(`Entity '${payload.value}' is not defined`);
+    if (!PhenylFunctionalGroupSkeleton.users[value]) {
+      throw new Error(`Entity '${value}' is not defined`);
     }
     const {
       accountPropName,
       passwordPropName
       // @ts-ignore global PhenylFunctionalGroupSkeleton
-    } = PhenylFunctionalGroupSkeleton.users[payload.value];
+    } = PhenylFunctionalGroupSkeleton.users[value];
 
     this.setState({
-      entityName: payload.value,
+      entityName: value,
       accountPropName,
       passwordPropName
     });
@@ -54,9 +54,9 @@ class LoginModal extends Component<Props> {
 
   handleChangeField = (field: string) => (
     event: any,
-    payload: { value: string }
+    { value }: { value: string }
   ) => {
-    this.setState({ [field]: payload.value });
+    this.setState({ [field]: value });
   };
 
   handleLogin = () => {
