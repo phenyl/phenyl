@@ -1,12 +1,12 @@
 import {
   Versioning,
-} from './versioning.js'
+} from './versioning'
 
 import {
   PhenylSessionClient
-} from './session-client.js'
+} from './session-client'
 
-import type {
+import {
   Entity,
   EntityClient,
   EntityMap,
@@ -36,9 +36,11 @@ import type {
   SingleInsertCommandResult,
   UpdateOperation,
   WhereQuery,
-} from 'phenyl-interfaces'
+  Key,
+  // @ts-ignore remove comment after @phenyl/interfaces fixed
+} from "@phenyl/interfaces"; 
 
-export type PhenylEntityClientOptions<M: EntityMap> = {
+export type PhenylEntityClientOptions<M extends EntityMap> = {
   validatePushCommand?: PushValidation<M>,
 }
 
@@ -58,7 +60,7 @@ function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOper
  * Pass dbClient: DbClient which accesses to data.
  * Optionally set merge strategy by options.validatePushCommand.
  */
-export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
+export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> {
   dbClient: $Subtype<DbClient<M>>
   validatePushCommand: PushValidation<M>
 
@@ -71,7 +73,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async find<N: $Keys<M>>(query: WhereQuery<N>): Promise<QueryResult<$ElementType<M, N>>> {
+  async find(query: WhereQuery<Key<M>>): Promise<QueryResult<M[Key<M>]>> {
     const entities = await this.dbClient.find(query)
     return Versioning.createQueryResult(entities)
   }
@@ -79,7 +81,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async findOne<N: $Keys<M>>(query: WhereQuery<N>): Promise<SingleQueryResult<$ElementType<M, N>>> {
+  async findOne(query: WhereQuery<Key<M>>): Promise<SingleQueryResult<M[Key<M>]>> {
     const entity = await this.dbClient.findOne(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -87,7 +89,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async get<N: $Keys<M>>(query: IdQuery<N>): Promise<SingleQueryResult<$ElementType<M, N>>> {
+  async get(query: IdQuery<Key<M>>): Promise<SingleQueryResult<M[Key<M>]>> {
     const entity = await this.dbClient.get(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -95,7 +97,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<QueryResult<$ElementType<M, N>>> {
+  async getByIds(query: IdsQuery<Key<M>>): Promise<QueryResult<M[Key<M>]>> {
     const entities = await this.dbClient.getByIds(query)
     return Versioning.createQueryResult(entities)
   }
@@ -103,7 +105,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async pull<N: $Keys<M>>(query: PullQuery<N>): Promise<PullQueryResult<$ElementType<M, N>>> {
+  async pull(query: PullQuery<Key<M>>): Promise<PullQueryResult<M[Key<M>]>> {
     const { versionId, entityName, id } = query
     const entity = await this.dbClient.get({ entityName, id })
     return Versioning.createPullQueryResult(entity, versionId)
@@ -112,7 +114,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<SingleInsertCommandResult> {
+  async insertOne(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<SingleInsertCommandResult> {
     const result = await this.insertAndGet(command)
     return { ok: 1, n: 1, versionId: result.versionId }
   }
@@ -120,7 +122,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<MultiInsertCommandResult> {
+  async insertMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<MultiInsertCommandResult> {
     const result = await this.insertAndGetMulti(command)
     return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
@@ -128,7 +130,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<GetCommandResult<$ElementType<M, N>>> {
+  async insertAndGet(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<GetCommandResult<M[Key<M>]>> {
     const { entityName, value } = command
     const valueWithMeta = Versioning.attachMetaInfoToNewEntity(value)
     const entity = await this.dbClient.insertAndGet({ entityName, value: valueWithMeta })
@@ -138,7 +140,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>> {
+  async insertAndGetMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<MultiValuesCommandResult<M[Key<M>], *>> {
     const { entityName, values } = command
     const valuesWithMeta = values.map(value => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
@@ -148,7 +150,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async updateById<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<IdUpdateCommandResult> {
+  async updateById(command: IdUpdateCommand<Key<M>>): Promise<IdUpdateCommandResult> {
     const result = await this.updateAndGet((command: IdUpdateCommand<N>))
     return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
@@ -156,7 +158,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async updateMulti<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<MultiUpdateCommandResult<*>> {
+  async updateMulti(command: MultiUpdateCommand<Key<M>>): Promise<MultiUpdateCommandResult<*>> {
     const result = await this.updateAndFetch((command: MultiUpdateCommand<N>))
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
@@ -164,7 +166,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<GetCommandResult<$ElementType<M, N>>> {
+  async updateAndGet(command: IdUpdateCommand<Key<M>>): Promise<GetCommandResult<M[Key<M>]>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entity = await this.dbClient.updateAndGet(metaInfoAttachedCommand)
     return Versioning.createGetCommandResult(entity)
@@ -173,7 +175,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<MultiValuesCommandResult<$ElementType<M, N>, *>> {
+  async updateAndFetch(command: MultiUpdateCommand<Key<M>>): Promise<MultiValuesCommandResult<M[Key<M>], *>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entities = await this.dbClient.updateAndFetch(metaInfoAttachedCommand)
     return Versioning.createMultiValuesCommandResult(entities)
@@ -182,7 +184,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async push<N: $Keys<M>>(command: PushCommand<N>): Promise<PushCommandResult<$ElementType<M, N>>> {
+  async push(command: PushCommand<Key<M>>): Promise<PushCommandResult<M[Key<M>]>> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.dbClient.get({ entityName, id })
     const masterOperations = Versioning.getOperationDiffsByVersion(entity, versionId)
@@ -197,7 +199,7 @@ export class PhenylEntityClient<M: EntityMap> implements EntityClient<M> {
   /**
    *
    */
-  async delete<N: $Keys<M>>(command: DeleteCommand<N>): Promise<DeleteCommandResult> {
+  async delete(command: DeleteCommand<Key<M>>): Promise<DeleteCommandResult> {
     return { ok: 1, n: await this.dbClient.delete(command) }
   }
 
