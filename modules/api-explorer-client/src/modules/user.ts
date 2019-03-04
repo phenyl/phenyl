@@ -132,8 +132,13 @@ export const loginRequest = () => ({
 });
 
 // @TODO: define those any types
-export const loginSuccess = (params: { user: any; session: any }) => {
-  const { user, session } = params;
+export const loginSuccess = ({
+  user,
+  session
+}: {
+  user: any;
+  session: any;
+}) => {
   return { type: LOGIN_SUCCESS, user, session };
 };
 

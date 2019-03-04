@@ -194,19 +194,22 @@ export const execute = (params: {
     }
 
     // https://github.com/Microsoft/TypeScript/issues/5710
-    dispatch(receiveResponse(response, +(new Date()) - (+start)));
+    dispatch(receiveResponse(response, +new Date() - +start));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
+    dispatch(receiveErrorResponse(e, +new Date() - +start));
   }
 };
 
-export const runCustomQuery = (_params: {
+export const runCustomQuery = ({
+  sessionId,
+  name,
+  params
+}: {
   sessionId: string;
   name: string;
   params: string;
   // @TODO: define those any typs
 }) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  const { sessionId, name, params } = _params;
   const client = new PhenylHttpClient({ url: window.location.origin });
   dispatch(startExecute());
 
@@ -218,29 +221,35 @@ export const runCustomQuery = (_params: {
       sessionId
     );
     // https://github.com/Microsoft/TypeScript/issues/5710
-    dispatch(receiveResponse(response, +(new Date()) - (+start)));
+    dispatch(receiveResponse(response, +new Date() - +start));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
+    dispatch(receiveErrorResponse(e, +new Date() - +start));
   }
 };
 
-export const runCustomCommand = (_params: {
+export const runCustomCommand = ({
+  sessionId,
+  name,
+  params
+}: {
   sessionId: string;
   name: string;
   params: string;
   // @TODO: define those any typs
 }) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  const { sessionId, name, params } = _params;
   const client = new PhenylHttpClient({ url: window.location.origin });
   dispatch(startExecute());
 
   const start = new Date();
   try {
     const paramsJSON = JSON.parse(params);
-    const response = await client.runCustomCommand({ name, paramsJSON }, sessionId);
+    const response = await client.runCustomCommand(
+      { name, paramsJSON },
+      sessionId
+    );
     // https://github.com/Microsoft/TypeScript/issues/5710
-    dispatch(receiveResponse(response, +(new Date()) - (+start)));
+    dispatch(receiveResponse(response, +new Date() - +start));
   } catch (e) {
-    dispatch(receiveErrorResponse(e, +(new Date()) - (+start)));
+    dispatch(receiveErrorResponse(e, +new Date() - +start));
   }
 };
