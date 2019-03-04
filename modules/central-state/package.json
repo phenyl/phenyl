@@ -1,10 +1,11 @@
 {
-  "name": "phenyl-central-state",
-  "version": "0.3.2",
+  "name": "@phenyl/central-state",
+  "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "jsnext:main": "./jsnext.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "files": [
+    "lib",
     "src",
     "dist",
     "package.json",
@@ -12,6 +13,10 @@
     "LICENSE",
     "README.md"
   ],
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "type-check": "upbin tsc --noEmit"
+  },
   "devDependencies": {
     "babel-register": "^6.24.1",
     "mocha": "^5.0.5",
@@ -19,10 +24,10 @@
   },
   "dependencies": {
     "oad-utils": "~0.3.0",
-    "phenyl-interfaces": "~0.4.2",
-    "phenyl-utils": "~0.4.2"
+    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/utils": "~1.0.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-central-state",
+  "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0"
 }
