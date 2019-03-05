@@ -1,4 +1,3 @@
-// @flow
 import type { EntityMap } from 'phenyl-interfaces'
 import { PhenylEntityClient } from 'phenyl-central-state/jsnext'
 import { PhenylMongoDbClient } from './mongodb-client.js'
