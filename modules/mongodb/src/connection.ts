@@ -1,15 +1,16 @@
 // Sorry for poor typing
 import { MongoClient } from 'mongodb'
 import promisify from 'es6-promisify'
-import type {
+import {
   FindOperation,
   UpdateOperation,
-} from 'phenyl-interfaces'
-import type {
+  // @ts-ignore remove this comment after @phenyl/interfaces release
+} from '@phenyl/interfaces'
+import {
   ChangeStreamPipeline,
   ChangeStreamOptions,
   ChangeStream,
-} from './change-stream.js'
+} from './change-stream'
 
 const connectToMongoDb = promisify(MongoClient.connect)
 
@@ -21,7 +22,7 @@ export interface MongoDbConnection {
 export type MongoDbCollection = {
   find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Object>>,
   insertOne(obj: Object): Promise<{ insertedId: string, insertedCount: number }>,
-  insertMany(objs: Array<Object>): Promise<{ insertedIds: { [string]: string }, insertedCount: number }>,
+  insertMany(objs: Array<Object>): Promise<{ insertedIds: { [key: string]: string }, insertedCount: number }>,
   updateOne({ _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
   updateMany(fOp: FindOperation, uOp: UpdateOperation): Promise<Object>,
   deleteOne({ _id: any }): Promise<{ deletedCount: number }>,
@@ -72,7 +73,7 @@ export class PhenylMongoDbConnection implements MongoDbConnection {
   }
 }
 
-function promisifyCollection(coll: Object): MongoDbCollection {
+function promisifyCollection(coll: MongoDbCollection): MongoDbCollection {
   return {
     find: promisifyFindChain(coll.find.bind(coll)),
     insertOne: promisify(coll.insertOne, coll),
@@ -93,7 +94,7 @@ type FindChainParams = {
 type PromisifiedFind = (where?: Object, params?: FindChainParams) => Promise<any>
 
 function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
-  return function(where?: Object = {}, params?: FindChainParams = {}): Promise<any> {
+  return function(where: Object = {}, params: FindChainParams = {}): Promise<any> {
     const findChain = find(where)
     const newFindChain = Object.keys(params).reduce((chain, name) =>
       chain[name](params[name]), findChain)
