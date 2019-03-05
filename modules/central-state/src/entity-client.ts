@@ -48,7 +48,7 @@ export type PhenylEntityClientOptions<M extends EntityMap> = {
  * Validate PushCommand only when masterOperations are found.
  * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
  */
-function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOperations: ?Array<UpdateOperation>) {
+function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOperations: Array<UpdateOperation> | null | undefined) {
   if (masterOperations == null) {
     throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
   }
@@ -61,7 +61,7 @@ function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOper
  * Optionally set merge strategy by options.validatePushCommand.
  */
 export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> {
-  dbClient: $Subtype<DbClient<M>>
+  dbClient: DbClient<M>
   validatePushCommand: PushValidation<M>
 
   constructor(dbClient: DbClient<M>, options: PhenylEntityClientOptions<M> = {}) {
@@ -142,7 +142,7 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
    */
   async insertAndGetMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<MultiValuesCommandResult<M[Key<M>], *>> {
     const { entityName, values } = command
-    const valuesWithMeta = values.map(value => Versioning.attachMetaInfoToNewEntity(value))
+    const valuesWithMeta = values.map((value: PreEntity<M[Key<M>]>) => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
     return Versioning.createMultiValuesCommandResult(entities)
   }
@@ -151,7 +151,7 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
    *
    */
   async updateById(command: IdUpdateCommand<Key<M>>): Promise<IdUpdateCommandResult> {
-    const result = await this.updateAndGet((command: IdUpdateCommand<N>))
+    const result = await this.updateAndGet(command)
     return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
 
@@ -159,7 +159,7 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
    *
    */
   async updateMulti(command: MultiUpdateCommand<Key<M>>): Promise<MultiUpdateCommandResult<*>> {
-    const result = await this.updateAndFetch((command: MultiUpdateCommand<N>))
+    const result = await this.updateAndFetch(command)
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
 
