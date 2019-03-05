@@ -59,7 +59,7 @@ export class Versioning {
    * @public
    * Create PullQueryResult with diff operations.
    */
-  static createPullQueryResult<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | null | undefined): PullQueryResult<E> {
+  static createPullQueryResult<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | void): PullQueryResult<E> {
     const operations = this.getOperationDiffsByVersion(entity, versionId)
     if (operations == null) {
       return { ok: 1, entity: this.stripMeta(entity), versionId: this.getVersionId(entity) }
@@ -103,7 +103,7 @@ export class Versioning {
    * @public
    * Create PushCommandResult from entity, updated entity and local versionId.
    */
-  static createPushCommandResult<E extends Entity>(entity: EntityWithMetaInfo<E>, updatedEntity: EntityWithMetaInfo<E>, versionId: Id | null | undefined, newOperation: UpdateOperation): PushCommandResult<E> {
+  static createPushCommandResult<E extends Entity>(entity: EntityWithMetaInfo<E>, updatedEntity: EntityWithMetaInfo<E>, versionId: Id | void, newOperation: UpdateOperation): PushCommandResult<E> {
     const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
     const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
@@ -157,7 +157,7 @@ export class Versioning {
    * @public
    * Get operation diffs by the given versionId.
    */
-  static getOperationDiffsByVersion<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | null | undefined): Array<UpdateOperation> | null | undefined {
+  static getOperationDiffsByVersion<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | void): Array<UpdateOperation> | void {
     if (versionId == null) return null
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
@@ -200,7 +200,7 @@ export class Versioning {
    * @private
    * Extract current version id from entity with meta info.
    */
-  static getVersionId<E extends Entity>(entity: EntityWithMetaInfo<E>): Id | null | undefined {
+  static getVersionId<E extends Entity>(entity: EntityWithMetaInfo<E>): Id | void {
     const metaInfo = entity._PhenylMeta
     if (metaInfo == null) return null
     if (metaInfo.versions == null) return null
@@ -212,7 +212,7 @@ export class Versioning {
    * @private
    * Extract previous version id from entity with meta info.
    */
-  static getPrevVersionId<E extends Entity>(entity: EntityWithMetaInfo<E>): Id | null | undefined {
+  static getPrevVersionId<E extends Entity>(entity: EntityWithMetaInfo<E>): Id | void {
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta
       return metaInfo.versions[metaInfo.versions.length - 2].id
@@ -227,8 +227,8 @@ export class Versioning {
    * @private
    * Extract current version ids from entities with meta info.
    */
-  static getVersionIds<E extends Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: string]: Id | null | undefined } {
-    const versionsById: { [key: string]: Id | null | undefined } = {}
+  static getVersionIds<E extends Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: string]: Id | void } {
+    const versionsById: { [key: string]: Id | void } = {}
     entities.forEach((entity:EntityWithMetaInfo<E>) => {
       versionsById[entity.id] = this.getVersionId(entity)
     })
@@ -239,8 +239,8 @@ export class Versioning {
    * @private
    * Extract previous version ids from entities with meta info.
    */
-  static getPrevVersionIds<E extends Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: string]: Id | null | undefined} {
-    const versionsById: { [key: string]: Id | null | undefined } = {}
+  static getPrevVersionIds<E extends Entity>(entities: Array<EntityWithMetaInfo<E>>): { [entityId: string]: Id | void} {
+    const versionsById: { [key: string]: Id | void } = {}
     entities.forEach(entity => {
       versionsById[entity.id] = this.getPrevVersionId(entity)
     })

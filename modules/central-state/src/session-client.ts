@@ -29,7 +29,7 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async get(id: Id | null | undefined): Promise<Session | null | undefined> {
+  async get(id: Id | void): Promise<Session | void> {
     if (id == null) {
       return null
     }
@@ -68,7 +68,7 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async delete(id: Id | null | undefined): Promise<boolean> {
+  async delete(id: Id | void): Promise<boolean> {
     if (id == null) {
       return false
     }
