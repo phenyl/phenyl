@@ -10,13 +10,14 @@ import {
   visitUpdateOperation,
 } from 'oad-utils/jsnext'
 
-import type {
+import {
   Entity,
   EntityMap,
   PreEntity,
   DbClient,
   IdQuery,
   IdsQuery,
+  Key,
   WhereQuery,
   SingleInsertCommand,
   MultiInsertCommand,
@@ -27,14 +28,15 @@ import type {
   UpdateOperation,
   SetOperator,
   SimpleFindOperation,
-} from 'phenyl-interfaces'
+  // @ts-ignore remove this comment after @phenyl/interfaces release
+} from '@phenyl/interfaces'
 
-import type { MongoDbConnection } from './connection.js'
-import type {
+import { MongoDbConnection } from './connection'
+import {
   ChangeStreamPipeline,
   ChangeStreamOptions,
   ChangeStream,
-} from './change-stream.js'
+} from './change-stream'
 
 
 // convert 24-byte hex lower string to ObjectId
@@ -48,7 +50,7 @@ function ObjectID(id: any): any {
   }
 }
 
-function assignToEntity<E: Entity>(entity: E, op: UpdateOperation | SetOperator): E {
+function assignToEntity<E extends Entity>(entity: E, op: UpdateOperation | SetOperator): E {
   // $FlowIssue(structure-is-entity)
   return assign(entity, op)
 }
@@ -126,17 +128,17 @@ export function filterUpdateOperation(updateOperation: UpdateOperation): UpdateO
 }
 
 
-function convertIdToObjectIdInEntity<E: Entity>(entity: E): E {
+function convertIdToObjectIdInEntity<E extends Entity>(entity: E): E {
   return entity.id
     ? assignToEntity(entity, { id: ObjectID(entity.id) })
     : entity
 }
 
-function setIdTo_idInEntity<E: Entity>(entity: E): E {
+function setIdTo_idInEntity<E extends Entity>(entity: E): E {
   return assignToEntity(entity, { $rename: { id: '_id' } })
 }
 
-export function filterInputEntity<E: Entity>(srcEntity: E): E {
+export function filterInputEntity<E extends Entity>(srcEntity: E): E {
   return [
     convertIdToObjectIdInEntity,
     setIdTo_idInEntity,
@@ -144,31 +146,31 @@ export function filterInputEntity<E: Entity>(srcEntity: E): E {
 }
 
 
-function convertObjectIdToIdInEntity<E: Entity>(entity: E): E {
+function convertObjectIdToIdInEntity<E extends Entity>(entity: E): E {
   return entity._id instanceof mongodb.ObjectID
     ? assignToEntity(entity, { _id: entity._id.toString() })
     : entity
 }
 
-function set_idToIdInEntity<E: Entity>(entity: E): E {
+function set_idToIdInEntity<E extends Entity>(entity: E): E {
   return assignToEntity(entity, { $rename: { _id: 'id' } })
 }
 
-export function filterOutputEntity<E: Entity>(srcEntity: E): E {
+export function filterOutputEntity<E extends Entity>(srcEntity: E): E {
   return [
     convertObjectIdToIdInEntity,
     set_idToIdInEntity,
   ].reduce((entity: E, filterFunc) => filterFunc(entity), srcEntity)
 }
 
-export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
+export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
   conn: MongoDbConnection
 
   constructor(conn: MongoDbConnection) {
     this.conn = conn
   }
 
-  async find<N: $Keys<M>>(query: WhereQuery<N>): Promise<Array<$ElementType<M, N>>> {
+  async find(query: WhereQuery<Key<M>>): Promise<Array<M[Key<M>]>> {
     const { entityName, where, skip, limit } = query
     const coll = this.conn.collection(entityName)
     const options = {}
@@ -179,7 +181,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return result.map(filterOutputEntity)
   }
 
-  async findOne<N: $Keys<M>>(query: WhereQuery<N>): Promise<$ElementType<M, N>> {
+  async findOne(query: WhereQuery<Key<M>>): Promise<M[Key<M>]> {
     const { entityName, where } = query
     const coll = this.conn.collection(entityName)
     const result = await coll.find(filterFindOperation(where), { limit: 1 })
@@ -189,7 +191,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return filterOutputEntity(result[0] || null)
   }
 
-  async get<N: $Keys<M>>(query: IdQuery<N>): Promise<$ElementType<M, N>> {
+  async get(query: IdQuery<Key<M>>): Promise<M[Key<M>]> {
     const { entityName, id } = query
     const coll = this.conn.collection(entityName)
     const result = await coll.find({ _id: ObjectID(id) })
@@ -202,7 +204,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return filterOutputEntity(result[0])
   }
 
-  async getByIds<N: $Keys<M>>(query: IdsQuery<N>): Promise<Array<$ElementType<M, N>>> {
+  async getByIds(query: IdsQuery<Key<M>>): Promise<Array<M[Key<M>]>> {
     const { entityName, ids } = query
     const coll = this.conn.collection(entityName)
     // $FlowIssue(find-operation)
@@ -216,21 +218,21 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return result.map(filterOutputEntity)
   }
 
-  async insertOne<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number> {
+  async insertOne(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<number> {
     const { entityName, value } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.insertOne(filterInputEntity(value))
     return result.insertedCount
   }
 
-  async insertMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<number> {
+  async insertMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<number> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.insertMany(command.values.map(filterInputEntity))
     return result.insertedCount
   }
 
-  async insertAndGet<N: $Keys<M>>(command: SingleInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<$ElementType<M, N>> {
+  async insertAndGet(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<M[Key<M>]> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.insertOne(filterInputEntity(command.value))
@@ -238,7 +240,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return this.get({ entityName, id: result.insertedId })
   }
 
-  async insertAndGetMulti<N: $Keys<M>>(command: MultiInsertCommand<N, PreEntity<$ElementType<M, N>>>): Promise<Array<$ElementType<M, N>>> {
+  async insertAndGetMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<Array<M[Key<M>]>> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
 
@@ -249,7 +251,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return this.getByIds({ entityName, ids })
   }
 
-  async updateAndGet<N: $Keys<M>>(command: IdUpdateCommand<N>): Promise<$ElementType<M, N>> {
+  async updateAndGet(command: IdUpdateCommand<Key<M>>): Promise<M[Key<M>]> {
     const { entityName, id, operation } = command
     const coll = this.conn.collection(entityName)
     const result = await coll.updateOne({ _id: ObjectID(id) }, filterUpdateOperation(operation))
@@ -264,7 +266,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return this.get({ entityName, id })
   }
 
-  async updateAndFetch<N: $Keys<M>>(command: MultiUpdateCommand<N>): Promise<Array<$ElementType<M, N>>> {
+  async updateAndFetch(command: MultiUpdateCommand<Key<M>>): Promise<Array<M[Key<M>]>> {
     const { entityName, where, operation } = command
     const coll = this.conn.collection(entityName)
     await coll.updateMany(filterFindOperation(where), filterUpdateOperation(operation))
@@ -272,7 +274,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return this.find({ entityName, where })
   }
 
-  async delete<N: $Keys<M>>(command: DeleteCommand<N>): Promise<number> {
+  async delete(command: DeleteCommand<Key<M>>): Promise<number> {
     const { entityName } = command
     const coll = this.conn.collection(entityName)
     let result
@@ -287,7 +289,7 @@ export class PhenylMongoDbClient<M: EntityMap> implements DbClient<M> {
     return deletedCount
   }
 
-  watch<N: $Keys<M>>(entityName: N, pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream {
+  watch(entityName: Key<M>, pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream {
     return this.conn.collection(entityName).watch(pipeline, options)
   }
 }
