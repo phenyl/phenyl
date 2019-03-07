@@ -19,6 +19,8 @@
     "README.md"
   ],
   "devDependencies": {
+    "@types/bson": "^1.0.4",
+    "@types/mongodb": "^3.1.20",
     "babel-register": "^6.24.1",
     "nyc": "^11.6.0",
     "power-assert": "^1.4.4",

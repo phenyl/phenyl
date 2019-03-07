@@ -2,13 +2,17 @@ import mongodb from 'mongodb'
 import bson from 'bson'
 import {
   createServerError,
-} from 'phenyl-utils/jsnext'
-import { assign } from 'power-assign/jsnext'
+  // @ts-ignore remove this after @phenyl/utils release
+} from '@phenyl/utils'
+// @ts-ignore remove this after @phenyl/power-assign
+import { assign } from 'power-assign'
 import {
   convertToDotNotationString,
   visitFindOperation,
   visitUpdateOperation,
-} from 'oad-utils/jsnext'
+  UpdateOperator,
+  // @ts-ignore remove this after @phenyl/oad-utils
+} from 'oad-utils'
 
 import {
   Entity,
@@ -44,6 +48,7 @@ function ObjectID(id: any): any {
   if (id instanceof mongodb.ObjectID) return id
   if (typeof id !== 'string') return id
   try {
+    // @ts-ignore ObjectID is not class type
     return /^[0-9a-f]{24}$/.test(id) ? bson.ObjectID(id) : id
   } catch (e) {
     return id
@@ -58,7 +63,7 @@ function assignToEntity<E extends Entity>(entity: E, op: UpdateOperation | SetOp
 function convertToObjectIdRecursively(src: any): any {
   if (Array.isArray(src)) return src.map(id => ObjectID(id))
   if (typeof src !== 'object') return ObjectID(src)
-  return Object.keys(src).reduce((dst, key) => {
+  return Object.keys(src).reduce((dst: any, key: string) => {
     dst[key] = convertToObjectIdRecursively(src[key])
     return dst
   }, {})
@@ -76,7 +81,7 @@ function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFind
 }
 
 function convertDocumentPathToDotNotationInFindOperation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
-  return Object.keys(simpleFindOperation).reduce((operation, srcKey) => {
+  return Object.keys(simpleFindOperation).reduce((operation: any, srcKey: string) => {
     const dstKey = convertToDotNotationString(srcKey)
     operation[dstKey] = simpleFindOperation[srcKey]
     return operation
@@ -99,7 +104,7 @@ function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
   const renameOperator = operation.$rename
   if (!renameOperator) return operation
 
-  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator, key) => {
+  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator: any, key: string) => {
     operator[key] = key.split('.').slice(0, -1).concat(renameOperator[key]).join('.')
     return operator
   }, {})
@@ -109,8 +114,8 @@ function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
 
 function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
   return visitUpdateOperation(updateOperation, {
-    operation: op => {
-      return Object.keys(op).reduce((acc, srcKey) => {
+    operation: (op: UpdateOperator) => {
+      return Object.keys(op).reduce((acc: any, srcKey: string) => {
         const dstKey = convertToDotNotationString(srcKey)
         // $FlowIssue(op[srcKey])
         acc[dstKey] = op[srcKey]
@@ -173,7 +178,7 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
   async find(query: WhereQuery<Key<M>>): Promise<Array<M[Key<M>]>> {
     const { entityName, where, skip, limit } = query
     const coll = this.conn.collection(entityName)
-    const options = {}
+    const options: WhereQuery<Key<M>> = {}
     if (skip) options.skip = skip
     if (limit) options.limit = limit
 
@@ -284,7 +289,7 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
     else if (command.where) {
       result = await coll.deleteMany(filterFindOperation(command.where))
     }
-    // $FlowIssue(deleteCount-exists)
+    // @ts-ignore deleteCount-exists
     const { deletedCount } = result
     return deletedCount
   }

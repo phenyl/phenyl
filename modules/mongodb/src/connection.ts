@@ -1,9 +1,11 @@
 // Sorry for poor typing
-import { MongoClient } from 'mongodb'
+import { MongoClient, Collection } from 'mongodb'
+// @ts-ignore something wrong with types/es6-promisify 
 import promisify from 'es6-promisify'
 import {
   FindOperation,
   UpdateOperation,
+  Entity,
   // @ts-ignore remove this comment after @phenyl/interfaces release
 } from '@phenyl/interfaces'
 import {
@@ -20,12 +22,12 @@ export interface MongoDbConnection {
 }
 
 export type MongoDbCollection = {
-  find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Object>>,
+  find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Entity>>,
   insertOne(obj: Object): Promise<{ insertedId: string, insertedCount: number }>,
   insertMany(objs: Array<Object>): Promise<{ insertedIds: { [key: string]: string }, insertedCount: number }>,
-  updateOne({ _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
+  updateOne({ _id }: { _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
   updateMany(fOp: FindOperation, uOp: UpdateOperation): Promise<Object>,
-  deleteOne({ _id: any }): Promise<{ deletedCount: number }>,
+  deleteOne({ _id }: { _id: any }): Promise<{ deletedCount: number }>,
   deleteMany(op: FindOperation): Promise<{ deletedCount: number }>,
   watch(pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream
 }
@@ -73,7 +75,7 @@ export class PhenylMongoDbConnection implements MongoDbConnection {
   }
 }
 
-function promisifyCollection(coll: MongoDbCollection): MongoDbCollection {
+function promisifyCollection(coll: Collection<any>): MongoDbCollection {
   return {
     find: promisifyFindChain(coll.find.bind(coll)),
     insertOne: promisify(coll.insertOne, coll),
@@ -97,6 +99,7 @@ function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
   return function(where: Object = {}, params: FindChainParams = {}): Promise<any> {
     const findChain = find(where)
     const newFindChain = Object.keys(params).reduce((chain, name) =>
+      // @ts-ignore fix this latter
       chain[name](params[name]), findChain)
     return promisify(newFindChain.toArray, newFindChain)()
   }
