@@ -1,13 +1,14 @@
 {
-  "name": "phenyl-standards",
-  "version": "0.2.9",
+  "name": "@phenyl/standards",
+  "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "./lib/index.js",
   "jsnext:main": "./jsnext.js",
   "scripts": {
     "test": "nyc mocha test/*.js --color always"
   },
   "files": [
+    "lib",
     "src",
     "dist",
     "package.json",
