@@ -15,7 +15,7 @@ process.env.BABEL_CACHE_PATH =
     'babel-register-cache.json',
   )
 
-require('babel-register')({
+require('@babel/register')({
   ...babelrc,
   extensions: ['.jsx', '.js', '.ts', '.tsx'],
   cache: true,

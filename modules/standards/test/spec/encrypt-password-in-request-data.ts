@@ -1,10 +1,10 @@
 import { it, describe } from 'mocha'
 import { GeneralRequestData } from "@phenyl/interfaces";
 // @ts-ignore remove this comment after @phenyl/power-crypt released
-import powerCrypt from 'power-crypt/jsnext'
+import powerCrypt from 'power-crypt'
 // @ts-ignore remove this comment after @phenyl/power-assert released
 import assert from 'power-assert'
-import { encryptPasswordInRequestData } from '../../src/encrypt-password-in-request-data.js'
+import { encryptPasswordInRequestData } from '../../src/encrypt-password-in-request-data'
 
 describe('encryptPasswordInRequestData', (): void => {
   it ('does nothing if request isnt update', (): void => {

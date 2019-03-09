@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.js",
   "scripts": {
+    "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit",
     "test": "yarn test:ts && yarn test:mocha",
     "test:mocha": "NODE_ENV=test nyc --nycrc-path .nycrc mocha --require test/helper/babel-register.js --recursive test/spec/**/*.ts --color always",

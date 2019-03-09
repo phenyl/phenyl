@@ -2,7 +2,7 @@
   "cache": true,
   "exclude": ["jsnext.js", "test/**/*.js"],
   "require": [
-    "babel-register"
+    "@babel/register"
   ],
   "reporter": [
     "lcov",

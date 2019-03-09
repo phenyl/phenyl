@@ -2,7 +2,7 @@ import { GetResponseData } from "@phenyl/interfaces";
 import { it, describe } from 'mocha'
 // @ts-ignore remove this comment after @phenyl/power-assert released
 import assert from 'power-assert'
-import { removePasswordFromResponseData } from '../../src/remove-password-from-response-data.js'
+import { removePasswordFromResponseData } from '../../src/remove-password-from-response-data'
 
 describe('removePasswordFromResponseData', function () {
   it ('removes password property', function () {
