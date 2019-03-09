@@ -1,16 +1,18 @@
-// @flow
-import type {
+import {
   RequestData,
   DocumentPath,
-} from 'phenyl-interfaces'
+  // @ts-ignore remove this comment after @phenyl/interfaces release
+} from '@phenyl/interfaces'
 
-import type {
+import {
   EncryptFunction,
-} from '../decls/index.js.flow'
+} from '../decls/index'
 
-import { getNestedValue } from 'oad-utils/jsnext'
+// @ts-ignore remove this comment after @phenyl/oad-utils release
+import { getNestedValue } from 'oad-utils'
 
-import { assign } from 'power-assign/jsnext'
+// @ts-ignore remove this comment after @phenyl/oad-utils release
+import { assign } from 'power-assign'
 
 
 export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
@@ -22,7 +24,7 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
       const { payload } = reqData
 
       if (payload.values) {
-        const valuesWithEncryptedPass = payload.values.map(value => {
+        const valuesWithEncryptedPass = payload.values.map((value: Object) => {
           const password = getNestedValue(value, passwordPropName)
 
           if (password) {
