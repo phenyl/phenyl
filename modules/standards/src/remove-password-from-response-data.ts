@@ -19,7 +19,7 @@ import {
   // @ts-ignore remove this comment after @phenyl/interfaces released
 } from '@phenyl/interfaces'
 
-export function removePasswordFromResponseData(resData: ResponseData, passwordPropName: string): ResponseData {
+export function removePasswordFromResponseData<M extends string | number | symbol>(resData: ResponseData, passwordPropName: M): ResponseData {
   return visitEntitiesInResponseData(resData, (entity: Entity) => {
     if (!hasOwnNestedProperty(entity, passwordPropName)) return entity
     return assign(entity, { $unset: { [passwordPropName]: '' } })

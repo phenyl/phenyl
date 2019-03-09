@@ -1,15 +1,15 @@
-// @flow
-
+// @ts-ignore remove this comment after @phenyl/power-crypt released
 import powerCrypt from 'power-crypt/jsnext'
 import {
   createServerError,
+  // @ts-ignore remove this comment after @phenyl/utils released
 } from 'phenyl-utils/jsnext'
 
-import { StandardEntityDefinition } from './standard-entity-definition.js'
-import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
-import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
+import { StandardEntityDefinition } from './standard-entity-definition'
+import { encryptPasswordInRequestData } from './encrypt-password-in-request-data'
+import { removePasswordFromResponseData } from './remove-password-from-response-data'
 
-import type {
+import {
   AuthSetting,
   EntityMap,
   EntityClient,
@@ -21,25 +21,26 @@ import type {
   RequestData,
   ResponseData,
   RestApiExecution,
-} from 'phenyl-interfaces'
+  // @ts-ignore remove this comment after @phenyl/interfaces released
+} from '@phenyl/interfaces'
 
-import type {
+import {
   EncryptFunction,
-} from '../decls/index.js.flow'
+} from '../decls/index'
 
-export type StandardUserDefinitionParams<M: EntityMap, A: AuthSetting> = {
+export type StandardUserDefinitionParams<M extends EntityMap, A extends AuthSetting> = {
   entityClient: EntityClient<M>,
   encrypt?: EncryptFunction,
-  accountPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
-  passwordPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
+  accountPropName?: keyof M[keyof M] & keyof A['credentials'] | string,
+  passwordPropName?: keyof M[keyof M] & keyof A['credentials'] | string,
   ttl?: number,
 }
 
-export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+export class StandardUserDefinition<M extends EntityMap = EntityMap, A extends AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
   entityClient: EntityClient<M>
   encrypt: EncryptFunction
-  accountPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
-  passwordPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
+  accountPropName: keyof M[keyof M] & keyof A['credentials'] | string
+  passwordPropName: keyof M[keyof M] & keyof A['credentials'] | string
   ttl: number
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
@@ -51,7 +52,7 @@ export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = A
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication<N: $Keys<M>>(loginCommand: LoginCommandOf<A, N>, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
+  async authentication<N extends keyof M>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 
@@ -75,12 +76,12 @@ export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = A
     }
   }
 
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: RequestData, session: Session | null | undefined, execution: RestApiExecution): Promise<ResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
     const resData = await execution(newReqData, session)
-    const newResData = removePasswordFromResponseData(resData, this.passwordPropName)
+    const newResData = removePasswordFromResponseData<keyof M[keyof M] & keyof A['credentials'] | string>(resData, this.passwordPropName)
     return newResData
   }
 }
 
-export const GeneralStandardUserDefinition: Class<StandardUserDefinition<*, *>> = StandardUserDefinition
+export const GeneralStandardUserDefinition: typeof StandardUserDefinition = StandardUserDefinition
