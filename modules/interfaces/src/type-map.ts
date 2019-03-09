@@ -158,7 +158,7 @@ type GeneralCustomInOut = {
 export type GeneralAuthCommandMap = {
   [name: string]: GeneralAuthSetting;
 };
-type GeneralAuthSetting = {
+export type GeneralAuthSetting = {
   credentials: Object;
   session?: Object;
 };

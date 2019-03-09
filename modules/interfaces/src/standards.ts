@@ -6,7 +6,7 @@ type ForeignQuery<FN extends string, T> = T & {
   foreign?: ForeignQueryParams<FN>;
 };
 
-export type ForeignQueryParams<FN extends string> = {
+export type ForeignQueryParams<FN extends string | number | symbol> = {
   documentPath: string;
   entityName: FN;
 };
