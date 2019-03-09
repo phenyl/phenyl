@@ -1,8 +1,8 @@
-// @flow
-import type {
+import {
   ClientPathModifier,
   PathModifier,
-} from 'phenyl-interfaces'
+  // @ts-ignore remove this comment after @phenyl/interfaces released
+} from '@phenyl/interfaces'
 
 type PathModifiers = {
   modifyPathInClient: ClientPathModifier,
@@ -40,11 +40,11 @@ type Options = {
  *   }})
  *
  */
-export function createCustomPathModifiers(customNames: Array<string>, options?: Options = {}): PathModifiers {
+export function createCustomPathModifiers(customNames: Array<string>, options: Options = {}): PathModifiers {
   const from = options.from || '_'
   const to = options.to || '/'
-  const originalToModified = {}
-  const modifiedToOriginal = {}
+  const originalToModified: { [key: string]: string } = {}
+  const modifiedToOriginal: { [key: string]: string }  = {}
   customNames.forEach(customName => {
     const original = `/api/${customName}`
     const modified = `/api/${customName.split(from).join(to)}`
