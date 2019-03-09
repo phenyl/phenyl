@@ -1,3 +1,4 @@
+import { GetResponseData } from "@phenyl/interfaces";
 import { it, describe } from 'mocha'
 // @ts-ignore remove this comment after @phenyl/power-assert released
 import assert from 'power-assert'
@@ -5,10 +6,9 @@ import { removePasswordFromResponseData } from '../../src/remove-password-from-r
 
 describe('removePasswordFromResponseData', function () {
   it ('removes password property', function () {
-    const resData = {
+    const resData: GetResponseData<any> = {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           email: 'foo@example.com',
@@ -23,7 +23,6 @@ describe('removePasswordFromResponseData', function () {
     assert.deepEqual(modifiedResData, {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           email: 'foo@example.com',
@@ -35,10 +34,9 @@ describe('removePasswordFromResponseData', function () {
   })
 
   it ('removes password property when nested', function () {
-    const resData = {
+    const resData: GetResponseData<any> = {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           account: {
@@ -55,7 +53,6 @@ describe('removePasswordFromResponseData', function () {
     assert.deepEqual(modifiedResData, {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           account: {
