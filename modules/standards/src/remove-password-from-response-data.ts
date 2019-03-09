@@ -1,27 +1,22 @@
 import {
-  hasOwnNestedProperty,
+  hasOwnNestedProperty
   // @ts-ignore remove this comment after @phenyl/oad-utils released
-} from 'oad-utils'
+} from "oad-utils";
+
+import { visitEntitiesInResponseData } from "@phenyl/utils";
 
 import {
-  visitEntitiesInResponseData,
-  // @ts-ignore remove this comment after @phenyl/utils released
-} from '@phenyl/utils'
-
-import {
-  assign,
+  assign
   // @ts-ignore remove this comment after @phenyl/power-assign released
-} from 'power-assign'
+} from "power-assign";
 
-import {
-  ResponseData,
-  Entity,
-  // @ts-ignore remove this comment after @phenyl/interfaces released
-} from '@phenyl/interfaces'
+import { GeneralResponseData, Entity } from "@phenyl/interfaces";
 
-export function removePasswordFromResponseData<M extends string | number | symbol>(resData: ResponseData, passwordPropName: M): ResponseData {
+export function removePasswordFromResponseData<
+  M extends string | number | symbol
+>(resData: GeneralResponseData, passwordPropName: M): GeneralResponseData {
   return visitEntitiesInResponseData(resData, (entity: Entity) => {
-    if (!hasOwnNestedProperty(entity, passwordPropName)) return entity
-    return assign(entity, { $unset: { [passwordPropName]: '' } })
-  })
+    if (!hasOwnNestedProperty(entity, passwordPropName)) return entity;
+    return assign(entity, { $unset: { [passwordPropName]: "" } });
+  });
 }

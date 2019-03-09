@@ -1,18 +1,14 @@
-import {
-  ClientPathModifier,
-  PathModifier,
-  // @ts-ignore remove this comment after @phenyl/interfaces released
-} from '@phenyl/interfaces'
+import { ClientPathModifier, PathModifier } from "@phenyl/interfaces";
 
 type PathModifiers = {
-  modifyPathInClient: ClientPathModifier,
-  modifyPathInServer: PathModifier,
-}
+  modifyPathInClient: ClientPathModifier;
+  modifyPathInServer: PathModifier;
+};
 
 type Options = {
-  from?: string,
-  to?: string,
-}
+  from?: string;
+  to?: string;
+};
 
 /**
  * Create Path Modifiers(both ClientSide and ServerSide) of custom queries/commands.
@@ -40,23 +36,26 @@ type Options = {
  *   }})
  *
  */
-export function createCustomPathModifiers(customNames: Array<string>, options: Options = {}): PathModifiers {
-  const from = options.from || '_'
-  const to = options.to || '/'
-  const originalToModified: { [key: string]: string } = {}
-  const modifiedToOriginal: { [key: string]: string }  = {}
+export function createCustomPathModifiers(
+  customNames: Array<string>,
+  options: Options = {}
+): PathModifiers {
+  const from = options.from || "_";
+  const to = options.to || "/";
+  const originalToModified: { [key: string]: string } = {};
+  const modifiedToOriginal: { [key: string]: string } = {};
   customNames.forEach(customName => {
-    const original = `/api/${customName}`
-    const modified = `/api/${customName.split(from).join(to)}`
-    originalToModified[original] = modified
-    modifiedToOriginal[modified] = original
-  })
+    const original = `/api/${customName}`;
+    const modified = `/api/${customName.split(from).join(to)}`;
+    originalToModified[original] = modified;
+    modifiedToOriginal[modified] = original;
+  });
   return {
     modifyPathInClient: (originalPath: string): string => {
-      return originalToModified[originalPath] || originalPath
+      return originalToModified[originalPath] || originalPath;
     },
     modifyPathInServer: (modifiedPath: string): string => {
-      return modifiedToOriginal[modifiedPath] || modifiedPath
-    },
-  }
+      return modifiedToOriginal[modifiedPath] || modifiedPath;
+    }
+  };
 }
