@@ -11,7 +11,7 @@ import { IdQuery, IdsQuery, WhereQuery } from "./query";
 import { Key } from "./utils";
 import { PreEntity } from "./entity";
 
-type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
+export type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
 
 export interface DbClient<M extends GeneralEntityMap> {
   find<EN extends Key<M>>(

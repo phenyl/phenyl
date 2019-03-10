@@ -27,6 +27,7 @@ import {
   IdQuery,
   IdsQuery,
   Key,
+  EntityOf,
   WhereQuery,
   SingleInsertCommand,
   MultiInsertCommand,
@@ -198,8 +199,6 @@ export function filterOutputEntity<E extends Entity>(srcEntity: E): E {
     srcEntity
   );
 }
-
-declare type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
 
 export class PhenylMongoDbClient<M extends GeneralEntityMap>
   implements DbClient<M> {
