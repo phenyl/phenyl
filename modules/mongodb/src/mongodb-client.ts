@@ -12,8 +12,16 @@ import {
 } from "oad-utils";
 
 import {
+  FindOperation,
+  UpdateOperation,
+  SetOperator,
+  SimpleFindOperation
+  // @ts-ignore TODO: typescriptify monogolike-operation
+} from "mongolike-operations";
+
+import {
   Entity,
-  EntityMap,
+  GeneralEntityMap,
   PreEntity,
   DbClient,
   IdQuery,
@@ -24,11 +32,7 @@ import {
   MultiInsertCommand,
   IdUpdateCommand,
   MultiUpdateCommand,
-  DeleteCommand,
-  FindOperation,
-  UpdateOperation,
-  SetOperator,
-  SimpleFindOperation
+  DeleteCommand
 } from "@phenyl/interfaces";
 
 import { MongoDbConnection } from "./connection";
@@ -177,7 +181,9 @@ export function filterInputEntity<E extends Entity>(srcEntity: E): E {
 }
 
 function convertObjectIdToIdInEntity<E extends Entity>(entity: E): E {
+  // @ts-ignore TODO: improve Entity type
   return entity._id instanceof mongodb.ObjectID
+    // @ts-ignore TODO: improve Entity type
     ? assignToEntity(entity, { _id: entity._id.toString() })
     : entity;
 }
@@ -193,35 +199,44 @@ export function filterOutputEntity<E extends Entity>(srcEntity: E): E {
   );
 }
 
-export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
+declare type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
+
+export class PhenylMongoDbClient<M extends GeneralEntityMap>
+  implements DbClient<M> {
   conn: MongoDbConnection;
 
   constructor(conn: MongoDbConnection) {
     this.conn = conn;
   }
 
-  async find(query: WhereQuery<Key<M>>): Promise<Array<M[Key<M>]>> {
+  async find<EN extends Key<M>>(
+    query: WhereQuery<EN>
+  ): Promise<Array<EntityOf<M, EN>>> {
     const { entityName, where, skip, limit } = query;
     const coll = this.conn.collection(entityName);
-    const options: WhereQuery<Key<M>> = {};
+    const options: FindOperation = {};
     if (skip) options.skip = skip;
     if (limit) options.limit = limit;
 
     const result = await coll.find(filterFindOperation(where), options);
+    // @ts-ignore @TODO: improve the types in MongoDbCollection
     return result.map(filterOutputEntity);
   }
 
-  async findOne(query: WhereQuery<Key<M>>): Promise<M[Key<M>]> {
+  async findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>
+  ): Promise<EntityOf<M, EN>> {
     const { entityName, where } = query;
     const coll = this.conn.collection(entityName);
     const result = await coll.find(filterFindOperation(where), { limit: 1 });
     if (result.length === 0) {
       throw createServerError("findOne()", "NotFound");
     }
+    // @ts-ignore @TODO: improve the types in MongoDbCollection
     return filterOutputEntity(result[0] || null);
   }
 
-  async get(query: IdQuery<Key<M>>): Promise<M[Key<M>]> {
+  async get<EN extends Key<M>>(query: IdQuery<EN>): Promise<EntityOf<M, EN>> {
     const { entityName, id } = query;
     const coll = this.conn.collection(entityName);
     const result = await coll.find({ _id: ObjectID(id) });
@@ -231,10 +246,13 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
         "NotFound"
       );
     }
+    // @ts-ignore @TODO: improve the types in MongoDbCollection
     return filterOutputEntity(result[0]);
   }
 
-  async getByIds(query: IdsQuery<Key<M>>): Promise<Array<M[Key<M>]>> {
+  async getByIds<EN extends Key<M>>(
+    query: IdsQuery<EN>
+  ): Promise<Array<EntityOf<M, EN>>> {
     const { entityName, ids } = query;
     const coll = this.conn.collection(entityName);
     // $FlowIssue(find-operation)
@@ -245,43 +263,48 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
         "NotFound"
       );
     }
+    // @ts-ignore @TODO: improve the types in MongoDbCollection
     return result.map(filterOutputEntity);
   }
 
-  async insertOne(
-    command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>
+  async insertOne<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
   ): Promise<number> {
     const { entityName, value } = command;
     const coll = this.conn.collection(entityName);
+    // @ts-ignore @TODO: improve the types in filterInputEntity
     const result = await coll.insertOne(filterInputEntity(value));
     return result.insertedCount;
   }
 
-  async insertMulti(
-    command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>
+  async insertMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
   ): Promise<number> {
     const { entityName } = command;
     const coll = this.conn.collection(entityName);
+    // @ts-ignore @TODO: improve the types in filterInputEntity
     const result = await coll.insertMany(command.values.map(filterInputEntity));
     return result.insertedCount;
   }
 
-  async insertAndGet(
-    command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>
-  ): Promise<M[Key<M>]> {
+  async insertAndGet<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
+  ): Promise<EntityOf<M, EN>> {
     const { entityName } = command;
     const coll = this.conn.collection(entityName);
+    // @ts-ignore @TODO: improve the types in filterInputEntity
     const result = await coll.insertOne(filterInputEntity(command.value));
     // TODO transactional operation needed
     return this.get({ entityName, id: result.insertedId });
   }
 
-  async insertAndGetMulti(
-    command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>
-  ): Promise<Array<M[Key<M>]>> {
+  async insertAndGetMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
+  ): Promise<EntityOf<M, EN>[]> {
     const { entityName } = command;
     const coll = this.conn.collection(entityName);
 
+    // @ts-ignore @TODO: improve the types in filterInputEntity
     const result = await coll.insertMany(command.values.map(filterInputEntity));
     // $FlowIssue(ids-are-all-strings)
     const ids: string[] = Object.values(result.insertedIds);
@@ -289,7 +312,9 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
     return this.getByIds({ entityName, ids });
   }
 
-  async updateAndGet(command: IdUpdateCommand<Key<M>>): Promise<M[Key<M>]> {
+  async updateAndGet<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>
+  ): Promise<EntityOf<M, EN>> {
     const { entityName, id, operation } = command;
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
@@ -307,9 +332,9 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
     return this.get({ entityName, id });
   }
 
-  async updateAndFetch(
-    command: MultiUpdateCommand<Key<M>>
-  ): Promise<Array<M[Key<M>]>> {
+  async updateAndFetch<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>
+  ): Promise<EntityOf<M, EN>[]> {
     const { entityName, where, operation } = command;
     const coll = this.conn.collection(entityName);
     await coll.updateMany(
@@ -324,10 +349,12 @@ export class PhenylMongoDbClient<M extends EntityMap> implements DbClient<M> {
     const { entityName } = command;
     const coll = this.conn.collection(entityName);
     let result;
-    if (command.id) {
-      result = await coll.deleteOne({ _id: ObjectID(command.id) });
-    } else if (command.where) {
-      result = await coll.deleteMany(filterFindOperation(command.where));
+    // @ts-ignore TODO: improve the type of DeleteCommand
+    const { id, where } = command;
+    if (id) {
+      result = await coll.deleteOne({ _id: ObjectID(id) });
+    } else if (where) {
+      result = await coll.deleteMany(filterFindOperation(where));
     }
     // @ts-ignore deleteCount-exists
     const { deletedCount } = result;

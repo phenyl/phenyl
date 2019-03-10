@@ -2,7 +2,9 @@
 import { MongoClient, Collection } from "mongodb";
 // @ts-ignore something wrong with types/es6-promisify
 import promisify from "es6-promisify";
-import { FindOperation, UpdateOperation, Entity } from "@phenyl/interfaces";
+// @ts-ignore TODO: typescriptify monogolike-operation
+import { FindOperation, UpdateOperation } from "mongolike-operations";
+import { Entity } from "@phenyl/interfaces";
 import {
   ChangeStreamPipeline,
   ChangeStreamOptions,

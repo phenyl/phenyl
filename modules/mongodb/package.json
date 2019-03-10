@@ -35,6 +35,7 @@
     "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
     "mongodb": "^3.0.5",
+    "mongolike-operations": "~0.1.5",
     "oad-utils": "~0.3.0",
     "phenyl-central-state": "~0.3.2",
     "power-assign": "~0.2.10"
