@@ -82,6 +82,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<QueryResult<ResponseEntity<M, EN>>> {
     const entities = await this.dbClient.find(query)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createQueryResult(entities)
   }
 
@@ -93,6 +94,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<SingleQueryResult<ResponseEntity<M, EN>>> {
     const entity = await this.dbClient.findOne(query)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createSingleQueryResult(entity)
   }
 
@@ -104,6 +106,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<SingleQueryResult<ResponseEntity<M, EN>>> {
     const entity = await this.dbClient.get(query)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createSingleQueryResult(entity)
   }
 
@@ -115,6 +118,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<QueryResult<ResponseEntity<M, EN>>> {
     const entities = await this.dbClient.getByIds(query)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createQueryResult(entities)
   }
 
@@ -127,6 +131,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
   ): Promise<PullQueryResult<ResponseEntity<M, EN>>> {
     const { versionId, entityName, id } = query
     const entity = await this.dbClient.get({ entityName, id })
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createPullQueryResult(entity, versionId)
   }
 
@@ -160,8 +165,10 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<GetCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, value } = command
+    // @ts-ignore @TODO PreEntity<M[EN]["request"]> is not assignable to type 'Entity'
     const valueWithMeta = Versioning.attachMetaInfoToNewEntity(value)
     const entity = await this.dbClient.insertAndGet({ entityName, value: valueWithMeta })
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createGetCommandResult(entity)
   }
 
@@ -173,8 +180,9 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, values } = command
-    const valuesWithMeta = values.map((value: PreEntity<M[Key<M>]>) => Versioning.attachMetaInfoToNewEntity(value))
+    const valuesWithMeta = values.map((value: PreEntity<any>) => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createMultiValuesCommandResult(entities)
   }
 
@@ -209,6 +217,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
   ): Promise<GetCommandResult<ResponseEntity<M, EN>>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entity = await this.dbClient.updateAndGet(metaInfoAttachedCommand)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createGetCommandResult(entity)
   }
 
@@ -221,6 +230,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
   ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entities = await this.dbClient.updateAndFetch(metaInfoAttachedCommand)
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     return Versioning.createMultiValuesCommandResult(entities)
   }
 
@@ -233,12 +243,14 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
   ): Promise<PushCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.dbClient.get({ entityName, id })
+    // @ts-ignore @TODO: 'ReqRes<Entity, Entity>' is not assignable to type 'Entity'
     const masterOperations = Versioning.getOperationDiffsByVersion(entity, versionId)
-
+    // @ts-ignore @TODO: Type 'M[EN]' is not assignable to type 'Entity'
     this.validatePushCommand(command, Versioning.stripMeta(entity), masterOperations)
 
     const newOperation = Versioning.mergeUpdateOperations(...operations)
     const updatedEntity = await this.dbClient.updateAndGet({ entityName, id, operation: newOperation })
+    // @ts-ignore @TODO: Type 'M[EN]' is not assignable to type 'Entity'
     return Versioning.createPushCommandResult(entity, updatedEntity, versionId, newOperation)
   }
 
