@@ -64,12 +64,14 @@ function validWhenDiffsFound(command: PushCommand<any>, entity: Entity, masterOp
  * Optionally set merge strategy by options.validatePushCommand.
  */
 export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements EntityClient<M> {
+  // @ts-ignore @TODO: GeneralReqResEntityMap is incompatible with GeneralEntityMap
   dbClient: DbClient<M>
   validatePushCommand: PushValidation<M>
 
+  // @ts-ignore @TODO: GeneralReqResEntityMap is incompatible with GeneralEntityMap
   constructor(dbClient: DbClient<M>, options: PhenylEntityClientOptions<M> = {}) {
     this.dbClient = dbClient
-    // $FlowIssue(compatible-optional-function-type)
+    // @ts-ignore compatible-optional-function-type
     this.validatePushCommand = options.validatePushCommand || validWhenDiffsFound
   }
 
@@ -185,7 +187,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<IdUpdateCommandResult> {
     const result = await this.updateAndGet(command)
-    return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
+    return { n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
 
   /**
@@ -196,7 +198,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<MultiUpdateCommandResult> {
     const result = await this.updateAndFetch(command)
-    return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
+    return { n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
 
   /**
@@ -248,13 +250,13 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     command: DeleteCommand<EN>,
     sessionId?: string | null
   ): Promise<DeleteCommandResult> {
-    return { ok: 1, n: await this.dbClient.delete(command) }
+    return { n: await this.dbClient.delete(command) }
   }
 
   /**
    *
    */
-  createSessionClient(): SessionClient {
+  createSessionClient(): PhenylSessionClient {
     return new PhenylSessionClient(this.dbClient)
   }
 }
