@@ -3,9 +3,8 @@ import {
 } from '@phenyl/utils'
 
 import {
-  Id,
   DbClient,
-  PreSession,
+  PreEntity,
   Session,
   SessionClient,
 } from '@phenyl/interfaces'
@@ -20,14 +19,14 @@ type PhenylSessionEntityMap = {
 export class PhenylSessionClient implements SessionClient {
   dbClient: DbClient<PhenylSessionEntityMap>
 
-  constructor(dbClient: DbClient<*>) {
+  constructor(dbClient: DbClient<any>) {
     this.dbClient = dbClient
   }
 
   /**
    *
    */
-  async get(id: Id | void): Promise<Session | void> {
+  async get(id: string | null): Promise<Session<string, Object> | null> {
     if (id == null) {
       return null
     }
@@ -48,7 +47,7 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async create(preSession: PreSession): Promise<Session> {
+  async create(preSession: PreEntity<Session>): Promise<Session<string, Object>> {
     let value = preSession
     if (value.id == null) {
       value = Object.assign({}, value, { id: timeStampWithRandomString() })
@@ -59,14 +58,14 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async set(value: Session): Promise<Session> {
+  async set(value: PreEntity<Session>): Promise<Session<string, Object>> {
     return this.dbClient.insertAndGet({ entityName: '_PhenylSession', value })
   }
 
   /**
    *
    */
-  async delete(id: Id | void): Promise<boolean> {
+  async delete(id: string | null): Promise<boolean> {
     if (id == null) {
       return false
     }
