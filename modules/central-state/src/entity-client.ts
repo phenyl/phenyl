@@ -32,7 +32,6 @@ import {
   ResponseEntity,
   RequestEntity,
   QueryResult,
-  SessionClient,
   SingleQueryResult,
   SingleInsertCommand,
   SingleInsertCommandResult,
@@ -139,7 +138,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<SingleInsertCommandResult> {
     const result = await this.insertAndGet(command)
-    return { ok: 1, n: 1, versionId: result.versionId }
+    return { n: 1, versionId: result.versionId }
   }
 
   /**
@@ -150,7 +149,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Ent
     sessionId?: string | null
   ): Promise<MultiInsertCommandResult> {
     const result = await this.insertAndGetMulti(command)
-    return { ok: 1, n: result.n, versionsById: result.versionsById }
+    return { n: result.n, versionsById: result.versionsById }
   }
 
   /**
