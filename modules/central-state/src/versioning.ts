@@ -2,11 +2,10 @@ import {
   normalizeUpdateOperation,
   mergeUpdateOperations,
   // @ts-ignore remove this commend after @phenyl/oad-utils release
-} from '@phenyl/oad-utils'
+} from 'oad-utils'
 
 import {
   timeStampWithRandomString
-  // @ts-ignore remove this commend after @phenyl/utils release
 } from '@phenyl/utils'
 
 import {
@@ -21,7 +20,6 @@ import {
   QueryResult,
   SingleQueryResult,
   UpdateOperation,
-  // @ts-ignore remove this commend after @phenyl/interfaces release
 } from '@phenyl/interfaces'
 
 type Id = string
