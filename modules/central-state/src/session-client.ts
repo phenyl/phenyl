@@ -1,6 +1,5 @@
 import {
   timeStampWithRandomString
-  // @ts-ignore remove this commend after @phenyl/utils release
 } from '@phenyl/utils'
 
 import {
@@ -9,7 +8,6 @@ import {
   PreSession,
   Session,
   SessionClient,
-  // @ts-ignore remove this commend after @phenyl/interfaces release
 } from '@phenyl/interfaces'
 
 type PhenylSessionEntityMap = {
