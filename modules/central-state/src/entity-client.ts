@@ -9,7 +9,7 @@ import {
 import {
   Entity,
   EntityClient,
-  EntityMap,
+  GeneralReqResEntityMap,
   DbClient,
   DeleteCommand,
   DeleteCommandResult,
@@ -29,18 +29,21 @@ import {
   PushCommand,
   PushCommandResult,
   PushValidation,
+  ResponseEntity,
+  RequestEntity,
   QueryResult,
   SessionClient,
   SingleQueryResult,
   SingleInsertCommand,
   SingleInsertCommandResult,
-  UpdateOperation,
   WhereQuery,
   Key,
-  // @ts-ignore remove comment after @phenyl/interfaces fixed
-} from "@phenyl/interfaces"; 
+} from "@phenyl/interfaces";
 
-export type PhenylEntityClientOptions<M extends EntityMap> = {
+// @ts-ignore TODO: remove this comment after @phenyl/mongolike-operation
+import { UpdateOperation } from "mongolike-operations"
+
+export type PhenylEntityClientOptions<M extends GeneralReqResEntityMap> = {
   validatePushCommand?: PushValidation<M>,
 }
 
@@ -48,7 +51,7 @@ export type PhenylEntityClientOptions<M extends EntityMap> = {
  * Validate PushCommand only when masterOperations are found.
  * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
  */
-function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOperations: Array<UpdateOperation> | void) {
+function validWhenDiffsFound(command: PushCommand<any>, entity: Entity, masterOperations: Array<UpdateOperation> | void) {
   if (masterOperations == null) {
     throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
   }
@@ -60,7 +63,7 @@ function validWhenDiffsFound(command: PushCommand<*>, entity: Entity, masterOper
  * Pass dbClient: DbClient which accesses to data.
  * Optionally set merge strategy by options.validatePushCommand.
  */
-export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> {
+export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements EntityClient<M> {
   dbClient: DbClient<M>
   validatePushCommand: PushValidation<M>
 
@@ -73,7 +76,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async find(query: WhereQuery<Key<M>>): Promise<QueryResult<M[Key<M>]>> {
+  async find<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<ResponseEntity<M, EN>>> {
     const entities = await this.dbClient.find(query)
     return Versioning.createQueryResult(entities)
   }
@@ -81,7 +87,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async findOne(query: WhereQuery<Key<M>>): Promise<SingleQueryResult<M[Key<M>]>> {
+  async findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>> {
     const entity = await this.dbClient.findOne(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -89,7 +98,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async get(query: IdQuery<Key<M>>): Promise<SingleQueryResult<M[Key<M>]>> {
+  async get<EN extends Key<M>>(
+    query: IdQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>> {
     const entity = await this.dbClient.get(query)
     return Versioning.createSingleQueryResult(entity)
   }
@@ -97,7 +109,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async getByIds(query: IdsQuery<Key<M>>): Promise<QueryResult<M[Key<M>]>> {
+  async getByIds<EN extends Key<M>>(
+    query: IdsQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<ResponseEntity<M, EN>>> {
     const entities = await this.dbClient.getByIds(query)
     return Versioning.createQueryResult(entities)
   }
@@ -105,7 +120,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async pull(query: PullQuery<Key<M>>): Promise<PullQueryResult<M[Key<M>]>> {
+  async pull<EN extends Key<M>>(
+    query: PullQuery<EN>,
+    sessionId?: string | null
+  ): Promise<PullQueryResult<ResponseEntity<M, EN>>> {
     const { versionId, entityName, id } = query
     const entity = await this.dbClient.get({ entityName, id })
     return Versioning.createPullQueryResult(entity, versionId)
@@ -114,7 +132,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async insertOne(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<SingleInsertCommandResult> {
+  async insertOne<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
+    sessionId?: string | null
+  ): Promise<SingleInsertCommandResult> {
     const result = await this.insertAndGet(command)
     return { ok: 1, n: 1, versionId: result.versionId }
   }
@@ -122,7 +143,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async insertMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<MultiInsertCommandResult> {
+  async insertMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
+    sessionId?: string | null
+  ): Promise<MultiInsertCommandResult> {
     const result = await this.insertAndGetMulti(command)
     return { ok: 1, n: result.n, versionsById: result.versionsById }
   }
@@ -130,7 +154,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async insertAndGet(command: SingleInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<GetCommandResult<M[Key<M>]>> {
+  async insertAndGet<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, value } = command
     const valueWithMeta = Versioning.attachMetaInfoToNewEntity(value)
     const entity = await this.dbClient.insertAndGet({ entityName, value: valueWithMeta })
@@ -140,7 +167,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async insertAndGetMulti(command: MultiInsertCommand<Key<M>, PreEntity<M[Key<M>]>>): Promise<MultiValuesCommandResult<M[Key<M>], *>> {
+  async insertAndGetMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<RequestEntity<M, EN>>>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, values } = command
     const valuesWithMeta = values.map((value: PreEntity<M[Key<M>]>) => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
@@ -150,7 +180,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async updateById(command: IdUpdateCommand<Key<M>>): Promise<IdUpdateCommandResult> {
+  async updateById<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<IdUpdateCommandResult> {
     const result = await this.updateAndGet(command)
     return { ok: 1, n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
@@ -158,7 +191,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async updateMulti(command: MultiUpdateCommand<Key<M>>): Promise<MultiUpdateCommandResult<*>> {
+  async updateMulti<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiUpdateCommandResult> {
     const result = await this.updateAndFetch(command)
     return { ok: 1, n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
@@ -166,7 +202,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async updateAndGet(command: IdUpdateCommand<Key<M>>): Promise<GetCommandResult<M[Key<M>]>> {
+  async updateAndGet<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<ResponseEntity<M, EN>>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entity = await this.dbClient.updateAndGet(metaInfoAttachedCommand)
     return Versioning.createGetCommandResult(entity)
@@ -175,7 +214,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async updateAndFetch(command: MultiUpdateCommand<Key<M>>): Promise<MultiValuesCommandResult<M[Key<M>], *>> {
+  async updateAndFetch<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>> {
     const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(command)
     const entities = await this.dbClient.updateAndFetch(metaInfoAttachedCommand)
     return Versioning.createMultiValuesCommandResult(entities)
@@ -184,7 +226,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async push(command: PushCommand<Key<M>>): Promise<PushCommandResult<M[Key<M>]>> {
+  async push<EN extends Key<M>>(
+    command: PushCommand<EN>,
+    sessionId?: string | null
+  ): Promise<PushCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, id, versionId, operations } = command
     const entity = await this.dbClient.get({ entityName, id })
     const masterOperations = Versioning.getOperationDiffsByVersion(entity, versionId)
@@ -199,7 +244,10 @@ export class PhenylEntityClient<M extends EntityMap> implements EntityClient<M> 
   /**
    *
    */
-  async delete(command: DeleteCommand<Key<M>>): Promise<DeleteCommandResult> {
+  async delete<EN extends Key<M>>(
+    command: DeleteCommand<EN>,
+    sessionId?: string | null
+  ): Promise<DeleteCommandResult> {
     return { ok: 1, n: await this.dbClient.delete(command) }
   }
 
