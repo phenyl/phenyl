@@ -1,4 +1,3 @@
-// @flow
 import {
   assign,
 } from 'power-assign/jsnext'

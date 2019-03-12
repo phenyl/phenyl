@@ -1,4 +1,3 @@
-// @flow
 import {
   hasOwnNestedProperty,
 } from 'oad-utils/jsnext'

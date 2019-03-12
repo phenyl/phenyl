@@ -1,4 +1,3 @@
-// @flow
 export { StandardEntityDefinition } from './standard-entity-definition.js'
 export { GeneralStandardUserDefinition, StandardUserDefinition } from './standard-user-definition.js'
 export { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'

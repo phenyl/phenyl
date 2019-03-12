@@ -1,5 +1,3 @@
-// @flow
-
 import powerCrypt from 'power-crypt/jsnext'
 import {
   createServerError,

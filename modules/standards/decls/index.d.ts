@@ -1,4 +1,3 @@
-// @flow
 import type {
 } from 'phenyl-interfaces'
 
