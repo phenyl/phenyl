@@ -10,12 +10,10 @@ import { removePasswordFromResponseData } from './remove-password-from-response-
 import {
   GeneralReqResEntityMap,
   Key,
-  AuthSetting,
   LoginCommand,
   EntityClient,
   EntityDefinition,
   UserDefinition,
-  LoginCommandOf,
   Session,
   AuthenticationResult,
   GeneralRequestData,
@@ -26,11 +24,13 @@ import {
   EncryptFunction,
 } from '../decls/index'
 
-// @TODO: should we put this type in to @phenyl/interfaces?
+// @TODO: should we put those types into @phenyl/interfaces?
 type RestApiExecution = (
   reqData: GeneralRequestData,
   session: Session | null | undefined
 ) => Promise<GeneralResponseData>
+export type AuthSetting = { credentials: Object, options: Object }
+export type LoginCommandOf<A extends AuthSetting, N extends string> = LoginCommand<N, A['credentials']>
 
 export type StandardUserDefinitionParams<M extends GeneralReqResEntityMap, A extends AuthSetting> = {
   entityClient: EntityClient<M>,
@@ -43,8 +43,8 @@ export type StandardUserDefinitionParams<M extends GeneralReqResEntityMap, A ext
 export class StandardUserDefinition<M extends GeneralReqResEntityMap = GeneralReqResEntityMap, A extends AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
   entityClient: EntityClient<M>
   encrypt: EncryptFunction
-  accountPropName: Key<M[Key<M>]> & Key<A['credentials']> | 'account'
-  passwordPropName: Key<M[Key<M>]> & Key<A['credentials']> | 'password'
+  accountPropName: Key<M[Key<M>]> & Key<A['credentials']>
+  passwordPropName: Key<M[Key<M>]> & Key<A['credentials']>
   ttl: number
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
