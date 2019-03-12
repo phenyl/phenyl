@@ -2,7 +2,6 @@ import {
   GeneralRequestData,
 } from '@phenyl/interfaces'
 
-// @ts-ignore replace this after @phenyl/mongolike-operations released
 import { DocumentPath } from 'mongolike-operations'
 
 import {
