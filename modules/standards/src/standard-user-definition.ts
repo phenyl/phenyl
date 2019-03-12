@@ -1,43 +1,50 @@
 import powerCrypt from 'power-crypt/jsnext'
 import {
   createServerError,
-} from 'phenyl-utils/jsnext'
+} from '@phenyl/utils'
 
 import { StandardEntityDefinition } from './standard-entity-definition.js'
 import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
 import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
 
-import type {
+import {
+  GeneralReqResEntityMap,
+  Key,
   AuthSetting,
-  EntityMap,
+  LoginCommand,
   EntityClient,
   EntityDefinition,
   UserDefinition,
   LoginCommandOf,
   Session,
   AuthenticationResult,
-  RequestData,
-  ResponseData,
-  RestApiExecution,
-} from 'phenyl-interfaces'
+  GeneralRequestData,
+  GeneralResponseData,
+} from '@phenyl/interfaces'
 
-import type {
+import {
   EncryptFunction,
-} from '../decls/index.js.flow'
+} from '../decls/index'
 
-export type StandardUserDefinitionParams<M: EntityMap, A: AuthSetting> = {
+// @TODO: should we put this type in to @phenyl/interfaces?
+type RestApiExecution = (
+  reqData: GeneralRequestData,
+  session: Session | null | undefined
+) => Promise<GeneralResponseData>
+
+export type StandardUserDefinitionParams<M extends GeneralReqResEntityMap, A extends AuthSetting> = {
   entityClient: EntityClient<M>,
   encrypt?: EncryptFunction,
-  accountPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
-  passwordPropName?: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>,
+  accountPropName?: Key<M[Key<M>]> & Key<A['credentials']>,
+  passwordPropName?: Key<M[Key<M>]> & Key<A['credentials']>,
   ttl?: number,
 }
 
-export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+export class StandardUserDefinition<M extends GeneralReqResEntityMap = GeneralReqResEntityMap, A extends AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
   entityClient: EntityClient<M>
   encrypt: EncryptFunction
-  accountPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
-  passwordPropName: $Keys<$Values<M>> & $Keys<$ElementType<A, 'credentials'>>
+  accountPropName: Key<M[Key<M>]> & Key<A['credentials']> | 'account'
+  passwordPropName: Key<M[Key<M>]> & Key<A['credentials']> | 'password'
   ttl: number
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
@@ -49,7 +56,7 @@ export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = A
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication<N: $Keys<M>>(loginCommand: LoginCommandOf<A, N>, session: ?Session): Promise<AuthenticationResult> { // eslint-disable-line no-unused-vars
+  async authentication<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 
@@ -66,14 +73,14 @@ export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = A
       const user = result.entity
       const expiredAt = new Date(Date.now() + ttl * 1000).toISOString()
       const preSession = { expiredAt, entityName, userId: user.id }
-      return { ok: 1, preSession, user, versionId: result.versionId }
+      return { preSession, user, versionId: result.versionId }
     }
     catch (e) {
       throw createServerError(e.message, 'Unauthorized')
     }
   }
 
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: GeneralRequestData, session: Session | null | undefined, execution: RestApiExecution): Promise<GeneralResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
     const resData = await execution(newReqData, session)
     const newResData = removePasswordFromResponseData(resData, this.passwordPropName)
@@ -81,4 +88,4 @@ export class StandardUserDefinition<M: EntityMap = EntityMap, A: AuthSetting = A
   }
 }
 
-export const GeneralStandardUserDefinition: Class<StandardUserDefinition<*, *>> = StandardUserDefinition
+export const GeneralStandardUserDefinition: typeof StandardUserDefinition = StandardUserDefinition
