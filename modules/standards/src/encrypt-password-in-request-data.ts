@@ -1,27 +1,31 @@
-import type {
-  RequestData,
-  DocumentPath,
-} from 'phenyl-interfaces'
+import {
+  GeneralRequestData,
+} from '@phenyl/interfaces'
 
-import type {
+// @ts-ignore replace this after @phenyl/mongolike-operations released
+import { DocumentPath } from 'mongolike-operations'
+
+import {
   EncryptFunction,
-} from '../decls/index.js.flow'
+} from '../decls/index'
 
 import { getNestedValue } from 'oad-utils/jsnext'
 
 import { assign } from 'power-assign/jsnext'
 
 
-export function encryptPasswordInRequestData(reqData: RequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): RequestData {
+export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): GeneralRequestData {
   switch (reqData.method) {
     case 'insertOne':
     case 'insertMulti':
     case 'insertAndGet':
     case 'insertAndGetMulti': {
       const { payload } = reqData
+      // @ts-ignore TODO: differ Multi Type and Single Type
+      const { value, values } = payload
 
-      if (payload.values) {
-        const valuesWithEncryptedPass = payload.values.map(value => {
+      if (values) {
+        const valuesWithEncryptedPass = values.map(value => {
           const password = getNestedValue(value, passwordPropName)
 
           if (password) {
@@ -32,11 +36,11 @@ export function encryptPasswordInRequestData(reqData: RequestData, passwordPropN
         })
 
         return assign(reqData, { $set: { 'payload.values': valuesWithEncryptedPass }})
-      } else if (payload.value) {
-        const password = getNestedValue(payload.value, passwordPropName)
+      } else if (value) {
+        const password = getNestedValue(value, passwordPropName)
 
         if (password) {
-          const valueWithEncryptedPass = assign(payload.value, { $set: { [passwordPropName]: encrypt(password) } })
+          const valueWithEncryptedPass = assign(value, { $set: { [passwordPropName]: encrypt(password) } })
           return assign(reqData, { $set: { 'payload.value': valueWithEncryptedPass }})
         } else {
           return reqData
