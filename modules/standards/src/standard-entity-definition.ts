@@ -1,12 +1,13 @@
-import type {
+import {
   EntityDefinition,
-  RequestData,
+  GeneralRequestData,
   Session,
-} from 'phenyl-interfaces'
+} from '@phenyl/interfaces'
 
 type AuthorizationSetting = {
 }
 
+// @ts-ignore @TODO: implement this class
 export class StandardEntityDefinition implements EntityDefinition {
   authorizationSetting: AuthorizationSetting
 
@@ -14,11 +15,11 @@ export class StandardEntityDefinition implements EntityDefinition {
     this.authorizationSetting = authorizationSetting
   }
 
-  async authorization(reqData: RequestData, session: ?Session): Promise<boolean> { // eslint-disable-line no-unused-vars
+  async authorization(reqData: GeneralRequestData, session: Session | null | undefined): Promise<boolean> { // eslint-disable-line no-unused-vars
     // TODO
     return false
   }
 
-  async validation(reqData: RequestData, session: ?Session): Promise<void> { // eslint-disable-line no-unused-vars
+  async validation(reqData: GeneralRequestData, session: Session | null | undefined): Promise<void> { // eslint-disable-line no-unused-vars
   }
 }
