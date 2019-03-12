@@ -5,24 +5,30 @@ import {
   switchByRequestMethod,
   assertValidEntityName,
   assertNonEmptyString,
-} from 'phenyl-utils/jsnext'
+} from '@phenyl/utils'
 import {
   getNestedValue,
 } from 'oad-utils/jsnext'
-import type {
+import {
   Entity,
-  EntityMap,
+  GeneralReqResEntityMap,
   ForeignWhereQuery,
   ForeignIdQuery,
   ForeignIdsQuery,
   ForeignQueryParams,
-  RequestData,
+  Key,
+  GeneralRequestData,
+  GeneralResponseData,
   Session,
-  RestApiExecution,
-  ResponseData,
   EntitiesById,
   EntityClient,
-} from 'phenyl-interfaces'
+} from '@phenyl/interfaces'
+
+// @TODO: should we put this type in to @phenyl/interfaces?
+type RestApiExecution = (
+  reqData: GeneralRequestData,
+  session: Session | null | undefined
+) => Promise<GeneralResponseData>
 
 /**
  * Instance containing ExecutionWrapper and ValidationHandler to attach foreign Entity by foreign key.
@@ -31,7 +37,7 @@ import type {
  * wrapExecution: ExecutionWrapper
  * validation: ValidationHandler
  */
-export class ForeignQueryWrapper<M: EntityMap> {
+export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
   entityClient: EntityClient<M>
 
   constructor(entityClient: EntityClient<M>) {
@@ -41,21 +47,21 @@ export class ForeignQueryWrapper<M: EntityMap> {
   /**
    *
    */
-  async validation(reqData: RequestData, session: ?Session): Promise<void> { // eslint-disable-line no-unused-vars
+  async validation(reqData: GeneralRequestData, session: Session | null | undefined): Promise<void> { // eslint-disable-line no-unused-vars
     return switchByRequestMethod(reqData, {
-      async find(query: ForeignWhereQuery<*, *>) {
+      async find(query: ForeignWhereQuery<any, any>) {
         assertValidForeignQuery(query.foreign, 'ForeignWhereQuery')
       },
-      async findOne(query: ForeignWhereQuery<*, *>) {
+      async findOne(query: ForeignWhereQuery<any, any>) {
         assertValidForeignQuery(query.foreign, 'ForeignWhereQuery')
       },
-      async get(query: ForeignIdQuery<*, *>) {
+      async get(query: ForeignIdQuery<any, any>) {
         assertValidForeignQuery(query.foreign, 'ForeignIdQuery')
       },
-      async getByIds(query: ForeignIdsQuery<*, *>) {
+      async getByIds(query: ForeignIdsQuery<any, any>) {
         assertValidForeignQuery(query.foreign, 'ForeignIdsQuery')
       },
-      async handleDefault(reqData, session) { // eslint-disable-line no-unused-vars
+      async handleDefault(reqData) { // eslint-disable-line no-unused-vars
         return
       },
     })
@@ -64,35 +70,35 @@ export class ForeignQueryWrapper<M: EntityMap> {
   /**
    *
    */
-  async wrapExecution(reqData: RequestData, session: ?Session, execution: RestApiExecution): Promise<ResponseData> {
+  async wrapExecution(reqData: GeneralRequestData, session: Session | null | undefined, execution: RestApiExecution): Promise<GeneralResponseData> {
     const resData = await execution(reqData, session)
 
     return await switchByRequestMethod(reqData, {
-      find: async (query: ForeignWhereQuery<*, *>) => {
+      find: async (query: ForeignWhereQuery<any, any>) => {
         if (resData.type !== 'find' || query.foreign == null) return resData
         const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
         return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
       },
 
-      findOne: async (query: ForeignWhereQuery<*, *>) => {
+      findOne: async (query: ForeignWhereQuery<any, any>) => {
         if (resData.type !== 'findOne' || query.foreign == null) return resData
         const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
         return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
       },
 
-      get: async (query: ForeignIdQuery<*, *>) => {
+      get: async (query: ForeignIdQuery<any, any>) => {
         if (resData.type !== 'get' || query.foreign == null) return resData
         const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
         return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
       },
 
-      getByIds: async (query: ForeignIdsQuery<*, *>) => {
+      getByIds: async (query: ForeignIdsQuery<any, any>) => {
         if (resData.type !== 'getByIds' || query.foreign == null) return resData
         const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
         return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
       },
 
-      handleDefault: async (reqData, session) => { // eslint-disable-line no-unused-vars
+      handleDefault: async (reqData: GeneralRequestData) => { // eslint-disable-line no-unused-vars
         return resData
       },
     })
@@ -101,7 +107,7 @@ export class ForeignQueryWrapper<M: EntityMap> {
   /**
    * @private
    */
-  async getForeignEntities<E: Entity, FN: $Keys<M>>(entities: Array<E>, foreign: ForeignQueryParams<FN>): Promise<EntitiesById<E>> {
+  async getForeignEntities<E extends Entity, FN extends Key<M>>(entities: Array<E>, foreign: ForeignQueryParams<FN>): Promise<EntitiesById<E>> {
     const { documentPath, entityName } = foreign
 
     try {
@@ -122,7 +128,7 @@ export class ForeignQueryWrapper<M: EntityMap> {
   /**
    * @private
    */
-  async getForeignEntity<E: Entity, FN: $Keys<M>>(entity: E, foreign: ForeignQueryParams<FN>): Promise<E> {
+  async getForeignEntity<E extends Entity, FN extends Key<M>>(entity: E, foreign: ForeignQueryParams<FN>): Promise<M[FN]["response"]> {
     const { documentPath, entityName } = foreign
 
     try {
@@ -148,4 +154,4 @@ function assertValidForeignQuery(foreign: any, dataName: string) {
   assertNonEmptyString(documentPath, `${dataName}.foreign.documentPath must be a non-empty string.`)
   assertValidEntityName(entityName, `${dataName}.foreign`)
 }
-export const GeneralForeignQueryWrapper: Class<ForeignQueryWrapper<*>> = ForeignQueryWrapper
+export const GeneralForeignQueryWrapper: typeof ForeignQueryWrapper = ForeignQueryWrapper
