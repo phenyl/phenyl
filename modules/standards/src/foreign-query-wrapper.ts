@@ -24,11 +24,9 @@ import {
   EntityClient,
 } from '@phenyl/interfaces'
 
-// @TODO: should we put this type in to @phenyl/interfaces?
-type RestApiExecution = (
-  reqData: GeneralRequestData,
-  session: Session | null | undefined
-) => Promise<GeneralResponseData>
+import {
+  RestApiExecution,
+} from '../decls/index'
 
 /**
  * Instance containing ExecutionWrapper and ValidationHandler to attach foreign Entity by foreign key.
