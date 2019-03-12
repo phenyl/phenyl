@@ -1,7 +1,7 @@
-import type {
+import {
   ClientPathModifier,
   PathModifier,
-} from 'phenyl-interfaces'
+} from '@phenyl/interfaces'
 
 type PathModifiers = {
   modifyPathInClient: ClientPathModifier,
@@ -39,7 +39,7 @@ type Options = {
  *   }})
  *
  */
-export function createCustomPathModifiers(customNames: Array<string>, options?: Options = {}): PathModifiers {
+export function createCustomPathModifiers(customNames: Array<string>, options: Options = {}): PathModifiers {
   const from = options.from || '_'
   const to = options.to || '/'
   const originalToModified = {}
