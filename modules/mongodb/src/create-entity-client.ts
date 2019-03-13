@@ -1,14 +1,15 @@
-import type { EntityMap } from 'phenyl-interfaces'
-import { PhenylEntityClient } from 'phenyl-central-state/jsnext'
-import { PhenylMongoDbClient } from './mongodb-client.js'
-import type { MongoDbConnection } from './connection.js'
-import type { PhenylEntityClientOptions } from 'phenyl-central-state/jsnext'
+import { GeneralEntityMap } from '@phenyl/interfaces'
+// @ts-ignore TODO: typescriptify phenyl-central-state
+import { PhenylEntityClient, PhenylEntityClientOptions } from 'phenyl-central-state/jsnext'
+import { PhenylMongoDbClient } from './mongodb-client'
+import { MongoDbConnection } from './connection'
 
-export function createEntityClient<M: EntityMap>(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}): PhenylMongoDbEntityClient<M> {
+export function createEntityClient<M extends GeneralEntityMap>(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}): PhenylMongoDbEntityClient<M> {
   return new PhenylMongoDbEntityClient(conn, options)
 }
 
-export class PhenylMongoDbEntityClient<M: EntityMap> extends PhenylEntityClient<M> {
+export class PhenylMongoDbEntityClient<M extends GeneralEntityMap> extends PhenylEntityClient<M> {
+  // @ts-ignore is this dbClient necessary?
   dbClient: PhenylMongoDbClient<M>
 
   constructor(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}) {

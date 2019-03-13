@@ -1,5 +1,6 @@
 // Sorry for poor typing
 import { MongoClient, Collection } from 'mongodb'
+// @ts-ignore something is wrong with types/es6-promisify
 import promisify from 'es6-promisify'
 import {
   ChangeStreamPipeline,
@@ -7,7 +8,7 @@ import {
   ChangeStream,
 } from './change-stream'
 
-// @ts-ignore TODO: typescriptify monogolike-operation
+// @ts-ignore TODO: typescriptify mongolike-operations
 import { FindOperation, UpdateOperation } from 'mongolike-operations'
 
 const connectToMongoDb = promisify(MongoClient.connect)
@@ -21,9 +22,9 @@ export type MongoDbCollection = {
   find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Object>>,
   insertOne(obj: Object): Promise<{ insertedId: string, insertedCount: number }>,
   insertMany(objs: Array<Object>): Promise<{ insertedIds: { [key: string]: string }, insertedCount: number }>,
-  updateOne({ _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
+  updateOne({ _id }: { _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
   updateMany(fOp: FindOperation, uOp: UpdateOperation): Promise<Object>,
-  deleteOne({ _id: any }): Promise<{ deletedCount: number }>,
+  deleteOne({ _id }: { _id: any }): Promise<{ deletedCount: number }>,
   deleteMany(op: FindOperation): Promise<{ deletedCount: number }>,
   watch(pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream
 }
@@ -95,6 +96,7 @@ function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
   return function(where: Object = {}, params: FindChainParams = {}): Promise<any> {
     const findChain = find(where)
     const newFindChain = Object.keys(params).reduce((chain, name) =>
+      // @ts-ignore fix this latter
       chain[name](params[name]), findChain)
     return promisify(newFindChain.toArray, newFindChain)()
   }
