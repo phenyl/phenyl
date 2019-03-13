@@ -1,15 +1,16 @@
 {
-  "name": "phenyl-mongodb",
-  "version": "0.4.8",
+  "name": "@phenyl/mongodb",
+  "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
-  "jsnext:main": "./jsnext.js",
+  "main": "lib/index.js",
   "scripts": {
+    "type-check": "upbin tsc --noEmit",
     "pretest": "test/scripts/init-mongodb.sh",
     "test": "nyc mocha test/*.js --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
   "files": [
+    "lib",
     "src",
     "dist",
     "package.json",
@@ -20,19 +21,21 @@
   "devDependencies": {
     "babel-register": "^6.24.1",
     "nyc": "^11.6.0",
-    "power-assert": "^1.4.4"
+    "power-assert": "^1.4.4",
+    "upbin": "^0.8.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-mongodb",
+  "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
   "dependencies": {
+    "@phenyl/interfaces": "*",
+    "@phenyl/utils": "*",
     "bson": "^1.0.4",
     "es6-promisify": "^5.0.0",
     "mongodb": "^3.0.5",
+    "mongolike-operations": "~0.1.5",
     "oad-utils": "~0.3.0",
     "phenyl-central-state": "~0.3.2",
-    "phenyl-interfaces": "~0.4.2",
-    "phenyl-utils": "~0.4.2",
     "power-assign": "~0.2.10"
   }
 }
