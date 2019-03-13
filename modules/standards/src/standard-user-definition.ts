@@ -11,7 +11,6 @@ import {
   GeneralReqResEntityMap,
   Key,
   EntityClient,
-  EntityDefinition,
   UserDefinition,
   Session,
   AuthenticationResult,
@@ -28,15 +27,16 @@ import {
 
 export type StandardUserDefinitionParams<M extends GeneralReqResEntityMap, A extends AuthSetting> = {
   entityClient: EntityClient<M>,
-  encrypt?: EncryptFunction<A, M>,
+  encrypt?: EncryptFunction<A>,
   accountPropName?: Key<M[Key<M>]> & Key<A['credentials']>,
   passwordPropName?: Key<M[Key<M>]> & Key<A['credentials']>,
   ttl?: number,
 }
 
-export class StandardUserDefinition<M extends GeneralReqResEntityMap = GeneralReqResEntityMap, A extends AuthSetting = AuthSetting> extends StandardEntityDefinition implements EntityDefinition, UserDefinition {
+// Q: is it necessary and possible to implement EntityDefinition and UserDefinition both?
+export class StandardUserDefinition<M extends GeneralReqResEntityMap, A extends AuthSetting> extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>
-  encrypt: EncryptFunction<A, M>
+  encrypt: EncryptFunction<A>
   accountPropName: Key<M[Key<M>]> & Key<A['credentials']>
   passwordPropName: Key<M[Key<M>]> & Key<A['credentials']>
   ttl: number
@@ -52,8 +52,7 @@ export class StandardUserDefinition<M extends GeneralReqResEntityMap = GeneralRe
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  // @TODO: fix this implmented
-  async authorize<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
+  async authentication<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 
@@ -77,7 +76,6 @@ export class StandardUserDefinition<M extends GeneralReqResEntityMap = GeneralRe
     }
   }
 
-  // @TODO: fix this implmented
   async wrapExecution(reqData: GeneralRequestData, session: Session | null | undefined, execution: RestApiExecution): Promise<GeneralResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
     const resData = await execution(newReqData, session)
