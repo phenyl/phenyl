@@ -41,6 +41,6 @@ export type ChangeEvent = UpdateChangeEvent | StandardChangeEvent
 
 
 export interface ChangeStream {
-  next(fn: (err: ?Error, evt: ChangeEvent) => any): any,
+  next(fn: (err: Error | null | undefined, evt: ChangeEvent) => any): any,
   close(): any,
 }
