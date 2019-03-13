@@ -1,3 +1,3 @@
-export { connect } from './connection.js'
-export { createEntityClient, PhenylMongoDbEntityClient } from './create-entity-client.js'
-export { PhenylMongoDbClient } from './mongodb-client.js'
+export { connect } from './connection'
+export { createEntityClient, PhenylMongoDbEntityClient } from './create-entity-client'
+export { PhenylMongoDbClient } from './mongodb-client'
