@@ -1,6 +1,4 @@
-// @flow
 // Sorry for poor typing
-
 import { MongoClient } from 'mongodb'
 import promisify from 'es6-promisify'
 import type {

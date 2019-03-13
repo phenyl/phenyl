@@ -1,4 +1,3 @@
-// @flow
 export type ChangeStreamPipeline = Object
 export type ChangeStreamOptions = {
   fullDocument?: string,

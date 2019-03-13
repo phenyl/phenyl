@@ -1,4 +1,3 @@
-// @flow
 import mongodb from 'mongodb'
 import bson from 'bson'
 import {
