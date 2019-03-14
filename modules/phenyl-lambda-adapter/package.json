@@ -1,6 +1,6 @@
 {
   "name": "phenyl-lambda-adapter",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "",
   "main": "./dist/index.js",
   "jsnext:main": "./jsnext.js",
@@ -18,8 +18,8 @@
     "babel-register": "^6.24.1"
   },
   "dependencies": {
-    "phenyl-interfaces": "~0.4.2",
-    "phenyl-http-rules": "~0.2.9"
+    "phenyl-interfaces": "~0.4.3",
+    "phenyl-http-rules": "~0.2.10"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-lambda-adapter",
