@@ -29,7 +29,7 @@ export class PhenylMemoryDbEntityClient<M: EntityMap> extends PhenylEntityClient
 
   constructor(options: MemoryClientOptions<M> = {}) {
     const entityState = options.entityState ||  { pool: {} }
-    const dbClient = new PhenylMemoryDbClient(entityState)
+    const dbClient = new PhenylMemoryDbClient({ entityState })
     super(dbClient, options)
   }
 
