@@ -3,15 +3,6 @@ import bson from 'bson'
 import {
   createServerError,
 } from '@phenyl/utils'
-// @ts-ignore TODO: typescriptify power-assign
-import { assign } from 'power-assign/jsnext'
-import {
-  convertToDotNotationString,
-  visitFindOperation,
-  visitUpdateOperation,
-  UpdateOperator
-  // @ts-ignore TODO: typescriptify oad-utils
-} from 'oad-utils/jsnext'
 
 import {
   Key,
@@ -30,8 +21,17 @@ import {
   EntityOf,
 } from '@phenyl/interfaces'
 
-// @ts-ignore TODO: typescriptify monogolike-operation
-import { FindOperation, UpdateOperation, SetOperator, SimpleFindOperation } from 'mongolike-operations'
+import {
+  FindOperation,
+  UpdateOperand,
+  GeneralUpdateOperation,
+  SimpleFindOperation,
+  visitUpdateOperation,
+  visitFindOperation,
+  convertToDotNotationString,
+} from '@sp2/format'
+
+import { $bind, update } from '@sp2/updater'
 
 import { MongoDbConnection } from './connection'
 import {
@@ -40,6 +40,7 @@ import {
   ChangeStream,
 } from './change-stream'
 
+type SetOperator = { [field: string]: any }
 
 // convert 24-byte hex lower string to ObjectId
 function ObjectID(id: any): any {
@@ -53,9 +54,8 @@ function ObjectID(id: any): any {
   }
 }
 
-function assignToEntity<E extends Entity>(entity: E, op: UpdateOperation | SetOperator): E {
-  // $FlowIssue(structure-is-entity)
-  return assign(entity, op)
+function assignToEntity<E extends Entity>(entity: E, op: GeneralUpdateOperation | SetOperator): E {
+  return Object.assign(entity, op)
 }
 
 function convertToObjectIdRecursively(src: any): any {
@@ -68,14 +68,17 @@ function convertToObjectIdRecursively(src: any): any {
 }
 
 function convertIdToObjectIdInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
+  const { $set, $docPath } = $bind<typeof simpleFindOperation>()
   return simpleFindOperation.id
-    ? assign(simpleFindOperation, { id: convertToObjectIdRecursively(simpleFindOperation.id) })
+    ? update(simpleFindOperation, $set($docPath('id'), convertToObjectIdRecursively(simpleFindOperation.id)))
     : simpleFindOperation
 }
 
 // $FlowIssue(this-is-SimpleFindOperation)
 function setIdTo_idInWhere(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
-  return assign(simpleFindOperation, { $rename: { id: '_id' } })
+  const { $set, $docPath } = $bind<SimpleFindOperation>()
+  // @ts-ignore @TODO: ??
+  return update(simpleFindOperation, $set($docPath('$rename', 'id'), '_id'))
 }
 
 function convertDocumentPathToDotNotationInFindOperation(simpleFindOperation: SimpleFindOperation): SimpleFindOperation {
@@ -98,21 +101,23 @@ export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, { simpleFindOperation: composedFindOperationFilters })
 }
 
-function convertNewNameWithParent(operation: UpdateOperation): UpdateOperation {
+function convertNewNameWithParent(operation: GeneralUpdateOperation): GeneralUpdateOperation {
   const renameOperator = operation.$rename
   if (!renameOperator) return operation
 
-  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator: UpdateOperator, key: string) => {
+  const renameOperatorWithParent = Object.keys(renameOperator).reduce((operator: UpdateOperand<"$rename">, key: string) => {
     operator[key] = key.split('.').slice(0, -1).concat(renameOperator[key]).join('.')
     return operator
   }, {})
 
-  return assign(operation, { $set: { $rename: renameOperatorWithParent }})
+  const { $set, $docPath } = $bind<typeof operation>()
+  // @ts-ignore @TODO: ??
+  return update(operation, $set($docPath('$set', '$rename'), renameOperatorWithParent))
 }
 
-function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: GeneralUpdateOperation): GeneralUpdateOperation {
   return visitUpdateOperation(updateOperation, {
-    operation: (op: UpdateOperator) => {
+    operation: (op: UpdateOperand<'$set'>) => {
       return Object.keys(op).reduce((acc: any, srcKey: string) => {
         const dstKey = convertToDotNotationString(srcKey)
         // $FlowIssue(op[srcKey])
@@ -123,7 +128,7 @@ function convertDocumentPathToDotNotationInUpdateOperation(updateOperation: Upda
   })
 }
 
-export function filterUpdateOperation(updateOperation: UpdateOperation): UpdateOperation {
+export function filterUpdateOperation(updateOperation: GeneralUpdateOperation): GeneralUpdateOperation {
   return [
     convertNewNameWithParent,
     convertDocumentPathToDotNotationInUpdateOperation,

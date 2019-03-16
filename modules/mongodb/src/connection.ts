@@ -8,8 +8,7 @@ import {
   ChangeStream,
 } from './change-stream'
 
-// @ts-ignore TODO: typescriptify mongolike-operations
-import { FindOperation, UpdateOperation } from 'mongolike-operations'
+import { FindOperation, GeneralUpdateOperation } from '@sp2/format'
 
 const connectToMongoDb = promisify(MongoClient.connect)
 
@@ -22,8 +21,8 @@ export type MongoDbCollection = {
   find(op?: FindOperation, options?: { limit?: number, skip?: number }): Promise<Array<Object>>,
   insertOne(obj: Object): Promise<{ insertedId: string, insertedCount: number }>,
   insertMany(objs: Array<Object>): Promise<{ insertedIds: { [key: string]: string }, insertedCount: number }>,
-  updateOne({ _id }: { _id: any }, op: UpdateOperation): Promise<{ matchedCount: number }>,
-  updateMany(fOp: FindOperation, uOp: UpdateOperation): Promise<Object>,
+  updateOne({ _id }: { _id: any }, op: GeneralUpdateOperation): Promise<{ matchedCount: number }>,
+  updateMany(fOp: FindOperation, uOp: GeneralUpdateOperation): Promise<Object>,
   deleteOne({ _id }: { _id: any }): Promise<{ deletedCount: number }>,
   deleteMany(op: FindOperation): Promise<{ deletedCount: number }>,
   watch(pipeline?: ChangeStreamPipeline, options?: ChangeStreamOptions): ChangeStream

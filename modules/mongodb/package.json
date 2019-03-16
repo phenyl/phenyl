@@ -30,6 +30,8 @@
   "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
   "dependencies": {
+    "@sp2/format": "~1.2.3",
+    "@sp2/updater": "~1.2.3",
     "@phenyl/interfaces": "*",
     "@phenyl/utils": "*",
     "bson": "^1.0.4",
