@@ -13,4 +13,4 @@ export type RestApiExecution<T extends GeneralResponseData = GeneralResponseData
 ) => Promise<T>
 export type AuthSetting = { credentials: Object, options: Object }
 export type LoginCommandOf<A extends AuthSetting, N extends string> = LoginCommand<N, A['credentials']>
-export type EncryptFunction<A extends AuthSetting> = (str: A["credentials"], options?: Object) => string
+export type EncryptFunction<A extends AuthSetting = AuthSetting> = (str: A["credentials"], options?: Object) => string

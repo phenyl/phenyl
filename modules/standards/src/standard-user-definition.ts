@@ -53,6 +53,7 @@ export class StandardUserDefinition<M extends GeneralReqResEntityMap, A extends 
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
+  // @ts-ignore @TODO: waiting for fix of interfaces
   async authorize<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
@@ -77,6 +78,7 @@ export class StandardUserDefinition<M extends GeneralReqResEntityMap, A extends 
     }
   }
 
+  // @ts-ignore @TODO: waiting for fix of interfaces
   async wrapExecution(reqData: GeneralRequestData, session: Session | null | undefined, execution: RestApiExecution): Promise<GeneralResponseData> {
     const newReqData = encryptPasswordInRequestData(reqData, this.passwordPropName, this.encrypt)
     const resData = await execution(newReqData, session)

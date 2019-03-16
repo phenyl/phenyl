@@ -13,40 +13,37 @@ import {
 export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): GeneralRequestData {
   switch (reqData.method) {
     case 'insertOne':
+    case 'insertAndGet': {
+      const { payload } = reqData
+      const { value } = payload
+      const password = getNestedValue(value, passwordPropName)
+
+      if (password) {
+        const { $set, $docPath } = $bind<typeof value>()
+        const valueWithEncryptedPass = update(value, $set($docPath(passwordPropName), encrypt(password)))
+        const { $set: $OtherSet, $docPath: $otherDocPath } = $bind<typeof reqData>() 
+        return update(reqData, $OtherSet($otherDocPath("payload", "value"), valueWithEncryptedPass))
+      } else {
+        return reqData
+      }
+    }
     case 'insertMulti':
-    case 'insertAndGet':
     case 'insertAndGetMulti': {
       const { payload } = reqData
-      // @ts-ignore TODO: differ Multi Type and Single Type
-      const { value, values } = payload
+      const { values } = payload
 
-      if (values) {
-        const valuesWithEncryptedPass = values.map(value => {
-          const password = getNestedValue(value, passwordPropName)
-
-          if (password) {
-            const { $set, $docPath } = $bind<typeof value>()
-            return update(value, $set($docPath(passwordPropName), encrypt(password)))
-          } else {
-            return value
-          }
-        })
-        const { $set, $docPath } = $bind<typeof reqData>()
-        return update(reqData, $set($docPath('payload', 'values'), valuesWithEncryptedPass))
-      } else if (value) {
+      const valuesWithEncryptedPass = values.map(value => {
         const password = getNestedValue(value, passwordPropName)
 
         if (password) {
           const { $set, $docPath } = $bind<typeof value>()
-          const valueWithEncryptedPass = update(value, $set($docPath(passwordPropName), encrypt(password)))
-          const { $set: $OtherSet, $docPath: $otherDocPath } = $bind<typeof reqData>() 
-          return update(reqData, $OtherSet($otherDocPath("payload", "value"), valueWithEncryptedPass))
+          return update(value, $set($docPath(passwordPropName), encrypt(password)))
         } else {
-          return reqData
+          return value
         }
-      } else {
-        return reqData
-      }
+      })
+      const { $set, $docPath } = $bind<typeof reqData>()
+      return update(reqData, $set($docPath('payload', 'values'), valuesWithEncryptedPass))
     }
     case 'updateById':
     case 'updateMulti':
@@ -58,6 +55,7 @@ export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwo
       let operationWithEncryptedPass = operation
 
       Object.keys(operation).forEach((key: any) => {
+        // @ts-ignore: Partial<UpdateOperationMap> has no index signature.
         const password = getNestedValue(operation[key], passwordPropName)
 
         if (password) {
