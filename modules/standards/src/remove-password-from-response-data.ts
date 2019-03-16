@@ -1,14 +1,12 @@
 import {
   hasOwnNestedProperty,
-} from 'oad-utils/jsnext'
+} from '@sp2/format'
 
 import {
   visitEntitiesInResponseData,
-} from 'phenyl-utils/jsnext'
+} from '@phenyl/utils'
 
-import {
-  assign,
-} from 'power-assign/jsnext'
+import { $bind, update } from '@sp2/updater'
 
 import {
   GeneralResponseData,
@@ -17,6 +15,7 @@ import {
 export function removePasswordFromResponseData(resData: GeneralResponseData, passwordPropName: string): GeneralResponseData {
   return visitEntitiesInResponseData(resData, entity => {
     if (!hasOwnNestedProperty(entity, passwordPropName)) return entity
-    return assign(entity, { $unset: { [passwordPropName]: '' } })
+    const { $unset, $docPath } = $bind<typeof entity>()
+    return update(entity, $unset($docPath(passwordPropName), ''))
   })
 }

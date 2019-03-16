@@ -1,11 +1,12 @@
+// @ts-ignore TODO typescriptify power-crypt
 import powerCrypt from 'power-crypt/jsnext'
 import {
   createServerError,
 } from '@phenyl/utils'
 
-import { StandardEntityDefinition } from './standard-entity-definition.js'
-import { encryptPasswordInRequestData } from './encrypt-password-in-request-data.js'
-import { removePasswordFromResponseData } from './remove-password-from-response-data.js'
+import { StandardEntityDefinition } from './standard-entity-definition'
+import { encryptPasswordInRequestData } from './encrypt-password-in-request-data'
+import { removePasswordFromResponseData } from './remove-password-from-response-data'
 
 import {
   GeneralReqResEntityMap,
@@ -52,7 +53,7 @@ export class StandardUserDefinition<M extends GeneralReqResEntityMap, A extends 
     this.ttl = params.ttl || 60 * 60 * 24 * 365 // one year
   }
 
-  async authentication<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
+  async authorize<N extends Key<M>>(loginCommand: LoginCommandOf<A, N>, session: Session | null | undefined): Promise<AuthenticationResult<string, any>> { // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this
     const { credentials, entityName } = loginCommand
 

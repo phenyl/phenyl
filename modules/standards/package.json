@@ -30,6 +30,8 @@
   "dependencies": {
     "@phenyl/interfaces": "*",
     "@phenyl/utils": "*",
+    "@sp2/format": "~1.2.3",
+    "@sp2/updater": "~1.1.0",
     "mongolike-operations": "~0.1.5",
     "oad-utils": "~0.3.0",
     "phenyl-interfaces": "~0.4.2",

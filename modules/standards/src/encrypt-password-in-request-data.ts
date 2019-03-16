@@ -2,15 +2,12 @@ import {
   GeneralRequestData,
 } from '@phenyl/interfaces'
 
-import { DocumentPath } from 'mongolike-operations'
+import { $bind, update } from "@sp2/updater"
+import { DocumentPath, getNestedValue } from '@sp2/format'
 
 import {
   EncryptFunction,
 } from '../decls/index'
-
-import { getNestedValue } from 'oad-utils/jsnext'
-
-import { assign } from 'power-assign/jsnext'
 
 
 export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): GeneralRequestData {
@@ -28,19 +25,22 @@ export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwo
           const password = getNestedValue(value, passwordPropName)
 
           if (password) {
-            return assign(value, { $set: { [passwordPropName]: encrypt(password)} })
+            const { $set, $docPath } = $bind<typeof value>()
+            return update(value, $set($docPath(passwordPropName), encrypt(password)))
           } else {
             return value
           }
         })
-
-        return assign(reqData, { $set: { 'payload.values': valuesWithEncryptedPass }})
+        const { $set, $docPath } = $bind<typeof reqData>()
+        return update(reqData, $set($docPath('payload', 'values'), valuesWithEncryptedPass))
       } else if (value) {
         const password = getNestedValue(value, passwordPropName)
 
         if (password) {
-          const valueWithEncryptedPass = assign(value, { $set: { [passwordPropName]: encrypt(password) } })
-          return assign(reqData, { $set: { 'payload.value': valueWithEncryptedPass }})
+          const { $set, $docPath } = $bind<typeof value>()
+          const valueWithEncryptedPass = update(value, $set($docPath(passwordPropName), encrypt(password)))
+          const { $set: $OtherSet, $docPath: $otherDocPath } = $bind<typeof reqData>() 
+          return update(reqData, $OtherSet($otherDocPath("payload", "value"), valueWithEncryptedPass))
         } else {
           return reqData
         }
@@ -57,15 +57,17 @@ export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwo
 
       let operationWithEncryptedPass = operation
 
-      Object.keys(operation).forEach(key => {
+      Object.keys(operation).forEach((key: any) => {
         const password = getNestedValue(operation[key], passwordPropName)
 
         if (password) {
-          operationWithEncryptedPass = assign(operationWithEncryptedPass, { $set: { [`${key}.${passwordPropName}`]: encrypt(password) } })
+          const { $set, $docPath } = $bind<typeof operationWithEncryptedPass>()
+          operationWithEncryptedPass = update(operationWithEncryptedPass, $set($docPath(key, passwordPropName), encrypt(password)))
         }
       })
 
-      return assign(reqData, { $set: { 'payload.operation': operationWithEncryptedPass }})
+      const { $set, $docPath } = $bind<typeof reqData>()
+      return update(reqData, $set($docPath('payload', 'operation'), operationWithEncryptedPass))
     }
     case 'push':
       // TODO Implement to encrypt password in push command

@@ -1,14 +1,10 @@
-import {
-  assign,
-} from 'power-assign/jsnext'
+import { $bind, update } from "@sp2/updater"
+import { getNestedValue } from '@sp2/format'
 import {
   switchByRequestMethod,
   assertValidEntityName,
   assertNonEmptyString,
 } from '@phenyl/utils'
-import {
-  getNestedValue,
-} from 'oad-utils/jsnext'
 import {
   Entity,
   GeneralReqResEntityMap,
@@ -75,25 +71,33 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
       find: async (query: ForeignWhereQuery<any, any>) => {
         if (resData.type !== 'find' || query.foreign == null) return resData
         const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
-        return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
+        const { $set, $docPath } = $bind<typeof resData>()
+        // @ts-ignore: GeneralResponseData is not have payload.foreign
+        return update(resData, $set($docPath("payload", "foreign", "entities"), foreignEntitiesById))
       },
 
       findOne: async (query: ForeignWhereQuery<any, any>) => {
         if (resData.type !== 'findOne' || query.foreign == null) return resData
         const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
-        return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
+        const { $set, $docPath } = $bind<typeof resData>()
+        // @ts-ignore: GeneralResponseData is not have payload.foreign
+        return update(resData, $set($docPath("payload", "foreign", "entity"), foreignEntity))
       },
 
       get: async (query: ForeignIdQuery<any, any>) => {
         if (resData.type !== 'get' || query.foreign == null) return resData
         const foreignEntity = await this.getForeignEntity(resData.payload.entity, query.foreign)
-        return assign(resData, { 'payload.foreign': { entity: foreignEntity } })
+        const { $set, $docPath } = $bind<typeof resData>()
+        // @ts-ignore: GeneralResponseData is not have payload.foreign
+        return update(resData, $set($docPath("payload", "foreign", "entity"), foreignEntity))
       },
 
       getByIds: async (query: ForeignIdsQuery<any, any>) => {
         if (resData.type !== 'getByIds' || query.foreign == null) return resData
         const foreignEntitiesById = await this.getForeignEntities(resData.payload.entities, query.foreign)
-        return assign(resData, { 'payload.foreign': { entities: foreignEntitiesById } })
+        const { $set, $docPath } = $bind<typeof resData>()
+        // @ts-ignore: GeneralResponseData is not have payload.foreign
+        return update(resData, $set($docPath("payload", "foreign", "entities"), foreignEntitiesById))
       },
 
       handleDefault: async (reqData: GeneralRequestData) => { // eslint-disable-line no-unused-vars
@@ -105,13 +109,13 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
   /**
    * @private
    */
-  async getForeignEntities<E extends Entity, FN extends Key<M>>(entities: Array<E>, foreign: ForeignQueryParams<FN>): Promise<EntitiesById<E>> {
+  async getForeignEntities<E extends Entity, FN extends Key<M>>(entities: Array<E>, foreign: ForeignQueryParams<FN>): Promise<EntitiesById<M[FN]["response"]>> {
     const { documentPath, entityName } = foreign
 
     try {
       const foreignIds = entities.map(entity => getNestedValue(entity, documentPath))
       const result = await this.entityClient.getByIds({ ids: foreignIds, entityName })
-      const entitiesById = {}
+      const entitiesById: EntitiesById<M[FN]["response"]> = {}
       for (const entity of result.entities) {
         entitiesById[entity.id] = entity
       }

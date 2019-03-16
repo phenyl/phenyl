@@ -7,10 +7,10 @@ import {
 } from '@phenyl/interfaces'
 
 // @TODO: should we put those types into @phenyl/interfaces?
-type RestApiExecution = (
+export type RestApiExecution<T extends GeneralResponseData = GeneralResponseData> = (
     reqData: GeneralRequestData,
     session: Session | null | undefined
-) => Promise<GeneralResponseData>
+) => Promise<T>
 export type AuthSetting = { credentials: Object, options: Object }
 export type LoginCommandOf<A extends AuthSetting, N extends string> = LoginCommand<N, A['credentials']>
 export type EncryptFunction<A extends AuthSetting> = (str: A["credentials"], options?: Object) => string
