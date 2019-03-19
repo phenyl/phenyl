@@ -22,6 +22,8 @@
     "power-assert": "^1.4.4"
   },
   "dependencies": {
+    "@sp2/format": "~1.2.3",
+    "@sp2/updater": "~1.2.3",
     "oad-utils": "~0.3.0",
     "@phenyl/interfaces": "*",
     "@phenyl/utils": "*"
