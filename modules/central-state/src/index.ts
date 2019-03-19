@@ -1,2 +1,2 @@
-export { PhenylEntityClient } from './entity-client.js'
-export type { PhenylEntityClientOptions } from './entity-client.js'
+export { PhenylEntityClient } from './entity-client'
+export { PhenylEntityClientOptions } from './entity-client'
