@@ -1,4 +1,3 @@
-// @flow
 import {
   timeStampWithRandomString
 } from 'phenyl-utils/jsnext'
