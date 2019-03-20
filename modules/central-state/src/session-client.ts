@@ -1,14 +1,16 @@
 import {
   timeStampWithRandomString
-} from 'phenyl-utils/jsnext'
+} from '@phenyl/utils'
 
-import type {
-  Id,
+import {
   DbClient,
   PreSession,
   Session,
   SessionClient,
-} from 'phenyl-interfaces'
+  PreEntity,
+} from '@phenyl/interfaces'
+
+type Id = string
 
 type PhenylSessionEntityMap = {
   _PhenylSession: Session
@@ -20,14 +22,14 @@ type PhenylSessionEntityMap = {
 export class PhenylSessionClient implements SessionClient {
   dbClient: DbClient<PhenylSessionEntityMap>
 
-  constructor(dbClient: DbClient<*>) {
+  constructor(dbClient: DbClient<any>) {
     this.dbClient = dbClient
   }
 
   /**
    *
    */
-  async get(id: ?Id): Promise<?Session> {
+  async get(id: Id | null | undefined): Promise<Session | null | undefined> {
     if (id == null) {
       return null
     }
@@ -59,14 +61,14 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async set(value: Session): Promise<Session> {
+  async set(value: PreEntity<Session>): Promise<Session> {
     return this.dbClient.insertAndGet({ entityName: '_PhenylSession', value })
   }
 
   /**
    *
    */
-  async delete(id: ?Id): Promise<boolean> {
+  async delete(id: Id | null | undefined): Promise<boolean> {
     if (id == null) {
       return false
     }
