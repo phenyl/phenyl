@@ -19,7 +19,7 @@ import {
   SingleQueryResult,
 } from '@phenyl/interfaces'
 
-import { GeneralUpdateOperation } from '@sp2/format'
+import { UpdateOperation, UpdateOperator } from '@sp2/format'
 
 type Id = string
 
@@ -96,7 +96,7 @@ export class Versioning {
    * @public
    * Create PushCommandResult from entity, updated entity and local versionId.
    */
-  static createPushCommandResult<E extends Entity>(entity: EntityWithMetaInfo<E>, updatedEntity: EntityWithMetaInfo<E>, versionId: Id | null | undefined, newOperation: GeneralUpdateOperation): PushCommandResult<E> {
+  static createPushCommandResult<E extends Entity>(entity: EntityWithMetaInfo<E>, updatedEntity: EntityWithMetaInfo<E>, versionId: Id | null | undefined, newOperation: UpdateOperation<UpdateOperator>): PushCommandResult<E> {
     const localUncommittedOperations = this.getOperationDiffsByVersion(entity, versionId)
     const prevVersionId = this.getPrevVersionId(updatedEntity)
     const latestVersionId = this.getVersionId(updatedEntity)
@@ -114,7 +114,7 @@ export class Versioning {
    * Merge operations into one operation and attach metaInfo.
    * TODO This merge process (using mergeUpdateOperations) is incomplete.
    */
-  static mergeUpdateOperations(...operations: Array<GeneralUpdateOperation>): GeneralUpdateOperation {
+  static mergeUpdateOperations(...operations: Array<UpdateOperation<UpdateOperator>>): UpdateOperation<UpdateOperator> {
     const mergedOperation = mergeUpdateOperations(...operations)
     const { operation } = this.attachMetaInfoToUpdateCommand({ operation: mergedOperation })
     return operation
@@ -136,7 +136,7 @@ export class Versioning {
    * @public
    * Attach meta info to the given update command.
    */
-  static attachMetaInfoToUpdateCommand<T extends { operation: GeneralUpdateOperation }>(command: T): T {
+  static attachMetaInfoToUpdateCommand<T extends { operation: UpdateOperation<UpdateOperator> }>(command: T): T {
     const normalizedOperation = normalizeUpdateOperation(command.operation)
     const version = { id: timeStampWithRandomString(), op: JSON.stringify(command.operation) }
     const $push = Object.assign({}, normalizedOperation.$push, {
@@ -150,7 +150,7 @@ export class Versioning {
    * @public
    * Get operation diffs by the given versionId.
    */
-  static getOperationDiffsByVersion<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | null | undefined): Array<GeneralUpdateOperation> | null | undefined {
+  static getOperationDiffsByVersion<E extends Entity>(entity: EntityWithMetaInfo<E>, versionId: Id | null | undefined): Array<UpdateOperation<UpdateOperator>> | null | undefined {
     if (versionId == null) return null
     if (!entity.hasOwnProperty('_PhenylMeta')) return null
     try {
