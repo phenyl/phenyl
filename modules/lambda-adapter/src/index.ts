@@ -6,7 +6,7 @@ import {
   ServerParams
 } from "@phenyl/interfaces";
 
-export type LambdaCallback = (err: any, result: any) => void;
+export type LambdaCallback = (err?: Error | null, result?: any) => void;
 export type LambdaHandler = (
   event: LambdaEvent,
   context: LambdaContext,
