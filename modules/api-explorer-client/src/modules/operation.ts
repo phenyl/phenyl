@@ -1,6 +1,5 @@
-// @ts-ignore
+// @ts-ignore remove this comment after phenyl/http-client release
 import PhenylHttpClient from "phenyl-http-client";
-// @ts-ignore remove this comment after @phenyl/interfaces release
 import { PhenylError } from "@phenyl/interfaces";
 import { ThunkDispatch } from "redux-thunk";
 
@@ -67,7 +66,7 @@ export const receiveResponse = (response: any, spent: number) => ({
   response
 });
 
-export const receiveErrorResponse = (error: PhenylError, spent: number) => ({
+export const receiveErrorResponse = (error: PhenylError<any>, spent: number) => ({
   type: EXECUTE_FAILED,
   spent,
   error

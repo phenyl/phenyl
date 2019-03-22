@@ -12,9 +12,10 @@ import {
 } from "semantic-ui-react/index";
 import { ThunkDispatch } from "redux-thunk";
 import { login, loginAsAnonymous } from "../modules/user";
-// @ts-ignore
-import { Credential } from "@phenyl/interfaces";
 import { State } from '../modules'
+
+// @TODO: add Credential in phenyl/interfaces
+type Credential = any
 
 type Props = {
   entityNames: Array<string>;
