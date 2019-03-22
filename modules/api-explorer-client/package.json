@@ -20,7 +20,7 @@
     "package.json"
   ],
   "dependencies": {
-    "@phenyl/interfaces": "~1.0.0"
+    "@phenyl/interfaces": "*"
   },
   "devDependencies": {
     "@types/react": "^16.8.6",

@@ -1,10 +1,7 @@
 /* global PhenylFunctionalGroupSkeleton */
-// @ts-ignore remove this comment after @phenyl/interfaces release
-import { Id, Credentials } from "@phenyl/interfaces";
 // @ts-ignore
 import PhenylHttpClient from "phenyl-http-client";
 import { ThunkDispatch } from "redux-thunk";
-
 const LOGIN = "user/LOGIN";
 const LOGIN_AS_ANONYMOUS = "user/LOGIN_AS_ANONYMOUS";
 const LOGIN_REQUEST = "user/LOGIN_REQUEST";
@@ -12,11 +9,14 @@ const LOGIN_SUCCESS = "user/LOGIN_SUCCESS";
 const LOGIN_FAILED = "user/LOGIN_FAILED";
 const LOGOUT = "user/LOGOUT";
 
+// @TODO: Should we add Credentials in phenyl/interfaces?
+type Credentials = any
+
 // @TODO: define session/user/error type
 export type User = {
   busy: boolean;
   displayName: string;
-  session: Id;
+  session: any;
   anonymous: boolean;
   user: any;
   error: any;
