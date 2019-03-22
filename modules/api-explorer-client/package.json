@@ -4,14 +4,9 @@
   "description": "Client application of phenyl-api-explorer",
   "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
-  "author": "Nicholas Lee <nicholaslee119@gmail.com>",
-  "main": "lib/index.js",
-  "types": "lib/index.d.js",
-  "scripts": {
-    "build": "node scripts/build.js && node scripts/prepare-assets.js",
-    "type-check": "upbin tsc --noEmit"
-  },
+  "author": "Leko <leko.noor@gmail.com>, Nicholas Lee <nicholaslee119@gmail.com>",
   "files": [
+    "lib",
     "src",
     "build",
     "config",
@@ -19,8 +14,15 @@
     "scripts",
     "package.json"
   ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.js",
+  "scripts": {
+    "build": "node scripts/build.js && node scripts/prepare-assets.js",
+    "type-check": "upbin tsc --noEmit",
+    "watch": "upbin tsc --declaration --watch"
+  },
   "dependencies": {
-    "@phenyl/interfaces": "*"
+    "@phenyl/interfaces": "~1.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.8.6",
