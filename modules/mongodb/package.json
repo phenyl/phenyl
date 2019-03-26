@@ -15,11 +15,11 @@
   "scripts": {
     "type-check": "upbin tsc --noEmit",
     "pretest": "test/scripts/init-mongodb.sh",
-    "test": "nyc mocha test/*.js --color always || (npm run posttest && exit 1)",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
   "devDependencies": {
-    "@types/bson": "^1.0.4",
+    "@types/bson": "^4.0.0",
     "@types/mongodb": "^3.1.20",
     "babel-register": "^6.24.1",
     "nyc": "^11.6.0",
@@ -31,10 +31,9 @@
     "@sp2/updater": "~1.2.3",
     "@phenyl/interfaces": "*",
     "@phenyl/utils": "*",
-    "bson": "^1.0.4",
+    "bson": "^4.0.0",
     "es6-promisify": "^5.0.0",
     "mongodb": "^3.0.5",
-    "mongolike-operations": "~0.1.5",
     "oad-utils": "~0.3.0",
     "phenyl-central-state": "~0.3.2",
     "power-assign": "~0.2.10"

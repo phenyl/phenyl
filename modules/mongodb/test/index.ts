@@ -1,34 +1,33 @@
-// @flow
 /* eslint-disable no-console */
-
-import mocha, { after, before, describe, it } from 'mocha'
-import { createEntityClient } from '../src/create-entity-client.js'
+import { after, before, describe, it } from 'mocha'
+import { createEntityClient } from '../src/create-entity-client'
+// @ts-ignore
 import assert from 'power-assert'
 import bson from 'bson'
-import { connect } from '../src/connection.js'
-import { assertEntityClient } from 'phenyl-interfaces/test-cases'
-import type { MongoDbConnection } from '../src/connection.js'
+// import { assertEntityClient } from '@phenyl/interfaces'
+import { MongoDbConnection, connect } from '../src/connection'
 
 const url = 'mongodb://localhost:27017'
 
-describe('MongoDBEntityClient as EntityClient', async () => {
-  const conn = await connect(url, 'phenyl-mongodb-test')
-  const client = createEntityClient(conn)
+// @TODO: should we implement assertEntityClient in @phenyl/interfaces
+// describe('MongoDBEntityClient as EntityClient', async () => {
+//   const conn = await connect(url, 'phenyl-mongodb-test')
+//   const client = createEntityClient(conn)
 
-  assertEntityClient(client, mocha, assert)
+//   assertEntityClient(client, mocha, assert)
 
-  after(() => {
-    conn.close()
-  })
-})
+//   after(() => {
+//     conn.close()
+//   })
+// })
 
 describe('MongoDBEntityClient', () => {
 
   let conn: MongoDbConnection
-  let entityClient
+  let entityClient: any
 
   const HEX_24_ID = '000000000123456789abcdef'
-  let generatedId
+  let generatedId: string
 
   before(async () => {
     conn = await connect(url, 'phenyl-mongodb-test')
@@ -50,6 +49,7 @@ describe('MongoDBEntityClient', () => {
       assert(result.entity.id)
 
       const users = await conn.collection('user').find()
+      // @ts-ignore
       assert.deepEqual(users[0]._id, bson.ObjectID(result.entity.id))
 
       generatedId = result.entity.id
@@ -62,7 +62,7 @@ describe('MongoDBEntityClient', () => {
           value: { id: 'jane', name: 'Jane' },
         })
 
-        const users = await conn.collection('user').find({_id: 'jane'})
+        const users: any = await conn.collection('user').find({_id: 'jane'})
         assert(users[0]._id === 'jane')
       })
 
@@ -75,6 +75,7 @@ describe('MongoDBEntityClient', () => {
         assert(result.entity.id === HEX_24_ID)
 
         const users = await conn.collection('user').find({ name: 'Jesse' })
+        // @ts-ignore
         assert.deepEqual(users[0]._id, bson.ObjectID(HEX_24_ID))
       })
     })
@@ -112,7 +113,7 @@ describe('MongoDBEntityClient', () => {
   describe('[Unstable because of the mongodb client library] ChangeStream', () => {
     it('next', (done) => {
       const stream = entityClient.dbClient.watch('user')
-      stream.next((err, evt) => {
+      stream.next((err: Error, evt: any) => {
         if (evt.operationType === 'update') {
           assert(evt.updateDescription.removedFields.length === 1)
           assert(evt.updateDescription.updatedFields['shin.a123'] === 'out')
