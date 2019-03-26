@@ -18,10 +18,9 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "type-check": "upbin tsc --noEmit",
-    "test": "yarn test:ts && yarn test:mocha",
-    "test:mocha": "NODE_ENV=test nyc --nycrc-path .nycrc mocha --require test/helper/babel-register.js --recursive test/spec/**/*.ts --color always",
-    "test:ts": "upbin tsc -p tsconfig.test.json"
+    "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always",
+    "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
     "@phenyl/interfaces": "*",

@@ -17,6 +17,7 @@ export function removePasswordFromResponseData(resData: GeneralResponseData, pas
   return visitEntitiesInResponseData(resData, (entity: ProEntity): any => {
     if (!hasOwnNestedProperty(entity, passwordPropName)) return entity
     const { $unset, $docPath } = $bind<typeof entity>()
-    return update(entity, $unset($docPath(passwordPropName), ''))
+    const res = update(entity, $unset($docPath(passwordPropName), ''))
+    return res
   })
 }
