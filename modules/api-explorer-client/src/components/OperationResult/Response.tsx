@@ -6,7 +6,7 @@ type Props = {
   loading: boolean;
   expanded: boolean;
   response: any;
-  error: Error | null | undefined;
+  error?: Error;
 };
 
 const Response = ({ loading, expanded, response, error }: Props) => {

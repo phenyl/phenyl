@@ -3,7 +3,7 @@ import { Button, Menu } from "semantic-ui-react/index";
 
 type Props = {
   version: string;
-  userName: string | null | undefined;
+  userName?: string;
   onLogout: () => any;
 };
 
