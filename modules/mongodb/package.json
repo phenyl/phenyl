@@ -2,22 +2,22 @@
   "name": "@phenyl/mongodb",
   "version": "1.0.0",
   "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache License 2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "main": "lib/index.js",
+  "types": "lib/index.d.js",
   "scripts": {
     "type-check": "upbin tsc --noEmit",
     "pretest": "test/scripts/init-mongodb.sh",
     "test": "nyc mocha test/*.js --color always || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
   },
-  "files": [
-    "lib",
-    "src",
-    "dist",
-    "package.json",
-    "jsnext.js",
-    "LICENSE",
-    "README.md"
-  ],
   "devDependencies": {
     "@types/bson": "^1.0.4",
     "@types/mongodb": "^3.1.20",
@@ -26,9 +26,6 @@
     "power-assert": "^1.4.4",
     "upbin": "^0.8.1"
   },
-  "author": "Shin Suzuki <shinout310@gmail.com>",
-  "repository": "phenyl-js/phenyl",
-  "license": "Apache License 2.0",
   "dependencies": {
     "@sp2/format": "~1.2.3",
     "@sp2/updater": "~1.2.3",
