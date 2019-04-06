@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Client application of phenyl-api-explorer",
   "repository": "phenyl-js/phenyl",
-  "license": "Apache License 2.0",
-  "author": "Leko <leko.noor@gmail.com>, Nicholas Lee <nicholaslee119@gmail.com>",
+  "license": "Apache-2.0",
+  "author": "Leko <leko.noor@gmail.com>",
+  "contributors": ["Nicholas Lee <nicholaslee119@gmail.com>"],
   "files": [
     "build",
     "lib",
