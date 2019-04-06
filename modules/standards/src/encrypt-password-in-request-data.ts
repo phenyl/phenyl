@@ -2,8 +2,12 @@ import {
   GeneralRequestData,
 } from '@phenyl/interfaces'
 
-import { $bind, update } from "@sp2/updater"
-import { DocumentPath, getNestedValue } from '@sp2/format'
+import { 
+  $bind,
+  update,
+  DocumentPath,
+  getNestedValue
+} from "sp2"
 
 import { EncryptFunction } from './decls'
 
