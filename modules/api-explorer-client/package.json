@@ -6,14 +6,16 @@
   "license": "Apache License 2.0",
   "author": "Leko <leko.noor@gmail.com>, Nicholas Lee <nicholaslee119@gmail.com>",
   "files": [
+    "build",
     "lib",
-    "config",
     "public"
   ],
-  "main": "lib/index.ts",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "node scripts/build.js && node scripts/prepare-assets.js",
+    "build": "yarn build:app & yarn build:ts",
+    "build:app": "node scripts/build.js && node scripts/prepare-assets.js",
+    "build:ts": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
@@ -64,6 +66,7 @@
     "redux-thunk": "^2.3.0",
     "semantic-ui-react": "^0.77.0",
     "style-loader": "0.19.0",
+    "ts-loader": "~5.3.3",
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "upbin": "^0.8.1",

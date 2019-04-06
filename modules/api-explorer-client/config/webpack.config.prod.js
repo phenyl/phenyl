@@ -152,7 +152,7 @@ module.exports = {
           },
           {
             test: /\.(ts|tsx|d.ts)$/,
-            use: 'ts-loader',
+            loader: require.resolve('ts-loader'),
             options: {
               transpileOnly: true,
             },
