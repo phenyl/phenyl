@@ -1,14 +1,15 @@
-import url from "url";
-import { ServerLogic } from "@phenyl/http-rules";
-import http, { IncomingMessage, ServerResponse } from "http";
 import {
   EncodedHttpResponse,
-  HttpMethod,
-  ServerParams,
   GeneralTypeMap,
-  QueryStringParams
+  HttpMethod,
+  QueryStringParams,
+  ServerParams
 } from "@phenyl/interfaces";
+import http, { IncomingMessage, ServerResponse } from "http";
+
+import { ServerLogic } from "@phenyl/http-rules";
 import https from "https";
+import url from "url";
 
 /**
  * HTTP(s) server wrapping ServerLogic (implemented at "phenyl-http-rules") and Node.js server.
@@ -111,7 +112,7 @@ export default class PhenylHttpServer<TM extends GeneralTypeMap> {
       method: request.method as HttpMethod,
       path,
       body: await this.getRequestBody(request),
-      headers: request.headers,
+      headers: request.headers as { [name: string]: string },
       qsParams
     };
     const encodedResponse = await this.logic.handleRequest(encodedHttpRequest);
