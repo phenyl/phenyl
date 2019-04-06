@@ -1,8 +1,6 @@
 import {
   ClientPathModifier,
   EveryNameOf,
-  GeneralRequestData,
-  GeneralResponseData,
   GeneralTypeMap,
   HandlerResult,
   HttpClientParams,
@@ -70,11 +68,7 @@ export default class PhenylHttpClient<
     N extends EveryNameOf<TM, MN>
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
-
-  async handleRequestData(
-    reqData: GeneralRequestData
-  ): Promise<GeneralResponseData> {
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
     const { method, headers, path, qsParams, body } = encodeRequest(reqData);
     const qs = stringifyQsParams(qsParams);
     const url = `${this.url}${this.modifyPath(path)}${qs}`;
@@ -90,6 +84,7 @@ export default class PhenylHttpClient<
       statusCode: response.status,
       headers: response.headers // FIXME: headers from polyfilled fetch don't implement Headers API.
     };
+    // @ts-ignore http-client will not receive any types beyond this point
     return decodeResponse(encodedResponse);
   }
 
