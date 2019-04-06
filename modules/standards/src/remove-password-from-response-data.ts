@@ -1,12 +1,11 @@
 import {
   hasOwnNestedProperty,
-} from '@sp2/format'
+  update,
+} from 'sp2'
 
 import {
   visitEntitiesInResponseData,
 } from '@phenyl/utils'
-
-import { $bind, update } from '@sp2/updater'
 
 import {
   GeneralResponseData,
@@ -16,8 +15,7 @@ import {
 export function removePasswordFromResponseData(resData: GeneralResponseData, passwordPropName: string): GeneralResponseData {
   return visitEntitiesInResponseData(resData, (entity: ProEntity): any => {
     if (!hasOwnNestedProperty(entity, passwordPropName)) return entity
-    const { $unset, $docPath } = $bind<typeof entity>()
-    const res = update(entity, $unset($docPath(passwordPropName), ''))
+    const res = update(entity, { $unset: { [passwordPropName]: '' } })
     return res
   })
 }

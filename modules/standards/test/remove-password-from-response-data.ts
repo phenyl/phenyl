@@ -33,37 +33,37 @@ describe('removePasswordFromResponseData', () => {
   })
 
   // @TODO: the sp2/updater can not support nested property right now
-  // it ('removes password property when nested', () => {
-  //   const resData: EntityResponseData<any> = {
-  //     type: 'get',
-  //     payload: {
-  //       entity: {
-  //         id: 'foo',
-  //         account: {
-  //           email: 'foo@example.com',
-  //           password: 'foobar',
-  //         },
-  //         name: 'John',
-  //       },
-  //       versionId: 'xyz'
-  //     },
-  //   }
+  it ('removes password property when nested', () => {
+    const resData: EntityResponseData<any> = {
+      type: 'get',
+      payload: {
+        entity: {
+          id: 'foo',
+          account: {
+            email: 'foo@example.com',
+            password: 'foobar',
+          },
+          name: 'John',
+        },
+        versionId: 'xyz'
+      },
+    }
 
-  //   const modifiedResData = removePasswordFromResponseData(resData, 'account.password')
-  //   assert.deepEqual(modifiedResData, {
-  //     type: 'get',
-  //     payload: {
-  //       entity: {
-  //         id: 'foo',
-  //         account: {
-  //           email: 'foo@example.com',
-  //         },
-  //         name: 'John',
-  //       },
-  //       versionId: 'xyz'
-  //     },
-  //   })
-  // })
+    const modifiedResData = removePasswordFromResponseData(resData, 'account.password')
+    assert.deepEqual(modifiedResData, {
+      type: 'get',
+      payload: {
+        entity: {
+          id: 'foo',
+          account: {
+            email: 'foo@example.com',
+          },
+          name: 'John',
+        },
+        versionId: 'xyz'
+      },
+    })
+  })
 
 
 })
