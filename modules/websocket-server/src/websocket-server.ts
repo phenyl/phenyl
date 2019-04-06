@@ -130,7 +130,7 @@ export class PhenylWebSocketServer {
     port: number,
     hostname?: string,
     backlog?: number,
-    callback?: Function
+    callback?: () => void
   ) {
     this.server.on("request", (req, res) => {
       res.writeHead(404);
