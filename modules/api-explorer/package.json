@@ -11,7 +11,10 @@
     "start": "nodemon examples/index.js --exec babel-node --watch src --watch examples",
     "test": "echo no test specified in phenyl-api-explorer"
   },
-  "author": "Leko <leko.noor@gmail.com>",
+  "author": [
+    "Leko <leko.noor@gmail.com>",
+    "imoans <naomins0101@gmail.com>"
+  ],
   "license": "Apache-2.0",
   "devDependencies": {
     "@phenyl/interfaces": "~1.0.0",
