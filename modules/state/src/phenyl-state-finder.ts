@@ -1,11 +1,10 @@
 import {
   EntityState,
   EntityStateFinder,
-  GeneralReqResEntityMap,
+  GeneralEntityMap,
   IdQuery,
   IdsQuery,
   Key,
-  ResponseEntity,
   WhereQuery
 } from "@phenyl/interfaces";
 import { retrieve, sortByNotation } from "sp2";
@@ -14,7 +13,7 @@ import { retrieve, sortByNotation } from "sp2";
  *
  */
 
-export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
+export default class PhenylStateFinder<M extends GeneralEntityMap>
   implements EntityStateFinder<M> {
   state: EntityState<M>;
 
@@ -24,37 +23,35 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  find<EN extends Key<M>>(query: WhereQuery<EN>): ResponseEntity<M, EN>[] {
+  find<EN extends Key<M>>(query: WhereQuery<EN>): M[EN][] {
     return PhenylStateFinder.find(this.state, query);
   }
   /**
    *
    */
 
-  findOne<EN extends Key<M>>(
-    query: WhereQuery<EN>
-  ): ResponseEntity<M, EN> | null {
+  findOne<EN extends Key<M>>(query: WhereQuery<EN>): M[EN] | null {
     return PhenylStateFinder.findOne(this.state, query);
   }
   /**
    *
    */
 
-  get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN> {
+  get<EN extends Key<M>>(query: IdQuery<EN>): M[EN] {
     return PhenylStateFinder.get(this.state, query);
   }
   /**
    *
    */
 
-  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): ResponseEntity<M, EN>[] {
+  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): M[EN][] {
     return PhenylStateFinder.getByIds(this.state, query);
   }
   /**
    *
    */
 
-  getAll<EN extends Key<M>>(entityName: EN): ResponseEntity<M, EN>[] {
+  getAll<EN extends Key<M>>(entityName: EN): M[EN][] {
     return PhenylStateFinder.getAll(this.state, entityName);
   }
   /**
@@ -68,10 +65,10 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static getAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static getAll<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     entityName: EN
-  ): ResponseEntity<M, EN>[] {
+  ): M[EN][] {
     const pool = state.pool[entityName];
 
     if (pool == null) {
@@ -84,10 +81,10 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static find<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static find<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     query: WhereQuery<EN>
-  ): ResponseEntity<M, EN>[] {
+  ): M[EN][] {
     const { entityName, where, sort, skip, limit } = query;
     let filtered = retrieve(this.getAll(state, entityName), where);
 
@@ -103,20 +100,20 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static findOne<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static findOne<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     query: WhereQuery<EN>
-  ): ResponseEntity<M, EN> | null {
+  ): M[EN] | null {
     return this.find(state, query)[0];
   }
   /**
    *
    */
 
-  static get<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static get<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     query: IdQuery<EN>
-  ): ResponseEntity<M, EN> {
+  ): M[EN] {
     const entitiesById = state.pool[query.entityName];
     if (entitiesById == null) throw new Error("NoEntityRegistered");
     const entity = entitiesById[query.id];
@@ -127,10 +124,10 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  static getByIds<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static getByIds<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     query: IdsQuery<EN>
-  ): ResponseEntity<M, EN>[] {
+  ): M[EN][] {
     const { ids, entityName } = query; // TODO: handle error
 
     return ids.map(id =>
@@ -144,7 +141,7 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static has<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static has<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     query: IdQuery<EN>
   ): boolean {

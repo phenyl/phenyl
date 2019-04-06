@@ -2,13 +2,12 @@ import {
   DeleteCommand,
   EntityState,
   EntityStateUpdater,
-  GeneralReqResEntityMap,
+  GeneralEntityMap,
   IdDeleteCommand,
   IdUpdateCommand,
   Key,
   MultiDeleteCommand,
-  MultiUpdateCommand,
-  ResponseEntity
+  MultiUpdateCommand
 } from "@phenyl/interfaces";
 import {
   GeneralUpdateOperation,
@@ -23,7 +22,7 @@ import PhenylStateFinder from "./phenyl-state-finder";
  *
  */
 
-export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
+export default class PhenylStateUpdater<M extends GeneralEntityMap>
   implements EntityStateUpdater<M> {
   state: EntityState<M>;
 
@@ -57,7 +56,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    */
   register<EN extends Key<M>>(
     entityName: EN,
-    ...entities: ResponseEntity<M, EN>[]
+    ...entities: M[EN][]
   ): GeneralUpdateOperation {
     return PhenylStateUpdater.register(this.state, entityName, ...entities);
   }
@@ -92,7 +91,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  static updateById<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static updateById<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     command: IdUpdateCommand<EN>
   ): GeneralUpdateOperation {
@@ -114,7 +113,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  static updateMulti<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static updateMulti<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     command: MultiUpdateCommand<EN>
   ): GeneralUpdateOperation {
@@ -136,10 +135,10 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static register<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static register<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     entityName: EN,
-    ...entities: ResponseEntity<M, EN>[]
+    ...entities: M[EN][]
   ): GeneralUpdateOperation {
     const operationList = entities.map(entity => {
       const docPath = ["pool", entityName, entity.id].join(".");
@@ -155,7 +154,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    *
    */
 
-  static delete<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static delete<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     command: DeleteCommand<EN>
   ): GeneralUpdateOperation {
@@ -171,7 +170,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    *
    */
 
-  static deleteById<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static deleteById<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     command: IdDeleteCommand<EN>
   ): GeneralUpdateOperation {
@@ -187,10 +186,7 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    *
    */
 
-  static deleteByFindOperation<
-    M extends GeneralReqResEntityMap,
-    EN extends Key<M>
-  >(
+  static deleteByFindOperation<M extends GeneralEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
     command: MultiDeleteCommand<EN>
   ): GeneralUpdateOperation {

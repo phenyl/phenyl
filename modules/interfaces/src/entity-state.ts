@@ -1,38 +1,36 @@
 import { DeleteCommand, IdUpdateCommand, MultiUpdateCommand } from "./command";
-import { GeneralReqResEntityMap, ResponseEntity } from "./type-map";
 import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
 import { Entity } from "./entity";
+import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 
-export type EntityPool<M extends GeneralReqResEntityMap> = {
-  [EN in Key<M>]: EntitiesById<ResponseEntity<M, EN>>
+export type EntityPool<M extends GeneralEntityMap> = {
+  [EN in Key<M>]: EntitiesById<M[EN]>
 };
 export type EntitiesById<T extends Entity> = { [id: string]: T };
 
-export interface EntityState<M extends GeneralReqResEntityMap> {
+export interface EntityState<M extends GeneralEntityMap> {
   pool: EntityPool<M>;
 }
 
-export interface EntityStateFinder<M extends GeneralReqResEntityMap> {
-  find<EN extends Key<M>>(query: WhereQuery<EN>): ResponseEntity<M, EN>[];
+export interface EntityStateFinder<M extends GeneralEntityMap> {
+  find<EN extends Key<M>>(query: WhereQuery<EN>): M[EN][];
 
-  findOne<EN extends Key<M>>(
-    query: WhereQuery<EN>
-  ): ResponseEntity<M, EN> | null;
+  findOne<EN extends Key<M>>(query: WhereQuery<EN>): M[EN] | null;
 
-  get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN> | null;
+  get<EN extends Key<M>>(query: IdQuery<EN>): M[EN] | null;
 
-  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): ResponseEntity<M, EN>[];
+  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): M[EN][];
 
   has<EN extends Key<M>>(query: IdQuery<EN>): boolean;
 }
 
-export interface EntityStateUpdater<M extends GeneralReqResEntityMap> {
+export interface EntityStateUpdater<M extends GeneralEntityMap> {
   register<EN extends Key<M>>(
     entityName: EN,
-    ...entities: ResponseEntity<M, EN>[]
+    ...entities: M[EN][]
   ): GeneralUpdateOperation;
 
   updateById<EN extends Key<M>>(
