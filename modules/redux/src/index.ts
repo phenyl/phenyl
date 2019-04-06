@@ -1,7 +1,14 @@
-import { PhenylRedux } from './phenyl-redux.js'
-import phenylReducer, { actions } from './phenyl-redux-module.js'
-import { MiddlewareCreator, createMiddleware } from './middleware.js'
-import { LocalStateFinder } from './local-state-finder.js'
-import { LocalStateUpdater } from './local-state-updater.js'
-export { PhenylRedux, actions, createMiddleware, MiddlewareCreator, LocalStateFinder, LocalStateUpdater }
-export default phenylReducer
+import { PhenylRedux } from './phenyl-redux';
+import phenylReducer, { actions } from './phenyl-redux-module';
+import { MiddlewareCreator, createMiddleware } from './middleware';
+import { LocalStateFinder } from './local-state-finder';
+import { LocalStateUpdater } from './local-state-updater';
+export {
+  PhenylRedux,
+  actions,
+  createMiddleware,
+  MiddlewareCreator,
+  LocalStateFinder,
+  LocalStateUpdater,
+};
+export default phenylReducer;
