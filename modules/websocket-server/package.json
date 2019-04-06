@@ -2,17 +2,14 @@
   "name": "@phenyl/websocket-server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "type-check": "upbin tsc --noEmit",
     "build": "upbin tsc --declaration"
   },
   "files": [
-    "src",
-    "dist",
-    "package.json",
-    "jsnext.js",
+    "lib",
     "LICENSE",
     "README.md"
   ],
@@ -21,12 +18,17 @@
     "@types/ws": "^6.0.1",
     "babel-register": "^6.24.1",
     "mocha": "^5.0.5",
-    "@phenyl/interfaces": "~1.0.0"
+    "@phenyl/interfaces": "~1.0.0",
+    "upbin": "^0.9.0"
   },
   "dependencies": {
     "@phenyl/utils": "~1.0.0",
     "ws": "^3.3.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
+  "collaborators": [
+    "imoans <naomins0101@gmail.com>",
+    "Jesse Katsumata <jesse.katsumata@gmail.com>"
+  ],
   "license": "Apache-2.0"
 }
