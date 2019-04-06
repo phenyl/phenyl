@@ -1,5 +1,5 @@
 // @ts-ignore remove this comment after phenyl/http-client release
-import PhenylHttpClient from "phenyl-http-client";
+import PhenylHttpClient from "@phenyl/http-client";
 import { PhenylError } from "@phenyl/interfaces";
 import { ThunkDispatch } from "redux-thunk";
 

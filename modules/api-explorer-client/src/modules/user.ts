@@ -1,6 +1,5 @@
 /* global PhenylFunctionalGroupSkeleton */
-// @ts-ignore
-import PhenylHttpClient from "phenyl-http-client";
+import PhenylHttpClient from "@phenyl/http-client";
 import { ThunkDispatch } from "redux-thunk";
 const LOGIN = "user/LOGIN";
 const LOGIN_AS_ANONYMOUS = "user/LOGIN_AS_ANONYMOUS";
