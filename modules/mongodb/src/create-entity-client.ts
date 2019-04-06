@@ -1,18 +1,31 @@
-import { GeneralReqResEntityMap } from '@phenyl/interfaces'
-import { PhenylEntityClient, PhenylEntityClientOptions } from '@phenyl/central-state'
-import { PhenylMongoDbClient } from './mongodb-client'
-import { MongoDbConnection } from './connection'
+import {
+  PhenylEntityClient,
+  PhenylEntityClientOptions
+} from "@phenyl/central-state";
 
-export function createEntityClient<M extends GeneralReqResEntityMap>(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}): PhenylMongoDbEntityClient<M> {
-  return new PhenylMongoDbEntityClient(conn, options)
+import { GeneralEntityMap } from "@phenyl/interfaces";
+import { MongoDbConnection } from "./connection";
+import { PhenylMongoDbClient } from "./mongodb-client";
+
+export function createEntityClient<M extends GeneralEntityMap>(
+  conn: MongoDbConnection,
+  options: PhenylEntityClientOptions<M> = {}
+): PhenylMongoDbEntityClient<M> {
+  return new PhenylMongoDbEntityClient(conn, options);
 }
 
-export class PhenylMongoDbEntityClient<M extends GeneralReqResEntityMap> extends PhenylEntityClient<M> {
+export class PhenylMongoDbEntityClient<
+  M extends GeneralEntityMap
+> extends PhenylEntityClient<M> {
   // @ts-ignore is this dbClient necessary?
-  dbClient: PhenylMongoDbClient<M>
+  dbClient: PhenylMongoDbClient<M>;
 
-  constructor(conn: MongoDbConnection, options: PhenylEntityClientOptions<M> = {}) {
-    const dbClient = new PhenylMongoDbClient(conn)
-    super(dbClient, options)
+  constructor(
+    conn: MongoDbConnection,
+    options: PhenylEntityClientOptions<M> = {}
+  ) {
+    const dbClient = new PhenylMongoDbClient(conn);
+    // @ts-ignore is this dbClient necessary?
+    super(dbClient, options);
   }
 }
