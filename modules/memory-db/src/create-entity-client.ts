@@ -19,16 +19,21 @@ export function createEntityClient<M extends GeneralEntityMap>(
 export class PhenylMemoryDbEntityClient<
   M extends GeneralEntityMap
 > extends PhenylEntityClient<M> {
+  // @ts-ignore TODO WithMetaInfo
+  dbClient: PhenylMemoryDbClient<M>;
+
   get entityState(): EntityState<M> {
-    // $FlowIssue(dbClient-is-instanceof-PhenylMemoryDbClient)
     return this.dbClient.entityState;
   }
 
   constructor(options: MemoryClientOptions<M> = {}) {
-    const entityState = options.entityState || {
-      pool: {}
-    };
-    const dbClient = new PhenylMemoryDbClient(entityState);
+    const entityState =
+      options.entityState ||
+      ({
+        pool: {}
+      } as EntityState<M>);
+    const dbClient = new PhenylMemoryDbClient({ entityState });
+    // @ts-ignore TODO WithMetaInfo
     super(dbClient, options);
   }
 

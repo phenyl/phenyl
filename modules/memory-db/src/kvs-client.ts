@@ -1,58 +1,57 @@
-// @flow
-import { assignWithRestoration } from 'power-assign/jsnext'
-import type {
-  Entity,
-  PreEntity,
-  KvsClient,
-  Id,
-} from 'phenyl-interfaces'
-import { randomString } from 'phenyl-utils/jsnext'
+import { Entity, KvsClient, PreEntity } from "@phenyl/interfaces";
+
+import { randomString } from "@phenyl/utils";
+import { updateAndRestore } from "sp2";
 
 interface KeyValuePool<T> {
-  [id: Id]: T
+  [id: string]: T;
 }
 
 type MemoryKvsClientParams<T> = {
-  pool?: KeyValuePool<T>
-}
+  pool?: KeyValuePool<T>;
+};
 
-export default class MemoryKvsClient<T: Entity> implements KvsClient<T> {
-  pool: KeyValuePool<T>
+export default class MemoryKvsClient<T extends Entity> implements KvsClient<T> {
+  pool: KeyValuePool<T>;
 
   constructor(params: MemoryKvsClientParams<T> = {}) {
     // $FlowIssue(empty-object-is-object-as-a-map)
-    this.pool = params.pool || {}
+    this.pool = params.pool || {};
   }
 
-  async get(id: ?Id): Promise<?T> {
+  async get(id?: string | null): Promise<T | null> {
     if (id == null) {
-      return null
+      return null;
     }
-    return this.pool[id]
+    return this.pool[id];
   }
 
-  async create(value: T | PreEntity<T>): Promise<T> {
+  async create(value: PreEntity<T>): Promise<T> {
     if (value.id != null) {
       if (this.pool[value.id] != null) {
-        throw new Error(`The given id "${value.id}" already exists in memory pool.`)
+        throw new Error(
+          `The given id "${value.id}" already exists in memory pool.`
+        );
       }
-      return this.set(value)
+      // @ts-ignore value.id exists
+      return this.set(value);
     }
 
-    const newValue = assignWithRestoration(value, { id: randomString() })
-    return this.set(newValue)
+    const newValue = updateAndRestore(value, { id: randomString() });
+    // @ts-ignore value.id exists
+    return this.set(newValue);
   }
 
   async set(value: T): Promise<T> {
-    this.pool = assignWithRestoration(this.pool, { $set: { [value.id]: value } })
-    return value
+    this.pool = updateAndRestore(this.pool, { $set: { [value.id]: value } });
+    return value;
   }
 
-  async delete(id: ?Id): Promise<boolean> {
+  async delete(id?: string | null): Promise<boolean> {
     if (id == null || this.pool[id] == null) {
-      return false
+      return false;
     }
-    this.pool = assignWithRestoration(this.pool, { $unset: { [id]: '' } })
-    return true
+    this.pool = updateAndRestore(this.pool, { $unset: { [id]: "" } });
+    return true;
   }
 }

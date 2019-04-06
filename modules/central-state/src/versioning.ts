@@ -12,15 +12,11 @@ import {
 } from "@phenyl/interfaces";
 import {
   GeneralUpdateOperation,
-  UpdateOperation,
-  UpdateOperator,
   mergeUpdateOperations,
   normalizeUpdateOperation
 } from "sp2";
 
 import { timeStampWithRandomString } from "@phenyl/utils";
-
-type Id = string;
 
 /**
  * Utility classes containing static methods to attach versioning system to EntityClients.
@@ -55,7 +51,7 @@ export class Versioning {
    */
   public static createPullQueryResult<E extends Entity>(
     entity: EntityWithMetaInfo<E>,
-    versionId: Id | null | undefined
+    versionId: string | null
   ): PullQueryResult<E> {
     const operations = this.getOperationDiffsByVersion(entity, versionId);
     if (operations == null) {
@@ -110,7 +106,7 @@ export class Versioning {
   }: {
     entity: EntityWithMetaInfo<E>;
     updatedEntity: EntityWithMetaInfo<E>;
-    versionId: Id | null;
+    versionId: string | null;
     newOperation: GeneralUpdateOperation;
   }): PushCommandResult<E> {
     const localUncommittedOperations = this.getOperationDiffsByVersion(
@@ -192,8 +188,8 @@ export class Versioning {
    */
   public static getOperationDiffsByVersion<E extends Entity>(
     entity: EntityWithMetaInfo<E>,
-    versionId: Id | null | undefined
-  ): Array<UpdateOperation<UpdateOperator>> | null | undefined {
+    versionId: string | null
+  ): GeneralUpdateOperation[] | null {
     if (versionId == null) return null;
     if (!entity.hasOwnProperty("_PhenylMeta")) return null;
     try {
@@ -234,7 +230,7 @@ export class Versioning {
    */
   private static getVersionId<E extends Entity>(
     entity: EntityWithMetaInfo<E>
-  ): Id | null {
+  ): string | null {
     const metaInfo = entity._PhenylMeta;
     if (metaInfo == null) return null;
     if (metaInfo.versions == null) return null;
@@ -247,7 +243,7 @@ export class Versioning {
    */
   private static getPrevVersionId<E extends Entity>(
     entity: EntityWithMetaInfo<E>
-  ): Id | null {
+  ): string | null {
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta;
       return metaInfo.versions[metaInfo.versions.length - 2].id;
@@ -261,8 +257,8 @@ export class Versioning {
    */
   private static getVersionIds<E extends Entity>(
     entities: Array<EntityWithMetaInfo<E>>
-  ): { [entityId: string]: Id | null } {
-    const versionsById: { [entityId: string]: Id | null } = {};
+  ): { [entityId: string]: string | null } {
+    const versionsById: { [entityId: string]: string | null } = {};
     entities.forEach((entity: any) => {
       versionsById[entity.id] = this.getVersionId(entity);
     });
@@ -274,8 +270,8 @@ export class Versioning {
    */
   private static getPrevVersionIds<E extends Entity>(
     entities: Array<EntityWithMetaInfo<E>>
-  ): { [entityId: string]: Id | null } {
-    const versionsById: { [entityId: string]: Id | null } = {};
+  ): { [entityId: string]: string | null } {
+    const versionsById: { [entityId: string]: string | null } = {};
     entities.forEach(entity => {
       versionsById[entity.id] = this.getPrevVersionId(entity);
     });
