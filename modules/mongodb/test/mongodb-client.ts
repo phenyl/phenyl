@@ -1,7 +1,6 @@
 import { it, describe } from 'mocha'
 import bson from 'bson'
-// @ts-ignore
-import assert from 'power-assert'
+import assert from 'assert'
 import { Entity } from '@phenyl/interfaces'
 import { AndFindOperation, UpdateOperation } from '@sp2/format'
 import {

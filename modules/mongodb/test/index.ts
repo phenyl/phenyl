@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 import { after, before, describe, it } from 'mocha'
 import { createEntityClient } from '../src/create-entity-client'
-// @ts-ignore
-import assert from 'power-assert'
+import assert from 'assert'
 import bson from 'bson'
 // import { assertEntityClient } from '@phenyl/interfaces'
 import { MongoDbConnection, connect } from '../src/connection'

@@ -26,17 +26,9 @@
     "sp2": "~1.4.0",
     "bson": "^4.0.0",
     "es6-promisify": "^5.0.0",
-    "mongodb": "^3.0.5",
-    "oad-utils": "~0.3.0",
-    "phenyl-central-state": "~0.3.2",
-    "power-assign": "~0.2.10"
+    "mongodb": "^3.0.5"
   },
   "devDependencies": {
-    "@types/bson": "^4.0.0",
-    "@types/mongodb": "^3.1.20",
-    "babel-register": "^6.24.1",
-    "nyc": "^11.6.0",
-    "power-assert": "^1.4.4",
     "upbin": "^0.8.1"
   },
   "collaborators": "Nicholas Lee <nicholaslee119@gmail.com>"
