@@ -1,7 +1,7 @@
-import { Entity } from "./entity";
-import { GeneralReqResEntityMap } from "./type-map";
+import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "@sp2/format";
 import { Key } from "./utils";
+import { ProEntity } from "./entity";
 import { PushCommand } from "./command";
 
 export type EntityVersion = {
@@ -13,7 +13,7 @@ export type EntityMetaInfo = {
   versions: Array<EntityVersion>;
 };
 
-export type EntityWithMetaInfo<T extends Entity> = T & {
+export type EntityWithMetaInfo<T extends ProEntity> = T & {
   _PhenylMeta: EntityMetaInfo;
 };
 
@@ -60,10 +60,8 @@ export interface VersionDiffPublisher {
 /**
  * Validate PushCommand in PhenylEntityClient.
  */
-export type PushValidation<EM extends GeneralReqResEntityMap> = <
-  EN extends Key<EM>
->(
+export type PushValidation<EM extends GeneralEntityMap> = <EN extends Key<EM>>(
   command: PushCommand<EN>,
   entity: EM[EN],
-  masterOperations?: GeneralUpdateOperation[]
+  masterOperations?: GeneralUpdateOperation[] | null
 ) => void;

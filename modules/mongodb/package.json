@@ -1,0 +1,37 @@
+{
+  "name": "@phenyl/mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache License 2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Nicholas Lee <nicholaslee119@gmail.com>"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "pretest": "test/scripts/init-mongodb.sh",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always || (npm run posttest && exit 1)",
+    "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "dependencies": {
+    "@phenyl/central-state": "~1.0.0",
+    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/utils": "~1.0.0",
+    "bson": "^4.0.0",
+    "es6-promisify": "^5.0.0",
+    "mongodb": "^3.0.5",
+    "sp2": "~1.4.0"
+  },
+  "devDependencies": {
+    "upbin": "^0.8.1"
+  }
+}

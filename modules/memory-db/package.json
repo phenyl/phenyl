@@ -1,0 +1,30 @@
+{
+  "name": "@phenyl/memory-db",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "test": "upbin nyc upbin mocha test/*.ts --color always",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "dependencies": {
+    "@phenyl/central-state": "~1.0.0",
+    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/state": "~1.0.0",
+    "@phenyl/utils": "~1.0.0",
+    "sp2": "^1.4.1"
+  },
+  "devDependencies": {
+    "upbin": "^0.9.0"
+  }
+}

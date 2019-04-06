@@ -1,0 +1,27 @@
+{
+  "name": "@phenyl/state",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "type-check": "upbin tsc --noEmit",
+    "test": "upbin nyc upbin mocha test/*.ts --color always"
+  },
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "dependencies": {
+    "@phenyl/interfaces": "~1.0.0",
+    "sp2": "^1.4.1"
+  },
+  "devDependencies": {
+    "upbin": "^0.9.0"
+  },
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "license": "Apache-2.0"
+}

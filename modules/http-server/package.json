@@ -1,0 +1,33 @@
+{
+  "name": "@phenyl/http-server",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache-2.0",
+  "author": [
+    "Leko <leko.noor@gmail.com>",
+    "Shin Suzuki <shinout310@gmail.com>",
+    "imoans <naomins0101@gmail.com>"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "lint": "upbin eslint 'src/**/*.ts' --fix",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "dependencies": {
+    "@phenyl/http-rules": "~1.0.0",
+    "@phenyl/interfaces": "~1.0.0"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.4.0",
+    "mocha": "^5.0.5",
+    "upbin": "^0.9.0"
+  }
+}
