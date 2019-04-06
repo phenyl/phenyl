@@ -15,7 +15,7 @@ export type SingleInsertCommandResult = {
 
 export type MultiInsertCommandResult = {
   n: number;
-  versionsById: { [entityId: string]: string };
+  versionsById: IdMap;
 };
 
 export type IdUpdateCommandResult = {
