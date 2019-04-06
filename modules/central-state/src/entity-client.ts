@@ -51,7 +51,7 @@ export type PhenylEntityClientOptions<M extends GeneralReqResEntityMap> = {
  * Validate PushCommand only when masterOperations are found.
  * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
  */
-// @TODO: any
+// @TODO: define any
 function validWhenDiffsFound(command: PushCommand<any>, entity: Entity, masterOperations: Array<GeneralUpdateOperation> | null | undefined) {
   if (masterOperations == null) {
     throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
