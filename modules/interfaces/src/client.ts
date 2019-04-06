@@ -49,6 +49,7 @@ import {
   QueryResult,
   SingleQueryResult
 } from "./query-result";
+
 import { Key } from "./utils";
 import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";

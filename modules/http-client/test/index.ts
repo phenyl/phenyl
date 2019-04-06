@@ -9,9 +9,13 @@ import { createEntityClient } from "@phenyl/memory-db";
 import { createServer } from "http";
 
 const entityClient = createEntityClient();
-const restApiHandler = new PhenylRestApi({
-  client: entityClient
-});
+const restApiHandler = new PhenylRestApi(
+  {},
+  {
+    client: entityClient,
+    sessionClient: entityClient.createSessionClient()
+  }
+);
 const server = new PhenylHttpServer(createServer(), {
   restApiHandler
 });
