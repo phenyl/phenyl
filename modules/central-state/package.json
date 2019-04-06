@@ -1,0 +1,27 @@
+{
+  "name": "@phenyl/central-state",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache License 2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>, Nicholas Lee <nicholaslee119@gmail.com>",
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "devDependencies": {
+    "upbin": "^0.9.0"
+  },
+  "dependencies": {
+    "@phenyl/interfaces": "^1.0.0",
+    "@phenyl/utils": "^1.0.0",
+    "sp2": "^1.2.0"
+  }
+}
