@@ -1,50 +1,50 @@
 import {
-  timeStampWithRandomString
-} from '@phenyl/utils'
-
-import {
   DbClient,
+  PreEntity,
   PreSession,
   Session,
-  SessionClient,
-  PreEntity,
-} from '@phenyl/interfaces'
+  SessionClient
+} from "@phenyl/interfaces";
 
-type Id = string
+import { timeStampWithRandomString } from "@phenyl/utils";
+
+type Id = string;
 
 // @TODO: make this type better
 type PhenylSessionEntityMap = {
-  _PhenylSession: Session
-}
+  _PhenylSession: Session;
+};
 
 /**
  *
  */
 export class PhenylSessionClient implements SessionClient {
-  dbClient: DbClient<PhenylSessionEntityMap>
+  dbClient: DbClient<PhenylSessionEntityMap>;
 
   constructor(dbClient: DbClient<PhenylSessionEntityMap>) {
-    this.dbClient = dbClient
+    this.dbClient = dbClient;
   }
 
   /**
    *
    */
-  async get(id: Id | null | undefined): Promise<Session | null | undefined> {
+  async get(id: Id | null): Promise<Session | null> {
     if (id == null) {
-      return null
+      return null;
     }
     try {
-      const session = await this.dbClient.get({ entityName: '_PhenylSession', id })
+      const session = await this.dbClient.get({
+        entityName: "_PhenylSession",
+        id
+      });
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
-        this.delete(id) // Run asynchronously
-        return null
+        this.delete(id); // Run asynchronously
+        return null;
       }
-      return session
-    }
-    catch (e) {
+      return session;
+    } catch (e) {
       // TODO: Check error message.
-      return null
+      return null;
     }
   }
 
@@ -52,18 +52,18 @@ export class PhenylSessionClient implements SessionClient {
    *
    */
   async create(preSession: PreSession): Promise<Session> {
-    let value = preSession
+    let value = preSession;
     if (value.id == null) {
-      value = Object.assign({}, value, { id: timeStampWithRandomString() })
+      value = Object.assign({}, value, { id: timeStampWithRandomString() });
     }
-    return this.set(value)
+    return this.set(value);
   }
 
   /**
    *
    */
   async set(value: PreEntity<Session>): Promise<Session> {
-    return this.dbClient.insertAndGet({ entityName: '_PhenylSession', value })
+    return this.dbClient.insertAndGet({ entityName: "_PhenylSession", value });
   }
 
   /**
@@ -71,9 +71,9 @@ export class PhenylSessionClient implements SessionClient {
    */
   async delete(id: Id | null | undefined): Promise<boolean> {
     if (id == null) {
-      return false
+      return false;
     }
-    await this.dbClient.delete({ entityName: '_PhenylSession', id })
-    return true
+    await this.dbClient.delete({ entityName: "_PhenylSession", id });
+    return true;
   }
 }

@@ -1,4 +1,4 @@
-import { $bind, update } from "@sp2/updater";
+import { $bind, update } from "sp2";
 import { Entity, GeneralResponseData } from "@phenyl/interfaces";
 
 export type EntityVisitor = (entity: Entity) => Entity;

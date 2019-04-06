@@ -9,7 +9,7 @@ import {
   RestApiHandler
 } from "@phenyl/interfaces";
 
-import { PhenylRestApiClient } from "./phenyl-rest-api-client.js";
+import { PhenylRestApiClient } from "./phenyl-rest-api-client";
 
 /**
  * Client to access to the given RestApiHandler directly.
