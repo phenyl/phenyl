@@ -57,7 +57,7 @@ export default class PhenylHttpServer<TM extends GeneralTypeMap> {
    * Concatenate request body from chunks.
    */
 
-  getRequestBody(request: IncomingMessage): Promise<string> {
+  private getRequestBody(request: IncomingMessage): Promise<string> {
     return new Promise((resolve, reject) => {
       const read = () => {
         try {
