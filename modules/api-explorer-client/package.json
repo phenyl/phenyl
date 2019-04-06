@@ -7,29 +7,28 @@
   "author": "Leko <leko.noor@gmail.com>, Nicholas Lee <nicholaslee119@gmail.com>",
   "files": [
     "lib",
-    "src",
-    "build",
     "config",
-    "public",
-    "scripts",
-    "package.json"
+    "public"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.js",
+  "main": "lib/index.ts",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "node scripts/build.js && node scripts/prepare-assets.js",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
-  "dependencies": {
-    "@phenyl/interfaces": "~1.0.0"
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   },
   "devDependencies": {
+    "@phenyl/interfaces": "~1.0.0",
     "@types/react": "^16.8.6",
     "@types/react-dom": "^16.8.2",
+    "@types/react-json-tree": "^0.6.11",
     "@types/react-redux": "^7.0.1",
     "@types/react-router-dom": "^4.3.1",
-    "@types/react-json-tree": "^0.6.11",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
@@ -67,13 +66,8 @@
     "style-loader": "0.19.0",
     "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
     "uglifyjs-webpack-plugin": "^1.1.1",
-    "url-loader": "0.6.2",
     "upbin": "^0.8.1",
+    "url-loader": "0.6.2",
     "webpack": "3.8.1"
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
   }
 }
