@@ -13,7 +13,7 @@ import pkg from "../../package.json";
 
 type Props = {
   version: string;
-  userName: string | null | undefined;
+  userName?: string;
   logout: () => void;
 };
 
