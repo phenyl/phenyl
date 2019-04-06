@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "lib/index.js",
-  "types": "lib/index.d.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "type-check": "upbin tsc --noEmit",
     "build": "upbin tsc --declaration"
@@ -26,5 +26,9 @@
     "ws": "^3.3.1"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
+  "collaborators": [
+    "imoans <naomins0101@gmail.com>",
+    "Jesse Katsumata <jesse.katsumata@gmail.com>"
+  ],
   "license": "Apache-2.0"
 }
