@@ -22,7 +22,7 @@ import {
 
 import {
   RestApiExecution,
-} from '../decls/index'
+} from './decls'
 
 /**
  * Instance containing ExecutionWrapper and ValidationHandler to attach foreign Entity by foreign key.

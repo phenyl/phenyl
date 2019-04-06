@@ -1,8 +1,7 @@
 import { it, describe } from 'mocha'
 // @ts-ignore
 import powerCrypt from 'power-crypt'
-// @ts-ignore
-import assert from 'power-assert'
+import assert from 'assert'
 import { GeneralRequestData } from '@phenyl/interfaces'
 import { encryptPasswordInRequestData } from '../src/encrypt-password-in-request-data'
 

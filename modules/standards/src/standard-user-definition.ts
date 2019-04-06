@@ -24,7 +24,7 @@ import {
   RestApiExecution,
   AuthSetting,
   LoginCommandOf
-} from '../decls/index'
+} from './decls'
 
 export type StandardUserDefinitionParams<M extends GeneralReqResEntityMap, A extends AuthSetting> = {
   entityClient: EntityClient<M>,

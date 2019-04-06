@@ -1,6 +1,5 @@
 import { it, describe } from 'mocha'
-// @ts-ignore
-import assert from 'power-assert'
+import assert from 'assert'
 import { EntityResponseData } from '@phenyl/interfaces'
 import { removePasswordFromResponseData } from '../src/remove-password-from-response-data'
 
