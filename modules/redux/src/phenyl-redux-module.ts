@@ -1,13 +1,6 @@
-// @flow
+import { assign } from 'power-assign/jsnext'
+import { randomStringWithTimeStamp } from 'phenyl-utils/jsnext'
 import {
-  assign,
-} from 'power-assign/jsnext'
-
-import {
-  randomStringWithTimeStamp,
-} from 'phenyl-utils/jsnext'
-
-import type {
   AssignAction,
   AuthCommandMapOf,
   CommitAction,
@@ -51,9 +44,7 @@ import type {
   UseEntitiesAction,
   UserEntityNameOf,
 } from 'phenyl-interfaces'
-
-export class PhenylReduxModule<TM: TypeMap> {
-
+export class PhenylReduxModule<TM extends TypeMap> {
   static createInitialState(): LocalState<EntityMapOf<TM>> {
     return {
       entities: {},
@@ -64,11 +55,14 @@ export class PhenylReduxModule<TM: TypeMap> {
       },
     }
   }
-
   /**
    * Reducer.
    */
-  static phenylReducer(state: ?LocalState<EntityMapOf<TM>>, action: PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>): LocalState<EntityMapOf<TM>> {
+
+  static phenylReducer(
+    state: LocalState<EntityMapOf<TM>> | undefined | null,
+    action: PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>,
+  ): LocalState<EntityMapOf<TM>> {
     if (state == null) {
       return this.createInitialState()
     }
@@ -119,10 +113,13 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static setSession(session: Session, user?: ?Entity): SetSessionAction {
+  static setSession(session: Session, user?: Entity | undefined | null): SetSessionAction {
     return {
       type: 'phenyl/setSession',
-      payload: { session, user },
+      payload: {
+        session,
+        user,
+      },
       tag: randomStringWithTimeStamp(),
     }
   }
@@ -134,19 +131,29 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static follow<N: EntityNameOf<TM>>(entityName: N, entity: EntityOf<TM, N>, versionId: Id): FollowAction<N, EntityMapOf<TM>> {
+  static follow<N extends EntityNameOf<TM>>(
+    entityName: N,
+    entity: EntityOf<TM, N>,
+    versionId: Id,
+  ): FollowAction<N, EntityMapOf<TM>> {
     return {
       type: 'phenyl/follow',
       payload: {
         entityName,
         entity,
-        versionId
+        versionId,
       },
       tag: randomStringWithTimeStamp(),
     }
   }
 
-  static followAll<N: EntityNameOf<TM>>(entityName: N, entities: Array<EntityOf<TM, N>>, versionsById: { [entityId: Id]: Id }): FollowAllAction<N, EntityMapOf<TM>> {
+  static followAll<N extends EntityNameOf<TM>>(
+    entityName: N,
+    entities: Array<EntityOf<TM, N>>,
+    versionsById: {
+      [entityId: Id]: Id
+    },
+  ): FollowAllAction<N, EntityMapOf<TM>> {
     return {
       type: 'phenyl/followAll',
       payload: {
@@ -158,7 +165,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static unfollow<N: EntityNameOf<TM>>(entityName: N, id: Id): UnfollowAction<N> {
+  static unfollow<N extends EntityNameOf<TM>>(entityName: N, id: Id): UnfollowAction<N> {
     return {
       type: 'phenyl/unfollow',
       payload: {
@@ -169,7 +176,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static delete<N: EntityNameOf<TM>>(command: IdDeleteCommand<N>): DeleteAction<N> {
+  static delete<N extends EntityNameOf<TM>>(command: IdDeleteCommand<N>): DeleteAction<N> {
     return {
       type: 'phenyl/delete',
       payload: command,
@@ -177,7 +184,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static pushAndCommit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): PushAndCommitAction<N> {
+  static pushAndCommit<N extends EntityNameOf<TM>>(command: IdUpdateCommand<N>): PushAndCommitAction<N> {
     return {
       type: 'phenyl/pushAndCommit',
       payload: command,
@@ -185,7 +192,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static commit<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAction<N> {
+  static commit<N extends EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAction<N> {
     return {
       type: 'phenyl/commit',
       payload: command,
@@ -193,10 +200,15 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static push<N: EntityNameOf<TM>>(payload: PushActionPayload<N>): PushAction<N> {
+  static push<N extends EntityNameOf<TM>>(payload: PushActionPayload<N>): PushAction<N> {
     return {
       type: 'phenyl/push',
-      payload: assign({ until: -1 }, payload),
+      payload: assign(
+        {
+          until: -1,
+        },
+        payload,
+      ),
       tag: randomStringWithTimeStamp(),
     }
   }
@@ -208,7 +220,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static commitAndPush<N: EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAndPushAction<N> {
+  static commitAndPush<N extends EntityNameOf<TM>>(command: IdUpdateCommand<N>): CommitAndPushAction<N> {
     return {
       type: 'phenyl/commitAndPush',
       payload: command,
@@ -216,7 +228,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static pull<N: EntityNameOf<TM>>(query: IdQuery<N>): PullAction<N> {
+  static pull<N extends EntityNameOf<TM>>(query: IdQuery<N>): PullAction<N> {
     return {
       type: 'phenyl/pull',
       payload: query,
@@ -224,7 +236,9 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static login<N: UserEntityNameOf<TM>, C: CredentialsOf<TM, N>, O: OptionsOf<TM, N>>(command: LoginCommand<N, C, O>): LoginAction<N, AuthCommandMapOf<TM>> {
+  static login<N extends UserEntityNameOf<TM>, C extends CredentialsOf<TM, N>, O extends OptionsOf<TM, N>>(
+    command: LoginCommand<N, C, O>,
+  ): LoginAction<N, AuthCommandMapOf<TM>> {
     return {
       type: 'phenyl/login',
       payload: command,
@@ -232,7 +246,7 @@ export class PhenylReduxModule<TM: TypeMap> {
     }
   }
 
-  static logout<N: UserEntityNameOf<TM>>(command: LogoutCommand<N>): LogoutAction<N> {
+  static logout<N extends UserEntityNameOf<TM>>(command: LogoutCommand<N>): LogoutAction<N> {
     return {
       type: 'phenyl/logout',
       payload: command,
@@ -260,8 +274,7 @@ export class PhenylReduxModule<TM: TypeMap> {
       tag: randomStringWithTimeStamp(),
     }
   }
-}
+} // For backward compatibility
+// export const actions: Class<PhenylReduxModule<*>> = PhenylReduxModule
 
-// For backward compatibility
-export const actions: Class<PhenylReduxModule<*>> = PhenylReduxModule
 export default actions.phenylReducer.bind(actions)
