@@ -45,6 +45,7 @@ jobs:
           key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
       - run: yarn bootstrap
       - run: yarn build
+      - run: yarn type-check
       - run: yarn ci-test
   deploy:
     executor:
@@ -75,4 +76,4 @@ workflows:
           filters:
             branches:
               only:
-                - /^(release)\/.*/
+                - /^(master|release|typescript)\/.*/
