@@ -35,7 +35,7 @@ export class PhenylExpressMiddlewareCreator<TM extends GeneralTypeMap> {
       }
       const encodedHttpRequest: EncodedHttpRequest = {
         method,
-        headers,
+        headers: headers as EncodedHttpRequest["headers"],
         path,
         qsParams: query
       };
@@ -82,7 +82,7 @@ export class PhenylExpressMiddlewareCreator<TM extends GeneralTypeMap> {
       const serverLogic = new ServerLogic(serverParams);
       const encodedHttpRequest: EncodedHttpRequest = {
         method,
-        headers,
+        headers: headers as EncodedHttpRequest["headers"],
         path,
         qsParams: query
       };

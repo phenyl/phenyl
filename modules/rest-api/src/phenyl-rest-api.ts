@@ -1,6 +1,5 @@
 import {
   AuthCommandMapOf,
-  ReqResEntityMapOf,
   EntityClient,
   EveryNameOf,
   FunctionalGroup,
@@ -9,6 +8,7 @@ import {
   GeneralTypeMap,
   HandlerResult,
   Nullable,
+  ReqResEntityMapOf,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,

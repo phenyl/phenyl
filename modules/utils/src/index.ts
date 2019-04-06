@@ -1,17 +1,15 @@
-export * from "./request-assertion.js";
+export * from "./request-assertion";
 export {
   createError,
   createServerError,
   createLocalError
-} from "./create-error.js";
-export { PhenylRestApiClient } from "./phenyl-rest-api-client.js";
-export { PhenylRestApiDirectClient } from "./direct-client.js";
-export { switchByRequestMethod } from "./switch-by-request-method.js";
+} from "./create-error";
+export { PhenylRestApiClient } from "./phenyl-rest-api-client";
+export { PhenylRestApiDirectClient } from "./direct-client";
+export { switchByRequestMethod } from "./switch-by-request-method";
 export {
   randomString,
   randomStringWithTimeStamp,
   timeStampWithRandomString
-} from "./random-string.js";
-export {
-  visitEntitiesInResponseData
-} from "./visit-entities-in-response-data.js";
+} from "./random-string";
+export { visitEntitiesInResponseData } from "./visit-entities-in-response-data";
