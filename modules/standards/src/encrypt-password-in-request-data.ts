@@ -5,10 +5,7 @@ import {
 import { $bind, update } from "@sp2/updater"
 import { DocumentPath, getNestedValue } from '@sp2/format'
 
-import {
-  EncryptFunction,
-} from '../decls/index'
-
+type EncryptFunction = (str: string, options?: Object) => string
 
 export function encryptPasswordInRequestData(reqData: GeneralRequestData, passwordPropName: DocumentPath, encrypt: EncryptFunction): GeneralRequestData {
   switch (reqData.method) {
