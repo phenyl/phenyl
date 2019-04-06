@@ -1,7 +1,6 @@
-/*eslint-env node*/
 import url from "url";
 import { ServerLogic } from "@phenyl/http-rules";
-import { IncomingMessage, ServerResponse } from "http";
+import http, { IncomingMessage, ServerResponse } from "http";
 import {
   EncodedHttpResponse,
   HttpMethod,
@@ -9,7 +8,6 @@ import {
   GeneralTypeMap,
   QueryStringParams
 } from "@phenyl/interfaces";
-import http from "http";
 import https from "https";
 
 /**
