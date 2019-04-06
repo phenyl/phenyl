@@ -214,7 +214,7 @@ export interface AuthClient<
   ): Promise<LogoutCommandResult>;
   createSessionClient(): SessionClient<AM>;
 }
-export type RestApiClient<TM extends GeneralTypeMap> = EntityClient<
+export type RestApiClient<TM extends GeneralTypeMap> = NormalizedEntityClient<
   ReqResEntityMapOf<TM>
 > &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &

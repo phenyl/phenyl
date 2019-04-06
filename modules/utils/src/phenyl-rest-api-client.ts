@@ -53,7 +53,7 @@ import {
   WhereQuery
 } from "@phenyl/interfaces";
 
-import { createServerError } from "./create-error.js";
+import { createServerError } from "./create-error";
 
 /**
  * @abstract
