@@ -50,7 +50,7 @@ export class LocalStateFinder {
   static getHeadEntity<M extends GeneralTypeMap, EN extends Key<M>>(
     state: LocalStateOf,
     query: IdQuery<EN>,
-  ): ReqResEntityOf<M, EntityNameOf<M>> {
+  ): EntityNameOf<M> {
     const { entityName, id } = query
     if (state.entities[entityName] == null)
       throw new Error(

@@ -1,6 +1,6 @@
-import { update, createDocumentPath } from "sp2";
-import { createLocalError } from "@phenyl/utils";
-import { removeOne } from "./utils";
+import { update, createDocumentPath } from 'sp2'
+import { createLocalError } from '@phenyl/utils'
+import { removeOne } from './utils'
 import {
   ActionTag,
   Id,
@@ -21,17 +21,17 @@ import {
   GeneralReqResEntityMap,
   GeneralAuthCommandMap,
   Key,
-  GeneralTypeMap
-} from "@phenyl/interfaces";
-import { LocalStateFinder } from "./local-state-finder.js";
-type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
+  GeneralTypeMap,
+} from '@phenyl/interfaces'
+import { LocalStateFinder } from './local-state-finder.js'
+type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>
 
-type EntityName = string;
+type EntityName = string
 type RevertCommand<N extends EntityName> = {
-  entityName: N;
-  id: Id;
-  operations: Array<UpdateOperation>;
-};
+  entityName: N
+  id: Id
+  operations: Array<UpdateOperation>
+}
 /**
  *
  */
@@ -44,49 +44,49 @@ export class LocalStateUpdater {
    */
   static initialize<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
-    entityName: EN
+    entityName: EN,
   ): UpdateOperation {
     return {
       $set: {
-        [createDocumentPath("entities", entityName)]: {}
-      }
-    };
+        [createDocumentPath('entities', entityName)]: {},
+      },
+    }
   }
   /**
    * Commit the operation of entity to LocalState.
    * Error is thrown when no entity is registered.
    */
 
-  static commit<GM extends GeneralTypeMap, N extends EntityNameOf<GM>>(
+  static commit<GM extends GeneralTypeMap, EN extends Key<GM>>(
     state: LocalStateOf,
-    command: IdUpdateCommand<N>
+    command: IdUpdateCommand<EN>,
   ): UpdateOperation {
-    const { entityName, id, operation } = command;
+    const { entityName, id, operation } = command
 
     if (
       !LocalStateFinder.hasEntity(state, {
         entityName,
-        id
+        id,
       })
     ) {
       throw new Error(
-        `LocalStateUpdater.commit(). No entity found. entityName: "${entityName}", id: "${id}".`
-      );
+        `LocalStateUpdater.commit(). No entity found. entityName: "${entityName}", id: "${id}".`,
+      )
     }
 
     const entity = LocalStateFinder.getHeadEntity(state, {
       id,
-      entityName
-    });
-    const newEntity = update(entity, operation);
+      entityName,
+    })
+    const newEntity = update(entity, operation)
     return {
       $push: {
-        [createDocumentPath("entities", entityName, id, "commits")]: operation
+        [createDocumentPath('entities', entityName, id, 'commits')]: operation,
       },
       $set: {
-        [createDocumentPath("entities", entityName, id, "head")]: newEntity
-      }
-    };
+        [createDocumentPath('entities', entityName, id, 'head')]: newEntity,
+      },
+    }
   }
   /**
    * Revert the already applied commit.
@@ -95,36 +95,36 @@ export class LocalStateUpdater {
 
   static revert<GM extends GeneralTypeMap, N extends EntityNameOf<GM>>(
     state: LocalStateOf,
-    command: RevertCommand<N>
+    command: RevertCommand<N>,
   ): UpdateOperation {
-    const { entityName, id, operations } = command;
+    const { entityName, id, operations } = command
 
     if (
       !LocalStateFinder.hasEntity(state, {
         entityName,
-        id
+        id,
       })
     ) {
       throw new Error(
-        `LocalStateUpdater.revert(). No entity found. entityName: "${entityName}", id: "${id}".`
-      );
+        `LocalStateUpdater.revert(). No entity found. entityName: "${entityName}", id: "${id}".`,
+      )
     }
 
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
-    });
+      entityName,
+    })
     const commits = operations.reduce(
       (restCommits, op) => removeOne(restCommits, op),
-      entityInfo.commits
-    );
-    const restoredHead = update(entityInfo.origin, ...commits);
+      entityInfo.commits,
+    )
+    const restoredHead = update(entityInfo.origin, ...commits)
     return {
       $set: {
-        [createDocumentPath("entities", entityName, id, "commits")]: commits,
-        [createDocumentPath("entities", entityName, id, "head")]: restoredHead
-      }
-    };
+        [createDocumentPath('entities', entityName, id, 'commits')]: commits,
+        [createDocumentPath('entities', entityName, id, 'head')]: restoredHead,
+      },
+    }
   }
   /**
    * Register the entity info into LocalState.
@@ -135,18 +135,18 @@ export class LocalStateUpdater {
     state: LocalStateOf<TM>,
     entityName: N,
     entity: EntityOf<TM, N>,
-    versionId: Id | undefined | null
+    versionId: Id | undefined | null,
   ): UpdateOperation {
     return {
       $set: {
-        [createDocumentPath("entities", entityName, entity.id)]: {
+        [createDocumentPath('entities', entityName, entity.id)]: {
           origin: entity,
           versionId,
           commits: [],
-          head: null
-        }
-      }
-    };
+          head: null,
+        },
+      },
+    }
   }
   /**
    * Remove the entity info from LocalState.
@@ -155,13 +155,13 @@ export class LocalStateUpdater {
   static unfollow<N extends EntityNameOf<TM>>(
     state: LocalStateOf<TM>,
     entityName: N,
-    id: Id
+    id: Id,
   ): UpdateOperation {
     return {
       $unset: {
-        [createDocumentPath("entities", entityName, id)]: ""
-      }
-    };
+        [createDocumentPath('entities', entityName, id)]: '',
+      },
+    }
   }
   /**
    * Push network request promise.
@@ -169,26 +169,26 @@ export class LocalStateUpdater {
 
   static addUnreachedCommits<N extends EntityNameOf<TM>>(
     state: LocalStateOf<TM>,
-    commit: UnreachedCommit<N>
+    commit: UnreachedCommit<N>,
   ): UpdateOperation {
-    const { entityName, id, commitCount } = commit;
+    const { entityName, id, commitCount } = commit
     const enqueuedCount = state.unreachedCommits
       .filter(c => c.entityName === entityName && c.id === id)
-      .reduce((acc, c) => acc + c.commitCount, 0);
+      .reduce((acc, c) => acc + c.commitCount, 0)
 
     if (commitCount <= enqueuedCount) {
-      return {};
+      return {}
     }
 
     return {
       $push: {
-        [createDocumentPath("unreachedCommits")]: {
+        [createDocumentPath('unreachedCommits')]: {
           entityName,
           id,
-          commitCount: commitCount - enqueuedCount
-        }
-      }
-    };
+          commitCount: commitCount - enqueuedCount,
+        },
+      },
+    }
   }
   /**
    * Remove network request promise from the request queue.
@@ -196,15 +196,15 @@ export class LocalStateUpdater {
 
   static removeUnreachedCommits<N extends EntityNameOf<TM>>(
     state: LocalStateOf<TM>,
-    commit: UnreachedCommit<N>
+    commit: UnreachedCommit<N>,
   ): UpdateOperation {
     return {
       $pull: {
-        [createDocumentPath("unreachedCommits")]: {
-          $in: [commit]
-        }
-      }
-    };
+        [createDocumentPath('unreachedCommits')]: {
+          $in: [commit],
+        },
+      },
+    }
   }
   /**
    * Push network request promise.
@@ -212,13 +212,13 @@ export class LocalStateUpdater {
 
   static networkRequest(
     state: LocalStateOf<TM>,
-    tag: ActionTag
+    tag: ActionTag,
   ): UpdateOperation {
     return {
       $push: {
-        [createDocumentPath("network", "requests")]: tag
-      }
-    };
+        [createDocumentPath('network', 'requests')]: tag,
+      },
+    }
   }
   /**
    * Remove network request promise from the request queue.
@@ -226,16 +226,16 @@ export class LocalStateUpdater {
 
   static removeNetworkRequest(
     state: LocalStateOf<TM>,
-    tag: ActionTag
+    tag: ActionTag,
   ): UpdateOperation {
     return {
       $set: {
-        [createDocumentPath("network", "requests")]: removeOne(
+        [createDocumentPath('network', 'requests')]: removeOne(
           state.network.requests,
-          tag
-        )
-      }
-    };
+          tag,
+        ),
+      },
+    }
   }
   /**
    * Apply the given VersionDiff as a patch.
@@ -245,32 +245,32 @@ export class LocalStateUpdater {
 
   static patch(
     state: LocalStateOf<TM>,
-    versionDiff: VersionDiff
+    versionDiff: VersionDiff,
   ): UpdateOperation {
-    const { entityName, id, versionId, prevVersionId, operation } = versionDiff;
+    const { entityName, id, versionId, prevVersionId, operation } = versionDiff
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
-    }); // Not applicable diff.
+      entityName,
+    }) // Not applicable diff.
 
     if (entityInfo.versionId !== prevVersionId) {
-      return {};
+      return {}
     }
 
-    const newOrigin = update(entityInfo.origin, operation);
-    const newHead = update(newOrigin, ...entityInfo.commits);
+    const newOrigin = update(entityInfo.origin, operation)
+    const newHead = update(newOrigin, ...entityInfo.commits)
     return {
       $set: {
-        [createDocumentPath("entities", entityName, id, "origin")]: newOrigin,
+        [createDocumentPath('entities', entityName, id, 'origin')]: newOrigin,
         [createDocumentPath(
-          "entities",
+          'entities',
           entityName,
           id,
-          "versionId"
+          'versionId',
         )]: versionId,
-        [createDocumentPath("entities", entityName, id, "head")]: newHead
-      }
-    };
+        [createDocumentPath('entities', entityName, id, 'head')]: newHead,
+      },
+    }
   }
   /**
    * Apply the master commits.
@@ -279,30 +279,30 @@ export class LocalStateUpdater {
 
   static rebase<N extends EntityNameOf<TM>>(
     state: LocalStateOf<TM>,
-    pushCommand: PushCommand<N>
+    pushCommand: PushCommand<N>,
   ): UpdateOperation {
-    const { entityName, id, versionId, operations } = pushCommand;
+    const { entityName, id, versionId, operations } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
-    });
-    const newOrigin = update(entityInfo.origin, ...operations);
+      entityName,
+    })
+    const newOrigin = update(entityInfo.origin, ...operations)
     const newHead =
       entityInfo.commits.length > 0
         ? update(newOrigin, ...entityInfo.commits)
-        : null;
+        : null
     return {
       $set: {
-        [createDocumentPath("entities", entityName, id, "origin")]: newOrigin,
+        [createDocumentPath('entities', entityName, id, 'origin')]: newOrigin,
         [createDocumentPath(
-          "entities",
+          'entities',
           entityName,
           id,
-          "versionId"
+          'versionId',
         )]: versionId,
-        [createDocumentPath("entities", entityName, id, "head")]: newHead
-      }
-    };
+        [createDocumentPath('entities', entityName, id, 'head')]: newHead,
+      },
+    }
   }
   /**
    * Apply the master commits, then apply the given local commits.
@@ -311,28 +311,28 @@ export class LocalStateUpdater {
   static synchronize<N extends EntityNameOf<TM>>(
     state: LocalStateOf<TM>,
     pushCommand: PushCommand<N>,
-    localCommits: Array<UpdateOperation>
+    localCommits: Array<UpdateOperation>,
   ): UpdateOperation {
-    const { entityName, id, operations, versionId } = pushCommand;
+    const { entityName, id, operations, versionId } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
-    });
-    const newOrigin = update(entityInfo.origin, ...operations, ...localCommits); // assert(localCommits.length === 0 || entityInfo.commits[0] === localCommits[0])
+      entityName,
+    })
+    const newOrigin = update(entityInfo.origin, ...operations, ...localCommits) // assert(localCommits.length === 0 || entityInfo.commits[0] === localCommits[0])
 
-    const newCommits = entityInfo.commits.slice(localCommits.length);
+    const newCommits = entityInfo.commits.slice(localCommits.length)
     const newHead =
-      newCommits.length > 0 ? update(newOrigin, ...newCommits) : null;
+      newCommits.length > 0 ? update(newOrigin, ...newCommits) : null
     return {
       $set: {
-        [createDocumentPath("entities", entityName, id)]: {
+        [createDocumentPath('entities', entityName, id)]: {
           origin: newOrigin,
           versionId,
           commits: newCommits,
-          head: newHead
-        }
-      }
-    };
+          head: newHead,
+        },
+      },
+    }
   }
   /**
    * Register all the entities into LocalState.
@@ -344,20 +344,20 @@ export class LocalStateUpdater {
     entityName: N,
     entities: Array<EntityOf<TM, N>>,
     versionsById: {
-      [entityId: Id]: Id;
-    }
+      [entityId: Id]: Id
+    },
   ): UpdateOperation {
-    const $setOp = {};
+    const $setOp = {}
 
     for (const entity of entities) {
-      const versionId = versionsById[entity.id];
-      const operation = this.follow(state, entityName, entity, versionId);
-      Object.assign($setOp, operation.$set);
+      const versionId = versionsById[entity.id]
+      const operation = this.follow(state, entityName, entity, versionId)
+      Object.assign($setOp, operation.$set)
     }
 
     return {
-      $set: $setOp
-    };
+      $set: $setOp,
+    }
   }
   /**
    * Set session.
@@ -367,21 +367,21 @@ export class LocalStateUpdater {
     state: LocalStateOf<TM>,
     session: Session,
     user: EntityOf<TM, N> | undefined | null,
-    versionId?: Id | undefined | null
+    versionId?: Id | undefined | null,
   ): UpdateOperation {
-    const { entityName } = session;
+    const { entityName } = session
     const operation = {
       $set: {
-        session
-      }
-    };
-
-    if (user != null && versionId != null) {
-      const followOp = this.follow(state, entityName, user, versionId);
-      Object.assign(operation.$set, followOp.$set);
+        session,
+      },
     }
 
-    return operation;
+    if (user != null && versionId != null) {
+      const followOp = this.follow(state, entityName, user, versionId)
+      Object.assign(operation.$set, followOp.$set)
+    }
+
+    return operation
   }
   /**
    * Remove session.
@@ -390,16 +390,16 @@ export class LocalStateUpdater {
   static unsetSession(): UpdateOperation {
     return {
       $unset: {
-        session: ""
-      }
-    };
+        session: '',
+      },
+    }
   }
   /**
    * Set Error.
    */
 
   static error(e: Error | PhenylError, actionTag: ActionTag): UpdateOperation {
-    const err = e.type && e.at ? e : createLocalError(e);
+    const err = e.type && e.at ? e : createLocalError(e)
     return {
       $set: {
         error: {
@@ -408,10 +408,10 @@ export class LocalStateUpdater {
           // $FlowIssue(err.at-exists)
           at: err.at,
           message: err.message,
-          actionTag
-        }
-      }
-    };
+          actionTag,
+        },
+      },
+    }
   }
   /**
    * Set network state Online.
@@ -420,9 +420,9 @@ export class LocalStateUpdater {
   static online(): UpdateOperation {
     return {
       $set: {
-        [createDocumentPath("network", "isOnline")]: true
-      }
-    };
+        [createDocumentPath('network', 'isOnline')]: true,
+      },
+    }
   }
   /**
    * Set network state Offline.
@@ -431,9 +431,9 @@ export class LocalStateUpdater {
   static offline(): UpdateOperation {
     return {
       $set: {
-        [createDocumentPath("network", "isOnline")]: false
-      }
-    };
+        [createDocumentPath('network', 'isOnline')]: false,
+      },
+    }
   }
   /**
    * Unset error.
@@ -442,8 +442,8 @@ export class LocalStateUpdater {
   static resolveError(): UpdateOperation {
     return {
       $unset: {
-        [createDocumentPath("error")]: ""
-      }
-    };
+        [createDocumentPath('error')]: '',
+      },
+    }
   }
 }
