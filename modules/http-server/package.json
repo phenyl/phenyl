@@ -10,9 +10,7 @@
     "imoans <naomins0101@gmail.com>"
   ],
   "files": [
-    "src",
     "lib",
-    "package.json",
     "LICENSE",
     "README.md"
   ],
