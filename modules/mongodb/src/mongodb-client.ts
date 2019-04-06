@@ -199,6 +199,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap> implements DbClient
     if (result.length === 0) {
       throw createServerError('findOne()', 'NotFound')
     }
+    // @TODO: use better type to take place of any
     return filterOutputEntity<any>(result[0] || null)
   }
 
