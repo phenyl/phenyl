@@ -100,13 +100,10 @@ export const login = (
 
   try {
     dispatch(loginRequest());
-    const { ok, user, session } = await client.login({
+    const { user, session } = await client.login({
       entityName,
       credentials
     });
-    if (!ok) {
-      throw new Error("Unknown error: ok=0");
-    }
     dispatch(
       loginSuccess({
         user,

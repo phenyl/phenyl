@@ -1,6 +1,6 @@
 // @ts-ignore remove this comment after phenyl/http-client release
 import PhenylHttpClient from "@phenyl/http-client";
-import { PhenylError } from "@phenyl/interfaces";
+import { PhenylError, CustomQuery, CustomCommand } from "@phenyl/interfaces";
 import { ThunkDispatch } from "redux-thunk";
 
 const EXECUTE_START = "operation/EXECUTE_START";
@@ -66,7 +66,10 @@ export const receiveResponse = (response: any, spent: number) => ({
   response
 });
 
-export const receiveErrorResponse = (error: PhenylError<any>, spent: number) => ({
+export const receiveErrorResponse = (
+  error: PhenylError<any>,
+  spent: number
+) => ({
   type: EXECUTE_FAILED,
   spent,
   error
@@ -215,8 +218,12 @@ export const runCustomQuery = ({
   const start = new Date();
   try {
     const paramsJSON = JSON.parse(params);
+    const query: CustomQuery<string, Object> = {
+      name,
+      params: paramsJSON
+    }
     const response = await client.runCustomQuery(
-      { name, paramsJSON },
+      query,
       sessionId
     );
     // https://github.com/Microsoft/TypeScript/issues/5710
@@ -242,8 +249,12 @@ export const runCustomCommand = ({
   const start = new Date();
   try {
     const paramsJSON = JSON.parse(params);
+    const command: CustomCommand<string, Object> = {
+      name,
+      params: paramsJSON
+    }
     const response = await client.runCustomCommand(
-      { name, paramsJSON },
+      command,
       sessionId
     );
     // https://github.com/Microsoft/TypeScript/issues/5710
