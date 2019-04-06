@@ -1,14 +1,20 @@
-import fetch from "cross-fetch";
-import { encodeRequest, decodeResponse } from "@phenyl/http-rules";
-import { PhenylRestApiClient, createLocalError } from "@phenyl/utils";
 import {
+  ClientPathModifier,
+  EveryNameOf,
   GeneralRequestData,
   GeneralResponseData,
+  GeneralTypeMap,
+  HandlerResult,
   HttpClientParams,
-  ClientPathModifier,
   QueryStringParams,
-  GeneralTypeMap
+  RequestDataWithTypeMapForResponse,
+  RequestMethodName,
+  ResponseDataWithTypeMap
 } from "@phenyl/interfaces";
+import { PhenylRestApiClient, createLocalError } from "@phenyl/utils";
+import { decodeResponse, encodeRequest } from "@phenyl/http-rules";
+
+import fetch from "cross-fetch";
 
 /**
  * Client to access to PhenylRestApi on server.
@@ -59,6 +65,13 @@ export default class PhenylHttpClient<
    * @override
    * Access to PhenylRestApi on server and get GeneralResponseData.
    */
+  async handleRequestData<
+    MN extends RequestMethodName,
+    N extends EveryNameOf<TM, MN>
+  >(
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
+  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
+
   async handleRequestData(
     reqData: GeneralRequestData
   ): Promise<GeneralResponseData> {

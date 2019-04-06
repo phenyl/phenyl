@@ -11,23 +11,20 @@
   "scripts": {
     "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit",
-    "test": "upbin mocha --require ts-node/register test/*.ts --color always"
+    "test": "upbin nyc upbin mocha --require ts-node/register test/*.ts --color always"
   },
   "files": [
-    "src",
-    "dist",
-    "package.json",
+    "lib",
     "global-fetch.js",
     "LICENSE",
     "README.md"
   ],
   "devDependencies": {
-    "babel-register": "^6.24.1",
-    "nyc": "^11.6.0",
-    "phenyl-http-server": "~0.2.9",
-    "phenyl-memory-db": "~0.2.9",
-    "phenyl-rest-api": "~0.3.9",
-    "power-assert": "^1.4.4"
+    "@phenyl/http-server": "~1.0.0",
+    "@phenyl/memory-db": "~1.0.0",
+    "@phenyl/rest-api": "~1.0.0",
+    "power-assert": "^1.4.4",
+    "upbin": "^0.9.0"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "license": "Apache-2.0",
@@ -35,7 +32,6 @@
     "@phenyl/http-rules": "~1.0.0",
     "@phenyl/interfaces": "~1.0.0",
     "@phenyl/utils": "~1.0.0",
-    "cross-fetch": "^2.2.2",
-    "upbin": "^0.9.0"
+    "cross-fetch": "^2.2.2"
   }
 }
