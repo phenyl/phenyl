@@ -12,6 +12,7 @@ import {
 
 type Id = string
 
+// @TODO: make this type better
 type PhenylSessionEntityMap = {
   _PhenylSession: Session
 }
@@ -22,7 +23,7 @@ type PhenylSessionEntityMap = {
 export class PhenylSessionClient implements SessionClient {
   dbClient: DbClient<PhenylSessionEntityMap>
 
-  constructor(dbClient: DbClient<any>) {
+  constructor(dbClient: DbClient<PhenylSessionEntityMap>) {
     this.dbClient = dbClient
   }
 

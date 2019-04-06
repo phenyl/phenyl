@@ -38,9 +38,10 @@ import {
   ResponseEntity,
   WhereQuery,
   Key,
+  RequestEntityMapOf,
 } from '@phenyl/interfaces'
 
-import { GeneralUpdateOperation } from '@sp2/format'
+import { GeneralUpdateOperation } from 'sp2'
 
 export type PhenylEntityClientOptions<M extends GeneralReqResEntityMap> = {
   validatePushCommand?: PushValidation<M>,
@@ -50,6 +51,7 @@ export type PhenylEntityClientOptions<M extends GeneralReqResEntityMap> = {
  * Validate PushCommand only when masterOperations are found.
  * masterOperations are not found when the versionId in PushCommand is over 100 commits older, as entity saves only 100 commits.
  */
+// @TODO: any
 function validWhenDiffsFound(command: PushCommand<any>, entity: Entity, masterOperations: Array<GeneralUpdateOperation> | null | undefined) {
   if (masterOperations == null) {
     throw new Error('Cannot apply push operations: Too many diffs from master (over 100).')
@@ -63,7 +65,7 @@ function validWhenDiffsFound(command: PushCommand<any>, entity: Entity, masterOp
  * Optionally set merge strategy by options.validatePushCommand.
  */
 export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements RawEntityClient<M> {
-  dbClient: DbClient<GeneralEntityMap>
+  dbClient: DbClient<RequestEntityMapOf<M>>
   validatePushCommand: PushValidation<M>
 
   constructor(dbClient: DbClient<GeneralEntityMap>, options: PhenylEntityClientOptions<M> = {}) {
@@ -77,7 +79,6 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Raw
    */
   async find<EN extends Key<M>>(query: WhereQuery<EN>): Promise<QueryResult<ResponseEntity<M, EN>>> {
     const entities = await this.dbClient.find(query)
-     // @TODO: let GeneralEntityMap[EN] to be incompatible with EntityWithMetaInfo<GeneralEntityMap[EN]> in type of DbClient
     return Versioning.createQueryResult(entities)
   }
 
@@ -145,7 +146,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Raw
    */
   async insertAndGetMulti<EN extends Key<M>>(command: MultiInsertCommand<EN, PreEntity<ResponseEntity<M, EN>>>): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>> {
     const { entityName, values } = command
-    const valuesWithMeta = values.map(value => Versioning.attachMetaInfoToNewEntity(value))
+    const valuesWithMeta = values.map((value: Entity) => Versioning.attachMetaInfoToNewEntity(value))
     const entities = await this.dbClient.insertAndGetMulti({ entityName, values: valuesWithMeta })
     return Versioning.createMultiValuesCommandResult(entities)
   }
@@ -153,7 +154,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Raw
   /**
    *
    */
-  async updateById<N extends Key<M>>(command: IdUpdateCommand<N>): Promise<IdUpdateCommandResult> {
+  async updateById<EN extends Key<M>>(command: IdUpdateCommand<EN>): Promise<IdUpdateCommandResult> {
     const result = await this.updateAndGet(command)
     return { n: 1, prevVersionId: result.prevVersionId, versionId: result.versionId }
   }
@@ -161,7 +162,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Raw
   /**
    *
    */
-  async updateMulti<N extends Key<M>>(command: MultiUpdateCommand<N>): Promise<MultiUpdateCommandResult> {
+  async updateMulti<EN extends Key<M>>(command: MultiUpdateCommand<EN>): Promise<MultiUpdateCommandResult> {
     const result = await this.updateAndFetch(command)
     return { n: result.n, prevVersionsById: result.prevVersionsById, versionsById: result.versionsById }
   }
@@ -202,7 +203,7 @@ export class PhenylEntityClient<M extends GeneralReqResEntityMap> implements Raw
   /**
    *
    */
-  async delete<N extends Key<M>>(command: DeleteCommand<N>): Promise<DeleteCommandResult> {
+  async delete<EN extends Key<M>>(command: DeleteCommand<EN>): Promise<DeleteCommandResult> {
     return { n: await this.dbClient.delete(command) }
   }
 

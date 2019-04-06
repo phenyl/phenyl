@@ -17,15 +17,11 @@
     "type-check": "upbin tsc --noEmit"
   },
   "devDependencies": {
-    "babel-register": "^6.24.1",
-    "mocha": "^5.0.5",
-    "power-assert": "^1.4.4"
+    "upbin": "^0.9.0"
   },
   "dependencies": {
-    "@sp2/format": "~1.2.3",
-    "@sp2/updater": "~1.2.3",
-    "oad-utils": "~0.3.0",
-    "@phenyl/interfaces": "*",
-    "@phenyl/utils": "*"
+    "@phenyl/interfaces": "^1.0.0",
+    "@phenyl/utils": "^1.0.0",
+    "sp2": "^1.2.0"
   }
 }
