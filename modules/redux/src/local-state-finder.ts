@@ -8,10 +8,10 @@ import {
   GeneralTypeMap,
   Key,
   ReqResEntityOf,
-  Entity
-} from "@phenyl/interfaces";
-import { getNestedValue, createDocumentPath } from "sp2";
-type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
+  Entity,
+} from '@phenyl/interfaces'
+import { getNestedValue, createDocumentPath } from 'sp2'
+type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>
 /**
  * Get value(s) of LocalState.
  */
@@ -22,9 +22,9 @@ export class LocalStateFinder {
    */
   static hasEntityField<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
-    entityName: EN
+    entityName: EN,
   ): boolean {
-    return state.entities[entityName] != null;
+    return state.entities[entityName] != null
   }
   /**
    * Check if LocalState has given id and entityName.
@@ -32,15 +32,15 @@ export class LocalStateFinder {
 
   static hasEntity<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
-    query: IdQuery<EN>
+    query: IdQuery<EN>,
   ): boolean {
-    const { entityName, id } = query;
-    if (!state.entities[entityName]) return false;
+    const { entityName, id } = query
+    if (!state.entities[entityName]) return false
     const entityInfo = getNestedValue(
       state,
-      createDocumentPath("entities", entityName, id)
-    );
-    return entityInfo != null;
+      createDocumentPath('entities', entityName, id),
+    )
+    return entityInfo != null
   }
   /**
    * Get head entity by id and entityName.
@@ -49,23 +49,23 @@ export class LocalStateFinder {
 
   static getHeadEntity<M extends GeneralTypeMap, EN extends Key<M>>(
     state: LocalStateOf,
-    query: IdQuery<EN>
+    query: IdQuery<EN>,
   ): ReqResEntityOf<M, EntityNameOf<M>> {
-    const { entityName, id } = query;
+    const { entityName, id } = query
     if (state.entities[entityName] == null)
       throw new Error(
-        `LocalStateFinder#getHeadEntity(). No entityName found: "${entityName}".`
-      );
+        `LocalStateFinder#getHeadEntity(). No entityName found: "${entityName}".`,
+      )
     const entityInfo = getNestedValue(
       state,
-      createDocumentPath("entities", entityName, id)
-    );
+      createDocumentPath('entities', entityName, id),
+    )
     if (entityInfo == null)
       throw new Error(
-        `LocalStateFinder#getHeadEntity(). No id found in entityName: "${entityName}". id: "${id}".`
-      ); // If no head, meaning origin is the head (= commits.length === 0)
+        `LocalStateFinder#getHeadEntity(). No id found in entityName: "${entityName}". id: "${id}".`,
+      ) // If no head, meaning origin is the head (= commits.length === 0)
 
-    return entityInfo.head ? entityInfo.head : entityInfo.origin;
+    return entityInfo.head ? entityInfo.head : entityInfo.origin
   }
   /**
    * Get LocalEntityInfo by id and entityName.
@@ -75,21 +75,21 @@ export class LocalStateFinder {
 
   static getEntityInfo<M extends GeneralTypeMap, EN extends Key<M>>(
     state: LocalStateOf,
-    query: IdQuery<EN>
+    query: IdQuery<EN>,
   ): LocalEntityInfo<Entity> {
-    const { entityName, id } = query;
+    const { entityName, id } = query
     if (state.entities[entityName] == null)
       throw new Error(
-        `LocalStateFinder#getEntityInfo(). No entityName found: "${entityName}".`
-      );
+        `LocalStateFinder#getEntityInfo(). No entityName found: "${entityName}".`,
+      )
     const entityInfo = getNestedValue(
       state,
-      createDocumentPath("entities", entityName, id)
-    );
+      createDocumentPath('entities', entityName, id),
+    )
     if (entityInfo == null)
       throw new Error(
-        `LocalStateFinder#getEntityInfo(). No id found in entityName: "${entityName}". id: "${id}".`
-      );
-    return entityInfo;
+        `LocalStateFinder#getEntityInfo(). No id found in entityName: "${entityName}". id: "${id}".`,
+      )
+    return entityInfo
   }
 }
