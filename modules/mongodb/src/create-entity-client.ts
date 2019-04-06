@@ -1,6 +1,5 @@
 import { GeneralEntityMap } from '@phenyl/interfaces'
-// @ts-ignore TODO: typescriptify phenyl-central-state
-import { PhenylEntityClient, PhenylEntityClientOptions } from 'phenyl-central-state'
+import { PhenylEntityClient, PhenylEntityClientOptions } from '@phenyl/central-state'
 import { PhenylMongoDbClient } from './mongodb-client'
 import { MongoDbConnection } from './connection'
 

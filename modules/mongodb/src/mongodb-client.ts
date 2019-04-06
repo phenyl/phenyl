@@ -29,9 +29,9 @@ import {
   visitUpdateOperation,
   visitFindOperation,
   convertToDotNotationString,
-} from '@sp2/format'
-
-import { $bind, update } from '@sp2/updater'
+  $bind,
+  update,
+} from 'sp2'
 
 import { MongoDbConnection } from './connection'
 import {

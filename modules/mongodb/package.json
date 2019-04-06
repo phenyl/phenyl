@@ -10,13 +10,26 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.js",
+  "main": "lib/index.ts",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "type-check": "upbin tsc --noEmit",
+    "build": "upbin tsc --declaration",
     "pretest": "test/scripts/init-mongodb.sh",
     "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always || (npm run posttest && exit 1)",
-    "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb"
+    "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "dependencies": {
+    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/utils": "~1.0.0",
+    "@phenyl/central-state": "~1.0.0",
+    "sp2": "~1.4.0",
+    "bson": "^4.0.0",
+    "es6-promisify": "^5.0.0",
+    "mongodb": "^3.0.5",
+    "oad-utils": "~0.3.0",
+    "phenyl-central-state": "~0.3.2",
+    "power-assign": "~0.2.10"
   },
   "devDependencies": {
     "@types/bson": "^4.0.0",
@@ -26,16 +39,5 @@
     "power-assert": "^1.4.4",
     "upbin": "^0.8.1"
   },
-  "dependencies": {
-    "@sp2/format": "~1.2.3",
-    "@sp2/updater": "~1.2.3",
-    "@phenyl/interfaces": "*",
-    "@phenyl/utils": "*",
-    "bson": "^4.0.0",
-    "es6-promisify": "^5.0.0",
-    "mongodb": "^3.0.5",
-    "oad-utils": "~0.3.0",
-    "phenyl-central-state": "~0.3.2",
-    "power-assign": "~0.2.10"
-  }
+  "collaborators": "Nicholas Lee <nicholaslee119@gmail.com>"
 }

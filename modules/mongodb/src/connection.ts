@@ -8,7 +8,7 @@ import {
   ChangeStream,
 } from './change-stream'
 
-import { FindOperation, GeneralUpdateOperation } from '@sp2/format'
+import { FindOperation, GeneralUpdateOperation } from 'sp2'
 
 const connectToMongoDb = promisify(MongoClient.connect)
 
