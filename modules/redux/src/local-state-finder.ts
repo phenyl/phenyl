@@ -1,41 +1,71 @@
-import { IdQuery, EntityMapOf, EntityNameOf, EntityOf, LocalState, LocalEntityInfo, TypeMap } from 'phenyl-interfaces'
-import { getNestedValue, createDocumentPath } from 'oad-utils/jsnext'
-type LocalStateOf<TM extends TypeMap> = LocalState<EntityMapOf<TM>>
+import {
+  IdQuery,
+  GeneralReqResEntityMap,
+  GeneralAuthCommandMap,
+  EntityNameOf,
+  LocalState,
+  LocalEntityInfo,
+  GeneralTypeMap,
+  Key,
+  ReqResEntityOf,
+  Entity
+} from "@phenyl/interfaces";
+import { getNestedValue, createDocumentPath } from "sp2";
+type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
 /**
  * Get value(s) of LocalState.
  */
 
-export class LocalStateFinder<TM extends TypeMap> {
+export class LocalStateFinder {
   /**
    * Check if LocalState has given id and entityName.
    */
-  static hasEntityField<N extends EntityNameOf<TM>>(state: LocalStateOf<TM>, entityName: N): boolean {
-    return state.entities[entityName] != null
+  static hasEntityField<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+    state: LocalStateOf,
+    entityName: EN
+  ): boolean {
+    return state.entities[entityName] != null;
   }
   /**
    * Check if LocalState has given id and entityName.
    */
 
-  static hasEntity<N extends EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): boolean {
-    const { entityName, id } = query
-    if (!state.entities[entityName]) return false
-    const entityInfo = getNestedValue(state, createDocumentPath('entities', entityName, id))
-    return entityInfo != null
+  static hasEntity<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+    state: LocalStateOf,
+    query: IdQuery<EN>
+  ): boolean {
+    const { entityName, id } = query;
+    if (!state.entities[entityName]) return false;
+    const entityInfo = getNestedValue(
+      state,
+      createDocumentPath("entities", entityName, id)
+    );
+    return entityInfo != null;
   }
   /**
    * Get head entity by id and entityName.
    * "head" is like git's "HEAD", the current entity in local state.
    */
 
-  static getHeadEntity<N extends EntityNameOf<TM>>(state: LocalStateOf<TM>, query: IdQuery<N>): EntityOf<TM, N> {
-    const { entityName, id } = query
+  static getHeadEntity<M extends GeneralTypeMap, EN extends Key<M>>(
+    state: LocalStateOf,
+    query: IdQuery<EN>
+  ): ReqResEntityOf<M, EntityNameOf<M>> {
+    const { entityName, id } = query;
     if (state.entities[entityName] == null)
-      throw new Error(`LocalStateFinder#getHeadEntity(). No entityName found: "${entityName}".`)
-    const entityInfo = getNestedValue(state, createDocumentPath('entities', entityName, id))
+      throw new Error(
+        `LocalStateFinder#getHeadEntity(). No entityName found: "${entityName}".`
+      );
+    const entityInfo = getNestedValue(
+      state,
+      createDocumentPath("entities", entityName, id)
+    );
     if (entityInfo == null)
-      throw new Error(`LocalStateFinder#getHeadEntity(). No id found in entityName: "${entityName}". id: "${id}".`) // If no head, meaning origin is the head (= commits.length === 0)
+      throw new Error(
+        `LocalStateFinder#getHeadEntity(). No id found in entityName: "${entityName}". id: "${id}".`
+      ); // If no head, meaning origin is the head (= commits.length === 0)
 
-    return entityInfo.head ? entityInfo.head : entityInfo.origin
+    return entityInfo.head ? entityInfo.head : entityInfo.origin;
   }
   /**
    * Get LocalEntityInfo by id and entityName.
@@ -43,16 +73,23 @@ export class LocalStateFinder<TM extends TypeMap> {
    * head may be null.
    */
 
-  static getEntityInfo<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    query: IdQuery<N>,
-  ): LocalEntityInfo<EntityOf<TM, N>> {
-    const { entityName, id } = query
+  static getEntityInfo<M extends GeneralTypeMap, EN extends Key<M>>(
+    state: LocalStateOf,
+    query: IdQuery<EN>
+  ): LocalEntityInfo<Entity> {
+    const { entityName, id } = query;
     if (state.entities[entityName] == null)
-      throw new Error(`LocalStateFinder#getEntityInfo(). No entityName found: "${entityName}".`)
-    const entityInfo = getNestedValue(state, createDocumentPath('entities', entityName, id))
+      throw new Error(
+        `LocalStateFinder#getEntityInfo(). No entityName found: "${entityName}".`
+      );
+    const entityInfo = getNestedValue(
+      state,
+      createDocumentPath("entities", entityName, id)
+    );
     if (entityInfo == null)
-      throw new Error(`LocalStateFinder#getEntityInfo(). No id found in entityName: "${entityName}". id: "${id}".`)
-    return entityInfo
+      throw new Error(
+        `LocalStateFinder#getEntityInfo(). No id found in entityName: "${entityName}". id: "${id}".`
+      );
+    return entityInfo;
   }
 }
