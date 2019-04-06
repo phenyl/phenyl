@@ -1,5 +1,4 @@
-import { $bind, update } from "@sp2/updater"
-import { getNestedValue } from '@sp2/format'
+import { $bind, update, getNestedValue } from "sp2"
 import {
   switchByRequestMethod,
   assertValidEntityName,
