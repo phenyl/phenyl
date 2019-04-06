@@ -1,14 +1,14 @@
-import { sortByNotation } from "oad-utils";
-import { filter } from "power-filter";
 import {
-  GeneralReqResEntityMap,
   EntityState,
   EntityStateFinder,
+  GeneralReqResEntityMap,
   IdQuery,
   IdsQuery,
-  WhereQuery,
-  Key
+  Key,
+  ResponseEntity,
+  WhereQuery
 } from "@phenyl/interfaces";
+import { retrieve, sortByNotation } from "sp2";
 
 /**
  *
@@ -24,53 +24,54 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
   /**
    *
    */
-
-  find(query: WhereQuery<Key<M>>): Array<M[Key<M>]> {
+  find<EN extends Key<M>>(query: WhereQuery<EN>): ResponseEntity<M, EN>[] {
     return PhenylStateFinder.find(this.state, query);
   }
   /**
    *
    */
 
-  findOne(query: WhereQuery<Key<M>>): M[Key<M>] | undefined | null {
+  findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>
+  ): ResponseEntity<M, EN> | null {
     return PhenylStateFinder.findOne(this.state, query);
   }
   /**
    *
    */
 
-  get(query: IdQuery<Key<M>>): M[Key<M>] {
+  get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN> {
     return PhenylStateFinder.get(this.state, query);
   }
   /**
    *
    */
 
-  getByIds(query: IdsQuery<Key<M>>): Array<M[Key<M>]> {
+  getByIds<EN extends Key<M>>(query: IdsQuery<EN>): ResponseEntity<M, EN>[] {
     return PhenylStateFinder.getByIds(this.state, query);
   }
   /**
    *
    */
 
-  getAll(entityName: Key<M>): Array<M[Key<M>]> {
+  getAll<EN extends Key<M>>(entityName: EN): ResponseEntity<M, EN>[] {
     return PhenylStateFinder.getAll(this.state, entityName);
   }
   /**
    *
    */
 
-  has(query: IdQuery<Key<M>>): boolean {
+  has<EN extends Key<M>>(query: IdQuery<EN>): boolean {
     return PhenylStateFinder.has(this.state, query);
   }
   /**
    *
    */
 
-  static getAll<M extends GeneralReqResEntityMap>(
+  static getAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    entityName: Key<M>
-  ): Array<M[Key<M>]> {
+    entityName: EN
+  ): ResponseEntity<M, EN>[] {
     const pool = state.pool[entityName];
 
     if (pool == null) {
@@ -83,12 +84,12 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static find<M extends GeneralReqResEntityMap>(
+  static find<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    query: WhereQuery<Key<M>>
-  ): Array<M[Key<M>]> {
+    query: WhereQuery<EN>
+  ): ResponseEntity<M, EN>[] {
     const { entityName, where, sort, skip, limit } = query;
-    let filtered = filter(this.getAll(state, entityName), where);
+    let filtered = retrieve(this.getAll(state, entityName), where);
 
     if (sort != null) {
       filtered = sortByNotation(filtered, sort);
@@ -102,34 +103,34 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static findOne<M extends GeneralReqResEntityMap>(
+  static findOne<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    query: WhereQuery<Key<M>>
-  ): M[Key<M>] | undefined | null {
+    query: WhereQuery<EN>
+  ): ResponseEntity<M, EN> | null {
     return this.find(state, query)[0];
   }
   /**
    *
    */
 
-  static get<M extends GeneralReqResEntityMap>(
+  static get<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    query: IdQuery<Key<M>>
-  ): M[Key<M>] {
+    query: IdQuery<EN>
+  ): ResponseEntity<M, EN> {
     const entitiesById = state.pool[query.entityName];
     if (entitiesById == null) throw new Error("NoEntityRegistered");
     const entity = entitiesById[query.id];
     if (entity == null) throw new Error("NoId");
     return entity;
   }
+
   /**
    *
    */
-
-  static getByIds<M extends GeneralReqResEntityMap>(
+  static getByIds<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    query: IdsQuery<Key<M>>
-  ): Array<M[Key<M>]> {
+    query: IdsQuery<EN>
+  ): ResponseEntity<M, EN>[] {
     const { ids, entityName } = query; // TODO: handle error
 
     return ids.map(id =>
@@ -143,9 +144,9 @@ export default class PhenylStateFinder<M extends GeneralReqResEntityMap>
    *
    */
 
-  static has<M extends GeneralReqResEntityMap>(
+  static has<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    query: IdQuery<Key<M>>
+    query: IdQuery<EN>
   ): boolean {
     try {
       PhenylStateFinder.get(state, query);

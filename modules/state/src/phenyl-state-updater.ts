@@ -1,17 +1,23 @@
-import { retargetToProp, mergeOperations } from "power-assign";
 import {
   DeleteCommand,
-  GeneralReqResEntityMap,
   EntityState,
   EntityStateUpdater,
-  IdUpdateCommand,
+  GeneralReqResEntityMap,
   IdDeleteCommand,
-  MultiUpdateCommand,
+  IdUpdateCommand,
+  Key,
   MultiDeleteCommand,
-  Key
+  MultiUpdateCommand,
+  ResponseEntity
 } from "@phenyl/interfaces";
-import { GeneralUpdateOperation } from "@sp2/updater";
-import PhenylStateFinder from "./phenyl-state-finder.js";
+import {
+  GeneralUpdateOperation,
+  UpdateOperand,
+  mergeUpdateOperations,
+  retargetOperation
+} from "sp2";
+
+import PhenylStateFinder from "./phenyl-state-finder";
 
 /**
  *
@@ -28,14 +34,18 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  updateById(command: IdUpdateCommand<Key<M>>): GeneralUpdateOperation {
+  updateById<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>
+  ): GeneralUpdateOperation {
     return PhenylStateUpdater.updateById(this.state, command);
   }
 
   /**
    *
    */
-  updateMulti(command: MultiUpdateCommand<Key<M>>): GeneralUpdateOperation {
+  updateMulti<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>
+  ): GeneralUpdateOperation {
     return PhenylStateUpdater.updateMulti(this.state, command);
   }
 
@@ -45,9 +55,9 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  register(
-    entityName: Key<M>,
-    ...entities: Array<M[Key<M>]>
+  register<EN extends Key<M>>(
+    entityName: EN,
+    ...entities: ResponseEntity<M, EN>[]
   ): GeneralUpdateOperation {
     return PhenylStateUpdater.register(this.state, entityName, ...entities);
   }
@@ -55,22 +65,26 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  delete(command: DeleteCommand<Key<M>>): GeneralUpdateOperation {
+  delete<EN extends Key<M>>(
+    command: DeleteCommand<EN>
+  ): GeneralUpdateOperation {
     return PhenylStateUpdater.delete(this.state, command);
   }
 
   /**
    *
    */
-  deleteById(command: IdDeleteCommand<Key<M>>): GeneralUpdateOperation {
+  deleteById<EN extends Key<M>>(
+    command: IdDeleteCommand<EN>
+  ): GeneralUpdateOperation {
     return PhenylStateUpdater.deleteById(this.state, command);
   }
 
   /**
    *
    */
-  deleteByFindOperation(
-    command: MultiDeleteCommand<Key<M>>
+  deleteByFindOperation<EN extends Key<M>>(
+    command: MultiDeleteCommand<EN>
   ): GeneralUpdateOperation {
     return PhenylStateUpdater.deleteByFindOperation(this.state, command);
   }
@@ -78,9 +92,9 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
   /**
    *
    */
-  static updateById<M extends GeneralReqResEntityMap>(
+  static updateById<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    command: IdUpdateCommand<Key<M>>
+    command: IdUpdateCommand<EN>
   ): GeneralUpdateOperation {
     const { id, entityName, operation } = command;
 
@@ -94,15 +108,15 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
     }
 
     const docPath = ["pool", entityName, id].join(".");
-    return retargetToProp(docPath, operation);
+    return retargetOperation(docPath, operation);
   }
 
   /**
    *
    */
-  static updateMulti<M extends GeneralReqResEntityMap>(
+  static updateMulti<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    command: MultiUpdateCommand<Key<M>>
+    command: MultiUpdateCommand<EN>
   ): GeneralUpdateOperation {
     const { where, entityName, operation } = command;
     const targetEntities = PhenylStateFinder.find(state, {
@@ -111,9 +125,9 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
     });
     const operationList = targetEntities.map(targetEntity => {
       const docPath = ["pool", entityName, targetEntity.id].join(".");
-      return retargetToProp(docPath, operation);
+      return retargetOperation(docPath, operation);
     });
-    return mergeOperations(...operationList);
+    return mergeUpdateOperations(...operationList);
   }
 
   /**
@@ -122,10 +136,10 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    * PhenylState cannot handle InsertCommand.
    * Instead, it receives in entities created in server.
    */
-  static register<M extends GeneralReqResEntityMap>(
+  static register<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    entityName: string,
-    ...entities: Array<M[Key<M>]>
+    entityName: EN,
+    ...entities: ResponseEntity<M, EN>[]
   ): GeneralUpdateOperation {
     const operationList = entities.map(entity => {
       const docPath = ["pool", entityName, entity.id].join(".");
@@ -135,15 +149,15 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
         }
       };
     });
-    return mergeOperations(...operationList);
+    return mergeUpdateOperations(...operationList);
   }
   /**
    *
    */
 
-  static delete<M extends GeneralReqResEntityMap>(
+  static delete<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    command: DeleteCommand<Key<M>>
+    command: DeleteCommand<EN>
   ): GeneralUpdateOperation {
     if ((command as MultiDeleteCommand<Key<M>>).where) {
       return this.deleteByFindOperation(state, command as MultiDeleteCommand<
@@ -157,9 +171,9 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    *
    */
 
-  static deleteById<M extends GeneralReqResEntityMap>(
+  static deleteById<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: EntityState<M>,
-    command: IdDeleteCommand<Key<M>>
+    command: IdDeleteCommand<EN>
   ): GeneralUpdateOperation {
     const { id, entityName } = command;
     const docPath = ["pool", entityName, id].join(".");
@@ -173,16 +187,19 @@ export default class PhenylStateUpdater<M extends GeneralReqResEntityMap>
    *
    */
 
-  static deleteByFindOperation<M extends GeneralReqResEntityMap>(
+  static deleteByFindOperation<
+    M extends GeneralReqResEntityMap,
+    EN extends Key<M>
+  >(
     state: EntityState<M>,
-    command: MultiDeleteCommand<Key<M>>
+    command: MultiDeleteCommand<EN>
   ): GeneralUpdateOperation {
     const { where, entityName } = command;
     const targetEntities = PhenylStateFinder.find(state, {
       entityName,
       where
     });
-    const $unset: GeneralUpdateOperation = {};
+    const $unset: UpdateOperand<"$unset"> = {};
     targetEntities.forEach(targetEntity => {
       const docPath = ["pool", entityName, targetEntity.id].join(".");
       $unset[docPath] = "";

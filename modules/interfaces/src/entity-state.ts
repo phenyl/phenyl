@@ -3,7 +3,7 @@ import { GeneralReqResEntityMap, ResponseEntity } from "./type-map";
 import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
 import { Entity } from "./entity";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 
 export type EntityPool<M extends GeneralReqResEntityMap> = {
@@ -22,7 +22,7 @@ export interface EntityStateFinder<M extends GeneralReqResEntityMap> {
     query: WhereQuery<EN>
   ): ResponseEntity<M, EN> | null;
 
-  get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN>;
+  get<EN extends Key<M>>(query: IdQuery<EN>): ResponseEntity<M, EN> | null;
 
   getByIds<EN extends Key<M>>(query: IdsQuery<EN>): ResponseEntity<M, EN>[];
 
@@ -30,18 +30,18 @@ export interface EntityStateFinder<M extends GeneralReqResEntityMap> {
 }
 
 export interface EntityStateUpdater<M extends GeneralReqResEntityMap> {
-  register<N extends string>(
-    entityName: N,
-    ...entities: Array<M[N]>
+  register<EN extends Key<M>>(
+    entityName: EN,
+    ...entities: ResponseEntity<M, EN>[]
   ): GeneralUpdateOperation;
 
-  updateById<N extends string>(
-    command: IdUpdateCommand<N>
+  updateById<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>
   ): GeneralUpdateOperation;
 
-  updateMulti<N extends string>(
-    command: MultiUpdateCommand<N>
+  updateMulti<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>
   ): GeneralUpdateOperation;
 
-  delete<N extends string>(command: DeleteCommand<N>): GeneralUpdateOperation;
+  delete<EN extends Key<M>>(command: DeleteCommand<EN>): GeneralUpdateOperation;
 }
