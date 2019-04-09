@@ -9,9 +9,11 @@
     "Nicholas Lee <nicholaslee119@gmail.com>"
   ],
   "files": [
-    "build",
+    "src",
     "lib",
-    "public"
+    "public",
+    "LICENSE",
+    "README.md"
   ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
