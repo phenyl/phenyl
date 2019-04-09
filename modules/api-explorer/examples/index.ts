@@ -27,7 +27,6 @@ class HospitalDefinition extends StandardEntityDefinition {
     reqData: GeneralRequestData,
     session: Session | null
   ): Promise<boolean> {
-    // eslint-disable-line no-unused-vars
     return true;
   }
 }
