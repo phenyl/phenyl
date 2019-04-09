@@ -1,51 +1,43 @@
 import { update, createDocumentPath } from 'sp2'
-import { createLocalError } from '@phenyl/utils'
+import { GeneralUpdateOperation } from '@sp2/format'
+import { createError } from '@phenyl/utils'
 import { removeOne } from './utils'
 import {
-  ActionTag,
-  Id,
   IdUpdateCommand,
-  EntityMapOf,
-  EntityNameOf,
-  EntityOf,
   LocalState,
   PhenylError,
   PushCommand,
   Session,
-  TypeMap,
-  UpdateOperation,
-  UserEntityNameOf,
   VersionDiff,
-  CommitAction,
   UnreachedCommit,
   GeneralReqResEntityMap,
   GeneralAuthCommandMap,
   Key,
-  GeneralTypeMap,
+  Entity,
 } from '@phenyl/interfaces'
 import { LocalStateFinder } from './local-state-finder.js'
 type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>
 
 type EntityName = string
+type Id = string
+type ActionTag = string
 type RevertCommand<N extends EntityName> = {
   entityName: N
   id: Id
-  operations: Array<UpdateOperation>
+  operations: Array<GeneralUpdateOperation>
 }
 /**
  *
  */
 
 export class LocalStateUpdater {
-  // static LocalStateFinder: Class<LocalStateFinder<TM>> = LocalStateFinder
-
   /**
    * Initialize the given entity field.
    */
   static initialize<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
     entityName: EN,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     return {
       $set: {
         [createDocumentPath('entities', entityName)]: {},
@@ -57,10 +49,10 @@ export class LocalStateUpdater {
    * Error is thrown when no entity is registered.
    */
 
-  static commit<GM extends GeneralTypeMap, EN extends Key<GM>>(
+  static commit<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
     state: LocalStateOf,
     command: IdUpdateCommand<EN>,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     const { entityName, id, operation } = command
 
     if (
@@ -93,10 +85,10 @@ export class LocalStateUpdater {
    * Error is thrown when no entity is registered.
    */
 
-  static revert<GM extends GeneralTypeMap, N extends EntityNameOf<GM>>(
+  static revert<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
     state: LocalStateOf,
-    command: RevertCommand<N>,
-  ): UpdateOperation {
+    command: RevertCommand<EN>,
+  ): GeneralUpdateOperation {
     const { entityName, id, operations } = command
 
     if (
@@ -131,12 +123,12 @@ export class LocalStateUpdater {
    * Overwrite if already exists.
    */
 
-  static follow<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    entityName: N,
-    entity: EntityOf<TM, N>,
+  static follow<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+    state: LocalStateOf,
+    entityName: EN,
+    entity: Entity,
     versionId: Id | undefined | null,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     return {
       $set: {
         [createDocumentPath('entities', entityName, entity.id)]: {
@@ -152,11 +144,11 @@ export class LocalStateUpdater {
    * Remove the entity info from LocalState.
    */
 
-  static unfollow<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    entityName: N,
+  static unfollow<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+    state: LocalStateOf,
+    entityName: EN,
     id: Id,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     return {
       $unset: {
         [createDocumentPath('entities', entityName, id)]: '',
@@ -167,10 +159,10 @@ export class LocalStateUpdater {
    * Push network request promise.
    */
 
-  static addUnreachedCommits<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    commit: UnreachedCommit<N>,
-  ): UpdateOperation {
+  static addUnreachedCommits<
+    GM extends GeneralReqResEntityMap,
+    EN extends Key<GM>
+  >(state: LocalStateOf, commit: UnreachedCommit<EN>): GeneralUpdateOperation {
     const { entityName, id, commitCount } = commit
     const enqueuedCount = state.unreachedCommits
       .filter(c => c.entityName === entityName && c.id === id)
@@ -194,10 +186,10 @@ export class LocalStateUpdater {
    * Remove network request promise from the request queue.
    */
 
-  static removeUnreachedCommits<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    commit: UnreachedCommit<N>,
-  ): UpdateOperation {
+  static removeUnreachedCommits<
+    GM extends GeneralReqResEntityMap,
+    EN extends Key<GM>
+  >(state: LocalStateOf, commit: UnreachedCommit<EN>): GeneralUpdateOperation {
     return {
       $pull: {
         [createDocumentPath('unreachedCommits')]: {
@@ -211,9 +203,9 @@ export class LocalStateUpdater {
    */
 
   static networkRequest(
-    state: LocalStateOf<TM>,
+    state: LocalStateOf,
     tag: ActionTag,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     return {
       $push: {
         [createDocumentPath('network', 'requests')]: tag,
@@ -225,9 +217,9 @@ export class LocalStateUpdater {
    */
 
   static removeNetworkRequest(
-    state: LocalStateOf<TM>,
+    state: LocalStateOf,
     tag: ActionTag,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     return {
       $set: {
         [createDocumentPath('network', 'requests')]: removeOne(
@@ -244,9 +236,9 @@ export class LocalStateUpdater {
    */
 
   static patch(
-    state: LocalStateOf<TM>,
+    state: LocalStateOf,
     versionDiff: VersionDiff,
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     const { entityName, id, versionId, prevVersionId, operation } = versionDiff
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
@@ -277,10 +269,10 @@ export class LocalStateUpdater {
    * If local commits exist, apply them after master commits.
    */
 
-  static rebase<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    pushCommand: PushCommand<N>,
-  ): UpdateOperation {
+  static rebase<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+    state: LocalStateOf,
+    pushCommand: PushCommand<EN>,
+  ): GeneralUpdateOperation {
     const { entityName, id, versionId, operations } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
@@ -308,11 +300,11 @@ export class LocalStateUpdater {
    * Apply the master commits, then apply the given local commits.
    */
 
-  static synchronize<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    pushCommand: PushCommand<N>,
-    localCommits: Array<UpdateOperation>,
-  ): UpdateOperation {
+  static synchronize<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+    state: LocalStateOf,
+    pushCommand: PushCommand<EN>,
+    localCommits: Array<GeneralUpdateOperation>,
+  ): GeneralUpdateOperation {
     const { entityName, id, operations, versionId } = pushCommand
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
@@ -339,14 +331,14 @@ export class LocalStateUpdater {
    * NOTICE: if returned type of this.follow() changes, this implementation must be changed.
    */
 
-  static followAll<N extends EntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
-    entityName: N,
-    entities: Array<EntityOf<TM, N>>,
+  static followAll<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+    state: LocalStateOf,
+    entityName: EN,
+    entities: Entity[],
     versionsById: {
-      [entityId: Id]: Id
+      [entityId: string]: string
     },
-  ): UpdateOperation {
+  ): GeneralUpdateOperation {
     const $setOp = {}
 
     for (const entity of entities) {
@@ -363,12 +355,12 @@ export class LocalStateUpdater {
    * Set session.
    */
 
-  static setSession<N extends UserEntityNameOf<TM>>(
-    state: LocalStateOf<TM>,
+  static setSession(
+    state: LocalStateOf,
     session: Session,
-    user: EntityOf<TM, N> | undefined | null,
-    versionId?: Id | undefined | null,
-  ): UpdateOperation {
+    user: Entity | undefined | null,
+    versionId?: string | undefined | null,
+  ): GeneralUpdateOperation {
     const { entityName } = session
     const operation = {
       $set: {
@@ -387,7 +379,7 @@ export class LocalStateUpdater {
    * Remove session.
    */
 
-  static unsetSession(): UpdateOperation {
+  static unsetSession(): GeneralUpdateOperation {
     return {
       $unset: {
         session: '',
@@ -398,14 +390,15 @@ export class LocalStateUpdater {
    * Set Error.
    */
 
-  static error(e: Error | PhenylError, actionTag: ActionTag): UpdateOperation {
-    const err = e.type && e.at ? e : createLocalError(e)
+  static error(
+    e: Error | PhenylError<Object>,
+    actionTag: ActionTag,
+  ): GeneralUpdateOperation {
+    const err = createError(e)
     return {
       $set: {
         error: {
-          // $FlowIssue(err.type-exists)
           type: err.type,
-          // $FlowIssue(err.at-exists)
           at: err.at,
           message: err.message,
           actionTag,
@@ -417,7 +410,7 @@ export class LocalStateUpdater {
    * Set network state Online.
    */
 
-  static online(): UpdateOperation {
+  static online(): GeneralUpdateOperation {
     return {
       $set: {
         [createDocumentPath('network', 'isOnline')]: true,
@@ -428,7 +421,7 @@ export class LocalStateUpdater {
    * Set network state Offline.
    */
 
-  static offline(): UpdateOperation {
+  static offline(): GeneralUpdateOperation {
     return {
       $set: {
         [createDocumentPath('network', 'isOnline')]: false,
@@ -439,7 +432,7 @@ export class LocalStateUpdater {
    * Unset error.
    */
 
-  static resolveError(): UpdateOperation {
+  static resolveError(): GeneralUpdateOperation {
     return {
       $unset: {
         [createDocumentPath('error')]: '',

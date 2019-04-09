@@ -2,12 +2,9 @@ import {
   IdQuery,
   GeneralReqResEntityMap,
   GeneralAuthCommandMap,
-  EntityNameOf,
   LocalState,
   LocalEntityInfo,
-  GeneralTypeMap,
   Key,
-  ReqResEntityOf,
   Entity,
 } from '@phenyl/interfaces'
 import { getNestedValue, createDocumentPath } from 'sp2'
@@ -47,10 +44,10 @@ export class LocalStateFinder {
    * "head" is like git's "HEAD", the current entity in local state.
    */
 
-  static getHeadEntity<M extends GeneralTypeMap, EN extends Key<M>>(
+  static getHeadEntity<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
     query: IdQuery<EN>,
-  ): EntityNameOf<M> {
+  ): Entity {
     const { entityName, id } = query
     if (state.entities[entityName] == null)
       throw new Error(
@@ -73,7 +70,7 @@ export class LocalStateFinder {
    * head may be null.
    */
 
-  static getEntityInfo<M extends GeneralTypeMap, EN extends Key<M>>(
+  static getEntityInfo<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     state: LocalStateOf,
     query: IdQuery<EN>,
   ): LocalEntityInfo<Entity> {
