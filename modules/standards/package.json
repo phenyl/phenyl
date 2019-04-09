@@ -24,7 +24,6 @@
   "dependencies": {
     "@phenyl/interfaces": "~1.0.0",
     "@phenyl/utils": "~1.0.0",
-    "power-assign": "~0.2.10",
     "power-crypt": "~0.1.4",
     "sp2": "~1.4.1"
   },
