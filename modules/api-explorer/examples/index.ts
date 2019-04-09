@@ -1,11 +1,11 @@
 import http from "http";
-import PhenylRestApi from "phenyl-rest-api";
-import { createEntityClient } from "phenyl-memory-db";
+import PhenylRestApi from "@phenyl/rest-api";
+import { createEntityClient } from "@phenyl/memory-db";
 import {
   StandardUserDefinition,
   StandardEntityDefinition
 } from "phenyl-standards";
-import PhenylHttpServer from "phenyl-http-server";
+import PhenylHttpServer from "@phenyl/http-server";
 import PhenylApiExplorer from "../src/PhenylApiExplorer";
 import {
   Session,
