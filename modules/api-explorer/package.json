@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Automatically renders API explorer pages like swagger",
   "main": "lib/PhenylApiExplorer.js",
-  "types": "lib/PhenylApiExplorer.d.js",
+  "types": "lib/PhenylApiExplorer.d.ts",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-api-explorer",
   "scripts": {
     "build": "upbin tsc --declaration",
