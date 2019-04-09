@@ -1,5 +1,5 @@
-import { Middleware } from 'redux'
-import { assign } from 'power-assign'
+import { Middleware, Dispatch, AnyAction } from 'redux'
+import { assign } from 'assign'
 import { PhenylReduxModule } from './phenyl-redux-module.js'
 import { LocalStateUpdater } from './local-state-updater.js'
 import { LocalStateFinder } from './local-state-finder.js'
@@ -27,29 +27,39 @@ import {
   PullAction,
   RestApiClient,
   SetSessionAction,
-  TypeMap,
+  GeneralTypeMap,
   UnfollowAction,
   UpdateOperation,
   UseEntitiesAction,
   UserEntityNameOf,
-} from 'phenyl-interfaces'
-export type PhenylActionOf<TM extends TypeMap> = PhenylAction<EntityMapOf<TM>, AuthCommandMapOf<TM>>
-export type LocalStateOf<TM extends TypeMap> = LocalState<EntityMapOf<TM>>
-export type MiddlewareOptions<TM extends TypeMap> = {
+  GeneralReqResEntityMap,
+  GeneralAuthCommandMap,
+} from '@phenyl/interfaces'
+
+type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>
+export type MiddlewareOptions<TM extends GeneralTypeMap> = {
   client: RestApiClient<TM>
   storeKey?: string
-} // export type Next<TM: TypeMap, T> = (action: PhenylActionOf<TM>) => Promise<T>
+}
+type Next = Dispatch<AnyAction>
 
-export class MiddlewareCreator<TM extends TypeMap> {
-  static create<T, S>(options: MiddlewareOptions<TM>): Middleware<S, PhenylActionOf<TM>, Next<TM, T>> {
+// TODO: remove TM extends GeneralTypeMap
+export class MiddlewareCreator {
+  static create<GM extends GeneralTypeMap, T, S>(
+    options: MiddlewareOptions<GM>,
+  ): Middleware<T, S, Dispatch<PhenylAction> {
     const storeKey = options.storeKey || 'phenyl'
-    return (store: any) => (next: Next<TM, T>) => {
+    return (store: any) => (next: Dispatch<AnyAction>) => {
       const client = options.client
 
       const getState = () => store.getState()[storeKey]
 
-      const handler: MiddlewareHandler<TM, T> = new MiddlewareHandler(getState, client, next)
-      return (action: PhenylActionOf<TM>): Promise<T> => {
+      const handler: MiddlewareHandler<GM, T> = new MiddlewareHandler(
+        getState,
+        client,
+        next,
+      )
+      return (action: PhenylAction): Promise<T> => {
         switch (action.type) {
           case 'phenyl/useEntities':
             return handler.useEntities(action)
@@ -119,17 +129,17 @@ export class MiddlewareCreator<TM extends TypeMap> {
  *
  */
 
-export class MiddlewareHandler<TM extends TypeMap, T> {
-  //   static LocalStateUpdater: Class<LocalStateUpdater<TM>> = LocalStateUpdater;
-  //   static PhenylReduxModule: Class<PhenylReduxModule<TM>> = PhenylReduxModule;
-  // getState: () => LocalStateOf<TM>;
+export class MiddlewareHandler<TM extends GeneralTypeMap, T> {
+  static LocalStateUpdater = LocalStateUpdater;
+  static PhenylReduxModule= PhenylReduxModule;
+  getState: () => LocalStateOf;
   client: RestApiClient<TM>
-  next: Next<TM, T>
+  next: Next
 
   constructor(
-    // getState: () => LocalStateOf<TM>,
+    getState: () => LocalStateOf,
     client: RestApiClient<TM>,
-    next: Next<TM, T>,
+    next: Next,
   ) {
     this.getState = getState
     this.client = client
@@ -139,7 +149,7 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    *
    */
 
-  get state(): LocalStateOf<TM> {
+  get state(): LocalStateOf {
     return this.getState()
   }
   /**
@@ -173,7 +183,9 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
   async useEntities(action: UseEntitiesAction): Promise<T> {
     const entityNames = action.payload
     const ops = entityNames
-      .filter(entityName => !LocalStateFinder.hasEntityField(this.state, entityName))
+      .filter(
+        entityName => !LocalStateFinder.hasEntityField(this.state, entityName),
+      )
       .map(entityName => LocalStateUpdater.initialize(this.state, entityName))
     return this.assignToState(...ops)
   }
@@ -184,7 +196,9 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
 
-  async commitAndPush<N extends EntityNameOf<TM>>(action: CommitAndPushAction<N>): Promise<T> {
+  async commitAndPush<N extends EntityNameOf<TM>>(
+    action: CommitAndPushAction<N>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { id, entityName } = action.payload
     this.assignToState(
@@ -207,7 +221,14 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
       const result = await this.client.push(pushCommand, this.sessionId)
 
       if (result.hasEntity) {
-        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+        ops.push(
+          LocalStateUpdater.follow(
+            this.state,
+            entityName,
+            result.entity,
+            result.versionId,
+          ),
+        )
       } else {
         ops.push(
           LocalStateUpdater.synchronize(
@@ -252,9 +273,13 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * Commit to LocalState.
    */
 
-  async commit<N extends EntityNameOf<TM>>(action: CommitAction<N>): Promise<T> {
+  async commit<N extends EntityNameOf<TM>>(
+    action: CommitAction<N>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
-    return this.assignToState(LocalStateUpdater.commit(this.state, action.payload))
+    return this.assignToState(
+      LocalStateUpdater.commit(this.state, action.payload),
+    )
   }
   /**
    * Push to the CentralState.
@@ -290,7 +315,14 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
       const result = await this.client.push(pushCommand, this.sessionId)
 
       if (result.hasEntity) {
-        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+        ops.push(
+          LocalStateUpdater.follow(
+            this.state,
+            entityName,
+            result.entity,
+            result.versionId,
+          ),
+        )
       } else {
         ops.push(
           LocalStateUpdater.synchronize(
@@ -343,12 +375,17 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
     for (let unreachedCommit of this.state.unreachedCommits) {
       const ops = []
       const { entityName, id, commitCount } = unreachedCommit
-      const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
-        entityName,
-        id,
-      })
+      const { versionId, commits } = LocalStateFinder.getEntityInfo(
+        this.state,
+        {
+          entityName,
+          id,
+        },
+      )
       const operations = commits.slice(0, commitCount)
-      this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag)) // $FlowIssue(Cannot assign object literal to pushCommand because string [1] is incompatible with N [2] in property entityName)
+      this.assignToState(
+        LocalStateUpdater.networkRequest(this.state, action.tag),
+      ) // $FlowIssue(Cannot assign object literal to pushCommand because string [1] is incompatible with N [2] in property entityName)
 
       const pushCommand: PushCommand<N> = {
         id,
@@ -359,10 +396,19 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
 
       try {
         const result = await this.client.push(pushCommand, this.sessionId)
-        ops.push(LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit))
+        ops.push(
+          LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit),
+        )
 
         if (result.hasEntity) {
-          ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+          ops.push(
+            LocalStateUpdater.follow(
+              this.state,
+              entityName,
+              result.entity,
+              result.versionId,
+            ),
+          )
         } else {
           ops.push(
             LocalStateUpdater.synchronize(
@@ -391,7 +437,9 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * Delete the entity in the CentralState, then unfollow the entity in LocalState.
    */
 
-  async delete<N extends EntityNameOf<TM>>(action: DeleteAction<N>): Promise<T> {
+  async delete<N extends EntityNameOf<TM>>(
+    action: DeleteAction<N>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, id } = action.payload
     this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
@@ -412,33 +460,57 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * Register the given entity.
    */
 
-  async follow<N extends EntityNameOf<TM>>(action: FollowAction<N, EntityOf<TM, N>>): Promise<T> {
+  async follow<N extends EntityNameOf<TM>>(
+    action: FollowAction<N, EntityOf<TM, N>>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, entity, versionId } = action.payload
-    return this.assignToState(LocalStateUpdater.follow(this.state, entityName, entity, versionId))
+    return this.assignToState(
+      LocalStateUpdater.follow(this.state, entityName, entity, versionId),
+    )
   }
   /**
    * Register all the given entities.
    */
 
-  async followAll<N extends EntityNameOf<TM>>(action: FollowAllAction<N, EntityOf<TM, N>>): Promise<T> {
+  async followAll<N extends EntityNameOf<TM>>(
+    action: FollowAllAction<N, EntityOf<TM, N>>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, entities, versionsById } = action.payload
-    return this.assignToState(LocalStateUpdater.followAll(this.state, entityName, entities, versionsById))
+    return this.assignToState(
+      LocalStateUpdater.followAll(
+        this.state,
+        entityName,
+        entities,
+        versionsById,
+      ),
+    )
   }
   /**
    * Login with credentials, then register the user.
    */
 
-  async login<N extends UserEntityNameOf<TM>>(action: LoginAction<N, AuthCommandMapOf<TM>>): Promise<T> {
+  async login<N extends UserEntityNameOf<TM>>(
+    action: LoginAction<N, AuthCommandMapOf<TM>>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const command = action.payload
-    await this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag))
+    await this.assignToState(
+      LocalStateUpdater.networkRequest(this.state, action.tag),
+    )
     let ops = []
 
     try {
       const result = await this.client.login(command, this.sessionId)
-      ops.push(LocalStateUpdater.setSession(this.state, result.session, result.user, result.versionId))
+      ops.push(
+        LocalStateUpdater.setSession(
+          this.state,
+          result.session,
+          result.user,
+          result.versionId,
+        ),
+      )
     } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag))
     } finally {
@@ -451,7 +523,9 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * Remove the session in CentralState and reset the LocalState.
    */
 
-  async logout<N extends UserEntityNameOf<TM>>(action: LogoutAction<N>): Promise<T> {
+  async logout<N extends UserEntityNameOf<TM>>(
+    action: LogoutAction<N>,
+  ): Promise<T> {
     const command = action.payload
     await this.client.logout(command, this.sessionId)
     return this.resetState()
@@ -470,9 +544,13 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
    * If push failed, the commit is not applied.
    */
 
-  async pushAndCommit<N extends EntityNameOf<TM>>(action: PushAndCommitAction<N>): Promise<T> {
+  async pushAndCommit<N extends EntityNameOf<TM>>(
+    action: PushAndCommitAction<N>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
-    await this.assignToState(LocalStateUpdater.networkRequest(this.state, action.tag)) //LocalStateUpdater.commit(this.state, action.payload),
+    await this.assignToState(
+      LocalStateUpdater.networkRequest(this.state, action.tag),
+    ) //LocalStateUpdater.commit(this.state, action.payload),
 
     const { operation, id, entityName } = action.payload
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
@@ -493,7 +571,14 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
       const result = await this.client.push(pushCommand, this.sessionId)
 
       if (result.hasEntity) {
-        ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+        ops.push(
+          LocalStateUpdater.follow(
+            this.state,
+            entityName,
+            result.entity,
+            result.versionId,
+          ),
+        )
       } else {
         ops.push(
           LocalStateUpdater.synchronize(
@@ -530,7 +615,10 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
   async pull<N extends EntityNameOf<TM>>(action: PullAction<N>): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { id, entityName } = action.payload
-    const { versionId } = LocalStateFinder.getEntityInfo(this.state, action.payload)
+    const { versionId } = LocalStateFinder.getEntityInfo(
+      this.state,
+      action.payload,
+    )
     const pullQuery = {
       id,
       entityName,
@@ -549,7 +637,14 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
         }),
       )
     } else {
-      ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+      ops.push(
+        LocalStateUpdater.follow(
+          this.state,
+          entityName,
+          result.entity,
+          result.versionId,
+        ),
+      )
     }
 
     return this.assignToState(...ops)
@@ -561,16 +656,22 @@ export class MiddlewareHandler<TM extends TypeMap, T> {
   async setSession(action: SetSessionAction): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { user, versionId, session } = action.payload
-    return this.assignToState(LocalStateUpdater.setSession(this.state, session, user, versionId))
+    return this.assignToState(
+      LocalStateUpdater.setSession(this.state, session, user, versionId),
+    )
   }
   /**
    * Unregister the entity.
    */
 
-  async unfollow<N extends EntityNameOf<TM>>(action: UnfollowAction<N>): Promise<T> {
+  async unfollow<N extends EntityNameOf<TM>>(
+    action: UnfollowAction<N>,
+  ): Promise<T> {
     const { LocalStateUpdater } = this.constructor
     const { entityName, id } = action.payload
-    return this.assignToState(LocalStateUpdater.unfollow(this.state, entityName, id))
+    return this.assignToState(
+      LocalStateUpdater.unfollow(this.state, entityName, id),
+    )
   }
   /**
    * Unset session info. It doesn't remove the user info.
