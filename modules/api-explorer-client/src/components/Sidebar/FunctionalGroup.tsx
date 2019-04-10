@@ -1,11 +1,11 @@
-import React from 'react'
-import { Menu } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Menu } from "semantic-ui-react/index";
+import { Link } from "react-router-dom";
 
 type Props = {
-  groupName: string,
-  functionalNames: Array<string>,
-}
+  groupName: string;
+  functionalNames: Array<string>;
+};
 
 const FunctionalGroup = ({ groupName, functionalNames }: Props) => (
   <Menu.Item key={groupName} name={groupName}>
@@ -22,6 +22,6 @@ const FunctionalGroup = ({ groupName, functionalNames }: Props) => (
       ))}
     </div>
   </Menu.Item>
-)
+);
 
-export default FunctionalGroup
+export default FunctionalGroup;
