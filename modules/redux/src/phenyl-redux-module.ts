@@ -114,7 +114,7 @@ export class PhenylReduxModule {
     }
   }
 
-  static assign(ops: Array<GeneralUpdateOperation>): AssignAction {
+  static assign(ops: GeneralUpdateOperation[]): AssignAction {
     return {
       type: 'phenyl/assign',
       payload: ops,
@@ -191,9 +191,10 @@ export class PhenylReduxModule {
     }
   }
 
-  static delete<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    command: IdDeleteCommand<EN>,
-  ): DeleteAction<EN> {
+  static delete<
+    TM extends GeneralTypeMap,
+    EN extends Key<ReqResEntityMapOf<TM>>
+  >(command: IdDeleteCommand<EN>): DeleteAction<EN> {
     return {
       type: 'phenyl/delete',
       payload: command,
