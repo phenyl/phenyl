@@ -63,10 +63,7 @@ export class PhenylReduxModule {
   static phenylReducer<
     GEM extends GeneralReqResEntityMap,
     GCM extends GeneralAuthCommandMap
-  >(
-    state: LocalState<GEM, GCM> | undefined | null,
-    action: PhenylAction,
-  ): LocalState<GEM, GCM> {
+  >(action: PhenylAction, state?: LocalState<GEM, GCM>): LocalState<GEM, GCM> {
     if (state == null) {
       return this.createInitialState()
     }
@@ -127,7 +124,7 @@ export class PhenylReduxModule {
 
   static setSession<EN extends string, E extends Entity>(
     session: Session<EN>,
-    user?: E | undefined,
+    user?: E,
   ): SetSessionAction<EN, E> {
     return {
       type: 'phenyl/setSession',
