@@ -56,7 +56,7 @@ export class MiddlewareCreator {
         client,
         next,
       )
-      return (action: PhenylAction): Promise<AnyAction> => {
+      return (action: PhenylAction): Promise<AnyAction> | AnyAction => {
         switch (action.type) {
           case 'phenyl/useEntities':
             return handler.useEntities(action)
@@ -74,6 +74,7 @@ export class MiddlewareCreator {
             return handler.repush(action)
 
           case 'phenyl/delete':
+            // @ts-ignore entityName is always string
             return handler.delete(action)
 
           case 'phenyl/follow':

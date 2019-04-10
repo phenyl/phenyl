@@ -5,7 +5,10 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "test": "nyc mocha test/*.js --color always"
+    "build": "upbin tsc --declaration",
+    "clean": "upbin rimraf $(cat ../../.temporary-files)",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "type-check": "upbin tsc --noEmit"
   },
   "files": [
     "lib",
