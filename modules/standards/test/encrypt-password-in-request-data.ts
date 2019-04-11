@@ -1,13 +1,13 @@
-// @flow
-
 import { it, describe } from 'mocha'
-import powerCrypt from 'power-crypt/jsnext'
-import assert from 'power-assert'
-import { encryptPasswordInRequestData } from '../src/encrypt-password-in-request-data.js'
+// @ts-ignore
+import powerCrypt from 'power-crypt'
+import assert from 'assert'
+import { GeneralRequestData } from '@phenyl/interfaces'
+import { encryptPasswordInRequestData } from '../src/encrypt-password-in-request-data'
 
-describe('encryptPasswordInRequestData', function () {
-  it ('does nothing if request isnt update', function () {
-    const requestData = {
+describe('encryptPasswordInRequestData', () => {
+  it ('does nothing if request isnt update', () => {
+    const requestData: GeneralRequestData = {
       method: 'get',
       payload: {
         entityName: 'user',
@@ -19,8 +19,8 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, requestData)
   })
 
-  it ('encrypts password if password is in request data with insertOne method', function () {
-    const requestData = {
+  it ('encrypts password if password is in request data with insertOne method', () => {
+    const requestData: GeneralRequestData = {
       method: 'insertOne',
       payload: {
         entityName: 'user',
@@ -41,8 +41,8 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, expectedRequestData)
   })
 
-  it ('encrypts password if password is in request data with insertMulti method', function () {
-    const requestData = {
+  it ('encrypts password if password is in request data with insertMulti method', () => {
+    const requestData: GeneralRequestData = {
       method: 'insertMulti',
       payload: {
         entityName: 'user',
@@ -63,8 +63,8 @@ describe('encryptPasswordInRequestData', function () {
     assert.deepEqual(encryptedRequestData, expectedRequestData)
   })
 
-  it ('encrypts password if password is in request data with update method', function () {
-    const requestData = {
+  it ('encrypts password if password is in request data with update method', () => {
+    const requestData: GeneralRequestData = {
       method: 'updateById',
       payload: {
         id: 'foo',

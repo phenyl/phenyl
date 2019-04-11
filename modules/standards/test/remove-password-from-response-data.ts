@@ -1,15 +1,13 @@
-// @flow
-
 import { it, describe } from 'mocha'
-import assert from 'power-assert'
-import { removePasswordFromResponseData } from '../src/remove-password-from-response-data.js'
+import assert from 'assert'
+import { EntityResponseData } from '@phenyl/interfaces'
+import { removePasswordFromResponseData } from '../src/remove-password-from-response-data'
 
-describe('removePasswordFromResponseData', function () {
-  it ('removes password property', function () {
-    const resData = {
+describe('removePasswordFromResponseData', () => {
+  it ('removes password property', () => {
+    const resData: EntityResponseData<any> = {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           email: 'foo@example.com',
@@ -24,7 +22,6 @@ describe('removePasswordFromResponseData', function () {
     assert.deepEqual(modifiedResData, {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           email: 'foo@example.com',
@@ -35,11 +32,11 @@ describe('removePasswordFromResponseData', function () {
     })
   })
 
-  it ('removes password property when nested', function () {
-    const resData = {
+  // @TODO: the sp2/updater can not support nested property right now
+  it ('removes password property when nested', () => {
+    const resData: EntityResponseData<any> = {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           account: {
@@ -56,7 +53,6 @@ describe('removePasswordFromResponseData', function () {
     assert.deepEqual(modifiedResData, {
       type: 'get',
       payload: {
-        ok: 1,
         entity: {
           id: 'foo',
           account: {

@@ -1,0 +1,33 @@
+{
+  "name": "@phenyl/standards",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Nicholas Lee <nicholaslee119@gmail.com>"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "upbin tsc --declaration",
+    "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always",
+    "type-check": "upbin tsc --noEmit"
+  },
+  "dependencies": {
+    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/utils": "~1.0.0",
+    "power-crypt": "~0.1.4",
+    "sp2": "~1.4.1"
+  },
+  "devDependencies": {
+    "upbin": "^0.8.1"
+  }
+}
