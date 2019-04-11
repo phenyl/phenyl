@@ -79,7 +79,7 @@ export class PhenylReduxModule {
         return this.createInitialState()
 
       case 'phenyl/assign':
-        return update({ ...state, ...action.payload })
+        return update(state, ...action.payload) as LocalState<GEM, GCM>
 
       default:
         return state
@@ -227,7 +227,7 @@ export class PhenylReduxModule {
   ): PushAction<EN> {
     return {
       type: 'phenyl/push',
-      payload: update({ until: -1, ...payload }),
+      payload: update({ until: -1 }, payload) as PushActionPayload<EN>,
       tag: randomStringWithTimeStamp(),
     }
   }
