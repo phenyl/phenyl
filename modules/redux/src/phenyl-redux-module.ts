@@ -227,7 +227,7 @@ export class PhenylReduxModule {
   ): PushAction<EN> {
     return {
       type: 'phenyl/push',
-      payload: update({ until: -1 }, payload) as PushActionPayload<EN>,
+      payload: { until: -1, ...payload },
       tag: randomStringWithTimeStamp(),
     }
   }
