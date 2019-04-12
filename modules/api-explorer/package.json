@@ -9,6 +9,7 @@
     "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit",
     "start": "nodemon examples/index.js --exec babel-node --watch src --watch examples",
+    "lint": "upbin eslint 'src/**/*.ts' --fix",
     "test": "echo no test specified in phenyl-api-explorer"
   },
   "author": [
