@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/redux",
-  "version": "0.5.0",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -23,8 +23,8 @@
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
   "dependencies": {
-    "@phenyl/interfaces": "^0.5.0",
-    "@phenyl/utils": "^0.5.0",
+    "@phenyl/interfaces": "^1.0.0-alpha.0",
+    "@phenyl/utils": "^1.0.0-alpha.0",
     "fast-deep-equal": "^1.0.0",
     "sp2": "~1.4.1"
   },

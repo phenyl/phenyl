@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/utils",
-  "version": "0.5.0",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^0.5.0",
+    "@phenyl/interfaces": "^1.0.0-alpha.0",
     "sp2": "~1.4.0"
   },
   "devDependencies": {

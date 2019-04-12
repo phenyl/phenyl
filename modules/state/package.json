@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/state",
-  "version": "0.5.0",
+  "version": "1.0.0-alpha.0",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@phenyl/interfaces": "^0.5.0",
+    "@phenyl/interfaces": "^1.0.0-alpha.0",
     "sp2": "^1.4.1"
   },
   "devDependencies": {

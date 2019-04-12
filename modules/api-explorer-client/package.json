@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer-client",
-  "version": "0.5.0",
+  "version": "1.0.0-alpha.0",
   "description": "Client application of phenyl-api-explorer",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -30,9 +30,9 @@
     ]
   },
   "devDependencies": {
-    "@phenyl/http-client": "^0.5.0",
-    "@phenyl/interfaces": "^0.5.0",
-    "@phenyl/utils": "^0.5.0",
+    "@phenyl/http-client": "^1.0.0-alpha.0",
+    "@phenyl/interfaces": "^1.0.0-alpha.0",
+    "@phenyl/utils": "^1.0.0-alpha.0",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
