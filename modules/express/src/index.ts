@@ -11,7 +11,7 @@ import {
 } from "@phenyl/interfaces";
 import { Request, Response, NextFunction } from "express";
 
-export class PhenylExpressMiddlewareCreator<TM extends GeneralTypeMap> {
+export class PhenylExpressMiddlewareCreator {
   /**
    * Create an Express Middleware to listen to Phenyl API requests.
    * By default, paths start with "/api" will be handled by restApiHandler.
@@ -102,3 +102,8 @@ export class PhenylExpressMiddlewareCreator<TM extends GeneralTypeMap> {
     };
   }
 }
+
+export const {
+  createPhenylApiMiddleware,
+  createPhenylMiddleware
+} = PhenylExpressMiddlewareCreator;

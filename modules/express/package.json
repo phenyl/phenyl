@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "Express middleware to use Phenyl in it.",
   "repository": "phenyl-js/phenyl",
-  "license": "Apache License 2.0",
-  "author": "Shin Suzuki <shinout310@gmail.com>, Jesse Katsumata<jesse.katsumata@gmail.com>",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Jesse Katsumata<jesse.katsumata@gmail.com>"
+  ],
   "files": [
     "lib",
     "LICENSE",
@@ -26,6 +29,9 @@
     "express": "^4.16.4"
   },
   "devDependencies": {
+    "@phenyl/http-client": "~1.0.0",
+    "@phenyl/memory-db": "~1.0.0",
+    "@phenyl/rest-api": "~1.0.0",
     "upbin": "^0.8.1"
   }
 }
