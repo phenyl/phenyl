@@ -4,7 +4,7 @@ import { createEntityClient } from "@phenyl/memory-db";
 import {
   StandardUserDefinition,
   StandardEntityDefinition
-} from "phenyl-standards";
+} from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
 import PhenylApiExplorer from "../src/PhenylApiExplorer";
 import {
@@ -143,11 +143,9 @@ const functionalGroup: FunctionalGroup = {
     test: new TestCustomQuery()
   },
   users: {
-    // @ts-ignore TODO Convert phenyl-standards to TS
     patient: new PatientDefinition()
   },
   nonUsers: {
-    // @ts-ignore TODO Convert phenyl-standards to TS
     hospital: new HospitalDefinition()
   }
 };
