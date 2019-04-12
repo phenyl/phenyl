@@ -20,12 +20,12 @@
     "@phenyl/interfaces": "~1.0.0",
     "@types/ejs": "^2.6.2",
     "nodemon": "^1.18.3",
-    "phenyl-http-client": "~0.2.13",
-    "phenyl-http-server": "~0.2.9",
-    "phenyl-lambda-adapter": "~0.2.9",
-    "phenyl-memory-db": "~0.2.9",
-    "phenyl-rest-api": "~0.3.9",
-    "phenyl-standards": "~0.2.9"
+    "@phenyl/http-client": "~1.0.0",
+    "@phenyl/http-server": "~1.0.0",
+    "@phenyl/lambda-adapter": "~1.0.0",
+    "@phenyl/memory-db": "~1.0.0",
+    "@phenyl/rest-api": "~1.0.0",
+    "@phenyl/standards": "~1.0.0"
   },
   "dependencies": {
     "ejs": "^2.6.1",
