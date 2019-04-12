@@ -19,21 +19,21 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
  * Tests for `TypeMapFromFG`.
  */
 {
-  type NarrowMember = { id: string; name: string; age: number };
-  type BroadMember = { id: string; name: string };
+  type MemberResponse = { id: string; name: string; age: number };
+  type MemberRequest = { id: string; name: string };
   type Credentials = { email: string; password: string };
   type MemberSessionValue = { externalId: string; ttl: number };
 
   class MemberDefinition implements UserDefinition {
     entityName: TypeOnly<"member">;
-    entity: TypeOnly<ReqRes<BroadMember,NarrowMember>>;
+    entity: TypeOnly<ReqRes<MemberRequest, MemberResponse>>;
 
     async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
       const { entityName, credentials } = loginCommand;
 
       const ret: AuthenticationResult<
         "member",
-        NarrowMember,
+        MemberResponse,
         MemberSessionValue
       > = {
         preSession: {
@@ -50,11 +50,11 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     }
   }
 
-  type NarrowMessage = { id: string; body: string; createdAt: string };
-  type BroadMessage = { id: string; body: string };
+  type MessageResponse = { id: string; body: string; createdAt: string };
+  type MessageRequest = { id: string; body: string };
   class MessageDefinition implements EntityDefinition {
     entityName: TypeOnly<"message">;
-    entity: TypeOnly<ReqRes<BroadMessage,NarrowMessage>>;
+    entity: TypeOnly<ReqRes<MessageRequest, MessageResponse>>;
   }
 
   type MedicalRecord = { id: string; body: string; createdAt: string };
@@ -123,9 +123,9 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
       TypeEq<
         MyEntities,
         {
-          member: { request: BroadMember, response: NarrowMember};
-          message: { request:  BroadMessage, response: NarrowMessage};
-          medicalRecord: { request: MedicalRecord, response: MedicalRecord};
+          member: { request: MemberRequest; response: MemberResponse };
+          message: { request: MessageRequest; response: MessageResponse };
+          medicalRecord: { request: MedicalRecord; response: MedicalRecord };
         }
       >
     >();
