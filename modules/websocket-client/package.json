@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/websocket-client",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -23,11 +23,11 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/utils": "~1.0.0",
+    "@phenyl/utils": "^0.5.0",
     "ws": "^3.3.1"
   },
   "devDependencies": {
-    "@phenyl/interfaces": "~1.0.0",
+    "@phenyl/interfaces": "^0.5.0",
     "@types/ws": "^6.0.1",
     "babel-register": "^6.24.1",
     "upbin": "^0.9.0"
