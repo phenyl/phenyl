@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/memory-db",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.3",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -18,10 +18,10 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.0.0-alpha.1",
-    "@phenyl/interfaces": "^1.0.0-alpha.0",
-    "@phenyl/state": "^1.0.0-alpha.1",
-    "@phenyl/utils": "^1.0.0-alpha.0",
+    "@phenyl/central-state": "^1.0.0-alpha.3",
+    "@phenyl/interfaces": "^1.0.0-alpha.3",
+    "@phenyl/state": "^1.0.0-alpha.3",
+    "@phenyl/utils": "^1.0.0-alpha.3",
     "sp2": "^1.4.1"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/http-rules",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.3",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
@@ -22,8 +22,8 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.0-alpha.0",
-    "@phenyl/utils": "^1.0.0-alpha.0"
+    "@phenyl/interfaces": "^1.0.0-alpha.3",
+    "@phenyl/utils": "^1.0.0-alpha.3"
   },
   "devDependencies": {
     "upbin": "^0.8.1"
