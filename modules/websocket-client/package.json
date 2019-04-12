@@ -17,10 +17,8 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "npm test",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "test": "upbin tsc --noEmit $(find type-test -name '*.test.ts' -type f)",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
@@ -32,7 +30,6 @@
     "@phenyl/interfaces": "~1.0.0",
     "@types/ws": "^6.0.1",
     "babel-register": "^6.24.1",
-    "mocha": "^5.0.5",
     "upbin": "^0.9.0"
   }
 }
