@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Automatically renders API explorer pages like swagger",
   "main": "lib/PhenylApiExplorer.js",
   "types": "lib/PhenylApiExplorer.d.ts",
@@ -18,13 +18,13 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.0",
-    "@phenyl/http-server": "^1.0.0-alpha.0",
+    "@phenyl/http-client": "^1.0.0-alpha.1",
+    "@phenyl/http-server": "^1.0.0-alpha.1",
     "@phenyl/interfaces": "^1.0.0-alpha.0",
     "@phenyl/lambda-adapter": "^1.0.0-alpha.0",
-    "@phenyl/memory-db": "^1.0.0-alpha.0",
+    "@phenyl/memory-db": "^1.0.0-alpha.1",
     "@phenyl/rest-api": "^1.0.0-alpha.0",
-    "@phenyl/standards": "^1.0.0-alpha.0",
+    "@phenyl/standards": "^1.0.0-alpha.1",
     "@types/ejs": "^2.6.2",
     "nodemon": "^1.18.3"
   },

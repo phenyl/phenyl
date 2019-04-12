@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer-client",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Client application of phenyl-api-explorer",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -30,7 +30,7 @@
     ]
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.0",
+    "@phenyl/http-client": "^1.0.0-alpha.1",
     "@phenyl/interfaces": "^1.0.0-alpha.0",
     "@phenyl/utils": "^1.0.0-alpha.0",
     "autoprefixer": "7.1.6",
