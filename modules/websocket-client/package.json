@@ -31,5 +31,8 @@
     "@types/ws": "^6.0.1",
     "babel-register": "^6.24.1",
     "upbin": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -32,5 +32,8 @@
     "ejs": "^2.6.1",
     "phenyl-api-explorer-client": "~0.1.15",
     "upbin": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

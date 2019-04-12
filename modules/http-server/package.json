@@ -29,5 +29,8 @@
     "@babel/register": "^7.4.0",
     "mocha": "^5.0.5",
     "upbin": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

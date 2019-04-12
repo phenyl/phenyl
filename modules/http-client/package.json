@@ -36,5 +36,8 @@
     "@phenyl/interfaces": "^1.0.0-alpha.0",
     "@phenyl/utils": "^1.0.0-alpha.0",
     "cross-fetch": "^2.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

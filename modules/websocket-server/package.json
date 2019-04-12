@@ -30,5 +30,8 @@
     "imoans <naomins0101@gmail.com>",
     "Jesse Katsumata <jesse.katsumata@gmail.com>"
   ],
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  }
 }
