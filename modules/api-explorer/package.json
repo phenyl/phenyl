@@ -25,7 +25,7 @@
     "@phenyl/lambda-adapter": "~1.0.0",
     "@phenyl/memory-db": "~1.0.0",
     "@phenyl/rest-api": "~1.0.0",
-    "phenyl-standards": "~0.2.9"
+    "@phenyl/standards": "~1.0.0"
   },
   "dependencies": {
     "ejs": "^2.6.1",
