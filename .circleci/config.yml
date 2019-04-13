@@ -5,6 +5,7 @@ executors:
     working_directory: ~/repo
     docker:
       - image: circleci/node:8.11.3
+      - image: circleci/mongo:3.6.9
 
 commands:
   prepare:
