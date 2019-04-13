@@ -19,11 +19,12 @@ commands:
             sudo unlink $(which yarn)
             sudo npm i -g yarn@1.12.3
       - run:
-          name: Display version of Node.js, npm and Yarn
+          name: Display version of Node.js, npm, Yarn and mongodb
           command: |
             node -v
             npm -v
             yarn --version
+            mongo --version
 
 jobs:
   test:
