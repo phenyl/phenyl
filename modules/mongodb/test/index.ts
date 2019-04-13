@@ -48,8 +48,9 @@ describe('MongoDBEntityClient', () => {
       assert(result.entity.id)
 
       const users = await conn.collection('user').find()
+      const objectID = new bson.ObjectID(result.entity.id)
       // @ts-ignore
-      assert.deepEqual(users[0]._id, bson.ObjectID(result.entity.id))
+      assert(objectID.equals(users[0]._id))
 
       generatedId = result.entity.id
     })
@@ -74,8 +75,9 @@ describe('MongoDBEntityClient', () => {
         assert(result.entity.id === HEX_24_ID)
 
         const users = await conn.collection('user').find({ name: 'Jesse' })
+        const objectID = new bson.ObjectID(HEX_24_ID)
         // @ts-ignore
-        assert.deepEqual(users[0]._id, bson.ObjectID(HEX_24_ID))
+        assert(objectID.equals(users[0]._id))
       })
     })
   })
