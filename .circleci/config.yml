@@ -5,12 +5,13 @@ executors:
     working_directory: ~/repo
     docker:
       - image: circleci/node:8.11.3
-      - image: circleci/mongo:3.6.12
+      - image: circleci/mongo:3.5.6
 
 commands:
   prepare:
     steps:
       - checkout
+      - run: sudo apt-get install mongodb-clients
       - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - run:
           # https://yarnpkg.com/ja/docs/install#linux-tab
