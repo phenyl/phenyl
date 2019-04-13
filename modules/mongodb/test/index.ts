@@ -2,7 +2,7 @@
 import { after, before, describe, it } from 'mocha'
 import { createEntityClient } from '../src/create-entity-client'
 import assert from 'assert'
-import bson from 'bson'
+import { ObjectId } from 'bson'
 // import { assertEntityClient } from '@phenyl/interfaces'
 import { MongoDbConnection, connect } from '../src/connection'
 
@@ -48,7 +48,7 @@ describe('MongoDBEntityClient', () => {
       assert(result.entity.id)
 
       const users = await conn.collection('user').find()
-      const objectID = new bson.ObjectID(result.entity.id)
+      const objectID = new ObjectId(result.entity.id)
       // @ts-ignore
       assert(objectID.equals(users[0]._id))
 
@@ -75,7 +75,7 @@ describe('MongoDBEntityClient', () => {
         assert(result.entity.id === HEX_24_ID)
 
         const users = await conn.collection('user').find({ name: 'Jesse' })
-        const objectID = new bson.ObjectID(HEX_24_ID)
+        const objectID = new ObjectId(HEX_24_ID)
         // @ts-ignore
         assert(objectID.equals(users[0]._id))
       })
