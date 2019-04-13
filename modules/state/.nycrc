@@ -1,8 +1,9 @@
 {
   "cache": true,
-  "exclude": ["jsnext.js", "test/**/*.js"],
+  "extension": [".ts"],
+  "exclude": ["test/**/*.ts"],
   "require": [
-    "babel-register"
+    "ts-node/register"
   ],
   "reporter": [
     "lcov",
