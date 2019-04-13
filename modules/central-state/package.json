@@ -16,12 +16,15 @@
     "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit"
   },
-  "devDependencies": {
-    "upbin": "^0.9.0"
-  },
   "dependencies": {
     "@phenyl/interfaces": "^1.0.0",
     "@phenyl/utils": "^1.0.0",
     "sp2": "^1.4.1"
+  },
+  "devDependencies": {
+    "upbin": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

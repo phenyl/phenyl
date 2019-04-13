@@ -2,6 +2,18 @@
   "name": "@phenyl/redux",
   "version": "1.0.0",
   "description": "",
+  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Jesse Katsumata <jesse.katsumata@gmail.com>",
+    "Daiki Ihara <sasurau4@gmail.com>"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -10,18 +22,6 @@
     "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
-  "files": [
-    "lib",
-    "LICENSE",
-    "README.md"
-  ],
-  "author": "Shin Suzuki <shinout310@gmail.com>",
-  "contributors": [
-    "Jesse Katsumata <jesse.katsumata@gmail.com>",
-    "Daiki Ihara <sasurau4@gmail.com>"
-  ],
-  "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
-  "license": "Apache-2.0",
   "dependencies": {
     "@phenyl/interfaces": "~1.0.0",
     "@phenyl/utils": "~1.0.0",
@@ -31,5 +31,8 @@
   "devDependencies": {
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

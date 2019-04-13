@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Adapter for AWS lambda",
   "repository": "phenyl-js/phenyl",
-  "license": "Apache License 2.0",
-  "author": "Shin Suzuki <shinout310@gmail.com>, Jesse Katsumata <jesse.katsumata@gmail.com>",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Jesse Katsumata <jesse.katsumata@gmail.com>"
+  ],
   "files": [
     "lib",
     "LICENSE",
     "README.md"
   ],
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
@@ -21,11 +24,11 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/interfaces": "~1.0.0",
-    "@phenyl/http-rules": "~1.0.0"
+    "@phenyl/http-rules": "~1.0.0",
+    "@phenyl/interfaces": "~1.0.0"
   },
   "devDependencies": {
-    "upbin": "^0.8.1"
+    "upbin": "^0.9.0"
   },
   "publishConfig": {
     "access": "public"

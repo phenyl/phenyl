@@ -25,13 +25,16 @@
     "@phenyl/http-rules": "~1.0.0",
     "@phenyl/interfaces": "~1.0.0",
     "@phenyl/utils": "~1.0.0",
-    "raw-body": "^2.3.2",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "raw-body": "^2.3.2"
   },
   "devDependencies": {
     "@phenyl/http-client": "~1.0.0",
     "@phenyl/memory-db": "~1.0.0",
     "@phenyl/rest-api": "~1.0.0",
     "upbin": "^0.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -72,5 +72,8 @@
     "upbin": "^0.8.1",
     "url-loader": "0.6.2",
     "webpack": "3.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
