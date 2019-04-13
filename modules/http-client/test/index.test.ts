@@ -1,14 +1,13 @@
-import mocha, { after, before, describe } from "mocha";
-
-import PhenylHttpClient from "../src/index";
+import { createServer } from "http";
+import assert from "assert";
+import { after, before, describe, it } from "mocha";
 import PhenylHttpServer from "@phenyl/http-server";
 import PhenylRestApi from "@phenyl/rest-api";
-import assert from "power-assert";
-// import { assertEntityClient } from "@phenyl/interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
-import { createServer } from "http";
+import PhenylHttpClient from "../src/index";
 
 const entityClient = createEntityClient();
+
 const restApiHandler = new PhenylRestApi(
   {},
   {
@@ -16,19 +15,30 @@ const restApiHandler = new PhenylRestApi(
     sessionClient: entityClient.createSessionClient()
   }
 );
+
 const server = new PhenylHttpServer(createServer(), {
   restApiHandler
 });
+
 const client = new PhenylHttpClient({
-  url: "http://localhost:8080"
+  url: "http://127.0.0.1:8080"
 });
+
+describe("constructor", () => {
+  it("holds url when created", () => {
+    const expected = "http://127.0.0.1:8080";
+
+    assert.deepEqual(client.url, expected);
+  });
+});
+
 describe("PhenylHttpClient as EntityClient", () => {
   before(() => {
     server.listen(8080);
   });
-  // TODO call the following function
-  // assertEntityClient(client, mocha, assert);
-  client;
+
+  // TODO: add tests to check that PhenylHttoClient works as an Entity Client
+
   after(() => {
     server.close();
   });
