@@ -47,7 +47,7 @@ jobs:
       - run: yarn build
       - run: yarn lint
       - run: yarn type-check
-      - run: yarn test
+      - run: yarn ci-test
   deploy:
     executor:
       name: default
