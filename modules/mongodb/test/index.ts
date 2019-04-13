@@ -6,7 +6,7 @@ import { ObjectId } from 'bson'
 // import { assertEntityClient } from '@phenyl/interfaces'
 import { MongoDbConnection, connect } from '../src/connection'
 
-const url = 'mongodb://localhost:27017'
+const url = 'mongodb://localhost:27016'
 
 // @TODO: should we implement assertEntityClient in @phenyl/interfaces
 // describe('MongoDBEntityClient as EntityClient', async () => {
