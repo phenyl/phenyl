@@ -111,27 +111,28 @@ describe('MongoDBEntityClient', () => {
     })
   })
 
-  describe('[Unstable because of the mongodb client library] ChangeStream', () => {
-    it('next', (done) => {
-      const stream = entityClient.dbClient.watch('user')
-      stream.next((err: Error, evt: any) => {
-        if (evt.operationType === 'update') {
-          assert(evt.updateDescription.removedFields.length === 1)
-          assert(evt.updateDescription.updatedFields['shin.a123'] === 'out')
-          stream.close()
-          done()
-        }
-        else {
-          stream.close()
-          done(`Operation type is invalid. ${evt.operationType} is given.`)
-        }
-      })
+  // @TODO: uncomment this test after the mongodb client library stable
+  // describe('[Unstable because of the mongodb client library] ChangeStream', () => {
+  //   it('next', (done) => {
+  //     const stream = entityClient.dbClient.watch('user')
+  //     stream.next((err: Error, evt: any) => {
+  //       if (evt.operationType === 'update') {
+  //         assert(evt.updateDescription.removedFields.length === 1)
+  //         assert(evt.updateDescription.updatedFields['shin.a123'] === 'out')
+  //         stream.close()
+  //         done()
+  //       }
+  //       else {
+  //         stream.close()
+  //         done(`Operation type is invalid. ${evt.operationType} is given.`)
+  //       }
+  //     })
 
-      entityClient.updateAndGet({
-        entityName: 'user',
-        id: HEX_24_ID,
-        operation: { $set: { 'shin.a123': 'out' }, $unset: { name: '' } }
-      })
-    })
-  })
+  //     entityClient.updateAndGet({
+  //       entityName: 'user',
+  //       id: HEX_24_ID,
+  //       operation: { $set: { 'shin.a123': 'out' }, $unset: { name: '' } }
+  //     })
+  //   })
+  // })
 })
