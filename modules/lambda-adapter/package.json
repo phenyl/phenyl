@@ -17,9 +17,9 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
+    "ci-test": "echo no test",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
