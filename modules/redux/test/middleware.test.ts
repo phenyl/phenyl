@@ -1,9 +1,8 @@
 /* eslint-env mocha */
 import assert from 'assert'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { createDocumentPath } from 'oad-utils/jsnext'
-import { createServerError, createLocalError } from 'phenyl-utils/jsnext'
-import { assign } from 'power-assign'
+import { createDocumentPath } from 'sp2'
+import { createServerError, createLocalError } from "@phenyl/utils";
 import { createMiddleware } from '../src/middleware'
 import reducer, { actions } from '../src/phenyl-redux-module'
 
@@ -296,7 +295,7 @@ describe('MiddlewareCreator', () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
-          const newState = assign(state, ...payload)
+          const newState = Object.assign(state, ...payload)
           assert.strictEqual(type, 'phenyl/assign')
           assert.deepStrictEqual(newState.entities[entityName][id].commits, [{
             $set: {
@@ -314,7 +313,7 @@ describe('MiddlewareCreator', () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
-          const newState = assign(state, ...payload)
+          const newState = Object.assign(state, ...payload)
           assert.strictEqual(type, 'phenyl/assign')
           assert.deepStrictEqual(newState.entities[entityName][id].head, {
             nickname: 'John'
@@ -330,7 +329,7 @@ describe('MiddlewareCreator', () => {
         const store = storeCreator(initialState, middleware)
         const next = ({ type, payload }) => {
           const { phenyl: state } = store.getState()
-          const newState = assign(state, ...payload)
+          const newState = Object.assign(state, ...payload)
           assert.strictEqual(state.entities[entityName][id].origin, newState.entities[entityName][id].origin)
         }
         await middleware(store)(next)(actions.commit({
