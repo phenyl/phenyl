@@ -63,7 +63,7 @@ export class PhenylReduxModule {
   static phenylReducer<
     GEM extends GeneralReqResEntityMap,
     GCM extends GeneralAuthCommandMap
-  >(action: PhenylAction, state?: LocalState<GEM, GCM>): LocalState<GEM, GCM> {
+  >(state: LocalState<GEM, GCM> | undefined | null, action: PhenylAction): LocalState<GEM, GCM> {
     if (state == null) {
       return this.createInitialState()
     }

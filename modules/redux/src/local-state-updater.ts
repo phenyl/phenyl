@@ -15,7 +15,7 @@ import {
   Key,
   Entity,
 } from '@phenyl/interfaces'
-import { LocalStateFinder } from './local-state-finder.js'
+import { LocalStateFinder } from './local-state-finder'
 type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>
 
 type EntityName = string

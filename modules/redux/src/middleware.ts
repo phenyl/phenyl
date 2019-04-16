@@ -1,7 +1,7 @@
 import { Middleware, Dispatch, AnyAction } from 'redux'
-import { PhenylReduxModule } from './phenyl-redux-module.js'
-import { LocalStateUpdater } from './local-state-updater.js'
-import { LocalStateFinder } from './local-state-finder.js'
+import { PhenylReduxModule } from './phenyl-redux-module'
+import { LocalStateUpdater } from './local-state-updater'
+import { LocalStateFinder } from './local-state-finder'
 import {
   CommitAction,
   PushAction,

@@ -18,8 +18,8 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
+    "ci-test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
-    "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {

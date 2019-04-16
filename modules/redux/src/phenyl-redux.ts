@@ -6,8 +6,8 @@ import {
   ReqResEntityMapOf,
 } from '@phenyl/interfaces'
 import { Middleware, Dispatch } from 'redux'
-import { MiddlewareCreator, MiddlewareOptions } from './middleware.js'
-import { PhenylReduxModule } from './phenyl-redux-module.js'
+import { MiddlewareCreator, MiddlewareOptions } from './middleware'
+import { PhenylReduxModule } from './phenyl-redux-module'
 
 export class PhenylRedux<TM extends GeneralTypeMap> {
   createMiddleware<T, S>(
@@ -20,8 +20,8 @@ export class PhenylRedux<TM extends GeneralTypeMap> {
     RREM extends ReqResEntityMapOf<TM>,
     ACM extends AuthCommandMapOf<TM>
   >(
+    state: LocalState<RREM, ACM> | undefined | null,
     action: PhenylAction,
-    state?: LocalState<RREM, ACM>,
   ) => LocalState<RREM, ACM> {
     return PhenylReduxModule.phenylReducer.bind(PhenylReduxModule)
   }
