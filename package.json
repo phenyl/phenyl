@@ -1,48 +1,54 @@
 {
   "name": "phenyl",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.5.0",
   "private": true,
-  "scripts": {
-    "postinstall": "babel tools/src -d tools/dist",
-    "test": "node tools/dist/cli.js test",
-    "build": "node tools/dist/cli.js build",
-    "load": "node tools/dist/cli.js load",
-    "clean": "node tools/dist/cli.js clean",
-    "publish": "node tools/dist/cli.js publish",
-    "bump": "node tools/dist/cli.js bump",
-    "flow": "flow",
-    "chk": "npm run lint && flow",
-    "lint": "eslint --quiet modules/*/*.js examples/*/*.js tools/*/*.js",
-    "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh"
+  "description": "",
+  "homepage": "https://github.com/phenyl-js/phenyl#readme",
+  "bugs": {
+    "url": "https://github.com/phenyl-js/phenyl/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shinout/phenyl.git"
+    "url": "git+https://github.com/phenyl-js/phenyl.git"
   },
+  "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
-  "license": "Apache License 2.0",
-  "bugs": {
-    "url": "https://github.com/shinout/phenyl/issues"
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "ci-test": "lerna run ci-test",
+    "clean": "lerna run clean && lerna clean --yes",
+    "clean-tmp": "lerna run clean",
+    "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",
+    "lint": "lerna run lint",
+    "publish": "echo publish command is to be implemented",
+    "test": "lerna run test",
+    "type-check": "lerna run type-check",
+    "watch": "lerna run watch --parallel"
   },
-  "homepage": "https://github.com/shinout/phenyl#readme",
+  "dependencies": {
+    "eslint": "^5.0.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "eslint-plugin-typescript": "0.13.0",
+    "lerna": "3.8.0",
+    "prettier": "1.15.2",
+    "typescript-eslint-parser": "^21.0.0"
+  },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-strip-jsnext": "^2.0.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "babel-preset-power-assert": "^1.0.0",
-    "babel-register": "^6.26.0",
-    "chalk": "^2.3.0",
-    "eslint": "^4.10.0",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-react": "^7.5.1",
-    "flow-bin": "^0.68.0",
-    "mocha": "^5.0.5",
-    "nyc": "^11.6.0",
-    "power-assert": "^1.4.4",
-    "shelljs": "^0.7.8"
+    "@types/bson": "^4.0.0",
+    "@types/express": "^4.16.1",
+    "@types/mocha": "^5.0.0",
+    "@types/mongodb": "^3.1.20",
+    "@types/node": "~8.10.0",
+    "@types/react": "^16.8.6",
+    "@types/react-dom": "^16.8.2",
+    "@types/react-json-tree": "^0.6.11",
+    "@types/react-redux": "^7.0.1",
+    "@types/react-router-dom": "^4.3.1",
+    "mocha": "^5.0.0",
+    "nyc": "^13.0.0",
+    "rimraf": "^2.6.2",
+    "ts-node": "^7.0.0",
+    "typescript": "~3.4.1"
   }
 }

@@ -1,0 +1,40 @@
+{
+  "name": "@phenyl/express",
+  "version": "1.0.0-alpha.3",
+  "description": "Express middleware to use Phenyl in it.",
+  "repository": "phenyl-js/phenyl",
+  "license": "Apache-2.0",
+  "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Jesse Katsumata<jesse.katsumata@gmail.com>"
+  ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "type-check": "upbin tsc --noEmit",
+    "watch": "upbin tsc --declaration --watch"
+  },
+  "dependencies": {
+    "@phenyl/http-rules": "^1.0.0-alpha.3",
+    "@phenyl/interfaces": "^1.0.0-alpha.3",
+    "@phenyl/utils": "^1.0.0-alpha.3",
+    "express": "^4.16.4",
+    "raw-body": "^2.3.2"
+  },
+  "devDependencies": {
+    "@phenyl/http-client": "^1.0.0-alpha.3",
+    "@phenyl/memory-db": "^1.0.0-alpha.3",
+    "@phenyl/rest-api": "^1.0.0-alpha.3",
+    "upbin": "^0.8.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
