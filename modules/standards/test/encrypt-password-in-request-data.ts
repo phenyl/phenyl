@@ -5,8 +5,13 @@ import assert from "assert";
 import { GeneralRequestData } from "@phenyl/interfaces";
 import { encryptPasswordInRequestData } from "../src/encrypt-password-in-request-data";
 
+<<<<<<< HEAD
 describe("encryptPasswordInRequestData", () => {
   it("does nothing if request isnt update", () => {
+=======
+describe('encryptPasswordInRequestData', () => {
+  it('does nothing if request isnt update', () => {
+>>>>>>> update test
     const requestData: GeneralRequestData = {
       method: "get",
       payload: {
@@ -17,6 +22,7 @@ describe("encryptPasswordInRequestData", () => {
 
     const encryptedRequestData = encryptPasswordInRequestData(
       requestData,
+<<<<<<< HEAD
       "password",
       powerCrypt
     );
@@ -24,6 +30,15 @@ describe("encryptPasswordInRequestData", () => {
   });
 
   it("encrypts password if password is in request data with insertOne method", () => {
+=======
+      'password',
+      powerCrypt,
+    )
+    assert.deepEqual(encryptedRequestData, requestData)
+  })
+
+  it('encrypts password if password is in request data with insertOne method', () => {
+>>>>>>> update test
     const requestData: GeneralRequestData = {
       method: "insertOne",
       payload: {
@@ -34,22 +49,39 @@ describe("encryptPasswordInRequestData", () => {
 
     const encryptedRequestData = encryptPasswordInRequestData(
       requestData,
+<<<<<<< HEAD
       "password",
       powerCrypt
     );
+=======
+      'password',
+      powerCrypt,
+    )
+>>>>>>> update test
 
     const expectedRequestData = {
       method: "insertOne",
       payload: {
+<<<<<<< HEAD
         entityName: "user",
         value: { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" }
       }
     };
+=======
+        entityName: 'user',
+        value: { password: 'dfzO3OHHF0Snmnx7j5jn0Um7bRFLk89qq1/AoZ5Dcvs=' },
+      },
+    }
+>>>>>>> update test
 
     assert.deepEqual(encryptedRequestData, expectedRequestData);
   });
 
+<<<<<<< HEAD
   it("encrypts password if password is in request data with insertMulti method", () => {
+=======
+  it('encrypts password if password is in request data with insertMulti method', () => {
+>>>>>>> update test
     const requestData: GeneralRequestData = {
       method: "insertMulti",
       payload: {
@@ -60,13 +92,20 @@ describe("encryptPasswordInRequestData", () => {
 
     const encryptedRequestData = encryptPasswordInRequestData(
       requestData,
+<<<<<<< HEAD
       "password",
       powerCrypt
     );
+=======
+      'password',
+      powerCrypt,
+    )
+>>>>>>> update test
 
     const expectedRequestData = {
       method: "insertMulti",
       payload: {
+<<<<<<< HEAD
         entityName: "user",
         values: [
           { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" },
@@ -74,11 +113,24 @@ describe("encryptPasswordInRequestData", () => {
         ]
       }
     };
+=======
+        entityName: 'user',
+        values: [
+          { password: 'OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=' },
+          { name: 'user1' },
+        ],
+      },
+    }
+>>>>>>> update test
 
     assert.deepEqual(encryptedRequestData, expectedRequestData);
   });
 
+<<<<<<< HEAD
   it("encrypts password if password is in request data with update method", () => {
+=======
+  it('encrypts password if password is in request data with update method', () => {
+>>>>>>> update test
     const requestData: GeneralRequestData = {
       method: "updateById",
       payload: {
@@ -93,9 +145,15 @@ describe("encryptPasswordInRequestData", () => {
 
     const encryptedRequestData = encryptPasswordInRequestData(
       requestData,
+<<<<<<< HEAD
       "password",
       powerCrypt
     );
+=======
+      'password',
+      powerCrypt,
+    )
+>>>>>>> update test
 
     const expectedRequestData = {
       method: "updateById",
