@@ -17,7 +17,6 @@ describe("filterFindOperation", () => {
   });
 
   it("converts document path to dot notation", () => {
-    // $FlowIssue(this-is-and-find-operation)
     const input: FindOperation = {
       $and: [
         { "values[0]": "fizz" },
