@@ -22,9 +22,9 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "~1.0.0",
-    "@phenyl/interfaces": "~1.0.0",
-    "@phenyl/utils": "~1.0.0",
+    "@phenyl/http-rules": "^1.0.0-alpha.3",
+    "@phenyl/interfaces": "^1.0.0-alpha.3",
+    "@phenyl/utils": "^1.0.0-alpha.3",
     "cross-fetch": "^2.2.2"
   },
   "devDependencies": {

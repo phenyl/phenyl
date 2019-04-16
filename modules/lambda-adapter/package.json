@@ -24,8 +24,8 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/http-rules": "~1.0.0",
-    "@phenyl/interfaces": "~1.0.0"
+    "@phenyl/http-rules": "^1.0.0-alpha.3",
+    "@phenyl/interfaces": "^1.0.0-alpha.3"
   },
   "devDependencies": {
     "upbin": "^0.9.0"
