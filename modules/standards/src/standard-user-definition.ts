@@ -1,6 +1,11 @@
 // @ts-ignore TODO typescriptify power-crypt
+<<<<<<< HEAD
 import powerCrypt from "power-crypt/jsnext";
 import { createServerError } from "@phenyl/utils";
+=======
+import powerCrypt from 'power-crypt/jsnext'
+import { createServerError } from '@phenyl/utils'
+>>>>>>> fix types
 
 import { StandardEntityDefinition } from "./standard-entity-definition";
 import { encryptPasswordInRequestData } from "./encrypt-password-in-request-data";
@@ -13,6 +18,7 @@ import {
   UserDefinition,
   Session,
   AuthenticationResult,
+<<<<<<< HEAD
   GeneralRequestData,
   GeneralResponseData
 } from "@phenyl/interfaces";
@@ -23,21 +29,39 @@ import {
   AuthSetting,
   LoginCommandOf
 } from "./decls";
+=======
+  UserEntityRequestData,
+  Nullable,
+  UserEntityResponseData,
+} from '@phenyl/interfaces'
+
+import { EncryptFunction, AuthSetting, LoginCommandOf } from './decls'
+>>>>>>> fix types
 
 export type StandardUserDefinitionParams<
   M extends GeneralReqResEntityMap,
   A extends AuthSetting
 > = {
+<<<<<<< HEAD
   entityClient: EntityClient<M>;
   encrypt?: EncryptFunction<A>;
   accountPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
   passwordPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
   ttl?: number;
 };
+=======
+  entityClient: EntityClient<M>
+  encrypt?: EncryptFunction<A>
+  accountPropName?: Key<M[Key<M>]> & Key<A['credentials']>
+  passwordPropName?: Key<M[Key<M>]> & Key<A['credentials']>
+  ttl?: number
+}
+>>>>>>> fix types
 
 // Q: is it necessary and possible to implement EntityDefinition and UserDefinition both?
 export class StandardUserDefinition<
   M extends GeneralReqResEntityMap,
+<<<<<<< HEAD
   A extends AuthSetting
 > extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>;
@@ -45,6 +69,20 @@ export class StandardUserDefinition<
   accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
   passwordPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
   ttl: number;
+=======
+  A extends AuthSetting,
+  EN extends Key<M>,
+  Ereqres extends M[Key<M>],
+  C extends Object = Object,
+  S extends Object = Object,
+  SS extends Session<string, Object> = Session<string, Object>
+> extends StandardEntityDefinition<EN, Ereqres> implements UserDefinition {
+  entityClient: EntityClient<M>
+  encrypt: EncryptFunction<A>
+  accountPropName: Key<M[Key<M>]> & Key<A['credentials']>
+  passwordPropName: Key<M[Key<M>]> & Key<A['credentials']>
+  ttl: number
+>>>>>>> fix types
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
     super(params);
@@ -57,6 +95,7 @@ export class StandardUserDefinition<
     this.ttl = params.ttl || 60 * 60 * 24 * 365; // one year
   }
 
+<<<<<<< HEAD
   // @ts-ignore @TODO: waiting for fix of interfaces
   async authorize<N extends Key<M>>(
     loginCommand: LoginCommandOf<A, N>,
@@ -65,6 +104,14 @@ export class StandardUserDefinition<
     // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
+=======
+  async authenticate<N extends Key<M>>(
+    loginCommand: LoginCommandOf<A, N>,
+    session: Session | null | undefined,
+  ): Promise<AuthenticationResult<string, any>> {
+    const { accountPropName, passwordPropName, ttl } = this
+    const { credentials, entityName } = loginCommand
+>>>>>>> fix types
 
     const account = credentials[accountPropName];
     const password = credentials[passwordPropName];
@@ -73,6 +120,7 @@ export class StandardUserDefinition<
         entityName,
         where: {
           [accountPropName]: account,
+<<<<<<< HEAD
           [passwordPropName]: this.encrypt(password)
         }
       });
@@ -102,6 +150,39 @@ export class StandardUserDefinition<
       this.passwordPropName
     );
     return newResData;
+=======
+          [passwordPropName]: this.encrypt(password),
+        },
+      })
+      const user = result.entity
+      const expiredAt = new Date(Date.now() + ttl * 1000).toISOString()
+      const preSession = { expiredAt, entityName, userId: user.id }
+      return { preSession, user, versionId: result.versionId }
+    } catch (e) {
+      throw createServerError(e.message, 'Unauthorized')
+    }
+  }
+
+  async wrapExecution(
+    reqData: UserEntityRequestData<EN, Ereqres['request'], C>,
+    session: Nullable<SS>,
+    executeFn: (
+      reqData: UserEntityRequestData<EN, Ereqres['request'], C>,
+      session?: Nullable<SS>,
+    ) => Promise<UserEntityResponseData<EN, Ereqres['response'], S>>,
+  ): Promise<UserEntityResponseData<EN, Ereqres['response'], S>> {
+    const newReqData = encryptPasswordInRequestData(
+      reqData,
+      this.passwordPropName,
+      this.encrypt,
+    )
+    const resData = await executeFn(newReqData, session)
+    const newResData = removePasswordFromResponseData(
+      resData,
+      this.passwordPropName,
+    )
+    return newResData
+>>>>>>> fix types
   }
 }
 
