@@ -3,7 +3,7 @@
   "version": "1.0.0-alpha.3",
   "description": "",
   "repository": "phenyl-js/phenyl",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "files": [
     "lib",
@@ -26,7 +26,7 @@
     "@phenyl/utils": "^1.0.0-alpha.3"
   },
   "devDependencies": {
-    "upbin": "^0.8.1"
+    "upbin": "^0.9.0"
   },
   "publishConfig": {
     "access": "public"

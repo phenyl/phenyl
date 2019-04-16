@@ -44,9 +44,12 @@ $('script[src]').each((i, el) => {
 })
 
 // Inject entities
-const phenylFunctionalGroupSkeleton = cheerio('<script></script>').text(`
-  window.PhenylFunctionalGroupSkeleton = <%- JSON.stringify(functionalGroup) %>
+const phenylApiExplorerClientGlobals = cheerio('<script></script>').text(`
+  window.phenylApiExplorerClientGlobals = {
+    phenylApiUrlBase: "<%- phenylApiUrlBase %>",
+    PhenylFunctionalGroupSkeleton: <%- JSON.stringify(functionalGroup) %>,
+  }
 `)
-$('script').eq(0).before(phenylFunctionalGroupSkeleton)
+$('script').eq(0).before(phenylApiExplorerClientGlobals)
 
 fs.writeFileSync(indexPath, $.html(), 'utf8')

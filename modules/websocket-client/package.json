@@ -10,11 +10,11 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
   "browser": {
     "./src/websocket.js": "./src/websocket.browser.js"
   },
-  "types": "./lib/index.d.ts",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
