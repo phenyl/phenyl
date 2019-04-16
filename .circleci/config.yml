@@ -5,11 +5,13 @@ executors:
     working_directory: ~/repo
     docker:
       - image: circleci/node:8.11.3
+      - image: circleci/mongo:3.6.9
 
 commands:
   prepare:
     steps:
       - checkout
+      - run: sudo apt-get install mongodb-clients
       - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - run:
           # https://yarnpkg.com/ja/docs/install#linux-tab
@@ -18,11 +20,12 @@ commands:
             sudo unlink $(which yarn)
             sudo npm i -g yarn@1.12.3
       - run:
-          name: Display version of Node.js, npm and Yarn
+          name: Display version of Node.js, npm, Yarn and mongodb
           command: |
             node -v
             npm -v
             yarn --version
+            mongo --version
 
 jobs:
   test:

@@ -28,7 +28,7 @@ import {
   SingleInsertCommand,
   WhereQuery
 } from "@phenyl/interfaces";
-import bson, { ObjectId } from "bson";
+import { ObjectId } from "bson";
 
 import { MongoDbConnection } from "./connection";
 import { createServerError } from "@phenyl/utils";
@@ -43,8 +43,7 @@ function ObjectID<T>(id: string | ObjectId): string | ObjectId {
   if (id instanceof mongodb.ObjectID) return id;
   if (typeof id !== "string") return id;
   try {
-    // @ts-ignore ObjectID is not class type
-    return /^[0-9a-f]{24}$/.test(id) ? bson.ObjectID(id) : id;
+    return /^[0-9a-f]{24}$/.test(id) ? new ObjectId(id) : id;
   } catch (e) {
     return id;
   }
