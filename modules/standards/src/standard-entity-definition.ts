@@ -1,68 +1,41 @@
 import {
   EntityDefinition,
   GeneralRequestData,
-<<<<<<< HEAD
-  Session
-} from "@phenyl/interfaces";
-
-type AuthorizationSetting = {};
-
-// @ts-ignore @TODO: implement this class
-export class StandardEntityDefinition implements EntityDefinition {
-  authorizationSetting: AuthorizationSetting;
-
-  constructor(authorizationSetting: AuthorizationSetting) {
-    this.authorizationSetting = authorizationSetting;
-  }
-
-  async authorization(
-    reqData: GeneralRequestData,
-    session: Session | null | undefined
-  ): Promise<boolean> {
-    // eslint-disable-line no-unused-vars
-=======
   Session,
   TypeOnly,
   ReqRes,
-  Entity,
-} from '@phenyl/interfaces'
+  Entity
+} from "@phenyl/interfaces";
 
-type AuthorizationSetting = {}
+type AuthorizationSetting = {};
 
 export class StandardEntityDefinition<
   EN extends string,
   Ereqres extends ReqRes<Entity>
 > implements EntityDefinition {
-  authorizationSetting: AuthorizationSetting
-  entityName: TypeOnly<EN>
-  entity: TypeOnly<Ereqres>
+  authorizationSetting: AuthorizationSetting;
+  entityName: TypeOnly<EN>;
+  entity: TypeOnly<Ereqres>;
 
   constructor(authorizationSetting: AuthorizationSetting) {
-    this.authorizationSetting = authorizationSetting
+    this.authorizationSetting = authorizationSetting;
     // @ts-ignore
-    this.entityName = ''
+    this.entityName = "";
     // @ts-ignore
-    this.entity = ''
+    this.entity = "";
   }
 
   async authorize(
     reqData: GeneralRequestData,
-    session: Session | null | undefined,
+    session: Session | null | undefined
   ): Promise<boolean> {
->>>>>>> fix types
     // TODO
     return false;
   }
 
-<<<<<<< HEAD
-  async validation(
-    reqData: GeneralRequestData,
-    session: Session | null | undefined
-=======
   async validate(
     reqData: GeneralRequestData,
-    session: Session | null | undefined,
->>>>>>> fix types
+    session: Session | null | undefined
   ): Promise<void> {
     // eslint-disable-line no-unused-vars
   }
