@@ -1,26 +1,26 @@
-import { ReqRes } from './type-map'
+import { ReqRes } from "./type-map";
 import {
   GeneralUserEntityRequestData,
-  UserEntityRequestData,
-} from './request-data'
+  UserEntityRequestData
+} from "./request-data";
 
-import { Entity } from './entity'
-import { LoginCommand } from './command'
-import { Nullable } from './utils'
-import { PreSession } from './session'
-import { Session } from './session'
-import { TypeOnly } from './type-only'
-import { UserEntityResponseData } from './response-data'
+import { Entity } from "./entity";
+import { LoginCommand } from "./command";
+import { Nullable } from "./utils";
+import { PreSession } from "./session";
+import { Session } from "./session";
+import { TypeOnly } from "./type-only";
+import { UserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
   EN extends string,
   E extends Entity,
   S extends Object = Object
 > = {
-  preSession: PreSession<EN, S>
-  user: E | null
-  versionId: string | null
-}
+  preSession: PreSession<EN, S>;
+  user: E | null;
+  versionId: string | null;
+};
 
 export interface AuthDefinition<
   EN extends string = string,
@@ -42,12 +42,12 @@ export interface UserDefinition<
   S extends Object = Object,
   SS extends Session<string, Object> = Session<string, Object>
 > extends AuthDefinition<EN, Ereqres, C, S, SS> {
-  entityName: TypeOnly<EN>
-  entity: TypeOnly<Ereqres>
+  entityName: TypeOnly<EN>;
+  entity: TypeOnly<Ereqres>;
   authorize?: (
     reqData: GeneralUserEntityRequestData<EN>,
-    session?: Nullable<SS>,
-  ) => Promise<boolean>
+    session?: Nullable<SS>
+  ) => Promise<boolean>;
 
   normalize?: (
     reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
@@ -56,8 +56,8 @@ export interface UserDefinition<
 
   validate?: (
     reqData: GeneralUserEntityRequestData<EN>,
-    session?: Nullable<SS>,
-  ) => Promise<void>
+    session?: Nullable<SS>
+  ) => Promise<void>;
 
   wrapExecution?: (
     reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
