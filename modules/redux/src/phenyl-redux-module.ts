@@ -1,5 +1,5 @@
-import { update, GeneralUpdateOperation } from 'sp2'
-import { randomStringWithTimeStamp } from '@phenyl/utils'
+import { update, GeneralUpdateOperation } from "sp2";
+import { randomStringWithTimeStamp } from "@phenyl/utils";
 import {
   AssignAction,
   CommitAction,
@@ -36,10 +36,10 @@ import {
   GeneralAuthCommandMap,
   GeneralTypeMap,
   ReqResEntityMapOf,
-  Key,
-} from '@phenyl/interfaces'
+  Key
+} from "@phenyl/interfaces";
 
-type Id = string
+type Id = string;
 
 export class PhenylReduxModule {
   static createInitialState<
@@ -52,9 +52,9 @@ export class PhenylReduxModule {
       unreachedCommits: [],
       network: {
         requests: [],
-        isOnline: true,
-      },
-    }
+        isOnline: true
+      }
+    };
   }
   /**
    * Reducer.
@@ -63,26 +63,29 @@ export class PhenylReduxModule {
   static phenylReducer<
     GEM extends GeneralReqResEntityMap,
     GCM extends GeneralAuthCommandMap
-  >(state: LocalState<GEM, GCM> | undefined | null, action: PhenylAction): LocalState<GEM, GCM> {
+  >(
+    state: LocalState<GEM, GCM> | undefined | null,
+    action: PhenylAction
+  ): LocalState<GEM, GCM> {
     if (state == null) {
-      return this.createInitialState()
+      return this.createInitialState();
     }
 
     switch (action.type) {
-      case 'phenyl/replace':
+      case "phenyl/replace":
         return {
           ...state,
-          ...action.payload,
-        }
+          ...action.payload
+        };
 
-      case 'phenyl/reset':
-        return this.createInitialState()
+      case "phenyl/reset":
+        return this.createInitialState();
 
-      case 'phenyl/assign':
-        return update(state, ...action.payload) as LocalState<GEM, GCM>
+      case "phenyl/assign":
+        return update(state, ...action.payload) as LocalState<GEM, GCM>;
 
       default:
-        return state
+        return state;
     }
   }
 
@@ -91,104 +94,104 @@ export class PhenylReduxModule {
     GCM extends GeneralAuthCommandMap
   >(state: LocalState<GEM, GCM>): ReplaceAction<LocalState<GEM, GCM>> {
     return {
-      type: 'phenyl/replace',
+      type: "phenyl/replace",
       payload: state,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static useEntities<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    entityNames: EN[],
+    entityNames: EN[]
   ): UseEntitiesAction<EN> {
     return {
-      type: 'phenyl/useEntities',
+      type: "phenyl/useEntities",
       payload: entityNames,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static reset(): ResetAction {
     return {
-      type: 'phenyl/reset',
-      tag: randomStringWithTimeStamp(),
-    }
+      type: "phenyl/reset",
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static assign(ops: GeneralUpdateOperation[]): AssignAction {
     return {
-      type: 'phenyl/assign',
+      type: "phenyl/assign",
       payload: ops,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static setSession<EN extends string, E extends Entity>(
     session: Session<EN>,
-    user?: E,
+    user?: E
   ): SetSessionAction<EN, E> {
     return {
-      type: 'phenyl/setSession',
+      type: "phenyl/setSession",
       payload: {
         session,
-        user,
+        user
       },
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static unsetSession(): UnsetSessionAction {
     return {
-      type: 'phenyl/unsetSession',
-      tag: randomStringWithTimeStamp(),
-    }
+      type: "phenyl/unsetSession",
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static follow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     entityName: EN,
     entity: Entity,
-    versionId: Id,
+    versionId: Id
   ): FollowAction<EN, Entity> {
     return {
-      type: 'phenyl/follow',
+      type: "phenyl/follow",
       payload: {
         entityName,
         entity,
-        versionId,
+        versionId
       },
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static followAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     entityName: EN,
     entities: Entity[],
     versionsById: {
-      [entityId: string]: string
-    },
+      [entityId: string]: string;
+    }
   ): FollowAllAction<EN, Entity> {
     return {
-      type: 'phenyl/followAll',
+      type: "phenyl/followAll",
       payload: {
         entityName,
         entities,
-        versionsById,
+        versionsById
       },
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static unfollow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     entityName: EN,
-    id: string,
+    id: string
   ): UnfollowAction<EN> {
     return {
-      type: 'phenyl/unfollow',
+      type: "phenyl/unfollow",
       payload: {
         entityName,
-        id,
+        id
       },
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static delete<
@@ -196,67 +199,67 @@ export class PhenylReduxModule {
     EN extends Key<ReqResEntityMapOf<TM>>
   >(command: IdDeleteCommand<EN>): DeleteAction<EN> {
     return {
-      type: 'phenyl/delete',
+      type: "phenyl/delete",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static pushAndCommit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    command: IdUpdateCommand<EN>,
+    command: IdUpdateCommand<EN>
   ): PushAndCommitAction<EN> {
     return {
-      type: 'phenyl/pushAndCommit',
+      type: "phenyl/pushAndCommit",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static commit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    command: IdUpdateCommand<EN>,
+    command: IdUpdateCommand<EN>
   ): CommitAction<EN> {
     return {
-      type: 'phenyl/commit',
+      type: "phenyl/commit",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static push<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    payload: PushActionPayload<EN>,
+    payload: PushActionPayload<EN>
   ): PushAction<EN> {
     return {
-      type: 'phenyl/push',
+      type: "phenyl/push",
       payload: { until: -1, ...payload },
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static repush(): RePushAction {
     return {
-      type: 'phenyl/repush',
-      tag: randomStringWithTimeStamp(),
-    }
+      type: "phenyl/repush",
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static commitAndPush<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    command: IdUpdateCommand<EN>,
+    command: IdUpdateCommand<EN>
   ): CommitAndPushAction<EN> {
     return {
-      type: 'phenyl/commitAndPush',
+      type: "phenyl/commitAndPush",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static pull<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    query: IdQuery<EN>,
+    query: IdQuery<EN>
   ): PullAction<EN> {
     return {
-      type: 'phenyl/pull',
+      type: "phenyl/pull",
       payload: query,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static login<
@@ -265,41 +268,41 @@ export class PhenylReduxModule {
     C extends Object
   >(command: LoginCommand<EN, C>): LoginAction<EN, C> {
     return {
-      type: 'phenyl/login',
+      type: "phenyl/login",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static logout<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    command: LogoutCommand<EN>,
+    command: LogoutCommand<EN>
   ): LogoutAction<EN> {
     return {
-      type: 'phenyl/logout',
+      type: "phenyl/logout",
       payload: command,
-      tag: randomStringWithTimeStamp(),
-    }
+      tag: randomStringWithTimeStamp()
+    };
   }
 
   static online(): OnlineAction {
     return {
-      type: 'phenyl/online',
-    }
+      type: "phenyl/online"
+    };
   }
 
   static offline(): OfflineAction {
     return {
-      type: 'phenyl/offline',
-    }
+      type: "phenyl/offline"
+    };
   }
 
   static resolveError(): ResolveErrorAction {
     return {
-      type: 'phenyl/resolveError',
-    }
+      type: "phenyl/resolveError"
+    };
   }
 }
 // For backward compatibility
-export const actions = PhenylReduxModule
+export const actions = PhenylReduxModule;
 
-export default actions.phenylReducer.bind(actions)
+export default actions.phenylReducer.bind(actions);

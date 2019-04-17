@@ -20,9 +20,9 @@ export interface EntityDefinition<
   ) => Promise<boolean>;
 
   normalize?: (
-    reqData: EntityRequestData<EN, Ereqres['request']>,
+    reqData: EntityRequestData<EN, Ereqres["request"]>,
     session?: Nullable<SS>
-  ) => Promise<EntityRequestData<EN, Ereqres['response']>>;
+  ) => Promise<EntityRequestData<EN, Ereqres["response"]>>;
 
   validate?: (
     reqData: GeneralEntityRequestData<EN>,
@@ -30,11 +30,11 @@ export interface EntityDefinition<
   ) => Promise<void>;
 
   wrapExecution?: (
-    reqData: EntityRequestData<EN, Ereqres['response']>,
+    reqData: EntityRequestData<EN, Ereqres["response"]>,
     session: Nullable<SS>,
     executeFn: (
-      reqData: EntityRequestData<EN, Ereqres['response']>,
+      reqData: EntityRequestData<EN, Ereqres["response"]>,
       session?: Nullable<SS>
-    ) => Promise<EntityResponseData<Ereqres['response']>>
-  ) => Promise<EntityResponseData<Ereqres['response']>>;
+    ) => Promise<EntityResponseData<Ereqres["response"]>>
+  ) => Promise<EntityResponseData<Ereqres["response"]>>;
 }

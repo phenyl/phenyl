@@ -174,7 +174,7 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
       RequestMethodName,
       string
     >;
-    
+
     assertType<
       TypeEq<
         ResponseDataWithGeneralTypeMap | ErrorResponseData,

@@ -6,7 +6,7 @@ import CustomEditor from "../components/CustomEditor";
 import { runCustomCommand } from "../modules/operation";
 import { State } from "../modules";
 
-type Id = string
+type Id = string;
 
 const mapStateToProps = (state: State) => ({
   sessionId: state.user.session ? state.user.session.id : null,

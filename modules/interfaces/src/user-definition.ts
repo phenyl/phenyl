@@ -32,7 +32,7 @@ export interface AuthDefinition<
   authenticate(
     loginCommand: LoginCommand<EN, C>,
     session?: Nullable<SS>
-  ): Promise<AuthenticationResult<EN, Ereqres['response'], S>>;
+  ): Promise<AuthenticationResult<EN, Ereqres["response"], S>>;
 }
 
 export interface UserDefinition<
@@ -50,9 +50,9 @@ export interface UserDefinition<
   ) => Promise<boolean>;
 
   normalize?: (
-    reqData: UserEntityRequestData<EN, Ereqres['request'], C>,
+    reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
     session?: Nullable<SS>
-  ) => Promise<UserEntityRequestData<EN, Ereqres['response'], C>>;
+  ) => Promise<UserEntityRequestData<EN, Ereqres["response"], C>>;
 
   validate?: (
     reqData: GeneralUserEntityRequestData<EN>,
@@ -60,11 +60,11 @@ export interface UserDefinition<
   ) => Promise<void>;
 
   wrapExecution?: (
-    reqData: UserEntityRequestData<EN, Ereqres['response'], C>,
+    reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
     session: Nullable<SS>,
     executeFn: (
-      reqData: UserEntityRequestData<EN, Ereqres['response'], C>,
+      reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
       session?: Nullable<SS>
-    ) => Promise<UserEntityResponseData<EN, Ereqres['response'], S>>
-  ) => Promise<UserEntityResponseData<EN, Ereqres['response'], S>>;
+    ) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>
+  ) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>;
 }

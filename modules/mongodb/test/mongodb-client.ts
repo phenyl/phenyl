@@ -29,12 +29,12 @@ describe("filterFindOperation", () => {
     };
     const expected = {
       $and: [
-        { "values.0": { $eq: "fizz"} },
-        { "values.1.test": { $eq: "buzz"} },
+        { "values.0": { $eq: "fizz" } },
+        { "values.1.test": { $eq: "buzz" } },
         { "values.12.test": { $eq: "fizzBuzz" } },
         { "values.123.test": { $regex: /zz/ } },
         { "values.1234.test": { $in: ["fizz", "buzz"] } },
-        { type: { $eq: "bar"} }
+        { type: { $eq: "bar" } }
       ]
     };
     const actual = filterFindOperation(input);
@@ -61,9 +61,9 @@ describe("filterFindOperation", () => {
     };
     const expected = {
       $and: [
-        { _id: { $eq: null} },
-        { _id: { $eq: "bar"} },
-        { _id: { $eq: new ObjectId("222222222222222222222222")} },
+        { _id: { $eq: null } },
+        { _id: { $eq: "bar" } },
+        { _id: { $eq: new ObjectId("222222222222222222222222") } },
         { _id: { $eq: "000123456789abcdefABCDEF" } },
         { _id: { $eq: new ObjectId("000123456789abcdefabcdef") } },
         { _id: { $eq: new ObjectId("000000000011111111112222") } },

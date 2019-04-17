@@ -182,7 +182,11 @@ type ResponseDataMapWithTypeMap<
   runCustomCommand: RunCustomCommandResponseData<
     CustomCommandResultValueOf<TM, CN>
   >;
-  login: LoginResponseData<AN, ResponseAuthUserOf<TM, AN>, AuthSessionOf<TM, AN>>;
+  login: LoginResponseData<
+    AN,
+    ResponseAuthUserOf<TM, AN>,
+    AuthSessionOf<TM, AN>
+  >;
   logout: LogoutResponseData;
 };
 

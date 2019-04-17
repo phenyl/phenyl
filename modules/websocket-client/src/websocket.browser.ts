@@ -1,1 +1,1 @@
-export default WebSocket
+export default WebSocket;
