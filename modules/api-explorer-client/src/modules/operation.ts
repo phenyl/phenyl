@@ -221,11 +221,8 @@ export const runCustomQuery = ({
     const query: CustomQuery<string, Object> = {
       name,
       params: paramsJSON
-    }
-    const response = await client.runCustomQuery(
-      query,
-      sessionId
-    );
+    };
+    const response = await client.runCustomQuery(query, sessionId);
     // https://github.com/Microsoft/TypeScript/issues/5710
     dispatch(receiveResponse(response, +new Date() - +start));
   } catch (e) {
@@ -252,11 +249,8 @@ export const runCustomCommand = ({
     const command: CustomCommand<string, Object> = {
       name,
       params: paramsJSON
-    }
-    const response = await client.runCustomCommand(
-      command,
-      sessionId
-    );
+    };
+    const response = await client.runCustomCommand(command, sessionId);
     // https://github.com/Microsoft/TypeScript/issues/5710
     dispatch(receiveResponse(response, +new Date() - +start));
   } catch (e) {

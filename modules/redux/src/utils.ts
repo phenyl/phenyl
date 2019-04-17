@@ -1,20 +1,20 @@
-import deepEqual from 'fast-deep-equal'
+import deepEqual from "fast-deep-equal";
 export function removeOne(arr: Array<any>, element: any): Array<any> {
-  let idx = arr.length - 1
+  let idx = arr.length - 1;
 
   for (const el of arr.slice().reverse()) {
     if (deepEqual(el, element)) {
-      break
+      break;
     }
 
-    idx--
+    idx--;
   }
 
   if (idx < 0) {
-    return arr
+    return arr;
   }
 
-  const ret = arr.slice()
-  ret.splice(idx, 1)
-  return ret
+  const ret = arr.slice();
+  ret.splice(idx, 1);
+  return ret;
 }

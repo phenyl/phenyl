@@ -9,7 +9,7 @@ const LOGIN_FAILED = "user/LOGIN_FAILED";
 const LOGOUT = "user/LOGOUT";
 
 // @TODO: Should we add Credentials in phenyl/interfaces?
-type Credentials = any
+type Credentials = any;
 
 // @TODO: define session/user/error type
 export type User = {

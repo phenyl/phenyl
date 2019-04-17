@@ -1,25 +1,32 @@
 import {
   EntityDefinition,
   GeneralRequestData,
-  Session,
-} from '@phenyl/interfaces'
+  Session
+} from "@phenyl/interfaces";
 
-type AuthorizationSetting = {
-}
+type AuthorizationSetting = {};
 
 // @ts-ignore @TODO: implement this class
 export class StandardEntityDefinition implements EntityDefinition {
-  authorizationSetting: AuthorizationSetting
+  authorizationSetting: AuthorizationSetting;
 
   constructor(authorizationSetting: AuthorizationSetting) {
-    this.authorizationSetting = authorizationSetting
+    this.authorizationSetting = authorizationSetting;
   }
 
-  async authorization(reqData: GeneralRequestData, session: Session | null | undefined): Promise<boolean> { // eslint-disable-line no-unused-vars
+  async authorization(
+    reqData: GeneralRequestData,
+    session: Session | null | undefined
+  ): Promise<boolean> {
+    // eslint-disable-line no-unused-vars
     // TODO
-    return false
+    return false;
   }
 
-  async validation(reqData: GeneralRequestData, session: Session | null | undefined): Promise<void> { // eslint-disable-line no-unused-vars
+  async validation(
+    reqData: GeneralRequestData,
+    session: Session | null | undefined
+  ): Promise<void> {
+    // eslint-disable-line no-unused-vars
   }
 }
