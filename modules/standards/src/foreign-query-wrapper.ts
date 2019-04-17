@@ -81,9 +81,9 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
           query.foreign
         );
         const { $set, $docPath } = $bind<typeof resData>();
-        // @ts-ignore: GeneralResponseData is not have payload.foreign
         return update(
           resData,
+          // @ts-ignore: GeneralResponseData is not have payload.foreign
           $set($docPath("payload", "foreign", "entities"), foreignEntitiesById)
         );
       },
@@ -95,9 +95,9 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
           query.foreign
         );
         const { $set, $docPath } = $bind<typeof resData>();
-        // @ts-ignore: GeneralResponseData is not have payload.foreign
         return update(
           resData,
+          // @ts-ignore: GeneralResponseData is not have payload.foreign
           $set($docPath("payload", "foreign", "entity"), foreignEntity)
         );
       },
@@ -109,9 +109,9 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
           query.foreign
         );
         const { $set, $docPath } = $bind<typeof resData>();
-        // @ts-ignore: GeneralResponseData is not have payload.foreign
         return update(
           resData,
+          // @ts-ignore: GeneralResponseData is not have payload.foreign
           $set($docPath("payload", "foreign", "entity"), foreignEntity)
         );
       },
@@ -124,9 +124,9 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
           query.foreign
         );
         const { $set, $docPath } = $bind<typeof resData>();
-        // @ts-ignore: GeneralResponseData is not have payload.foreign
         return update(
           resData,
+          // @ts-ignore: GeneralResponseData is not have payload.foreign
           $set($docPath("payload", "foreign", "entities"), foreignEntitiesById)
         );
       },
