@@ -61,10 +61,6 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
       async handleDefault(reqData) {
         // eslint-disable-line no-unused-vars
         return;
-      },
-      async handleDefault(reqData) {
-        // eslint-disable-line no-unused-vars
-        return;
       }
     });
   }
