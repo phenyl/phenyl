@@ -89,9 +89,9 @@ export type GeneralAuthRequestData<
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type UserEntityRequestData<
-  EN extends string,
-  E extends Entity,
-  C extends Object
+  EN extends string = string,
+  E extends Entity = Entity,
+  C extends Object = Object
 > = EntityRequestData<EN, E> | AuthRequestData<EN, C>;
 
 /**
