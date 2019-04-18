@@ -1,7 +1,7 @@
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
 
-export type CustomQueryResult<QR extends Object> = {
+export type CustomQueryResult<QR extends Object = Object> = {
   result: QR;
 };
 

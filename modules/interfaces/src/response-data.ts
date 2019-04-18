@@ -50,7 +50,7 @@ export type GeneralResponseData =
 /**
  * ResponseData handled by EntityDefinition.
  */
-export type EntityResponseData<E extends Entity> =
+export type EntityResponseData<E extends Entity = Entity> =
   | FindResponseData<E>
   | FindOneResponseData<E>
   | GetResponseData<E>
@@ -85,16 +85,10 @@ export type AuthResponseData<
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type UserEntityResponseData<
-  EN extends string,
-  E extends Entity,
-  S extends Object
+  EN extends string = string,
+  E extends Entity = Entity,
+  S extends Object = Object
 > = EntityResponseData<E> | AuthResponseData<EN, E, S>;
-
-export type GeneralUserEntityResponseData = UserEntityResponseData<
-  string,
-  Entity,
-  Object
->;
 
 /**
  * ResponseData handled by CustomQueryDefinition.

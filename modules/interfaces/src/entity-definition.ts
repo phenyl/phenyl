@@ -1,40 +1,30 @@
-import { ReqRes } from "./type-map";
-import { EntityRequestData, GeneralEntityRequestData } from "./request-data";
+import { GeneralEntityRequestData, GeneralRequestData } from "./request-data";
+import {
+  GeneralEntityResponseData,
+  GeneralResponseData
+} from "./response-data";
 
-import { Entity } from "./entity";
-import { EntityResponseData } from "./response-data";
-import { Nullable } from "./utils";
 import { Session } from "./session";
-import { TypeOnly } from "./type-only";
 
-export interface EntityDefinition<
-  EN extends string = string,
-  Ereqres extends ReqRes<Entity> = ReqRes<Entity>,
-  SS extends Session = Session
-> {
-  entityName: TypeOnly<EN>;
-  entity: TypeOnly<Ereqres>;
+export interface EntityDefinition {
   authorize?: (
-    reqData: GeneralEntityRequestData<EN>,
-    session?: Nullable<SS>
+    reqData: GeneralEntityRequestData,
+    session?: Session
   ) => Promise<boolean>;
 
   normalize?: (
-    reqData: EntityRequestData<EN, Ereqres["request"]>,
-    session?: Nullable<SS>
-  ) => Promise<EntityRequestData<EN, Ereqres["response"]>>;
+    reqData: GeneralEntityRequestData,
+    session?: Session
+  ) => Promise<GeneralEntityRequestData>;
 
-  validate?: (
-    reqData: GeneralEntityRequestData<EN>,
-    session?: Nullable<SS>
-  ) => Promise<void>;
+  validate?: (reqData: GeneralRequestData, session?: Session) => Promise<void>;
 
   wrapExecution?: (
-    reqData: EntityRequestData<EN, Ereqres["response"]>,
-    session: Nullable<SS>,
+    reqData: GeneralRequestData,
+    session: Session,
     executeFn: (
-      reqData: EntityRequestData<EN, Ereqres["response"]>,
-      session?: Nullable<SS>
-    ) => Promise<EntityResponseData<Ereqres["response"]>>
-  ) => Promise<EntityResponseData<Ereqres["response"]>>;
+      reqData: GeneralRequestData,
+      session?: Session
+    ) => Promise<GeneralResponseData>
+  ) => Promise<GeneralEntityResponseData>;
 }

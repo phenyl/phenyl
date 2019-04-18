@@ -8,8 +8,6 @@ import {
   EntityRequestData,
   GeneralTypeMap,
   LoginCommand,
-  TypeMapFromFunctionalGroup,
-  TypeOnly,
   UserDefinition,
   ReqRes
 } from "../src";
@@ -25,17 +23,10 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type MemberSessionValue = { externalId: string; ttl: number };
 
   class MemberDefinition implements UserDefinition {
-    entityName: TypeOnly<"member">;
-    entity: TypeOnly<ReqRes<MemberRequest, MemberResponse>>;
-
     async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
       const { entityName, credentials } = loginCommand;
 
-      const ret: AuthenticationResult<
-        "member",
-        MemberResponse,
-        MemberSessionValue
-      > = {
+      const ret = {
         preSession: {
           entityName,
           expiredAt: "",
@@ -50,138 +41,73 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     }
   }
 
-  type MessageResponse = { id: string; body: string; createdAt: string };
-  type MessageRequest = { id: string; body: string };
-  class MessageDefinition implements EntityDefinition {
-    entityName: TypeOnly<"message">;
-    entity: TypeOnly<ReqRes<MessageRequest, MessageResponse>>;
-  }
+  /**
+   * Tests for `TypeMapFromFG` withSpecificAuthentication
+   */
+  {
+    type MemberResponse = { id: string; name: string; age: number };
+    type MemberRequest = { id: string; name: string };
+    type Credentials = { email: string; password: string };
+    type MemberSessionValue = { externalId: string; ttl: number };
 
-  type MedicalRecord = { id: string; body: string; createdAt: string };
-  type N = "medicalRecord";
-  type E = MedicalRecord;
+    class MemberDefinitionWithResultType implements UserDefinition {
+      async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
+        const { entityName, credentials } = loginCommand;
 
-  class MedicalRecordDefinition implements EntityDefinition {
-    entityName: TypeOnly<N>;
-    entity: TypeOnly<ReqRes<E>>;
-
-    async normalize(reqData: EntityRequestData<N, E>, session) {
-      return reqData;
+        const ret: AuthenticationResult<
+          "member",
+          MemberResponse,
+          MemberSessionValue
+        > = {
+          preSession: {
+            entityName,
+            expiredAt: "",
+            userId: credentials.email,
+            externalId: "",
+            ttl: 12345
+          },
+          user: { id: "bar", name: "John", age: 23 },
+          versionId: "foo"
+        };
+        return ret;
+      }
     }
-  }
 
-  type CountMessagesOfMemberParams = { memberId: string };
-  type CountMessagesOfMemberResult = { count: number };
-  class CountMessagesOfMemberDefinition implements CustomQueryDefinition {
-    async execute(
-      query: CustomQuery<"countMessagesOfMember", CountMessagesOfMemberParams>
-    ) {
-      return {
-        result: { count: 3 } as CountMessagesOfMemberResult
-      };
+    type MessageResponse = { id: string; body: string; createdAt: string };
+    type MessageRequest = { id: string; body: string };
+    class MessageDefinition implements EntityDefinition {}
+
+    type MedicalRecord = { id: string; body: string; createdAt: string };
+    type N = "medicalRecord";
+    type E = MedicalRecord;
+
+    class MedicalRecordDefinition implements EntityDefinition {
+      async normalize(reqData: EntityRequestData<N, E>, session) {
+        return reqData;
+      }
     }
-  }
 
-  type RegisterParams = { name: string };
-  type RegisterResult = { ok: 1 };
-
-  class RegisterDefinition implements CustomCommandDefinition {
-    async execute(query: CustomCommand<"register", RegisterParams>) {
-      return {
-        result: { ok: 1 } as RegisterResult
-      };
+    type CountMessagesOfMemberParams = { memberId: string };
+    type CountMessagesOfMemberResult = { count: number };
+    class CountMessagesOfMemberDefinition implements CustomQueryDefinition {
+      async execute(
+        query: CustomQuery<"countMessagesOfMember", CountMessagesOfMemberParams>
+      ) {
+        return {
+          result: { count: 3 } as CountMessagesOfMemberResult
+        };
+      }
     }
-  }
 
-  const fg = {
-    users: { member: new MemberDefinition() },
-    nonUsers: {
-      message: new MessageDefinition(),
-      medicalRecord: new MedicalRecordDefinition()
-    },
-    customQueries: {
-      countMessagesOfMember: new CountMessagesOfMemberDefinition()
-    },
-    customCommands: { register: new RegisterDefinition() }
-  };
+    type RegisterParams = { name: string };
+    type RegisterResult = { ok: 1 };
 
-  type MyMap = TypeMapFromFunctionalGroup<typeof fg>;
-
-  /**
-   * `MyMap` is compatible with `GeneralTypeMap`.
-   */
-  {
-    assertType<IsExtends<MyMap, GeneralTypeMap>>();
-  }
-
-  /**
-   * `MyMap["entities"]` contains three entities.
-   */
-  {
-    type MyEntities = MyMap["entities"];
-    assertType<
-      TypeEq<
-        MyEntities,
-        {
-          member: { request: MemberRequest; response: MemberResponse };
-          message: { request: MessageRequest; response: MessageResponse };
-          medicalRecord: { request: MedicalRecord; response: MedicalRecord };
-        }
-      >
-    >();
-  }
-
-  /**
-   * `MyMap["customQueries"]` contains CustomQuery params and result.
-   */
-  {
-    type MyQueries = MyMap["customQueries"];
-    assertType<
-      TypeEq<
-        MyQueries,
-        {
-          countMessagesOfMember: {
-            params: CountMessagesOfMemberParams;
-            result: CountMessagesOfMemberResult;
-          };
-        }
-      >
-    >();
-  }
-
-  /**
-   * `MyMap["customCommands"]` contains CustomCommand params and result.
-   */
-  {
-    type MyCommands = MyMap["customCommands"];
-    assertType<
-      TypeEq<
-        MyCommands,
-        {
-          register: {
-            params: RegisterParams;
-            result: RegisterResult;
-          };
-        }
-      >
-    >();
-  }
-
-  /**
-   * `MyMap["auths"]` contains auth credentials and session values.
-   */
-  {
-    type MyAuths = MyMap["auths"];
-    assertType<
-      TypeEq<
-        MyAuths,
-        {
-          member: {
-            credentials: Credentials;
-            session: MemberSessionValue;
-          };
-        }
-      >
-    >();
+    class RegisterDefinition implements CustomCommandDefinition {
+      async execute(query: CustomCommand<"register", RegisterParams>) {
+        return {
+          result: { ok: 1 } as RegisterResult
+        };
+      }
+    }
   }
 }

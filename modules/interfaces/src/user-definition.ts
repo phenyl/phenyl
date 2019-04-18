@@ -1,20 +1,15 @@
-import { ReqRes } from "./type-map";
-import {
-  GeneralUserEntityRequestData,
-  UserEntityRequestData
-} from "./request-data";
+import { UserEntityRequestData } from "./request-data";
 
 import { Entity } from "./entity";
 import { LoginCommand } from "./command";
-import { Nullable } from "./utils";
 import { PreSession } from "./session";
 import { Session } from "./session";
-import { TypeOnly } from "./type-only";
+
 import { UserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
-  EN extends string,
-  E extends Entity,
+  EN extends string = string,
+  E extends Entity = Entity,
   S extends Object = Object
 > = {
   preSession: PreSession<EN, S>;
@@ -22,49 +17,35 @@ export type AuthenticationResult<
   versionId: string | null;
 };
 
-export interface AuthDefinition<
-  EN extends string = string,
-  Ereqres extends ReqRes<Entity> = ReqRes<Entity>,
-  C extends Object = Object,
-  S extends Object = Object,
-  SS extends Session<string, Object> = Session<string, Object>
-> {
+export interface AuthDefinition {
   authenticate(
-    loginCommand: LoginCommand<EN, C>,
-    session?: Nullable<SS>
-  ): Promise<AuthenticationResult<EN, Ereqres["response"], S>>;
+    loginCommand: LoginCommand,
+    session?: Session
+  ): Promise<AuthenticationResult>;
 }
 
-export interface UserDefinition<
-  EN extends string = string,
-  Ereqres extends ReqRes<Entity> = ReqRes<Entity>,
-  C extends Object = Object,
-  S extends Object = Object,
-  SS extends Session<string, Object> = Session<string, Object>
-> extends AuthDefinition<EN, Ereqres, C, S, SS> {
-  entityName: TypeOnly<EN>;
-  entity: TypeOnly<Ereqres>;
+export interface UserDefinition extends AuthDefinition {
   authorize?: (
-    reqData: GeneralUserEntityRequestData<EN>,
-    session?: Nullable<SS>
+    reqData: UserEntityRequestData,
+    session?: Session
   ) => Promise<boolean>;
 
   normalize?: (
-    reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
-    session?: Nullable<SS>
-  ) => Promise<UserEntityRequestData<EN, Ereqres["response"], C>>;
+    reqData: UserEntityRequestData,
+    session?: Session
+  ) => Promise<UserEntityRequestData>;
 
   validate?: (
-    reqData: GeneralUserEntityRequestData<EN>,
-    session?: Nullable<SS>
+    reqData: UserEntityRequestData,
+    session?: Session
   ) => Promise<void>;
 
   wrapExecution?: (
-    reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
-    session: Nullable<SS>,
+    reqData: UserEntityRequestData,
+    session: Session,
     executeFn: (
-      reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
-      session?: Nullable<SS>
-    ) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>
-  ) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>;
+      reqData: UserEntityRequestData,
+      session?: Session
+    ) => Promise<UserEntityResponseData>
+  ) => Promise<UserEntityResponseData>;
 }
