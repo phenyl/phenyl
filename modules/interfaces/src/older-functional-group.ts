@@ -1,17 +1,8 @@
-import {
-  ReqRes,
-  CustomCommandParams,
-  CustomCommandResultValue,
-  GeneralCustomCommandMap,
-  GeneralCustomMap
-} from "./type-map";
 import { AuthDefinition, UserDefinition } from "./user-definition";
 
 import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
-import { Entity } from "./entity";
 import { EntityDefinition } from "./entity-definition";
-import { Key } from "./utils";
 
 export interface OlderEntityDefinition {
   authorization?: EntityDefinition["authorize"];
@@ -35,33 +26,18 @@ type OlderCustomQueryDefinitions = {
   [QueryName: string]: OlderCustomQueryDefinition | CustomQueryDefinition;
 };
 
-export interface OlderCustomCommandDefinition<
-  CN extends string = string,
-  CP extends Object = Object,
-  CR extends Object = Object
-> {
+export interface OlderCustomCommandDefinition {
   authorization?: CustomCommandDefinition["authorize"];
   normalization?: CustomCommandDefinition["normalize"];
   validation?: CustomCommandDefinition["validate"];
   execution: CustomCommandDefinition["execute"];
 }
 
-type OlderCustomCommandDefinitions<CM extends GeneralCustomCommandMap> = {
-  [CN in Key<CM>]:
-    | OlderCustomCommandDefinition<
-        CN,
-        CustomCommandParams<CM, CN>,
-        CustomCommandResultValue<CM, CN>
-      >
-    | CustomCommandDefinition
+type OlderCustomCommandDefinitions = {
+  [CommandName: string]: OlderCustomCommandDefinition | CustomCommandDefinition;
 };
 
-export interface OlderUserDefinition<
-  EN extends string = string,
-  Ebroader extends ReqRes<Entity> = ReqRes<Entity>,
-  C extends Object = Object,
-  S extends Object = Object
-> extends OlderEntityDefinition {
+export interface OlderUserDefinition extends OlderEntityDefinition {
   authentication: AuthDefinition["authenticate"];
 }
 
@@ -73,5 +49,5 @@ export type OlderFunctionalGroup = Partial<{
   users: OlderUserDefinitions;
   nonUsers: OlderEntityDefinitions;
   customQueries: OlderCustomQueryDefinitions;
-  customCommands: OlderCustomCommandDefinitions<GeneralCustomMap>;
+  customCommands: OlderCustomCommandDefinitions;
 }>;
