@@ -14,7 +14,6 @@ import {
   Session,
   AuthenticationResult,
   UserEntityRequestData,
-  Nullable,
   UserEntityResponseData
 } from "@phenyl/interfaces";
 
@@ -34,13 +33,8 @@ export type StandardUserDefinitionParams<
 // Q: is it necessary and possible to implement EntityDefinition and UserDefinition both?
 export class StandardUserDefinition<
   M extends GeneralReqResEntityMap,
-  A extends AuthSetting,
-  EN extends Key<M>,
-  Ereqres extends M[Key<M>],
-  C extends Object = Object,
-  S extends Object = Object,
-  SS extends Session<string, Object> = Session<string, Object>
-> extends StandardEntityDefinition<EN, Ereqres> implements UserDefinition {
+  A extends AuthSetting
+> extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>;
   encrypt: EncryptFunction<A>;
   accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
@@ -85,13 +79,13 @@ export class StandardUserDefinition<
   }
 
   async wrapExecution(
-    reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
-    session: Nullable<SS>,
+    reqData: UserEntityRequestData,
+    session: Session,
     executeFn: (
-      reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
-      session?: Nullable<SS>
-    ) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>
-  ): Promise<UserEntityResponseData<EN, Ereqres["response"], S>> {
+      reqData: UserEntityRequestData,
+      session?: Session
+    ) => Promise<UserEntityResponseData>
+  ): Promise<UserEntityResponseData> {
     const newReqData = encryptPasswordInRequestData(
       reqData,
       this.passwordPropName,

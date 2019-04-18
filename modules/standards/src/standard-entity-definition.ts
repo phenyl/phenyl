@@ -1,28 +1,16 @@
 import {
   EntityDefinition,
   GeneralRequestData,
-  Session,
-  TypeOnly,
-  ReqRes,
-  Entity
+  Session
 } from "@phenyl/interfaces";
 
 type AuthorizationSetting = {};
 
-export class StandardEntityDefinition<
-  EN extends string,
-  Ereqres extends ReqRes<Entity>
-> implements EntityDefinition {
+export class StandardEntityDefinition implements EntityDefinition {
   authorizationSetting: AuthorizationSetting;
-  entityName: TypeOnly<EN>;
-  entity: TypeOnly<Ereqres>;
 
   constructor(authorizationSetting: AuthorizationSetting) {
     this.authorizationSetting = authorizationSetting;
-    // @ts-ignore
-    this.entityName = "";
-    // @ts-ignore
-    this.entity = "";
   }
 
   async authorize(
