@@ -28,7 +28,6 @@ export * from "./rest-api-handler";
 export * from "./session";
 export * from "./standards";
 export * from "./type-map";
-export * from "./type-only";
 export * from "./user-definition";
 export * from "./versioning";
 export * from "./websocket";
