@@ -13,7 +13,7 @@ import {
   GeneralRequestData,
   GeneralResponseData,
   GeneralUserEntityRequestData,
-  GeneralUserEntityResponseData,
+  UserEntityResponseData,
   HandlerResult,
   LoginCommand,
   LoginResponseData,
@@ -22,7 +22,8 @@ import {
   Nullable,
   Session,
   SessionClient,
-  UserDefinition
+  UserDefinition,
+  ErrorResponseData
 } from "@phenyl/interfaces";
 
 import { createServerError } from "@phenyl/utils";
@@ -51,29 +52,38 @@ export class EntityDefinitionExecutor implements DefinitionExecutor {
 
   async authorize(
     reqData: GeneralEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<boolean> {
     return this.definition.authorize!(reqData, session);
   }
 
   async validate(
     reqData: GeneralEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<void> {
     return this.definition.validate!(reqData, session);
   }
 
   async normalize(
     reqData: GeneralEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralEntityRequestData> {
     return this.definition.normalize!(reqData, session);
   }
 
   async execute(
     reqData: GeneralEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): HandlerResult<GeneralEntityResponseData> {
+    if (session === undefined) {
+      const errorResult: ErrorResponseData = {
+        type: "error",
+        payload: createServerError(
+          `Execute method ${reqData.method} must needs session`
+        )
+      };
+      return errorResult;
+    }
     return this.definition.wrapExecution!(
       reqData,
       session,
@@ -85,7 +95,7 @@ export class EntityDefinitionExecutor implements DefinitionExecutor {
 async function executeEntityRequestData(
   client: EntityClient,
   reqData: GeneralEntityRequestData,
-  session?: Nullable<Session>
+  session?: Session
 ): Promise<GeneralEntityResponseData> {
   switch (reqData.method) {
     case "find":
@@ -205,31 +215,40 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
 
   async authorize(
     reqData: GeneralUserEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<boolean> {
     return this.definition.authorize!(reqData, session);
   }
 
   async validate(
     reqData: GeneralUserEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<void> {
     return this.definition.validate!(reqData, session);
   }
 
   async normalize(
     reqData: GeneralUserEntityRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralUserEntityRequestData> {
     return this.definition.normalize!(reqData, session);
   }
 
   async execute(
     reqData: GeneralUserEntityRequestData,
-    session?: Nullable<Session>
-  ): HandlerResult<GeneralUserEntityResponseData> {
+    session?: Session
+  ): HandlerResult<UserEntityResponseData> {
     if (reqData.method == "login") {
       return this.login(reqData.payload, session);
+    }
+    if (session === undefined) {
+      const errorResult: ErrorResponseData = {
+        type: "error",
+        payload: createServerError(
+          `Execute method ${reqData.method} must needs session`
+        )
+      };
+      return errorResult;
     }
     if (reqData.method == "logout") {
       return this.logout(reqData.payload, session);
@@ -244,7 +263,7 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
 
   private async login(
     loginCommand: LoginCommand<string, Object>,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<LoginResponseData<string, Entity, Object>> {
     const result = await this.definition.authenticate(loginCommand, session);
     const newSession = await this.sessionClient.create(result.preSession);
@@ -297,28 +316,28 @@ export class CustomQueryDefinitionExecutor implements DefinitionExecutor {
 
   async authorize(
     reqData: GeneralCustomQueryRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<boolean> {
     return this.definition.authorize!(reqData, session);
   }
 
   async validate(
     reqData: GeneralCustomQueryRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<void> {
     return this.definition.validate!(reqData, session);
   }
 
   async normalize(
     reqData: GeneralCustomQueryRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralCustomQueryRequestData> {
     return this.definition.normalize!(reqData, session);
   }
 
   async execute(
     reqData: GeneralCustomQueryRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): HandlerResult<GeneralCustomQueryResponseData> {
     return {
       type: "runCustomQuery",
@@ -348,28 +367,28 @@ export class CustomCommandDefinitionExecutor implements DefinitionExecutor {
 
   async authorize(
     reqData: GeneralCustomCommandRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<boolean> {
     return this.definition.authorize!(reqData, session);
   }
 
   async validate(
     reqData: GeneralCustomCommandRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<void> {
     return this.definition.validate!(reqData, session);
   }
 
   async normalize(
     reqData: GeneralCustomCommandRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralCustomCommandRequestData> {
     return this.definition.normalize!(reqData, session);
   }
 
   async execute(
     reqData: GeneralCustomCommandRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): HandlerResult<GeneralCustomCommandResponseData> {
     return {
       type: "runCustomCommand",
@@ -379,23 +398,17 @@ export class CustomCommandDefinitionExecutor implements DefinitionExecutor {
 }
 
 export interface DefinitionExecutor {
-  authorize(
-    reqData: GeneralRequestData,
-    session?: Nullable<Session>
-  ): Promise<boolean>;
+  authorize(reqData: GeneralRequestData, session?: Session): Promise<boolean>;
 
   normalize(
     reqData: GeneralRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralRequestData>;
 
-  validate(
-    reqData: GeneralRequestData,
-    session?: Nullable<Session>
-  ): Promise<void>;
+  validate(reqData: GeneralRequestData, session?: Session): Promise<void>;
 
   execute(
     reqData: GeneralRequestData,
-    session?: Nullable<Session>
+    session?: Session
   ): Promise<GeneralResponseData>;
 }
