@@ -19,7 +19,6 @@ import {
   LoginResponseData,
   LogoutCommand,
   LogoutResponseData,
-  Nullable,
   Session,
   SessionClient,
   UserDefinition,
@@ -238,22 +237,23 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
     reqData: GeneralUserEntityRequestData,
     session?: Session
   ): HandlerResult<UserEntityResponseData> {
+    if (reqData.method == "logout") {
+      return this.logout(reqData.payload);
+    }
     if (reqData.method == "login") {
       return this.login(reqData.payload, session);
     }
+
     if (session === undefined) {
       const errorResult: ErrorResponseData = {
         type: "error",
         payload: createServerError(
-          `Execute method ${reqData.method} must needs session`
+          `Method ${reqData.method} requires an active session`,
+          "Unauthorized"
         )
       };
       return errorResult;
     }
-    if (reqData.method == "logout") {
-      return this.logout(reqData.payload, session);
-    }
-
     return this.definition.wrapExecution!(
       reqData,
       session,
@@ -278,8 +278,7 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
   }
 
   private async logout(
-    logoutCommand: LogoutCommand<string>,
-    session?: Nullable<Session>
+    logoutCommand: LogoutCommand<string>
   ): Promise<LogoutResponseData> {
     const { sessionId } = logoutCommand;
     const result = await this.sessionClient.delete(sessionId);
