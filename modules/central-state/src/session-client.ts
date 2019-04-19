@@ -28,9 +28,9 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async get(id: Id | null): Promise<Session | null> {
-    if (id == null) {
-      return null;
+  async get(id?: Id): Promise<Session | undefined> {
+    if (id === undefined || id === null) {
+      return;
     }
     try {
       const session = await this.dbClient.get({
@@ -39,12 +39,12 @@ export class PhenylSessionClient implements SessionClient {
       });
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
         this.delete(id); // Run asynchronously
-        return null;
+        return;
       }
       return session;
     } catch (e) {
       // TODO: Check error message.
-      return null;
+      return;
     }
   }
 
