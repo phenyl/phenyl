@@ -15,13 +15,12 @@ export default class MemoryKvsClient<T extends Entity> implements KvsClient<T> {
   pool: KeyValuePool<T>;
 
   constructor(params: MemoryKvsClientParams<T> = {}) {
-    // $FlowIssue(empty-object-is-object-as-a-map)
     this.pool = params.pool || {};
   }
 
-  async get(id?: string | null): Promise<T | null> {
-    if (id == null) {
-      return null;
+  async get(id?: string): Promise<T | undefined> {
+    if (id === null || id === undefined) {
+      return;
     }
     return this.pool[id];
   }

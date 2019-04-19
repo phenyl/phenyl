@@ -62,7 +62,7 @@ export type PushCommandResult<E extends Entity> =
       newOperation: GeneralUpdateOperation;
     };
 
-export type CustomCommandResult<CR extends Object> = {
+export type CustomCommandResult<CR extends Object = Object> = {
   result: CR;
 };
 

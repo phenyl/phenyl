@@ -24,7 +24,10 @@ export interface PullQuery<EN extends string> {
   versionId: string | null;
 }
 
-export interface CustomQuery<CQ extends string, QP extends Object> {
+export interface CustomQuery<
+  CQ extends string = string,
+  QP extends Object = Object
+> {
   name: CQ;
   params: QP;
 }
