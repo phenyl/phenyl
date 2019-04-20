@@ -16,7 +16,9 @@ import {
   GeneralResponseData,
   Session,
   EntitiesById,
-  EntityClient
+  EntityClient,
+  UserEntityRequestData,
+  Nullable
 } from "@phenyl/interfaces";
 
 import { RestApiExecution } from "./decls";
@@ -66,10 +68,17 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
   /**
    *
    */
-  async wrapExecution(
-    reqData: GeneralRequestData,
-    session: Session | null | undefined,
-    execution: RestApiExecution
+  async wrapExecution<
+    M extends GeneralReqResEntityMap,
+    EN extends Key<M>,
+    Ereqres extends M[EN],
+    C extends Object,
+    S extends Object,
+    SS extends Session<string, Object> = Session<string, Object>
+  >(
+    reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
+    session: Nullable<SS>,
+    execution: RestApiExecution<M, EN, Ereqres, C, S, SS>
   ): Promise<GeneralResponseData> {
     const resData = await execution(reqData, session);
 
@@ -83,7 +92,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
         const { $set, $docPath } = $bind<typeof resData>();
         return update(
           resData,
-          // @ts-ignore: GeneralResponseData is not have payload.foreign
+          // @ts-ignore: has no foreign key
           $set($docPath("payload", "foreign", "entities"), foreignEntitiesById)
         );
       },
@@ -97,7 +106,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
         const { $set, $docPath } = $bind<typeof resData>();
         return update(
           resData,
-          // @ts-ignore: GeneralResponseData is not have payload.foreign
+          // @ts-ignore: has no foreign key
           $set($docPath("payload", "foreign", "entity"), foreignEntity)
         );
       },
@@ -111,7 +120,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
         const { $set, $docPath } = $bind<typeof resData>();
         return update(
           resData,
-          // @ts-ignore: GeneralResponseData is not have payload.foreign
+          // @ts-ignore: has no foreign key
           $set($docPath("payload", "foreign", "entity"), foreignEntity)
         );
       },
@@ -126,7 +135,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
         const { $set, $docPath } = $bind<typeof resData>();
         return update(
           resData,
-          // @ts-ignore: GeneralResponseData is not have payload.foreign
+          // @ts-ignore: has no foreign key
           $set($docPath("payload", "foreign", "entities"), foreignEntitiesById)
         );
       },

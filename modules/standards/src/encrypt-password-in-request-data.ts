@@ -1,14 +1,23 @@
-import { GeneralRequestData } from "@phenyl/interfaces";
+import {
+  UserEntityRequestData,
+  GeneralReqResEntityMap,
+  Key
+} from "@phenyl/interfaces";
 
 import { $bind, update, DocumentPath, getNestedValue } from "sp2";
 
 import { EncryptFunction } from "./decls";
 
-export function encryptPasswordInRequestData(
-  reqData: GeneralRequestData,
+export function encryptPasswordInRequestData<
+  M extends GeneralReqResEntityMap,
+  C extends Object,
+  EN extends Key<M>,
+  Ereqres extends M[EN]
+>(
+  reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
   passwordPropName: DocumentPath,
   encrypt: EncryptFunction
-): GeneralRequestData {
+): UserEntityRequestData<EN, Ereqres["request"], C> {
   switch (reqData.method) {
     case "insertOne":
     case "insertAndGet": {
@@ -20,7 +29,8 @@ export function encryptPasswordInRequestData(
         const { $set, $docPath } = $bind<typeof value>();
         const valueWithEncryptedPass = update(
           value,
-          $set($docPath(passwordPropName), encrypt(password))
+          // @ts-ignore password always exists
+          $set($docPath(passwordPropName), encrypt({ password }))
         );
         const { $set: $OtherSet, $docPath: $otherDocPath } = $bind<
           typeof reqData
@@ -45,6 +55,7 @@ export function encryptPasswordInRequestData(
           const { $set, $docPath } = $bind<typeof value>();
           return update(
             value,
+            // @ts-ignore password always exists
             $set($docPath(passwordPropName), encrypt(password))
           );
         } else {

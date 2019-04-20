@@ -13,16 +13,11 @@ import {
   UserDefinition,
   Session,
   AuthenticationResult,
-  GeneralRequestData,
-  GeneralResponseData
+  UserEntityRequestData,
+  UserEntityResponseData
 } from "@phenyl/interfaces";
 
-import {
-  EncryptFunction,
-  RestApiExecution,
-  AuthSetting,
-  LoginCommandOf
-} from "./decls";
+import { EncryptFunction, AuthSetting, LoginCommandOf } from "./decls";
 
 export type StandardUserDefinitionParams<
   M extends GeneralReqResEntityMap,
@@ -57,12 +52,10 @@ export class StandardUserDefinition<
     this.ttl = params.ttl || 60 * 60 * 24 * 365; // one year
   }
 
-  // @ts-ignore @TODO: waiting for fix of interfaces
-  async authorize<N extends Key<M>>(
+  async authenticate<N extends Key<M>>(
     loginCommand: LoginCommandOf<A, N>,
     session: Session | null | undefined
   ): Promise<AuthenticationResult<string, any>> {
-    // eslint-disable-line no-unused-vars
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
 
@@ -85,18 +78,20 @@ export class StandardUserDefinition<
     }
   }
 
-  // @ts-ignore @TODO: waiting for fix of interfaces
   async wrapExecution(
-    reqData: GeneralRequestData,
-    session: Session | null | undefined,
-    execution: RestApiExecution
-  ): Promise<GeneralResponseData> {
+    reqData: UserEntityRequestData,
+    session: Session,
+    executeFn: (
+      reqData: UserEntityRequestData,
+      session?: Session
+    ) => Promise<UserEntityResponseData>
+  ): Promise<UserEntityResponseData> {
     const newReqData = encryptPasswordInRequestData(
       reqData,
       this.passwordPropName,
       this.encrypt
     );
-    const resData = await execution(newReqData, session);
+    const resData = await executeFn(newReqData, session);
     const newResData = removePasswordFromResponseData(
       resData,
       this.passwordPropName
