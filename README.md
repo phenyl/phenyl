@@ -43,7 +43,6 @@ TBD
 - [@phenyl/utils](https://github.com/phenyl-js/phenyl/tree/master/modules/utils): (Almost internal) Utility functions in Phenyl family.
 - [@phenyl/state](https://github.com/phenyl-js/phenyl/tree/master/modules/state): (Almost internal) Entity state Reader/Writer.
 - [@phenyl/http-rules](https://github.com/phenyl-js/phenyl/tree/master/modules/http-rules): (Almost internal) Set of rules that translates HTTP Request/Response into Phenyl RequestData/ResponseData.
-- [power-crypt](https://github.com/phenyl-js/phenyl/tree/master/modules/power-crypt): (Almost internal) A module for string encryption.
 
 # sp2
 
