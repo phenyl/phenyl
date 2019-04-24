@@ -1,5 +1,4 @@
-// @ts-ignore TODO typescriptify power-crypt
-import powerCrypt from "power-crypt/jsnext";
+import powerCrypt from "power-crypt";
 import { createServerError } from "@phenyl/utils";
 
 import { StandardEntityDefinition } from "./standard-entity-definition";
