@@ -30,7 +30,7 @@ export function encryptPasswordInRequestData<
         const valueWithEncryptedPass = update(
           value,
           // @ts-ignore password always exists
-          $set($docPath(passwordPropName), encrypt({ password }))
+          $set($docPath(passwordPropName), encrypt(password))
         );
         const { $set: $OtherSet, $docPath: $otherDocPath } = $bind<
           typeof reqData
