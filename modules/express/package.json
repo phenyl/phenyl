@@ -18,6 +18,7 @@
   "scripts": {
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "ci-test": "yarn test",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
