@@ -28,6 +28,10 @@
     "sp2": "~1.4.1"
   },
   "devDependencies": {
+    "@phenyl/http-client": "^1.0.0-alpha.3",
+    "@phenyl/http-server": "^1.0.0-alpha.3",
+    "@phenyl/memory-db": "^1.0.0-alpha.3",
+    "@phenyl/rest-api": "^1.0.0-alpha.3",
     "upbin": "^0.9.0"
   },
   "publishConfig": {
