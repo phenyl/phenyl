@@ -8,10 +8,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import { createPhenylApiMiddleware, createPhenylMiddleware } from "../src";
 
 import {
-  TypeMapFromFunctionalGroup,
   EntityDefinition,
-  TypeOnly,
-  ReqRes,
   CustomQueryDefinition,
   CustomQuery,
   LoginCommand,
@@ -20,21 +17,12 @@ import {
   CustomRequestHandler,
   KvsClient,
   Session,
-  EncodedHttpRequest
+  EncodedHttpRequest,
+  GeneralTypeMap
 } from "@phenyl/interfaces";
 
 type Diary = { id: string };
 class DiaryDefinition implements EntityDefinition {
-  entityName: TypeOnly<"diary">;
-  entity: TypeOnly<ReqRes<Diary>>;
-
-  constructor() {
-    // @ts-ignore
-    this.entityName = "";
-    // @ts-ignore
-    this.entity = "";
-  }
-
   async authorize() {
     return true;
   }
@@ -71,15 +59,6 @@ type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
 type Credentials = { email: string; password: string };
 class MemberDefinition implements EntityDefinition {
-  entityName: TypeOnly<"member">;
-  entity: TypeOnly<ReqRes<Member>>;
-  constructor() {
-    // @ts-ignore
-    this.entityName = "";
-    // @ts-ignore
-    this.entity = "";
-  }
-
   async authorize() {
     return true;
   }
@@ -116,7 +95,27 @@ const fg = {
   customCommands: {}
 };
 
-type MyTypeMap = TypeMapFromFunctionalGroup<typeof fg>;
+interface MyTypeMap extends GeneralTypeMap {
+  entities: {
+    member: {
+      request: Member;
+      response: MemberResponse;
+    };
+    diary: {
+      request: Diary;
+      response: Diary;
+    };
+  };
+  customQueries: {
+    getVersion: {
+      params: GetVersionParams;
+      result: {
+        name: string;
+        version: string;
+      };
+    };
+  };
+}
 
 const restApiHandler = new PhenylRestApi<MyTypeMap>(fg, {
   client: createEntityClient<EntityMap>(),
