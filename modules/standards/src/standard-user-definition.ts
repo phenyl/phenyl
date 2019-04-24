@@ -24,8 +24,8 @@ export type StandardUserDefinitionParams<
 > = {
   entityClient: EntityClient<M>;
   encrypt?: EncryptFunction;
-  accountPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
+  accountPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  passwordPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
   ttl?: number;
 };
 
@@ -36,8 +36,8 @@ export class StandardUserDefinition<
 > extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>;
   encrypt: EncryptFunction;
-  accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
+  accountPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  passwordPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
   ttl: number;
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
