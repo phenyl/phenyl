@@ -42,7 +42,7 @@ describe("encryptPasswordInRequestData", () => {
       method: "insertOne",
       payload: {
         entityName: "user",
-        value: { password: "dfzO3OHHF0Snmnx7j5jn0Um7bRFLk89qq1/AoZ5Dcvs=" }
+        value: { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" }
       }
     };
 

@@ -23,9 +23,9 @@ export type StandardUserDefinitionParams<
   A extends AuthSetting
 > = {
   entityClient: EntityClient<M>;
-  encrypt?: EncryptFunction<A>;
-  accountPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
+  encrypt?: EncryptFunction;
+  accountPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  passwordPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
   ttl?: number;
 };
 
@@ -35,9 +35,9 @@ export class StandardUserDefinition<
   A extends AuthSetting
 > extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>;
-  encrypt: EncryptFunction<A>;
-  accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
+  encrypt: EncryptFunction;
+  accountPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  passwordPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
   ttl: number;
 
   constructor(params: StandardUserDefinitionParams<M, A>) {
@@ -65,6 +65,7 @@ export class StandardUserDefinition<
         entityName,
         where: {
           [accountPropName]: account,
+          // @ts-ignore
           [passwordPropName]: this.encrypt(password)
         }
       });
