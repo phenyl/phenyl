@@ -279,13 +279,63 @@ describe("createPhenylMiddleware", () => {
     assert(text === "Hello, Express! I'm Shin.");
   });
 
-  it.skip('can handle "/explorer" by default', async () => {
-    // TODO
+  it('can handle "/explorer" by default', async () => {
+    app.use(
+      createPhenylMiddleware({ restApiHandler, customRequestHandler } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: "http://localhost:3333"
+    });
+    const text = await client.requestText("/explorer?name=Shin");
+    assert.strictEqual(text, "Hi, Phenyl Custom Request Handler. I'm Shin");
   });
-  it.skip("can handle Phenyl API request with path modifier", async () => {
-    // TODO
+  it("can handle Phenyl API request with path modifier", async () => {
+    const modifyPath = "/foo/bar";
+    app.use(
+      modifyPath,
+      createPhenylMiddleware({
+        restApiHandler,
+        customRequestHandler
+      } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: `http://localhost:3333${modifyPath}`
+    });
+    const queryResult = await client.runCustomQuery({
+      name: "getVersion",
+      params: { name: "bar" }
+    });
+
+    assert.strictEqual(
+      queryResult.result && queryResult.result.version,
+      "1.2.3"
+    );
   });
-  it.skip("can handle non-API request with path modifier", async () => {
-    // TODO
+  it("can handle non-API request with path modifier", async () => {
+    const modifyPath = "/foo/bar";
+    app.use(
+      modifyPath,
+      createPhenylMiddleware({
+        restApiHandler,
+        customRequestHandler
+      } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    app.get("/foo/bar/baz", (req, res) => {
+      res.send(`Hello, Express! I'm ${req.query.name}.`);
+    });
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: `http://localhost:3333${modifyPath}`
+    });
+    const text = await client.requestText("/baz?name=Shin");
+    assert.strictEqual(text, "Hello, Express! I'm Shin.");
   });
 });
