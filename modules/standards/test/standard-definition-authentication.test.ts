@@ -166,12 +166,11 @@ describe("Phenyl Standards with Authentication", async () => {
     }
     loggedInUser = loginCommandResult.user as PatientResponse;
     loggedInSession = loginCommandResult.session as Session;
-    assert.strictEqual(loggedInUser && loggedInUser.name, "Shin Suzuki");
-    assert.strictEqual(
-      loggedInUser && loggedInUser.email,
-      "shinout@example.com"
-    );
-    assert.strictEqual(loggedInUser && loggedInUser.id, insertedEntity.id);
+    assert.deepStrictEqual(loggedInUser, {
+      name: "Shin Suzuki",
+      email: "shinout@example.com",
+      id: insertedEntity.id
+    });
   });
 
   it("can updateAndGet by loggedInSession", async () => {
