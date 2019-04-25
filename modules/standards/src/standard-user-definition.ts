@@ -3,7 +3,10 @@ import { createServerError } from "@phenyl/utils";
 
 import { StandardEntityDefinition } from "./standard-entity-definition";
 import { encryptPasswordInRequestData } from "./encrypt-password-in-request-data";
-import { removePasswordFromResponseData } from "./remove-password-from-response-data";
+import {
+  removePasswordFromResponseData,
+  removePasswordFromResponseEntity
+} from "./remove-password-from-response-data";
 
 import {
   GeneralReqResEntityMap,
@@ -69,7 +72,10 @@ export class StandardUserDefinition<
           [passwordPropName]: this.encrypt(password)
         }
       });
-      const user = result.entity;
+      const user = removePasswordFromResponseEntity(
+        result.entity,
+        passwordPropName
+      );
       const expiredAt = new Date(Date.now() + ttl * 1000).toISOString();
       const preSession = { expiredAt, entityName, userId: user.id };
       return { preSession, user, versionId: result.versionId };
