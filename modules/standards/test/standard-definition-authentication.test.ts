@@ -5,7 +5,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import PhenylHttpClient from "@phenyl/http-client";
 import { GeneralTypeMap, KvsClient, Session } from "@phenyl/interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
-import { StandardUserDefinition } from "../src/";
+import { StandardUserDefinition } from "../src";
 import assert from "assert";
 
 type PlainPatient = {
@@ -148,7 +148,8 @@ describe("Phenyl Standards with Authentication", async () => {
   let loggedInUser: PatientResponse;
   let loggedInSession: Session;
   it("can login by inserted user", async () => {
-    const logined = await client.login({
+    // TODO: loginCommandResult has hashed password. It's not good.
+    const loginCommandResult = await client.login({
       entityName: "patient",
       credentials: {
         email: "shinout@example.com",
@@ -156,12 +157,15 @@ describe("Phenyl Standards with Authentication", async () => {
       }
     });
 
-    // TODO: loginedUser has hashed password. It's not good.
-    if (!logined || !logined.user || !logined.session) {
-      assert.fail("logined must not be null", logined);
+    if (
+      !loginCommandResult ||
+      !loginCommandResult.user ||
+      !loginCommandResult.session
+    ) {
+      assert.fail("loginCommandResult must not be null", loginCommandResult);
     }
-    loggedInUser = logined.user as PatientResponse;
-    loggedInSession = logined.session as Session;
+    loggedInUser = loginCommandResult.user as PatientResponse;
+    loggedInSession = loginCommandResult.session as Session;
     assert.strictEqual(loggedInUser && loggedInUser.name, "Shin Suzuki");
     assert.strictEqual(
       loggedInUser && loggedInUser.email,
