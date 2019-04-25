@@ -112,22 +112,22 @@ after(() => {
   server.close();
 });
 
-describe("Phenyl Standards with Authentication", async () => {
+describe("Phenyl Standards with Authentication", () => {
   const client: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
     url: "http://localhost:8080"
   });
 
-  // TODO: need refinement. Should preSession be created by others?
-  const preSession = await sessionClient.create({
-    entityName: "patient",
-    expiredAt: "",
-    userId: "shinout@example.com",
-    externalId: "",
-    ttl: 12345
-  });
-
   let insertedEntity: PatientResponse;
   it(" should be inserted first user", async () => {
+    // TODO: need refinement. Should preSession be created by others?
+    const preSession = await sessionClient.create({
+      entityName: "patient",
+      expiredAt: "",
+      userId: "shinout@example.com",
+      externalId: "",
+      ttl: 12345
+    });
+
     const inserted = await client.insertAndGet(
       {
         entityName: "patient",
