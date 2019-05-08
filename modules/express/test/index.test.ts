@@ -55,7 +55,7 @@ type EntityMap = {
   member: any;
   diary: any;
 };
-type Member = { id: string };
+type MemberRequest = { id: string };
 type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
 type Credentials = { email: string; password: string };
@@ -98,10 +98,7 @@ const fg = {
 
 interface MyTypeMap extends GeneralTypeMap {
   entities: {
-    member: {
-      request: Member;
-      response: MemberResponse;
-    };
+    member: ReqRes<MemberRequest, MemberResponse>,
     diary: Diary;
   };
   customQueries: {
