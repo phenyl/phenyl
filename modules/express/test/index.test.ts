@@ -18,10 +18,11 @@ import {
   KvsClient,
   Session,
   EncodedHttpRequest,
-  GeneralTypeMap
+  GeneralTypeMap,
+  ReqRes
 } from "@phenyl/interfaces";
 
-type Diary = { id: string };
+type Diary = ReqRes<{ id: string }>;
 class DiaryDefinition implements EntityDefinition {
   async authorize() {
     return true;
@@ -101,10 +102,7 @@ interface MyTypeMap extends GeneralTypeMap {
       request: Member;
       response: MemberResponse;
     };
-    diary: {
-      request: Diary;
-      response: Diary;
-    };
+    diary: Diary;
   };
   customQueries: {
     getVersion: {
