@@ -112,22 +112,22 @@ after(() => {
   server.close();
 });
 
-describe("Phenyl Standards with Authentication", async () => {
+describe("Phenyl Standards with Authentication", () => {
   const client: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
     url: "http://localhost:8080"
   });
 
-  // TODO: need refinement. Should preSession be created by others?
-  const preSession = await sessionClient.create({
-    entityName: "patient",
-    expiredAt: "",
-    userId: "shinout@example.com",
-    externalId: "",
-    ttl: 12345
-  });
-
   let insertedEntity: PatientResponse;
   it(" should be inserted first user", async () => {
+    // TODO: need refinement. Should preSession be created by others?
+    const preSession = await sessionClient.create({
+      entityName: "patient",
+      expiredAt: "",
+      userId: "shinout@example.com",
+      externalId: "",
+      ttl: 12345
+    });
+
     const inserted = await client.insertAndGet(
       {
         entityName: "patient",
@@ -166,12 +166,11 @@ describe("Phenyl Standards with Authentication", async () => {
     }
     loggedInUser = loginCommandResult.user as PatientResponse;
     loggedInSession = loginCommandResult.session as Session;
-    assert.strictEqual(loggedInUser && loggedInUser.name, "Shin Suzuki");
-    assert.strictEqual(
-      loggedInUser && loggedInUser.email,
-      "shinout@example.com"
-    );
-    assert.strictEqual(loggedInUser && loggedInUser.id, insertedEntity.id);
+    assert.deepStrictEqual(loggedInUser, {
+      name: "Shin Suzuki",
+      email: "shinout@example.com",
+      id: insertedEntity.id
+    });
   });
 
   it("can updateAndGet by loggedInSession", async () => {

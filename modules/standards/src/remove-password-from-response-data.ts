@@ -6,7 +6,8 @@ import {
   UserEntityResponseData,
   ProEntity,
   GeneralReqResEntityMap,
-  Key
+  Key,
+  Entity
 } from "@phenyl/interfaces";
 
 export function removePasswordFromResponseData<
@@ -26,4 +27,13 @@ export function removePasswordFromResponseData<
       return res;
     }
   ) as UserEntityResponseData<EN, Ereqres["response"], C>;
+}
+
+export function removePasswordFromResponseEntity(
+  entity: Entity,
+  passwordPropName: string
+): Entity {
+  if (!hasOwnNestedProperty(entity, passwordPropName)) return entity;
+  const res = update(entity, { $unset: { [passwordPropName]: "" } });
+  return res as Entity;
 }
