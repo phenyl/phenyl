@@ -10,7 +10,8 @@ import {
   Session,
   PhenylAction,
   LocalState,
-  GetCommandResult
+  GetCommandResult,
+  ReqRes
 } from "../..//interfaces";
 import { createEntityClient } from "../..//memory-db";
 import { StandardUserDefinition } from "../../standards";
@@ -53,10 +54,7 @@ type MyEntityMap = {
   patient: PlainPatient;
 };
 type MyGeneralReqResEntityMap = {
-  patient: {
-    request: PatientRequest;
-    response: PatientResponse;
-  };
+  patient: ReqRes<PatientRequest, PatientResponse>;
 };
 
 type MyAuthCommandMap = {
@@ -238,14 +236,15 @@ describe("Integration", () => {
       assert.fail("session must be non null");
       return;
     }
-    store.dispatch(
+
+    // wait for logout command
+    await store.dispatch(
       PhenylReduxModule.logout({
         entityName: "patient",
         sessionId: session.id,
         userId: inserted.entity.id
       })
     );
-    await wait(30);
     const { entities } = store.getState().phenyl;
     assert.deepStrictEqual(entities, {});
   });
