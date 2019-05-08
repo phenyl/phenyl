@@ -14,6 +14,7 @@
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "scripts": {
+    "prepare": "yarn bootstrap && yarn clean && yarn build",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "ci-test": "lerna run ci-test",
@@ -21,7 +22,6 @@
     "clean-tmp": "lerna run clean",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",
     "lint": "lerna run lint",
-    "prepublish": "yarn clean && yarn bootstrap && yarn build",
     "publish": "echo publish command is to be implemented",
     "test": "lerna run test",
     "type-check": "lerna run type-check",
