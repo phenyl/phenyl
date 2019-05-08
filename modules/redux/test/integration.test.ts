@@ -125,8 +125,6 @@ const store = createStore<Store, PhenylAction, {}, {}>(
   )
 );
 
-const wait = async (msec: number) => new Promise(ok => setTimeout(ok, msec));
-
 let server: PhenylHttpServer<MyTypeMap>;
 before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
@@ -193,7 +191,8 @@ describe("Integration", () => {
   });
 
   it("should be success to login", async () => {
-    store.dispatch(
+    // wait for login command
+    await store.dispatch(
       PhenylReduxModule.login({
         entityName: "patient",
         credentials: {
@@ -202,13 +201,11 @@ describe("Integration", () => {
         }
       })
     );
-    await wait(30);
     const { entities } = store.getState().phenyl;
     const loggedInUser = entities.patient[inserted.entity.id].origin;
     assert.deepStrictEqual(loggedInUser, {
       name: "Shin Suzuki",
       email: "shinout@example.com",
-      password: "5S/eKy9JFkAgOfJUjmLfZmhQBLAPQtxuJX4Oc2urTdM=",
       id: inserted.entity.id
     });
   });
