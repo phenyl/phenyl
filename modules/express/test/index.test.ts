@@ -8,10 +8,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import { createPhenylApiMiddleware, createPhenylMiddleware } from "../src";
 
 import {
-  TypeMapFromFunctionalGroup,
   EntityDefinition,
-  TypeOnly,
-  ReqRes,
   CustomQueryDefinition,
   CustomQuery,
   LoginCommand,
@@ -20,21 +17,13 @@ import {
   CustomRequestHandler,
   KvsClient,
   Session,
-  EncodedHttpRequest
+  EncodedHttpRequest,
+  GeneralTypeMap,
+  ReqRes
 } from "@phenyl/interfaces";
 
-type Diary = { id: string };
+type Diary = ReqRes<{ id: string }>;
 class DiaryDefinition implements EntityDefinition {
-  entityName: TypeOnly<"diary">;
-  entity: TypeOnly<ReqRes<Diary>>;
-
-  constructor() {
-    // @ts-ignore
-    this.entityName = "";
-    // @ts-ignore
-    this.entity = "";
-  }
-
   async authorize() {
     return true;
   }
@@ -66,20 +55,11 @@ type EntityMap = {
   member: any;
   diary: any;
 };
-type Member = { id: string };
+type MemberRequest = { id: string };
 type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
 type Credentials = { email: string; password: string };
 class MemberDefinition implements EntityDefinition {
-  entityName: TypeOnly<"member">;
-  entity: TypeOnly<ReqRes<Member>>;
-  constructor() {
-    // @ts-ignore
-    this.entityName = "";
-    // @ts-ignore
-    this.entity = "";
-  }
-
   async authorize() {
     return true;
   }
@@ -116,7 +96,21 @@ const fg = {
   customCommands: {}
 };
 
-type MyTypeMap = TypeMapFromFunctionalGroup<typeof fg>;
+interface MyTypeMap extends GeneralTypeMap {
+  entities: {
+    member: ReqRes<MemberRequest, MemberResponse>,
+    diary: Diary;
+  };
+  customQueries: {
+    getVersion: {
+      params: GetVersionParams;
+      result: {
+        name: string;
+        version: string;
+      };
+    };
+  };
+}
 
 const restApiHandler = new PhenylRestApi<MyTypeMap>(fg, {
   client: createEntityClient<EntityMap>(),
@@ -160,11 +154,33 @@ describe("createPhenylApiMiddleware", () => {
     const text = await client.requestText("/foo/bar?name=Shin");
     assert(text === "Hello, Express! I'm Shin.");
   });
-  it.skip("can handle Phenyl API request with path modifier", async () => {
-    // TODO
+  it("can handle Phenyl API request with path modifier", async () => {
+    app.use(
+      "/foo/bar",
+      createPhenylApiMiddleware(restApiHandler as RestApiHandler)
+    );
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: "http://localhost:3333/foo/bar"
+    });
+    const queryResult = await client.runCustomQuery({
+      name: "getVersion",
+      params: { name: "foo" }
+    });
+    assert.strictEqual(queryResult.result.version, "1.2.3");
   });
-  it.skip("can handle non-API request with path modifier", async () => {
-    // TODO
+  it("can handle non-API request with path modifier", async () => {
+    app.use(
+      "/foo/bar",
+      createPhenylApiMiddleware(restApiHandler as RestApiHandler)
+    );
+    app.get("/foo/bar/piyo", (req, res) => {
+      res.send(`Hello, Express! I'm ${req.query.name}.`);
+    });
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: "http://localhost:3333/foo/bar"
+    });
+    const text = await client.requestText("/piyo?name=Shin");
+    assert.strictEqual(text, "Hello, Express! I'm Shin.");
   });
 });
 
@@ -258,13 +274,63 @@ describe("createPhenylMiddleware", () => {
     assert(text === "Hello, Express! I'm Shin.");
   });
 
-  it.skip('can handle "/explorer" by default', async () => {
-    // TODO
+  it('can handle "/explorer" by default', async () => {
+    app.use(
+      createPhenylMiddleware({ restApiHandler, customRequestHandler } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: "http://localhost:3333"
+    });
+    const text = await client.requestText("/explorer?name=Shin");
+    assert.strictEqual(text, "Hi, Phenyl Custom Request Handler. I'm Shin");
   });
-  it.skip("can handle Phenyl API request with path modifier", async () => {
-    // TODO
+  it("can handle Phenyl API request with path modifier", async () => {
+    const modifyPath = "/foo/bar";
+    app.use(
+      modifyPath,
+      createPhenylMiddleware({
+        restApiHandler,
+        customRequestHandler
+      } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: `http://localhost:3333${modifyPath}`
+    });
+    const queryResult = await client.runCustomQuery({
+      name: "getVersion",
+      params: { name: "bar" }
+    });
+
+    assert.strictEqual(
+      queryResult.result && queryResult.result.version,
+      "1.2.3"
+    );
   });
-  it.skip("can handle non-API request with path modifier", async () => {
-    // TODO
+  it("can handle non-API request with path modifier", async () => {
+    const modifyPath = "/foo/bar";
+    app.use(
+      modifyPath,
+      createPhenylMiddleware({
+        restApiHandler,
+        customRequestHandler
+      } as {
+        restApiHandler: RestApiHandler;
+        customRequestHandler: CustomRequestHandler<MyTypeMap>;
+      })
+    );
+    app.get("/foo/bar/baz", (req, res) => {
+      res.send(`Hello, Express! I'm ${req.query.name}.`);
+    });
+    const client = new PhenylHttpClient<MyTypeMap>({
+      url: `http://localhost:3333${modifyPath}`
+    });
+    const text = await client.requestText("/baz?name=Shin");
+    assert.strictEqual(text, "Hello, Express! I'm Shin.");
   });
 });
