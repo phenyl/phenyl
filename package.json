@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "scripts": {
-    "prepare": "yarn bootstrap && yarn clean && yarn build",
+    "prepare": "yarn bootstrap && yarn clean-tmp && yarn build",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "ci-test": "lerna run ci-test",
