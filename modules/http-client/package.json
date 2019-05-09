@@ -26,7 +26,7 @@
     "@phenyl/http-rules": "^1.0.0-alpha.5",
     "@phenyl/interfaces": "^1.0.0-alpha.5",
     "@phenyl/utils": "^1.0.0-alpha.5",
-    "cross-fetch": "^2.2.2"
+    "cross-fetch": "^3.0.2"
   },
   "devDependencies": {
     "@phenyl/http-server": "^1.0.0-alpha.5",
@@ -34,9 +34,6 @@
     "@phenyl/rest-api": "^1.0.0-alpha.5",
     "power-assert": "^1.4.4",
     "upbin": "^0.9.0"
-  },
-  "react-native": {
-    "cross-fetch": "./global-fetch.js"
   },
   "publishConfig": {
     "access": "public"
