@@ -23,7 +23,7 @@ export default class PhenylApiExplorer {
 
   getClientHtml(): string {
     const templatePath = path.join(
-      pkgDir("phenyl-api-explorer-client"),
+      pkgDir("@phenyl/api-explorer-client"),
       "build",
       "index.html"
     );
