@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/mongodb",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -24,9 +24,9 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.0.0-alpha.4",
-    "@phenyl/interfaces": "^1.0.0-alpha.4",
-    "@phenyl/utils": "^1.0.0-alpha.4",
+    "@phenyl/central-state": "^1.0.0-alpha.5",
+    "@phenyl/interfaces": "^1.0.0-alpha.5",
+    "@phenyl/utils": "^1.0.0-alpha.5",
     "bson": "^4.0.0",
     "es6-promisify": "^5.0.0",
     "mongodb": "^3.2.3",
