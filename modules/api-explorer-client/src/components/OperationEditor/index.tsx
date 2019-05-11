@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react/index";
+import { Form } from "semantic-ui-react";
 
 type Props = {
   match: any;

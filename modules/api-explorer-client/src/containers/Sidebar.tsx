@@ -2,14 +2,15 @@
 import React from "react";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-import { Sidebar as SemanticSidebar, Menu } from "semantic-ui-react/index";
+import { Sidebar as SemanticSidebar, Menu } from "semantic-ui-react";
 import { connect } from "react-redux";
 import Information from "../components/Sidebar/Information";
 import FunctionalGroup from "../components/Sidebar/FunctionalGroup";
 import { logout } from "../modules/user";
 import { State } from "../modules";
-// @ts-ignore webpack
 import pkg from "../../package.json";
+
+const { PhenylFunctionalGroupSkeleton } = window.phenylApiExplorerClientGlobals;
 
 type Props = {
   version: string;

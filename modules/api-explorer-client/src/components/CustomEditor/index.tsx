@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { Form } from "semantic-ui-react/index";
+import { Form } from "semantic-ui-react";
 
-type Id = string
+type Id = string;
 
 type Props = {
   match: any;
   isFetching: boolean;
   sessionId: Id;
-  execute: (params: { sessionId: Id, name: string; params: string }) => any;
+  execute: (params: { sessionId: Id; name: string; params: string }) => any;
 };
 
 type State = {

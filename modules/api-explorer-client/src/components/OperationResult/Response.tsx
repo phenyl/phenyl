@@ -1,5 +1,5 @@
 import React from "react";
-import { Segment, Tab, Message } from "semantic-ui-react/index";
+import { Segment, Tab, Message } from "semantic-ui-react";
 import JSONTree from "react-json-tree";
 
 type Props = {
