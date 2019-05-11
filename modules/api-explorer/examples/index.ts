@@ -6,7 +6,6 @@ import {
   StandardEntityDefinition
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
-import PhenylApiExplorer from "../src/PhenylApiExplorer";
 import {
   Session,
   GeneralRequestData,
@@ -17,13 +16,21 @@ import {
   CustomQueryDefinition,
   CustomQueryResult,
   FunctionalGroup,
-  ReqRes
+  ReqRes,
+  KvsClient
 } from "@phenyl/interfaces";
+import crypt from "power-crypt";
+import PhenylApiExplorer from "../src/PhenylApiExplorer";
 
 const PORT = 8000;
 
+type PlainHospital = {
+  id: string;
+  name: string;
+};
+
 class HospitalDefinition extends StandardEntityDefinition {
-  async authorization(
+  async authorize(
     reqData: GeneralRequestData,
     session?: Session
   ): Promise<boolean> {
@@ -46,6 +53,7 @@ type AppReqResEntityMap = { patient: ReqRes<PlainPatient> };
 
 type AppEntityMap = {
   patient: PlainPatient;
+  hospital: PlainHospital;
 };
 
 const memoryClient = createEntityClient<AppEntityMap>();
@@ -63,7 +71,7 @@ class PatientDefinition extends StandardUserDefinition<
     });
   }
 
-  async authorization(reqData: any, session: any): Promise<boolean> {
+  async authorize(reqData: any, session: any): Promise<boolean> {
     switch (reqData.method) {
       case "insertOne":
       case "insertAndGet":
@@ -155,13 +163,33 @@ const functionalGroup: FunctionalGroup = {
   }
 };
 
+type MemberSessionValue = { externalId: string; ttl: number };
+
+// insert initial values
+memoryClient.insertOne({
+  entityName: "patient",
+  value: {
+    name: "hoge",
+    email: "hoge@cureapp.jp",
+    password: crypt("hoge")
+  }
+});
+
+memoryClient.insertOne({
+  entityName: "hospital",
+  value: { name: "hoge hospital" }
+});
+
 const server = new PhenylHttpServer(http.createServer(), {
   restApiHandler: new PhenylRestApi(functionalGroup, {
     // @ts-ignore TODO
-    client: memoryClient
+    client: memoryClient,
+    sessionClient: memoryClient.createSessionClient() as KvsClient<
+      Session<"patient", MemberSessionValue>
+    >
   }),
   customRequestHandler: new PhenylApiExplorer(functionalGroup, {
-    path: "/explorer"
+    path: "/explorer.*"
   }).handler
 });
 

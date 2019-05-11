@@ -32,6 +32,7 @@
     "@phenyl/rest-api": "^1.0.0-alpha.5",
     "@phenyl/standards": "^1.0.0-alpha.5",
     "@types/ejs": "^2.6.2",
+    "power-crypt": "^0.2.2",
     "nodemon": "^1.18.3"
   },
   "publishConfig": {

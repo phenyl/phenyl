@@ -101,6 +101,7 @@ export const login = (
   // @TODO: define those any typs
 ) => async (dispatch: ThunkDispatch<any, any, any>) => {
   const client = getPhenylHttpClient();
+  console.log(client);
 
   try {
     dispatch(loginRequest());

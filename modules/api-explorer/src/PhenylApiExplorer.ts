@@ -68,7 +68,9 @@ export default class PhenylApiExplorer {
 
   async handler(req: EncodedHttpRequest): Promise<EncodedHttpResponse> {
     const { path: requestPath } = req;
-    if (/^\/(index(\.html)?)?$/.test(requestPath)) {
+
+    const indexRegExp = new RegExp(`^${this.path}(/index(.html)?)?$`);
+    if (indexRegExp.test(requestPath)) {
       return {
         statusCode: 200,
         headers: {
