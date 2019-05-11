@@ -1,8 +1,14 @@
 import fs from "fs";
 import path from "path";
 import ejs from "ejs";
-import { FunctionalGroup, EncodedHttpResponse } from "@phenyl/interfaces";
+import fileType from "file-type";
+import {
+  FunctionalGroup,
+  EncodedHttpResponse,
+  EncodedHttpRequest
+} from "@phenyl/interfaces";
 import { shallowMap, pkgDir } from "./utils";
+
 export type ExplorerParams = {
   path: string;
   phenylApiUrlBase?: string;
@@ -60,13 +66,43 @@ export default class PhenylApiExplorer {
     return ejs.render(template, data);
   }
 
-  async handler(): Promise<EncodedHttpResponse> {
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "text/html"
-      },
-      body: this.html
-    };
+  async handler(req: EncodedHttpRequest): Promise<EncodedHttpResponse> {
+    const { path: requestPath } = req;
+    if (/^\/(index(\.html)?)?$/.test(requestPath)) {
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "text/html"
+        },
+        body: this.html
+      };
+    } else {
+      const clientSourcePath = path.join(
+        pkgDir("@phenyl/api-explorer-client"),
+        "build",
+        requestPath
+      );
+      const sourceBuffer = fs.readFileSync(clientSourcePath);
+      const sourceFileType = fileType(sourceBuffer)!;
+      let sourceContentType = "text/plain";
+      if (sourceFileType) {
+        sourceContentType = sourceFileType.mime;
+      } else if (/.*\.css$/.test(requestPath)) {
+        sourceContentType = "text/css";
+      } else if (/.*\.js$/.test(requestPath)) {
+        sourceContentType = "application/javascript";
+      } else if (/.*\.json$/.test(requestPath)) {
+        sourceContentType = "application/manifest+json";
+      }
+      const body = sourceBuffer.toString();
+
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": sourceContentType
+        },
+        body
+      };
+    }
   }
 }
