@@ -1,4 +1,3 @@
-/* global PhenylFunctionalGroupSkeleton */
 import React from "react";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";

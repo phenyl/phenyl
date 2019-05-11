@@ -9,14 +9,10 @@
     "Nicholas Lee <nicholaslee119@gmail.com>"
   ],
   "files": [
-    "src",
-    "lib",
-    "public",
+    "build",
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "scripts": {
     "build": "react-scripts build && node scripts/prepare-assets.js",
     "eject": "react-scripts eject",

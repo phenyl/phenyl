@@ -1,6 +1,7 @@
 import { PhenylError, CustomQuery, CustomCommand } from "@phenyl/interfaces";
 import { ThunkDispatch } from "redux-thunk";
-import getPhenylHttpClient from "../lib/phenylClient";
+
+import getPhenylHttpClient from "../libs/phenylClient";
 
 const EXECUTE_START = "operation/EXECUTE_START";
 const EXECUTE_FINISHED = "operation/EXECUTE_FINISHED";

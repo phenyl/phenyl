@@ -1,4 +1,3 @@
-/* global PhenylFunctionalGroupSkeleton */
 import { Action } from "redux";
 import React, { Component } from "react";
 import { connect } from "react-redux";
