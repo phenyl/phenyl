@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/http-server",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -22,8 +22,8 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.0.0-alpha.6",
-    "@phenyl/interfaces": "^1.0.0-alpha.6"
+    "@phenyl/http-rules": "^1.0.0-alpha.7",
+    "@phenyl/interfaces": "^1.0.0-alpha.7"
   },
   "devDependencies": {
     "@babel/register": "^7.4.0",
