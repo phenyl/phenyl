@@ -9,6 +9,11 @@
     "imoans <naomins0101@gmail.com>",
     "Daiki Ihara <sasurau4@gmail.com>"
   ],
+  "files": [
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
   "main": "lib/PhenylApiExplorer.js",
   "types": "lib/PhenylApiExplorer.d.ts",
   "scripts": {
@@ -21,7 +26,6 @@
   "dependencies": {
     "@phenyl/api-explorer-client": "^1.0.0-alpha.6",
     "ejs": "^2.6.1",
-    "file-type": "^11.0.0",
     "upbin": "^0.9.0"
   },
   "devDependencies": {

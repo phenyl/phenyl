@@ -189,7 +189,7 @@ const server = new PhenylHttpServer(http.createServer(), {
     >
   }),
   customRequestHandler: new PhenylApiExplorer(functionalGroup, {
-    path: "/explorer.*"
+    path: "/explorer"
   }).handler
 });
 
