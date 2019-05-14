@@ -6,7 +6,8 @@
   "license": "Apache-2.0",
   "author": "Leko <leko.noor@gmail.com>",
   "contributors": [
-    "Nicholas Lee <nicholaslee119@gmail.com>"
+    "Nicholas Lee <nicholaslee119@gmail.com>",
+    "Daiki Ihara <sasurau4@gmail.com>"
   ],
   "files": [
     "build",
