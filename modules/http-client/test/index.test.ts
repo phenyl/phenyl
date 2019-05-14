@@ -32,12 +32,11 @@ describe("constructor", () => {
   });
 });
 
-describe("PhenylHttpClient as EntityClient", () => {
+// TODO: implement me!
+describe("PhenylHttpClient as http client", () => {
   before(() => {
     server.listen(8080);
   });
-
-  // TODO: add tests to check that PhenylHttoClient works as an Entity Client
 
   after(() => {
     server.close();
