@@ -6,72 +6,51 @@
   "license": "Apache-2.0",
   "author": "Leko <leko.noor@gmail.com>",
   "contributors": [
-    "Nicholas Lee <nicholaslee119@gmail.com>"
+    "Nicholas Lee <nicholaslee119@gmail.com>",
+    "Daiki Ihara <sasurau4@gmail.com>"
   ],
   "files": [
-    "src",
-    "lib",
-    "public",
+    "build",
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "yarn build:app & yarn build:ts",
-    "build:app": "node scripts/build.js && node scripts/prepare-assets.js",
-    "build:ts": "upbin tsc --declaration",
-    "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "build": "react-scripts build && node scripts/prepare-assets.js",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "test": "react-scripts test",
+    "type-check": "upbin tsc --noEmit"
   },
-  "babel": {
-    "presets": [
-      "react-app"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
     ]
   },
   "devDependencies": {
     "@phenyl/http-client": "^1.0.0-alpha.5",
     "@phenyl/interfaces": "^1.0.0-alpha.5",
     "@phenyl/utils": "^1.0.0-alpha.5",
-    "autoprefixer": "7.1.6",
-    "babel-core": "6.26.0",
-    "babel-eslint": "7.2.3",
-    "babel-loader": "7.1.2",
-    "babel-preset-react-app": "^3.1.0",
-    "chalk": "^2.3.0",
-    "cheerio": "^1.0.0-rc.2",
-    "css-loader": "0.28.7",
-    "debug": "^3.1.0",
-    "dotenv": "4.0.0",
-    "eslint": "4.10.0",
-    "eslint-loader": "1.9.0",
-    "eslint-plugin-flowtype": "2.39.1",
-    "eslint-plugin-import": "2.8.0",
-    "eslint-plugin-jsx-a11y": "5.1.1",
-    "eslint-plugin-react": "7.4.0",
-    "extract-text-webpack-plugin": "3.0.2",
-    "file-loader": "1.1.5",
-    "fs-extra": "3.0.1",
-    "html-webpack-plugin": "2.29.0",
-    "postcss-flexbugs-fixes": "3.2.0",
-    "postcss-loader": "2.0.8",
-    "react": "^16.8.3",
-    "react-dev-utils": "^4.2.1",
-    "react-dom": "^16.8.3",
-    "react-json-tree": "^0.11.0",
-    "react-redux": "^5.0.6",
-    "react-router-dom": "^4.3.1",
-    "redux": "^4.0.1",
-    "redux-localstorage": "^0.4.1",
+    "@types/node": "12.0.0",
+    "@types/react": "16.8.17",
+    "@types/react-dom": "16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "^3.0.1",
+    "react-redux": "^7.0.3",
+    "react-router-dom": "^5.0.0",
+    "semantic-ui-react": "^0.87.1",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.77.0",
-    "style-loader": "0.19.0",
-    "ts-loader": "~5.3.3",
-    "uglify-js": "git://github.com/mishoo/UglifyJS2#harmony-v2.8.22",
-    "uglifyjs-webpack-plugin": "^1.1.1",
     "upbin": "^0.8.1",
-    "url-loader": "0.6.2",
-    "webpack": "3.8.1"
+    "redux-localstorage": "^0.4.1",
+    "react-json-tree": "^0.11.2",
+    "cheerio": "^1.0.0-rc.3"
   },
   "publishConfig": {
     "access": "public"

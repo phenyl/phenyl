@@ -6,19 +6,21 @@
   "license": "Apache-2.0",
   "author": "Leko <leko.noor@gmail.com>",
   "contributors": [
-    "imoans <naomins0101@gmail.com>"
+    "imoans <naomins0101@gmail.com>",
+    "Daiki Ihara <sasurau4@gmail.com>"
   ],
   "main": "lib/PhenylApiExplorer.js",
   "types": "lib/PhenylApiExplorer.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "start": "nodemon examples/index.js --exec babel-node --watch src --watch examples",
+    "start": "nodemon --exec upbin ts-node examples/index.ts --watch src --watch examples --extensions '.ts'",
     "test": "echo no test specified in phenyl-api-explorer",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
     "@phenyl/api-explorer-client": "^1.0.0-alpha.5",
+    "file-type": "^11.0.0",
     "ejs": "^2.6.1",
     "upbin": "^0.9.0"
   },
@@ -31,6 +33,7 @@
     "@phenyl/rest-api": "^1.0.0-alpha.5",
     "@phenyl/standards": "^1.0.0-alpha.5",
     "@types/ejs": "^2.6.2",
+    "power-crypt": "^0.2.2",
     "nodemon": "^1.18.3"
   },
   "publishConfig": {

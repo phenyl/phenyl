@@ -1,3 +1,0 @@
-{
-  "presets": [["env", { "exclude": ["transform-regenerator"] }], "flow"]
-}

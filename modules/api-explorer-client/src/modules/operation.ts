@@ -1,7 +1,7 @@
-// @ts-ignore remove this comment after phenyl/http-client release
-import PhenylHttpClient from "@phenyl/http-client";
 import { PhenylError, CustomQuery, CustomCommand } from "@phenyl/interfaces";
 import { ThunkDispatch } from "redux-thunk";
+
+import getPhenylHttpClient from "../libs/phenylClient";
 
 const EXECUTE_START = "operation/EXECUTE_START";
 const EXECUTE_FINISHED = "operation/EXECUTE_FINISHED";
@@ -83,7 +83,7 @@ export const execute = (params: {
   // @TODO: define those any typs
 }) => async (dispatch: ThunkDispatch<any, any, any>) => {
   const { sessionId, entityName, method, payload } = params;
-  const client = new PhenylHttpClient({ url: window.location.origin });
+  const client = getPhenylHttpClient();
   dispatch(startExecute());
 
   const start = new Date();
@@ -212,7 +212,7 @@ export const runCustomQuery = ({
   params: string;
   // @TODO: define those any typs
 }) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  const client = new PhenylHttpClient({ url: window.location.origin });
+  const client = getPhenylHttpClient();
   dispatch(startExecute());
 
   const start = new Date();
@@ -240,7 +240,7 @@ export const runCustomCommand = ({
   params: string;
   // @TODO: define those any typs
 }) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  const client = new PhenylHttpClient({ url: window.location.origin });
+  const client = getPhenylHttpClient();
   dispatch(startExecute());
 
   const start = new Date();

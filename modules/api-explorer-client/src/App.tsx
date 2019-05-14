@@ -5,7 +5,7 @@ import {
   Sidebar as SemanticSidebar,
   Segment,
   Divider
-} from "semantic-ui-react/index";
+} from "semantic-ui-react";
 import LoginModal from "./containers/LoginModal";
 import Sidebar from "./containers/Sidebar";
 import Breadcrumb from "./containers/Breadcrumb";

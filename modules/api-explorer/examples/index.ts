@@ -6,7 +6,6 @@ import {
   StandardEntityDefinition
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
-import PhenylApiExplorer from "../src/PhenylApiExplorer";
 import {
   Session,
   GeneralRequestData,
@@ -16,16 +15,24 @@ import {
   CustomQuery,
   CustomQueryDefinition,
   CustomQueryResult,
-  FunctionalGroup
+  FunctionalGroup,
+  ReqRes,
+  KvsClient
 } from "@phenyl/interfaces";
+import crypt from "power-crypt";
+import PhenylApiExplorer from "../src/PhenylApiExplorer";
 
 const PORT = 8000;
-const memoryClient = createEntityClient();
+
+type PlainHospital = {
+  id: string;
+  name: string;
+};
 
 class HospitalDefinition extends StandardEntityDefinition {
-  async authorization(
+  async authorize(
     reqData: GeneralRequestData,
-    session: Session | null
+    session?: Session
   ): Promise<boolean> {
     return true;
   }
@@ -41,8 +48,18 @@ type PatientAuthSetting = {
   credentials: { email: string; password: string };
   options: Object;
 };
+
+type AppReqResEntityMap = { patient: ReqRes<PlainPatient> };
+
+type AppEntityMap = {
+  patient: PlainPatient;
+  hospital: PlainHospital;
+};
+
+const memoryClient = createEntityClient<AppEntityMap>();
+
 class PatientDefinition extends StandardUserDefinition<
-  { patient: PlainPatient },
+  AppReqResEntityMap,
   PatientAuthSetting
 > {
   constructor() {
@@ -54,7 +71,7 @@ class PatientDefinition extends StandardUserDefinition<
     });
   }
 
-  async authorization(reqData, session): Promise<boolean> {
+  async authorize(reqData: any, session: any): Promise<boolean> {
     switch (reqData.method) {
       case "insertOne":
       case "insertAndGet":
@@ -72,14 +89,12 @@ type CustomCommandParams = {
 };
 type CustomCommandResponse = {
   echo: string;
-  session: Session | null;
+  session?: Session;
 };
-class TestCustomCommand
-  implements
-    CustomCommandDefinition<any, CustomCommandParams, CustomCommandResponse> {
+class TestCustomCommand implements CustomCommandDefinition {
   async authorization(
     command: CustomCommand<any, CustomCommandParams>,
-    session: Session | null
+    session?: Session
   ): Promise<boolean> {
     return !!session;
   }
@@ -90,7 +105,7 @@ class TestCustomCommand
 
   async execute(
     command: CustomCommand<any, CustomCommandParams>,
-    session: Session | null
+    session?: Session
   ): Promise<CustomCommandResult<CustomCommandResponse>> {
     return {
       result: {
@@ -106,14 +121,12 @@ type CustomQueryParams = {
 };
 type CustomQueryResponse = {
   echo: string;
-  session: Session | null;
+  session?: Session;
 };
-class TestCustomQuery
-  implements
-    CustomQueryDefinition<any, CustomQueryParams, CustomQueryResponse> {
+class TestCustomQuery implements CustomQueryDefinition {
   async authorization(
     command: CustomQuery<any, CustomQueryParams>,
-    session: Session | null
+    session?: Session
   ): Promise<boolean> {
     return !!session;
   }
@@ -124,7 +137,7 @@ class TestCustomQuery
 
   async execute(
     command: CustomQuery<any, CustomQueryParams>,
-    session: Session | null
+    session?: Session
   ): Promise<CustomQueryResult<CustomQueryResponse>> {
     return {
       result: {
@@ -146,16 +159,37 @@ const functionalGroup: FunctionalGroup = {
     patient: new PatientDefinition()
   },
   nonUsers: {
-    hospital: new HospitalDefinition()
+    hospital: new HospitalDefinition({})
   }
 };
 
+type MemberSessionValue = { externalId: string; ttl: number };
+
+// insert initial values
+memoryClient.insertOne({
+  entityName: "patient",
+  value: {
+    name: "hoge",
+    email: "hoge@cureapp.jp",
+    password: crypt("hoge")
+  }
+});
+
+memoryClient.insertOne({
+  entityName: "hospital",
+  value: { name: "hoge hospital" }
+});
+
 const server = new PhenylHttpServer(http.createServer(), {
-  restApiHandler: PhenylRestApi.createFromFunctionalGroup(functionalGroup, {
-    client: memoryClient
+  restApiHandler: new PhenylRestApi(functionalGroup, {
+    // @ts-ignore TODO
+    client: memoryClient,
+    sessionClient: memoryClient.createSessionClient() as KvsClient<
+      Session<"patient", MemberSessionValue>
+    >
   }),
   customRequestHandler: new PhenylApiExplorer(functionalGroup, {
-    path: "/explorer"
+    path: "/explorer.*"
   }).handler
 });
 

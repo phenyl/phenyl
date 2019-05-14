@@ -1,21 +1,15 @@
-/* global PhenylFunctionalGroupSkeleton */
 import { Action } from "redux";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  Message,
-  Form,
-  Button,
-  Header,
-  Icon,
-  Modal
-} from "semantic-ui-react/index";
+import { Message, Form, Button, Header, Icon, Modal } from "semantic-ui-react";
 import { ThunkDispatch } from "redux-thunk";
 import { login, loginAsAnonymous } from "../modules/user";
-import { State } from '../modules'
+import { State } from "../modules";
+
+const { PhenylFunctionalGroupSkeleton } = window.phenylApiExplorerClientGlobals;
 
 // @TODO: add Credential in phenyl/interfaces
-type Credential = any
+type Credential = any;
 
 type Props = {
   entityNames: Array<string>;
@@ -41,7 +35,9 @@ class LoginModal extends Component<Props> {
       throw new Error(`Entity '${value}' is not defined`);
     }
     const {
+      // @ts-ignore global PhenylFunctionalGroupSkeleton
       accountPropName,
+      // @ts-ignore global PhenylFunctionalGroupSkeleton
       passwordPropName
       // @ts-ignore global PhenylFunctionalGroupSkeleton
     } = PhenylFunctionalGroupSkeleton.users[value];

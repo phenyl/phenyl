@@ -1,6 +1,9 @@
-/* global PhenylFunctionalGroupSkeleton */
-import PhenylHttpClient from "@phenyl/http-client";
 import { ThunkDispatch } from "redux-thunk";
+
+import getPhenylHttpClient from "../libs/phenylClient";
+
+const { PhenylFunctionalGroupSkeleton } = window.phenylApiExplorerClientGlobals;
+
 const LOGIN = "user/LOGIN";
 const LOGIN_AS_ANONYMOUS = "user/LOGIN_AS_ANONYMOUS";
 const LOGIN_REQUEST = "user/LOGIN_REQUEST";
@@ -62,7 +65,7 @@ export const reducer = (state = initialState, action: Action) => {
         ...state,
         busy: true
       };
-    case LOGIN_SUCCESS:
+    case LOGIN_SUCCESS: {
       // @ts-ignore global PhenylFunctionalGroupSkeleton
       const { accountPropName } = PhenylFunctionalGroupSkeleton.users[
         action.session.entityName
@@ -75,6 +78,7 @@ export const reducer = (state = initialState, action: Action) => {
         session: action.session,
         user: action.user
       };
+    }
     case LOGIN_FAILED:
       return {
         ...state,
@@ -96,7 +100,7 @@ export const login = (
   credentials: Credentials
   // @TODO: define those any typs
 ) => async (dispatch: ThunkDispatch<any, any, any>) => {
-  const client = new PhenylHttpClient({ url: window.location.origin });
+  const client = getPhenylHttpClient();
 
   try {
     dispatch(loginRequest());
