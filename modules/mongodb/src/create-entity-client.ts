@@ -17,15 +17,11 @@ export function createEntityClient<M extends GeneralEntityMap>(
 export class PhenylMongoDbEntityClient<
   M extends GeneralEntityMap
 > extends PhenylEntityClient<M> {
-  // @ts-ignore is this dbClient necessary?
-  dbClient: PhenylMongoDbClient<M>;
-
   constructor(
     conn: MongoDbConnection,
     options: PhenylEntityClientOptions<M> = {}
   ) {
-    const dbClient = new PhenylMongoDbClient(conn);
-    // @ts-ignore is this dbClient necessary?
+    const dbClient = new PhenylMongoDbClient<M>(conn);
     super(dbClient, options);
   }
 }
