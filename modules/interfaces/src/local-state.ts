@@ -4,7 +4,7 @@ import {
   GeneralReqResEntityMap,
   ResponseEntity
 } from "./type-map";
-import { ErrorLocation, PhenylErrorType } from "./error";
+import { PhenylError } from "./error";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "@sp2/format";
@@ -41,11 +41,6 @@ export type LocalState<
     isOnline: boolean;
   };
   unreachedCommits: UnreachedCommit<Key<M>>[];
-  error?: {
-    type: PhenylErrorType;
-    at: ErrorLocation;
-    message: string;
-    actionTag: string;
-  };
+  error?: PhenylError;
   session?: AllSessions<AM> | null;
 };
