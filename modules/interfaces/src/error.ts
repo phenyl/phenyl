@@ -8,7 +8,7 @@ export type ServerErrorType =
   | "InternalServer";
 export type LocalErrorType = "NetworkFailed" | "InvalidData" | "CodeProblem";
 
-export type PhenylError<D> = ServerError<D> | LocalError<D>;
+export type PhenylError<D = any> = ServerError<D> | LocalError<D>;
 
 export type ErrorLocation = "server" | "local";
 

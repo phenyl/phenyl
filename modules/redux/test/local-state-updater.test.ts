@@ -118,9 +118,9 @@ describe("LocalStateUpdater", () => {
       const state = PhenylReduxModule.createInitialState();
       state.error = {
         type: "NetworkFailed",
-        at: "server",
+        at: "local",
         message: "An error occured",
-        actionTag: "xxx"
+        ok: 0
       };
       assert.deepEqual(LocalStateUpdater.resolveError(), {
         $unset: { error: "" }
