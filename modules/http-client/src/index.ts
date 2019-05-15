@@ -72,11 +72,15 @@ export default class PhenylHttpClient<
     const { method, headers, path, qsParams, body } = encodeRequest(reqData);
     const qs = stringifyQsParams(qsParams);
     const url = `${this.url}${this.modifyPath(path)}${qs}`;
-    const response = await fetch(url, {
-      method,
-      headers,
-      body
-    }).catch((e: Error) => {
+    const response = await fetch(
+      url,
+      // @ts-ignore incompatible fetch type and IncomingHeaders
+      {
+        method,
+        headers,
+        body
+      }
+    ).catch((e: Error) => {
       throw createLocalError(e, "NetworkFailed");
     });
     const encodedResponse = {
