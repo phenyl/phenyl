@@ -1,4 +1,5 @@
 import { GeneralResponseData } from "./response-data";
+import { IncomingHttpHeaders, OutgoingHttpHeaders } from "http";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -6,7 +7,7 @@ export type QueryStringParams = { [name: string]: string };
 
 export type EncodedHttpRequest = {
   method: HttpMethod;
-  headers: { [name: string]: string };
+  headers: IncomingHttpHeaders;
   path: string; // must start with "/"
   qsParams?: QueryStringParams;
   body?: string;
@@ -14,7 +15,7 @@ export type EncodedHttpRequest = {
 };
 
 export type EncodedHttpResponse = {
-  headers: { [name: string]: string } | Headers;
+  headers: OutgoingHttpHeaders | Headers;
   body: string | GeneralResponseData; // stringified JSON or parsed JSON
   statusCode: number;
 };
