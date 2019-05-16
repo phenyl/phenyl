@@ -74,7 +74,7 @@ export default class PhenylHttpClient<
     const url = `${this.url}${this.modifyPath(path)}${qs}`;
     const response = await fetch(
       url,
-      // @ts-ignore incompatible fetch type and IncomingHeaders
+      // @ts-ignore incompatible fetch type and EncodedHttpRequest
       {
         method,
         headers,
