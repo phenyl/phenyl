@@ -351,7 +351,7 @@ function decodeDataInQsParams(
  */
 export function decodeSessionId(
   request: EncodedHttpRequest
-): string | undefined | null {
+): string | string[] | undefined | null {
   const { headers, qsParams } = request;
   return (qsParams && qsParams.sessionId) || headers.authorization || null;
 }

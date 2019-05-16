@@ -6,7 +6,9 @@ export type QueryStringParams = { [name: string]: string };
 
 export type EncodedHttpRequest = {
   method: HttpMethod;
-  headers: { [name: string]: string };
+  headers: {
+    [header: string]: string | string[] | undefined;
+  };
   path: string; // must start with "/"
   qsParams?: QueryStringParams;
   body?: string;
