@@ -14,8 +14,9 @@ import {
   GeneralReqResEntityMap,
   GeneralTypeMap,
   ReqResEntityMapOf,
-  RequestEntity,
   ResponseAuthUser,
+  GeneralEntityMap,
+  RequestEntity,
   ResponseEntity
 } from "./type-map";
 import {
@@ -55,74 +56,7 @@ import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";
 
-export type EntityClient<
-  M extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = RawEntityClient<M> | NormalizedEntityClient<M>;
-export interface RawEntityClient<
-  M extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> {
-  find<EN extends Key<M>>(
-    query: WhereQuery<EN>,
-    sessionId?: string | null
-  ): Promise<QueryResult<ResponseEntity<M, EN>>>;
-  findOne<EN extends Key<M>>(
-    query: WhereQuery<EN>,
-    sessionId?: string | null
-  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>>;
-  get<EN extends Key<M>>(
-    query: IdQuery<EN>,
-    sessionId?: string | null
-  ): Promise<SingleQueryResult<ResponseEntity<M, EN>>>;
-  getByIds<EN extends Key<M>>(
-    query: IdsQuery<EN>,
-    sessionId?: string | null
-  ): Promise<QueryResult<ResponseEntity<M, EN>>>;
-  pull<EN extends Key<M>>(
-    query: PullQuery<EN>,
-    sessionId?: string | null
-  ): Promise<PullQueryResult<ResponseEntity<M, EN>>>;
-  insertOne<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<ResponseEntity<M, EN>>>,
-    sessionId?: string | null
-  ): Promise<SingleInsertCommandResult>;
-  insertMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<ResponseEntity<M, EN>>>,
-    sessionId?: string | null
-  ): Promise<MultiInsertCommandResult>;
-  insertAndGet<EN extends Key<M>>(
-    command: SingleInsertCommand<EN, PreEntity<ResponseEntity<M, EN>>>,
-    sessionId?: string | null
-  ): Promise<GetCommandResult<ResponseEntity<M, EN>>>;
-  insertAndGetMulti<EN extends Key<M>>(
-    command: MultiInsertCommand<EN, PreEntity<ResponseEntity<M, EN>>>,
-    sessionId?: string | null
-  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>>;
-  updateById<EN extends Key<M>>(
-    command: IdUpdateCommand<EN>,
-    sessionId?: string | null
-  ): Promise<IdUpdateCommandResult>;
-  updateMulti<EN extends Key<M>>(
-    command: MultiUpdateCommand<EN>,
-    sessionId?: string | null
-  ): Promise<MultiUpdateCommandResult>;
-  updateAndGet<EN extends Key<M>>(
-    command: IdUpdateCommand<EN>,
-    sessionId?: string | null
-  ): Promise<GetCommandResult<ResponseEntity<M, EN>>>;
-  updateAndFetch<EN extends Key<M>>(
-    command: MultiUpdateCommand<EN>,
-    sessionId?: string | null
-  ): Promise<MultiValuesCommandResult<ResponseEntity<M, EN>>>;
-  push<EN extends Key<M>>(
-    command: PushCommand<EN>,
-    sessionId?: string | null
-  ): Promise<PushCommandResult<ResponseEntity<M, EN>>>;
-  delete<EN extends Key<M>>(
-    command: DeleteCommand<EN>,
-    sessionId?: string | null
-  ): Promise<DeleteCommandResult>;
-}
-export interface NormalizedEntityClient<
+export interface ReqResEntityClient<
   M extends GeneralReqResEntityMap = GeneralReqResEntityMap
 > {
   find<EN extends Key<M>>(
@@ -186,6 +120,69 @@ export interface NormalizedEntityClient<
     sessionId?: string | null
   ): Promise<DeleteCommandResult>;
 }
+export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
+  find<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<M[EN]>>;
+  findOne<EN extends Key<M>>(
+    query: WhereQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<M[EN]>>;
+  get<EN extends Key<M>>(
+    query: IdQuery<EN>,
+    sessionId?: string | null
+  ): Promise<SingleQueryResult<M[EN]>>;
+  getByIds<EN extends Key<M>>(
+    query: IdsQuery<EN>,
+    sessionId?: string | null
+  ): Promise<QueryResult<M[EN]>>;
+  pull<EN extends Key<M>>(
+    query: PullQuery<EN>,
+    sessionId?: string | null
+  ): Promise<PullQueryResult<M[EN]>>;
+  insertOne<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<SingleInsertCommandResult>;
+  insertMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<MultiInsertCommandResult>;
+  insertAndGet<EN extends Key<M>>(
+    command: SingleInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<M[EN]>>;
+  insertAndGetMulti<EN extends Key<M>>(
+    command: MultiInsertCommand<EN, PreEntity<M[EN]>>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<M[EN]>>;
+  updateById<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<IdUpdateCommandResult>;
+  updateMulti<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiUpdateCommandResult>;
+  updateAndGet<EN extends Key<M>>(
+    command: IdUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<GetCommandResult<M[EN]>>;
+  updateAndFetch<EN extends Key<M>>(
+    command: MultiUpdateCommand<EN>,
+    sessionId?: string | null
+  ): Promise<MultiValuesCommandResult<M[EN]>>;
+  push<EN extends Key<M>>(
+    command: PushCommand<EN>,
+    sessionId?: string | null
+  ): Promise<PushCommandResult<M[EN]>>;
+  delete<EN extends Key<M>>(
+    command: DeleteCommand<EN>,
+    sessionId?: string | null
+  ): Promise<DeleteCommandResult>;
+}
+
 export interface CustomClient<
   QM extends GeneralCustomMap,
   CM extends GeneralCustomMap
@@ -215,7 +212,7 @@ export interface AuthClient<
   ): Promise<LogoutCommandResult>;
   createSessionClient(): SessionClient<AM>;
 }
-export type RestApiClient<TM extends GeneralTypeMap> = NormalizedEntityClient<
+export type RestApiClient<TM extends GeneralTypeMap> = ReqResEntityClient<
   ReqResEntityMapOf<TM>
 > &
   CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &

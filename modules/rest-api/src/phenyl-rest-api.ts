@@ -8,13 +8,13 @@ import {
   GeneralTypeMap,
   HandlerResult,
   Nullable,
-  ReqResEntityMapOf,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiHandler,
   SessionClient,
-  VersionDiffPublisher
+  VersionDiffPublisher,
+  ResponseEntityMapOf
 } from "@phenyl/interfaces";
 import {
   CustomCommandDefinitionExecutor,
@@ -43,7 +43,7 @@ type DefinitionExecutorMap = {
  */
 export class PhenylRestApi<TM extends GeneralTypeMap>
   implements RestApiHandler<TM> {
-  readonly client: EntityClient<ReqResEntityMapOf<TM>>;
+  readonly client: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
   private readonly definitionExecutors: DefinitionExecutorMap;
@@ -51,7 +51,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   constructor(
     fg: FunctionalGroup,
     params: {
-      client: EntityClient<ReqResEntityMapOf<TM>>;
+      client: EntityClient<ResponseEntityMapOf<TM>>;
       sessionClient: SessionClient<AuthCommandMapOf<TM>>;
     }
   ) {
