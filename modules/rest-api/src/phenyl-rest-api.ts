@@ -17,20 +17,20 @@ import {
   ResponseEntityMapOf
 } from "@phenyl/interfaces";
 import {
+  PhenylRestApiDirectClient,
+  assertValidRequestData,
+  createServerError
+} from "@phenyl/utils";
+import { PhenylSessionClient } from "@phenyl/central-state";
+
+import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,
   DefinitionExecutor,
   EntityDefinitionExecutor,
   UserDefinitionExecutor
 } from "./definition-executor";
-import {
-  PhenylRestApiDirectClient,
-  assertValidRequestData,
-  createServerError
-} from "@phenyl/utils";
-
 import { createVersionDiff } from "./create-version-diff";
-import { PhenylSessionClient } from "./session-client";
 
 type DefinitionExecutorMap = {
   user: { [key: string]: UserDefinitionExecutor };
@@ -59,7 +59,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
     this.client = params.client;
     this.sessionClient =
       params.sessionClient ||
-      new PhenylSessionClient(this.client.getDbClient());
+      new PhenylSessionClient<AuthCommandMapOf<TM>>(this.client.getDbClient());
     this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
 
