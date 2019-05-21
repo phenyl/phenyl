@@ -59,6 +59,10 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
       options.validatePushCommand || this.validWhenDiffsFound.bind(this);
   }
 
+  getDbClient() {
+    return this.dbClient;
+  }
+
   /**
    *
    */

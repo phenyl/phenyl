@@ -55,6 +55,7 @@ import { Key } from "./utils";
 import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler } from "./rest-api-handler";
+import { DbClient } from "./db-client";
 
 export interface ReqResEntityClient<
   M extends GeneralReqResEntityMap = GeneralReqResEntityMap
@@ -121,6 +122,7 @@ export interface ReqResEntityClient<
   ): Promise<DeleteCommandResult>;
 }
 export interface EntityClient<M extends GeneralEntityMap = GeneralEntityMap> {
+  getDbClient: () => DbClient<M>;
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null

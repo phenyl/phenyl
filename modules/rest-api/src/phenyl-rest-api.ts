@@ -30,6 +30,7 @@ import {
 } from "@phenyl/utils";
 
 import { createVersionDiff } from "./create-version-diff";
+import { PhenylSessionClient } from "./session-client";
 
 type DefinitionExecutorMap = {
   user: { [key: string]: UserDefinitionExecutor };
@@ -52,11 +53,13 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
     fg: FunctionalGroup,
     params: {
       client: EntityClient<ResponseEntityMapOf<TM>>;
-      sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+      sessionClient?: SessionClient<AuthCommandMapOf<TM>>;
     }
   ) {
     this.client = params.client;
-    this.sessionClient = params.sessionClient;
+    this.sessionClient =
+      params.sessionClient ||
+      new PhenylSessionClient(this.client.getDbClient());
     this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
 
