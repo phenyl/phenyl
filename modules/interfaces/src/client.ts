@@ -17,7 +17,8 @@ import {
   ResponseAuthUser,
   GeneralEntityMap,
   RequestEntity,
-  ResponseEntity
+  ResponseEntity,
+  ResponseEntityMapOf
 } from "./type-map";
 import {
   CustomCommand,
@@ -223,3 +224,8 @@ export type RestApiClient<TM extends GeneralTypeMap> = ReqResEntityClient<
 export type SessionClient<
   AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
 > = KvsClient<AllSessions<AM>>;
+
+export type PhenylClients<TM extends GeneralTypeMap> = {
+  entityClient: EntityClient<ResponseEntityMapOf<TM>>;
+  sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+};

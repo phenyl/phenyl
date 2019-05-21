@@ -52,11 +52,11 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   constructor(
     fg: FunctionalGroup,
     params: {
-      client: EntityClient<ResponseEntityMapOf<TM>>;
+      entityClient: EntityClient<ResponseEntityMapOf<TM>>;
       sessionClient?: SessionClient<AuthCommandMapOf<TM>>;
     }
   ) {
-    this.client = params.client;
+    this.client = params.entityClient;
     this.sessionClient =
       params.sessionClient ||
       new PhenylSessionClient<AuthCommandMapOf<TM>>(this.client.getDbClient());
