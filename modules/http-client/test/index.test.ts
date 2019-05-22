@@ -11,7 +11,7 @@ const entityClient = createEntityClient();
 const restApiHandler = new PhenylRestApi(
   {},
   {
-    entityClient: entityClient,
+    entityClient,
     sessionClient: entityClient.createSessionClient()
   }
 );
