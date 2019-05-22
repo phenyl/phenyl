@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/http-client",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -23,15 +23,15 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.0.0-alpha.7",
-    "@phenyl/interfaces": "^1.0.0-alpha.7",
-    "@phenyl/utils": "^1.0.0-alpha.7",
+    "@phenyl/http-rules": "^1.0.0-alpha.8",
+    "@phenyl/interfaces": "^1.0.0-alpha.8",
+    "@phenyl/utils": "^1.0.0-alpha.8",
     "cross-fetch": "^3.0.2"
   },
   "devDependencies": {
-    "@phenyl/http-server": "^1.0.0-alpha.7",
-    "@phenyl/memory-db": "^1.0.0-alpha.7",
-    "@phenyl/rest-api": "^1.0.0-alpha.7",
+    "@phenyl/http-server": "^1.0.0-alpha.8",
+    "@phenyl/memory-db": "^1.0.0-alpha.8",
+    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "power-assert": "^1.4.4",
     "upbin": "^0.9.0"
   },

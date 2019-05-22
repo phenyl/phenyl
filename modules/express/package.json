@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/express",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "Express middleware to use Phenyl in it.",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -23,16 +23,16 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.0.0-alpha.7",
-    "@phenyl/interfaces": "^1.0.0-alpha.7",
-    "@phenyl/utils": "^1.0.0-alpha.7",
+    "@phenyl/http-rules": "^1.0.0-alpha.8",
+    "@phenyl/interfaces": "^1.0.0-alpha.8",
+    "@phenyl/utils": "^1.0.0-alpha.8",
     "express": "^4.16.4",
     "raw-body": "^2.3.2"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.7",
-    "@phenyl/memory-db": "^1.0.0-alpha.7",
-    "@phenyl/rest-api": "^1.0.0-alpha.7",
+    "@phenyl/http-client": "^1.0.0-alpha.8",
+    "@phenyl/memory-db": "^1.0.0-alpha.8",
+    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "upbin": "^0.8.1"
   },
   "publishConfig": {
