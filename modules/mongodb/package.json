@@ -34,6 +34,7 @@
     "sp2": "~1.4.0"
   },
   "devDependencies": {
+    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "upbin": "^0.9.0"
   },
   "publishConfig": {
