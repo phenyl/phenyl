@@ -18,7 +18,8 @@ import {
   EntitiesById,
   EntityClient,
   UserEntityRequestData,
-  Nullable
+  Nullable,
+  GeneralEntityMap
 } from "@phenyl/interfaces";
 
 import { RestApiExecution } from "./decls";
@@ -30,7 +31,7 @@ import { RestApiExecution } from "./decls";
  * wrapExecution: ExecutionWrapper
  * validation: ValidationHandler
  */
-export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
+export class ForeignQueryWrapper<M extends GeneralEntityMap> {
   entityClient: EntityClient<M>;
 
   constructor(entityClient: EntityClient<M>) {
@@ -153,7 +154,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
   async getForeignEntities<E extends Entity, FN extends Key<M>>(
     entities: Array<E>,
     foreign: ForeignQueryParams<FN>
-  ): Promise<EntitiesById<M[FN]["response"]>> {
+  ): Promise<EntitiesById<M[FN]>> {
     const { documentPath, entityName } = foreign;
 
     try {
@@ -164,7 +165,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
         ids: foreignIds,
         entityName
       });
-      const entitiesById: EntitiesById<M[FN]["response"]> = {};
+      const entitiesById: EntitiesById<M[FN]> = {};
       for (const entity of result.entities) {
         entitiesById[entity.id] = entity;
       }
@@ -183,7 +184,7 @@ export class ForeignQueryWrapper<M extends GeneralReqResEntityMap> {
   async getForeignEntity<E extends Entity, FN extends Key<M>>(
     entity: E,
     foreign: ForeignQueryParams<FN>
-  ): Promise<M[FN]["response"]> {
+  ): Promise<M[FN]> {
     const { documentPath, entityName } = foreign;
 
     try {

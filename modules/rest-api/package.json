@@ -20,6 +20,7 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
+    "@phenyl/central-state": "^1.0.0-alpha.7",
     "@phenyl/interfaces": "^1.0.0-alpha.7",
     "@phenyl/utils": "^1.0.0-alpha.7"
   },

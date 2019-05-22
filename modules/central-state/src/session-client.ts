@@ -3,7 +3,9 @@ import {
   PreEntity,
   PreSession,
   Session,
-  SessionClient
+  SessionClient,
+  GeneralAuthCommandMap,
+  AllSessions
 } from "@phenyl/interfaces";
 
 import { timeStampWithRandomString } from "@phenyl/utils";
@@ -11,15 +13,17 @@ import { timeStampWithRandomString } from "@phenyl/utils";
 type Id = string;
 
 // @TODO: make this type better
-type PhenylSessionEntityMap = {
-  _PhenylSession: Session;
+type PhenylSessionEntityMap<S extends Session = Session> = {
+  _PhenylSession: S;
 };
 
 /**
  *
  */
-export class PhenylSessionClient implements SessionClient {
-  dbClient: DbClient<PhenylSessionEntityMap>;
+export class PhenylSessionClient<
+  AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+> implements SessionClient<AM> {
+  dbClient: DbClient<PhenylSessionEntityMap<AllSessions<AM>>>;
 
   constructor(dbClient: DbClient<PhenylSessionEntityMap>) {
     this.dbClient = dbClient;
@@ -28,7 +32,7 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async get(id?: Id): Promise<Session | undefined> {
+  async get(id?: Id): Promise<AllSessions<AM> | undefined> {
     if (id === undefined || id === null) {
       return;
     }
@@ -51,7 +55,9 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async create(preSession: PreSession): Promise<Session> {
+  async create<EN extends string = string>(
+    preSession: PreSession<EN, AllSessions<AM>>
+  ): Promise<AllSessions<AM>> {
     let value = preSession;
     if (value.id == null) {
       value = Object.assign({}, value, { id: timeStampWithRandomString() });
@@ -62,7 +68,7 @@ export class PhenylSessionClient implements SessionClient {
   /**
    *
    */
-  async set(value: PreEntity<Session>): Promise<Session> {
+  async set(value: PreEntity<AllSessions<AM>>): Promise<AllSessions<AM>> {
     return this.dbClient.insertAndGet({ entityName: "_PhenylSession", value });
   }
 
