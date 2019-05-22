@@ -3,6 +3,7 @@ import {
   GeneralRequestData,
   QueryStringParams
 } from "@phenyl/interfaces";
+import { isString } from "util";
 
 /**
  *
@@ -351,9 +352,13 @@ function decodeDataInQsParams(
  */
 export function decodeSessionId(
   request: EncodedHttpRequest
-): string | string[] | undefined | null {
+): string | undefined | null {
   const { headers, qsParams } = request;
-  return (qsParams && qsParams.sessionId) || headers.authorization || null;
+  return (
+    (qsParams && qsParams.sessionId) ||
+    (isString(headers.authorization) && headers.authorization) ||
+    null
+  );
 }
 
 /**
