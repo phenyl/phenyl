@@ -33,9 +33,9 @@ describe("PhenylMemoryClient (test about versioning)", () => {
         entityName,
         where: { num: { $gte: 2 } }
       });
-      if (result.versionsById == null)
+      if (result.versionsById === null)
         throw new Error("result.versionsById should exist.");
-      assert(result.versionsById.user1 == null);
+      assert.strictEqual(result.versionsById.user1, null);
       assert(result.versionsById.user2 && result.versionsById.user3);
     });
   });
@@ -62,7 +62,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
         entityName,
         where: { num: { $gte: 2 } }
       });
-      assert(result.versionId != null);
+      assert.notStrictEqual(result.versionId, null);
     });
   });
 
@@ -85,7 +85,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
 
     it("returns versionId", async () => {
       const result = await client.get({ entityName, id: "user3" });
-      assert(result.versionId != null);
+      assert.notStrictEqual(result.versionId, null);
     });
   });
 
@@ -186,8 +186,8 @@ describe("PhenylMemoryClient (test about versioning)", () => {
           localUser = (await client.get({ entityName, id })).entity;
         }
       }
-      assert(versionIds.length === 111);
-      assert(localUser.age === 49);
+      assert.strictEqual(versionIds.length, 111);
+      assert.strictEqual(localUser.age, 49);
     });
 
     it("returns operation diffs", async () => {
@@ -226,7 +226,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       if (result.pulled)
         throw new Error('Result should not have "pulled" property');
       // @ts-ignore
-      assert(result.entity.hobbies.length === 111);
+      assert.strictEqual(result.entity.hobbies.length, 111);
     });
 
     it("returns empty operation diffs when the given versionId is the latest", async () => {

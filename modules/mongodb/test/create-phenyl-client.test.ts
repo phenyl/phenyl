@@ -32,4 +32,3 @@ describe("createPhenylClients", () => {
 after(async () => {
   dbClient.close();
 });
-// それとそれらのcreatePhenylClientsの結果をそのままphenyl - rest - apiに突っ込んで怒られないかどうか

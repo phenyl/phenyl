@@ -40,7 +40,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
         id: generatedId
       });
 
-      assert(result.entity.name === "Jone");
+      assert.strictEqual(result.entity.name, "Jone");
     });
 
     it("by set id", async () => {
@@ -49,7 +49,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
         id: "jane"
       });
 
-      assert(result.entity.name === "Jane");
+      assert.strictEqual(result.entity.name, "Jane");
     });
   });
 });
