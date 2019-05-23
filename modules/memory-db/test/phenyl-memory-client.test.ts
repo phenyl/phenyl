@@ -35,7 +35,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       });
       if (result.versionsById === null)
         throw new Error("result.versionsById should exist.");
-      assert.strictEqual(result.versionsById.user1, null);
+      assert.strictEqual(result.versionsById.user1, undefined);
       assert(result.versionsById.user2 && result.versionsById.user3);
     });
   });
