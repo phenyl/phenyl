@@ -9,38 +9,38 @@ import {
 } from "./remove-password-from-response-data";
 
 import {
-  GeneralReqResEntityMap,
   Key,
   EntityClient,
   UserDefinition,
   Session,
   AuthenticationResult,
   UserEntityRequestData,
-  UserEntityResponseData
+  UserEntityResponseData,
+  GeneralEntityMap
 } from "@phenyl/interfaces";
 
 import { EncryptFunction, AuthSetting, LoginCommandOf } from "./decls";
 
 export type StandardUserDefinitionParams<
-  M extends GeneralReqResEntityMap,
+  M extends GeneralEntityMap,
   A extends AuthSetting
 > = {
   entityClient: EntityClient<M>;
   encrypt?: EncryptFunction;
-  accountPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
-  passwordPropName?: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  accountPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
+  passwordPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
   ttl?: number;
 };
 
 // Q: is it necessary and possible to implement EntityDefinition and UserDefinition both?
 export class StandardUserDefinition<
-  M extends GeneralReqResEntityMap,
+  M extends GeneralEntityMap,
   A extends AuthSetting
 > extends StandardEntityDefinition implements UserDefinition {
   entityClient: EntityClient<M>;
   encrypt: EncryptFunction;
-  accountPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
-  passwordPropName: Key<M[Key<M>]["request"]> & Key<A["credentials"]>;
+  accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
+  passwordPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
   ttl: number;
 
   constructor(params: StandardUserDefinitionParams<M, A>) {

@@ -8,14 +8,21 @@ import {
   GeneralTypeMap,
   HandlerResult,
   Nullable,
-  ReqResEntityMapOf,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiHandler,
   SessionClient,
-  VersionDiffPublisher
+  VersionDiffPublisher,
+  ResponseEntityMapOf
 } from "@phenyl/interfaces";
+import {
+  PhenylRestApiDirectClient,
+  assertValidRequestData,
+  createServerError
+} from "@phenyl/utils";
+import { PhenylSessionClient } from "@phenyl/central-state";
+
 import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,
@@ -23,12 +30,6 @@ import {
   EntityDefinitionExecutor,
   UserDefinitionExecutor
 } from "./definition-executor";
-import {
-  PhenylRestApiDirectClient,
-  assertValidRequestData,
-  createServerError
-} from "@phenyl/utils";
-
 import { createVersionDiff } from "./create-version-diff";
 
 type DefinitionExecutorMap = {
@@ -43,7 +44,7 @@ type DefinitionExecutorMap = {
  */
 export class PhenylRestApi<TM extends GeneralTypeMap>
   implements RestApiHandler<TM> {
-  readonly client: EntityClient<ReqResEntityMapOf<TM>>;
+  readonly client: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
   private readonly definitionExecutors: DefinitionExecutorMap;
@@ -51,12 +52,14 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   constructor(
     fg: FunctionalGroup,
     params: {
-      client: EntityClient<ReqResEntityMapOf<TM>>;
-      sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+      entityClient: EntityClient<ResponseEntityMapOf<TM>>;
+      sessionClient?: SessionClient<AuthCommandMapOf<TM>>;
     }
   ) {
-    this.client = params.client;
-    this.sessionClient = params.sessionClient;
+    this.client = params.entityClient;
+    this.sessionClient =
+      params.sessionClient ||
+      new PhenylSessionClient<AuthCommandMapOf<TM>>(this.client.getDbClient());
     this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
 

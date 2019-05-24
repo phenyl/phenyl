@@ -15,8 +15,6 @@ import {
   AuthenticationResult,
   RestApiHandler,
   CustomRequestHandler,
-  KvsClient,
-  Session,
   EncodedHttpRequest,
   GeneralTypeMap,
   ReqRes
@@ -98,7 +96,7 @@ const fg = {
 
 interface MyTypeMap extends GeneralTypeMap {
   entities: {
-    member: ReqRes<MemberRequest, MemberResponse>,
+    member: ReqRes<MemberRequest, MemberResponse>;
     diary: Diary;
   };
   customQueries: {
@@ -113,10 +111,7 @@ interface MyTypeMap extends GeneralTypeMap {
 }
 
 const restApiHandler = new PhenylRestApi<MyTypeMap>(fg, {
-  client: createEntityClient<EntityMap>(),
-  sessionClient: createEntityClient<
-    EntityMap
-  >().createSessionClient() as KvsClient<Session<"member", MemberSessionValue>>
+  entityClient: createEntityClient<EntityMap>()
 });
 
 describe("createPhenylApiMiddleware", () => {

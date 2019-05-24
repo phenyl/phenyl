@@ -175,8 +175,8 @@ export type ReqResEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
  * - Key: name of entity
  * - Value: type of given entity's request
  */
-export type RequestEntityMapOf<M extends GeneralReqResEntityMap> = {
-  [K in Key<M>]: Request<M[K]>
+export type RequestEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Request<TM["entities"][K]>
 };
 
 /**
@@ -184,8 +184,8 @@ export type RequestEntityMapOf<M extends GeneralReqResEntityMap> = {
  * - Key: name of entity
  * - Value: type of given entity's response
  */
-export type ResponseEntityMapOf<M extends GeneralReqResEntityMap> = {
-  [K in Key<M>]: Response<M[K]>
+export type ResponseEntityMapOf<TM extends GeneralTypeMap> = {
+  [K in Key<TM["entities"]>]: Response<TM["entities"][K]>
 };
 
 /**

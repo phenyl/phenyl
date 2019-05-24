@@ -1,8 +1,7 @@
-import {
+export {
   PhenylMemoryDbEntityClient,
   createEntityClient
 } from "./create-entity-client";
 
-import { PhenylMemoryDbClient } from "./phenyl-memory-db-client";
-
-export { createEntityClient, PhenylMemoryDbClient, PhenylMemoryDbEntityClient };
+export { PhenylMemoryDbClient } from "./phenyl-memory-db-client";
+export { createPhenylClients } from "./create-phenyl-clients";

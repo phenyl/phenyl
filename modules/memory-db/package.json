@@ -14,7 +14,8 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "test": "upbin nyc upbin mocha test/*.ts --color always",
+    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "ci-test": "yarn test",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "sp2": "^1.4.1"
   },
   "devDependencies": {
+    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "upbin": "^0.9.0"
   },
   "publishConfig": {

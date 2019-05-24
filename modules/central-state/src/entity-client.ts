@@ -26,7 +26,8 @@ import {
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  WhereQuery
+  WhereQuery,
+  EntityClient
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation } from "sp2";
@@ -43,7 +44,8 @@ export type PhenylEntityClientOptions<M extends GeneralEntityMap> = {
  * Pass dbClient: DbClient which accesses to data.
  * Optionally set merge strategy by options.validatePushCommand.
  */
-export class PhenylEntityClient<M extends GeneralEntityMap> {
+export class PhenylEntityClient<M extends GeneralEntityMap>
+  implements EntityClient<M> {
   dbClient: DbClient<M>;
   validatePushCommand: PushValidation<M>;
 
@@ -55,6 +57,10 @@ export class PhenylEntityClient<M extends GeneralEntityMap> {
     // compatible-optional-function-type
     this.validatePushCommand =
       options.validatePushCommand || this.validWhenDiffsFound.bind(this);
+  }
+
+  getDbClient() {
+    return this.dbClient;
   }
 
   /**
