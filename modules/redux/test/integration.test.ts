@@ -73,13 +73,12 @@ interface MyTypeMap extends GeneralTypeMap {
 }
 
 const memoryClient = createEntityClient<MyEntityMap>();
-// TODO: need refinement
 const sessionClient = memoryClient.createSessionClient() as KvsClient<
   Session<"patient", MemberSessionValue>
 >;
 
 class PatientDefinition extends StandardUserDefinition<
-  MyGeneralReqResEntityMap,
+  MyEntityMap,
   MyAuthSetting
 > {
   constructor() {
@@ -130,8 +129,7 @@ before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,
     {
-      client: memoryClient,
-      sessionClient
+      entityClient: memoryClient
     }
   );
 
