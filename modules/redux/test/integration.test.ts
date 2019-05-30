@@ -13,8 +13,8 @@ import {
   GetCommandResult,
   ReqRes
 } from "../..//interfaces";
-import { createEntityClient } from "../..//memory-db";
-import { StandardUserDefinition } from "../../standards";
+import { createEntityClient } from "@phenyl/memory-db";
+import { StandardUserDefinition } from "@phenyl/standards";
 import assert from "assert";
 
 import { PhenylRedux, LocalStateFinder } from "../src";

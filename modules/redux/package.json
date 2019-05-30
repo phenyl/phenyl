@@ -33,6 +33,8 @@
     "@phenyl/rest-api": "^1.0.0-alpha.8",
     "@phenyl/http-client": "^1.0.0-alpha.8",
     "@phenyl/http-server": "^1.0.0-alpha.8",
+    "@phenyl/memory-db": "^1.0.0-alpha.8",
+    "@phenyl/standards": "^1.0.0-alpha.8",
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
   },
