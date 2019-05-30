@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 import { after, before, describe, it } from "mocha";
-import { createEntityClient } from "../src/create-entity-client";
+import {
+  createEntityClient,
+  PhenylMongoDbEntityClient
+} from "../src/create-entity-client";
 import assert from "assert";
 import { ObjectId } from "bson";
 // import { assertEntityClient } from '@phenyl/interfaces'
@@ -22,7 +25,9 @@ const url = "mongodb://localhost:27017";
 
 describe("MongoDBEntityClient", () => {
   let conn: MongoDbConnection;
-  let entityClient: any;
+  let entityClient: PhenylMongoDbEntityClient<{
+    user: { id: string; name: string };
+  }>;
 
   const HEX_24_ID = "000000000123456789abcdef";
   let generatedId: string;
