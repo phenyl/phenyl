@@ -1,9 +1,9 @@
 import http from "http";
 import { it, describe, before, after } from "mocha";
 import { createStore, combineReducers, applyMiddleware } from "redux";
-import PhenylHttpServer from "../../http-server";
-import PhenylRestApi from "../../rest-api";
-import PhenylHttpClient from "../../http-client";
+import PhenylHttpServer from "@phenyl/http-server";
+import PhenylRestApi from "@phenyl/rest-api";
+import PhenylHttpClient from "@phenyl/http-client";
 import {
   GeneralTypeMap,
   KvsClient,
@@ -13,8 +13,8 @@ import {
   GetCommandResult,
   ReqRes
 } from "../..//interfaces";
-import { createEntityClient } from "../..//memory-db";
-import { StandardUserDefinition } from "../../standards";
+import { createEntityClient } from "@phenyl/memory-db";
+import { StandardUserDefinition } from "@phenyl/standards";
 import assert from "assert";
 
 import { PhenylRedux, LocalStateFinder } from "../src";
