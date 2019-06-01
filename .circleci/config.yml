@@ -26,6 +26,37 @@ commands:
             npm -v
             yarn --version
             mongo --version
+  release:
+    parameters:
+      release_type:
+        type: enum
+        enum: ["patch", "minor"]
+    steps:
+      - add-ssh-keys:
+          fingerprints:
+            - "hogehgoge"
+      - run:
+          name: Setup git
+          command: |
+            git config --global user.email "shin.suzuki@cureapp.jp"
+            git config --global user.name "Shin Suzuki"
+      - run:
+          name: Login npm
+          command: |
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+            npm whoami
+      - restore_cache:
+          keys:
+            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
+      - run:
+          name: Clean tmp files
+          command: yarn clean-tmp
+      - run:
+          name: Build packages
+          command: yarn build
+      - run:
+          name: Publish packages
+          command: yarn publish << parameters.release_type >> --yes
 
 jobs:
   test:
@@ -51,33 +82,39 @@ jobs:
       - run: yarn lint
       - run: yarn type-check
       - run: yarn ci-test
-  deploy:
+  release_patch:
     executor:
       name: default
     steps:
       - prepare
-      - restore_cache:
-          keys:
-            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
-      - run:
-          name: Clean tmp files
-          command: yarn clean-tmp
-      - run:
-          name: Build packages
-          command: yarn build
-      - run:
-          name: Publish packages
-          command: yarn run publish
+      - release:
+          release_type: "patch"
+  release_minor:
+    executor:
+      name: default
+    steps:
+      - prepare
+      - release:
+          release_type: "minor"
 
 workflows:
   version: 2.1
   test_deploy:
     jobs:
       - test
-      - deploy:
-          requires:
-            - test
+      - release_patch:
+          type: approval
           filters:
             branches:
               only:
-                - /^(release)\/.*/
+                - master
+          requires:
+            - test
+      - release_minor:
+          type: approval
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - test
