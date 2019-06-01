@@ -34,12 +34,12 @@ commands:
     steps:
       - add-ssh-keys:
           fingerprints:
-            - "hogehgoge"
+            - "91:cd:e2:f6:96:ea:e5:9d:40:5b:b2:9a:b0:2c:ee:69"
       - run:
           name: Setup git
           command: |
-            git config --global user.email "shin.suzuki@cureapp.jp"
-            git config --global user.name "Shin Suzuki"
+            git config --global user.email "phenyl.js@gmail.com"
+            git config --global user.name "phenyl-bot"
       - run:
           name: Login npm
           command: |
