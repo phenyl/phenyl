@@ -1,8 +1,11 @@
 {
   "lerna": "3.8.0",
-  "packages": [
-    "modules/*"
-  ],
+  "packages": ["modules/*"],
+  "command": {
+    "version": {
+      "message": "[skip ci] chore(release): publish %s"
+    }
+  },
   "npmClient": "yarn",
   "version": "1.0.0-alpha.8"
 }
