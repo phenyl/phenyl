@@ -13,6 +13,19 @@
   },
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
+  "contributors": [
+    "Leko <leko.noor@gmail.com>",
+    "Nicholas Lee <nicholaslee119@gmail.com>",
+    "Daiki Ihara",
+    "Naomi Suzuki",
+    "Jesse Katsumata <niconico.clarinet@gmail.com>",
+    "Takehiro Hagiwara <fitzroy.t.hagi@gmail.com>",
+    "Daiki Nishikawa <nd.12021218@gmail.com>",
+    "yamatatsu",
+    "KONDO-Yuuki",
+    "kotatakaku",
+    "Yutaka Kohada <y.kohada@gmail.com>"
+  ],
   "scripts": {
     "prepare": "yarn bootstrap && yarn clean-tmp && yarn build",
     "bootstrap": "lerna bootstrap",
