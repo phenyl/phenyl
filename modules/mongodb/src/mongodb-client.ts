@@ -28,9 +28,9 @@ import {
   SingleInsertCommand,
   WhereQuery
 } from "@phenyl/interfaces";
-import { ObjectId } from "bson";
 
 import { MongoDbConnection } from "./connection";
+import { ObjectId } from "bson";
 import { createServerError } from "@phenyl/utils";
 import mongodb from "mongodb";
 
@@ -249,6 +249,24 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const ids: string[] = Object.values(result.insertedIds);
     // TODO: transactional operation needed
     return this.getByIds({ entityName, ids });
+  }
+
+  async updateById<N extends Key<M>>(
+    command: IdUpdateCommand<N>
+  ): Promise<void> {
+    const { entityName, id, operation } = command;
+    const coll = this.conn.collection(entityName);
+    const result = await coll.updateOne(
+      { _id: ObjectID(id) },
+      toMongoUpdateOperation(operation)
+    );
+    const { matchedCount } = result;
+    if (matchedCount === 0) {
+      throw createServerError(
+        '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.',
+        "NotFound"
+      );
+    }
   }
 
   async updateAndGet<N extends Key<M>>(
