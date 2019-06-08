@@ -27,7 +27,6 @@ export type VersionDiff = {
   id: string;
   prevVersionId: string;
   versionId: string;
-  operation: GeneralUpdateOperation;
 };
 
 export type SubscriptionRequest = {

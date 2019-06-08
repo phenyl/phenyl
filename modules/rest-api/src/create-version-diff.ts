@@ -87,11 +87,10 @@ function createVersionDiffByIdUpdateCommand<
   const { versionId, prevVersionId } = result;
 
   if (versionId && prevVersionId) {
-    const { entityName, id, operation } = command;
+    const { entityName, id } = command;
     return {
       entityName,
       id,
-      operation,
       versionId,
       prevVersionId
     };
@@ -133,14 +132,13 @@ function createVersionDiffByPushCommand<EN extends string, E extends Entity>(
   command: PushCommand<EN>,
   result: PushCommandResult<E>
 ): VersionDiff | undefined | null {
-  const { versionId, prevVersionId, newOperation } = result;
+  const { versionId, prevVersionId } = result;
 
   if (versionId && prevVersionId) {
     const { entityName, id } = command;
     return {
       entityName,
       id,
-      operation: newOperation,
       versionId,
       prevVersionId
     };
