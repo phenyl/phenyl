@@ -1,4 +1,5 @@
 import { MongoDbConnection, connect } from "../src/connection";
+import assert from "assert";
 import {
   PhenylMongoDbEntityClient,
   createEntityClient
@@ -31,7 +32,7 @@ describe("MongoDBEntityClient", () => {
   });
 
   describe("merge operation", () => {
-    it("operations with set and push", async () => {
+    it("should succeed when conflicted operations with set and push", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
         value: { name: "Jone", hobbies: ["play baseball"] }
@@ -48,6 +49,25 @@ describe("MongoDBEntityClient", () => {
         ],
         versionId
       });
+
+      const updatedEntity = await entityClient.findOne({
+        entityName: "user",
+        where: {
+          id: generatedId
+        }
+      });
+
+      assert.strictEqual(updatedEntity.entity.id, generatedId);
+      assert.strictEqual(updatedEntity.entity.name, "Alpha");
+      assert.deepStrictEqual(updatedEntity.entity.hobbies, [
+        "TypeScript",
+        "JavaScript"
+      ]);
     });
+
+    // TODO
+    it.skip("should throw error because of too long locked entity", () => {});
+    // TODO
+    it.skip("should succeed when only one operation", () => {});
   });
 });
