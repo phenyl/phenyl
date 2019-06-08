@@ -387,7 +387,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
           entityName,
           id
         })) as EntityWithMetaInfo<M[EN]>;
-        return { isSucceeded: !!result._PhenylMeta.locked, result };
+        return { isSucceeded: !result._PhenylMeta.locked, result };
       },
       200,
       5
