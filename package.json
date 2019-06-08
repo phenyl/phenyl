@@ -35,7 +35,7 @@
     "clean-tmp": "lerna run clean",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",
     "lint": "lerna run lint",
-    "publish": "echo publish command is to be implemented",
+    "publish": "lerna publish",
     "test": "lerna run test",
     "type-check": "lerna run type-check",
     "watch": "lerna run watch --parallel"
