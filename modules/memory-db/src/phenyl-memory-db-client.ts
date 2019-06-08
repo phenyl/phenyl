@@ -1,6 +1,7 @@
 import {
   DbClient,
   DeleteCommand,
+  EntityOf,
   EntityState,
   GeneralEntityMap,
   IdQuery,
@@ -10,6 +11,7 @@ import {
   MultiDeleteCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
+  OverWriteCommand,
   PreEntity,
   SingleInsertCommand,
   WhereQuery
@@ -170,15 +172,27 @@ export class PhenylMemoryDbClient<M extends GeneralEntityMap>
 
     return newValues;
   }
+
+  async overwrite<EN extends Key<M>>(
+    command: OverWriteCommand<EN, EntityOf<M, EN>>
+  ): Promise<void> {
+    const { entityName, entity } = command;
+    const operation = PhenylStateUpdater.register(
+      this.entityState,
+      entityName,
+      entity
+    );
+    // @ts-ignore operation is nonbreaking
+    this.entityState = update(this.entityState, operation);
+  }
+
   /**
    *
    */
-
   async updateById<N extends Key<M>>(
     command: IdUpdateCommand<N>
-  ): Promise<number> {
+  ): Promise<void> {
     await this.updateAndGet(command as IdUpdateCommand<N>); // eslint-disable-line no-unused-vars
-    return 1;
   }
   /**
    *
