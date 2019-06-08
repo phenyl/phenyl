@@ -28,6 +28,7 @@ export type MongoDbCollection = {
   insertMany(
     objs: Array<Object>
   ): Promise<{ insertedIds: { [key: string]: string }; insertedCount: number }>;
+  replaceOne({ _id }: { _id: any }, doc: Object): Promise<{ result: Object }>;
   updateOne(
     { _id }: { _id: any },
     op: GeneralUpdateOperation
@@ -92,6 +93,7 @@ function promisifyCollection(coll: Collection): MongoDbCollection {
     find: promisifyFindChain(coll.find.bind(coll)),
     insertOne: promisify(coll.insertOne, coll),
     insertMany: promisify(coll.insertMany, coll),
+    replaceOne: promisify(coll.replaceOne, coll),
     updateOne: promisify(coll.updateOne, coll),
     updateMany: promisify(coll.updateMany, coll),
     deleteOne: promisify(coll.deleteOne, coll),

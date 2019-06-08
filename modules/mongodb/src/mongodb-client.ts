@@ -24,6 +24,7 @@ import {
   Key,
   MultiInsertCommand,
   MultiUpdateCommand,
+  OverWriteCommand,
   PreEntity,
   SingleInsertCommand,
   WhereQuery
@@ -249,6 +250,14 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const ids: string[] = Object.values(result.insertedIds);
     // TODO: transactional operation needed
     return this.getByIds({ entityName, ids });
+  }
+
+  async overwrite<EN extends Key<M>>(
+    command: OverWriteCommand<EN, EntityOf<M, EN>>
+  ): Promise<void> {
+    const { entityName, id, entity } = command;
+    const coll = this.conn.collection(entityName);
+    await coll.replaceOne({ _id: ObjectID(id) }, entity);
   }
 
   async updateById<N extends Key<M>>(
