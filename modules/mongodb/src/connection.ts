@@ -30,7 +30,7 @@ export type MongoDbCollection = {
   ): Promise<{ insertedIds: { [key: string]: string }; insertedCount: number }>;
   replaceOne({ _id }: { _id: any }, doc: Object): Promise<{ result: Object }>;
   updateOne(
-    { _id }: { _id: any },
+    filter: Object,
     op: GeneralUpdateOperation
   ): Promise<{ matchedCount: number }>;
   updateMany(fOp: FindOperation, uOp: GeneralUpdateOperation): Promise<Object>;

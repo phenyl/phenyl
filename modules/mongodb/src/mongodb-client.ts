@@ -263,16 +263,24 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   async updateById<N extends Key<M>>(
     command: IdUpdateCommand<N>
   ): Promise<void> {
-    const { entityName, id, operation } = command;
+    const {
+      entityName,
+      id,
+      operation,
+      filter: additionalFilter = {}
+    } = command;
+    const filter: Object = Object.assign(additionalFilter, {
+      _id: ObjectID(id)
+    });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
-      { _id: ObjectID(id) },
+      filter,
       toMongoUpdateOperation(operation)
     );
     const { matchedCount } = result;
     if (matchedCount === 0) {
       throw createServerError(
-        '"PhenylMongodbClient#updateAndGet()" failed. Could not find any entity with the given query.',
+        '"PhenylMongodbClient#updateById()" failed. Could not find any entity with the given query.',
         "NotFound"
       );
     }
@@ -281,10 +289,18 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   async updateAndGet<N extends Key<M>>(
     command: IdUpdateCommand<N>
   ): Promise<EntityOf<M, N>> {
-    const { entityName, id, operation } = command;
+    const {
+      entityName,
+      id,
+      operation,
+      filter: additionalFilter = {}
+    } = command;
+    const filter: Object = Object.assign(additionalFilter, {
+      _id: ObjectID(id)
+    });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
-      { _id: ObjectID(id) },
+      filter,
       toMongoUpdateOperation(operation)
     );
     const { matchedCount } = result;

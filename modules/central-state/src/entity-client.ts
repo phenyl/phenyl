@@ -30,7 +30,7 @@ import {
   WhereQuery
 } from "@phenyl/interfaces";
 
-import { GeneralUpdateOperation } from "sp2";
+import { GeneralUpdateOperation, mergeUpdateOperations } from "sp2";
 import { PhenylSessionClient } from "./session-client";
 import { Versioning } from "./versioning";
 
@@ -46,11 +46,11 @@ async function wait(msec: number): Promise<void> {
 
 // Exponential Backoff Algorithm. See https://en.wikipedia.org/wiki/Exponential_backoff
 async function exponentialBackOff<R>(
-  fn: () => Promise<{ isSucceeded: boolean; result: R }>,
+  fn: () => Promise<{ isSucceeded: boolean; result: R | null }>,
   durationUnitMsec: number,
   trialLimit: number
-): Promise<{ isSucceeded: boolean; result: R }> {
-  let result: R;
+): Promise<{ isSucceeded: boolean; result: R | null }> {
+  let result: R | null = null;
   for (let trial = 1; trial <= trialLimit; trial++) {
     let { isSucceeded, result: fnResult } = await fn();
     result = fnResult;
@@ -59,7 +59,6 @@ async function exponentialBackOff<R>(
     }
     await wait(durationUnitMsec * (Math.pow(2, trial - 1) + Math.random()));
   }
-  // @ts-ignore for statement must run at least one time
   return { isSucceeded: false, result };
 }
 
@@ -270,17 +269,10 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     command: PushCommand<EN>
   ): Promise<PushCommandResult<M[EN]>> {
     const { entityName, id, versionId, operations } = command;
-    const { isSucceeded, result: entity } = await this.getUnlockedEntity(
-      entityName,
-      id
-    );
-    if (!isSucceeded) {
+    const { isSucceeded, result: entity } = await this.acquireLock(command);
+    if (!isSucceeded || entity == null) {
       throw new Error(
-        `Operation timed out. Target entity is still locked.\nentityName: ${entityName}\nid: ${id}\n${JSON.stringify(
-          entity._PhenylMeta.locked,
-          null,
-          2
-        )}`
+        `Operation timed out. Can not acquire lock.\nentityName: ${entityName}\nid: ${id}`
       );
     }
     const masterOperations = Versioning.getOperationDiffsByVersion(
@@ -296,28 +288,23 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     );
 
     if (operations.length === 1) {
-      const result = await this.updateAndGet({
+      const transactionEndOperation = Versioning.createEndTransactionOperation();
+      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand({
         entityName,
         id,
-        operation: operations[0]
+        operation: mergeUpdateOperations(operations[0], transactionEndOperation)
       });
+      const updatedEntity = (await this.dbClient.updateAndGet(
+        metaInfoAttachedCommand
+      )) as EntityWithMetaInfo<M[EN]>;
       return Versioning.createPushCommandResult({
         entity,
-        updatedEntity: result.entity as EntityWithMetaInfo<M[EN]>,
+        updatedEntity,
         versionId
       });
     }
 
     try {
-      const transactionStartOperation = Versioning.createStartTransactionOperation(
-        versionId,
-        operations
-      );
-      await this.dbClient.updateById({
-        entityName,
-        id,
-        operation: transactionStartOperation
-      });
       for (const operation of operations) {
         await this.dbClient.updateById(
           Versioning.attachMetaInfoToUpdateCommand({
@@ -377,17 +364,25 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     }
   }
 
-  private async getUnlockedEntity<EN extends Key<M>>(
-    entityName: EN,
-    id: string
-  ) {
+  private async acquireLock<EN extends Key<M>>(command: PushCommand<EN>) {
     return await exponentialBackOff<EntityWithMetaInfo<M[EN]>>(
       async () => {
-        const result = (await this.dbClient.get({
-          entityName,
-          id
-        })) as EntityWithMetaInfo<M[EN]>;
-        return { isSucceeded: !result._PhenylMeta.locked, result };
+        const { entityName, id, operations, versionId } = command;
+        const transactionStartOperation = Versioning.createStartTransactionOperation(
+          versionId,
+          operations
+        );
+        try {
+          const lockedEntity = (await this.dbClient.updateAndGet({
+            entityName,
+            id,
+            operation: transactionStartOperation,
+            filter: { "_PhenylMeta.locked": { $exists: false } }
+          })) as EntityWithMetaInfo<M[EN]>;
+          return { isSucceeded: true, result: lockedEntity };
+        } catch {
+          return { isSucceeded: false, result: null };
+        }
       },
       200,
       5
