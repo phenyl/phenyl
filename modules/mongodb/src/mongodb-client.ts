@@ -24,8 +24,8 @@ import {
   Key,
   MultiInsertCommand,
   MultiUpdateCommand,
-  OverWriteCommand,
   PreEntity,
+  ReplaceOneCommand,
   SingleInsertCommand,
   WhereQuery
 } from "@phenyl/interfaces";
@@ -252,8 +252,8 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     return this.getByIds({ entityName, ids });
   }
 
-  async overwrite<EN extends Key<M>>(
-    command: OverWriteCommand<EN, EntityOf<M, EN>>
+  async replaceOne<EN extends Key<M>>(
+    command: ReplaceOneCommand<EN, EntityOf<M, EN>>
   ): Promise<void> {
     const { entityName, id, entity } = command;
     const coll = this.conn.collection(entityName);

@@ -11,8 +11,8 @@ import {
   MultiDeleteCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
-  OverWriteCommand,
   PreEntity,
+  ReplaceOneCommand,
   SingleInsertCommand,
   WhereQuery
 } from "@phenyl/interfaces";
@@ -173,8 +173,8 @@ export class PhenylMemoryDbClient<M extends GeneralEntityMap>
     return newValues;
   }
 
-  async overwrite<EN extends Key<M>>(
-    command: OverWriteCommand<EN, EntityOf<M, EN>>
+  async replaceOne<EN extends Key<M>>(
+    command: ReplaceOneCommand<EN, EntityOf<M, EN>>
   ): Promise<void> {
     const { entityName, entity } = command;
     const operation = PhenylStateUpdater.register(

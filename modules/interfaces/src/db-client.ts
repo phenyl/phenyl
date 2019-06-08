@@ -13,7 +13,7 @@ import { Key } from "./utils";
 
 export type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
 
-export type OverWriteCommand<EN extends string, E extends Entity> = {
+export type ReplaceOneCommand<EN extends string, E extends Entity> = {
   id: string;
   entityName: EN;
   entity: E;
@@ -48,8 +48,8 @@ export interface DbClient<M extends GeneralEntityMap> {
     command: MultiInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
   ): Promise<EntityOf<M, EN>[]>;
 
-  overwrite<EN extends Key<M>>(
-    command: OverWriteCommand<EN, EntityOf<M, EN>>
+  replaceOne<EN extends Key<M>>(
+    command: ReplaceOneCommand<EN, EntityOf<M, EN>>
   ): Promise<void>;
 
   updateById<EN extends Key<M>>(command: IdUpdateCommand<EN>): Promise<void>;
