@@ -1,10 +1,10 @@
+import { MongoDbConnection, connect } from "../src/connection";
+import {
+  PhenylMongoDbEntityClient,
+  createEntityClient
+} from "../src/create-entity-client";
 /* eslint-disable no-console */
 import { after, before, describe, it } from "mocha";
-import {
-  createEntityClient,
-  PhenylMongoDbEntityClient
-} from "../src/create-entity-client";
-import { MongoDbConnection, connect } from "../src/connection";
 
 const url = "mongodb://localhost:27017";
 
@@ -39,7 +39,7 @@ describe("MongoDBEntityClient", () => {
       generatedId = result.entity.id;
       versionId = result.versionId;
 
-      const pushedResult = await entityClient.push({
+      await entityClient.push({
         entityName: "user",
         id: generatedId,
         operations: [

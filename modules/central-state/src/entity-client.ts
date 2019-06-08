@@ -2,6 +2,7 @@ import {
   DbClient,
   DeleteCommand,
   DeleteCommandResult,
+  EntityClient,
   EntityWithMetaInfo,
   GeneralEntityMap,
   GetCommandResult,
@@ -26,8 +27,7 @@ import {
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  WhereQuery,
-  EntityClient
+  WhereQuery
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation } from "sp2";
@@ -37,6 +37,31 @@ import { Versioning } from "./versioning";
 export type PhenylEntityClientOptions<M extends GeneralEntityMap> = {
   validatePushCommand?: PushValidation<M>;
 };
+
+async function wait(msec: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(resolve, msec);
+  });
+}
+
+// Exponential Backoff Algorithm. See https://en.wikipedia.org/wiki/Exponential_backoff
+async function exponentialBackOff<R>(
+  fn: () => Promise<{ isSucceeded: boolean; result: R }>,
+  durationUnitMsec: number,
+  trialLimit: number
+): Promise<{ isSucceeded: boolean; result: R }> {
+  let result: R;
+  for (let trial = 1; trial <= trialLimit; trial++) {
+    let { isSucceeded, result: fnResult } = await fn();
+    result = fnResult;
+    if (isSucceeded) {
+      return { isSucceeded, result };
+    }
+    await wait(durationUnitMsec * (Math.pow(2, trial - 1) + Math.random()));
+  }
+  // @ts-ignore for statement must run at least one time
+  return { isSucceeded: false, result };
+}
 
 /**
  * EntityClient used in PhenylRestApi.
@@ -245,10 +270,19 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     command: PushCommand<EN>
   ): Promise<PushCommandResult<M[EN]>> {
     const { entityName, id, versionId, operations } = command;
-    const entity = (await this.dbClient.get({
+    const { isSucceeded, result: entity } = await this.getUnlockedEntity(
       entityName,
       id
-    })) as EntityWithMetaInfo<M[EN]>;
+    );
+    if (!isSucceeded) {
+      throw new Error(
+        `Operation timed out. Target entity is still locked.\nentityName: ${entityName}\nid: ${id}\n${JSON.stringify(
+          entity._PhenylMeta.locked,
+          null,
+          2
+        )}`
+      );
+    }
     const masterOperations = Versioning.getOperationDiffsByVersion(
       entity,
       versionId
@@ -261,17 +295,54 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
       masterOperations
     );
 
-    const newOperation = Versioning.mergeUpdateOperations(...operations);
+    if (operations.length === 1) {
+      const result = await this.updateAndGet({
+        entityName,
+        id,
+        operation: operations[0]
+      });
+      return Versioning.createPushCommandResult({
+        entity,
+        updatedEntity: result.entity as EntityWithMetaInfo<M[EN]>,
+        versionId
+      });
+    }
+
+    try {
+      const transactionStartOperation = Versioning.createStartTransactionOperation(
+        versionId,
+        operations
+      );
+      await this.dbClient.updateById({
+        entityName,
+        id,
+        operation: transactionStartOperation
+      });
+      for (const operation of operations) {
+        await this.dbClient.updateById(
+          Versioning.attachMetaInfoToUpdateCommand({
+            entityName,
+            id,
+            operation
+          })
+        );
+      }
+    } catch (e) {
+      // Rollbacking. _PhenylMeta.locked is cleared by this command.
+      await this.dbClient.overwrite({ entityName, id, entity });
+      throw e;
+    }
+
+    const transactionEndOperation = Versioning.createEndTransactionOperation();
     const updatedEntity = (await this.dbClient.updateAndGet({
       entityName,
       id,
-      operation: newOperation
+      operation: transactionEndOperation
     })) as EntityWithMetaInfo<M[EN]>;
     return Versioning.createPushCommandResult({
       entity,
       updatedEntity,
-      versionId,
-      newOperation
+      versionId
     });
   }
 
@@ -304,5 +375,22 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
         "Cannot apply push operations: Too many diffs from master (over 100)."
       );
     }
+  }
+
+  private async getUnlockedEntity<EN extends Key<M>>(
+    entityName: EN,
+    id: string
+  ) {
+    return await exponentialBackOff<EntityWithMetaInfo<M[EN]>>(
+      async () => {
+        const result = (await this.dbClient.get({
+          entityName,
+          id
+        })) as EntityWithMetaInfo<M[EN]>;
+        return { isSucceeded: !!result._PhenylMeta.locked, result };
+      },
+      200,
+      5
+    );
   }
 }
