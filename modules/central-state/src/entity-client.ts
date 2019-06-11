@@ -305,7 +305,8 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     }
 
     try {
-      operations.forEach(async operation => {
+      for (let i = 0; i < operations.length; i++) {
+        const operation = operations[i];
         await this.dbClient.updateById(
           Versioning.attachMetaInfoToUpdateCommand({
             entityName,
@@ -313,7 +314,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
             operation
           })
         );
-      });
+      }
     } catch (e) {
       // Rollbacking. _PhenylMeta.locked is cleared by this command.
       await this.dbClient.replaceOne({ entityName, id, entity });
