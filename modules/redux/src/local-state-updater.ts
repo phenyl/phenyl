@@ -239,7 +239,7 @@ export class LocalStateUpdater {
     state: LocalStateOf,
     versionDiff: VersionDiff
   ): GeneralUpdateOperation {
-    const { entityName, id, versionId, prevVersionId, operation } = versionDiff;
+    const { entityName, id, versionId, prevVersionId } = versionDiff;
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
       entityName
@@ -249,7 +249,7 @@ export class LocalStateUpdater {
       return {};
     }
 
-    const newOrigin = update(entityInfo.origin, operation);
+    const newOrigin = update(entityInfo.origin);
     const newHead = update(newOrigin, ...entityInfo.commits);
     return {
       $set: {

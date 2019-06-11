@@ -1,4 +1,8 @@
-import { FindOperation, GeneralUpdateOperation } from "@sp2/format";
+import {
+  FindOperation,
+  GeneralUpdateOperation,
+  SimpleFindOperation
+} from "@sp2/format";
 
 import { ProEntity } from "./entity";
 
@@ -50,6 +54,7 @@ export type IdUpdateCommand<EN extends string = string> = {
   entityName: EN; // "update" key in MongoDB reference
   id: string;
   operation: GeneralUpdateOperation; // "u" key in MongoDB reference
+  filter?: SimpleFindOperation;
 };
 
 /**

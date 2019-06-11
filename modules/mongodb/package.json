@@ -19,7 +19,7 @@
     "build": "upbin tsc --declaration",
     "ci-test": "upbin nyc npm test --color always",
     "pretest": "test/scripts/init-mongodb.sh",
-    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always || (npm run posttest && exit 1)",
+    "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always --timeout 20000 || (npm run posttest && exit 1)",
     "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb",
     "type-check": "upbin tsc --noEmit"
   },

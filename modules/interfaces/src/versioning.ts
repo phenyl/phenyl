@@ -11,6 +11,11 @@ export type EntityVersion = {
 
 export type EntityMetaInfo = {
   versions: Array<EntityVersion>;
+  locked?: {
+    timestamp: string;
+    clientHeadVersionId: string | null;
+    ops: string[]; // stringified GeneralUpdateOperation
+  };
 };
 
 export type EntityWithMetaInfo<T extends ProEntity> = T & {
@@ -22,7 +27,6 @@ export type VersionDiff = {
   id: string;
   prevVersionId: string;
   versionId: string;
-  operation: GeneralUpdateOperation;
 };
 
 export type SubscriptionRequest = {

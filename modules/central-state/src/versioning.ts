@@ -101,13 +101,11 @@ export class Versioning {
   public static createPushCommandResult<E extends Entity>({
     entity,
     updatedEntity,
-    versionId,
-    newOperation
+    versionId
   }: {
     entity: EntityWithMetaInfo<E>;
     updatedEntity: EntityWithMetaInfo<E>;
     versionId: string | null;
-    newOperation: GeneralUpdateOperation;
   }): PushCommandResult<E> {
     const localUncommittedOperations = this.getOperationDiffsByVersion(
       entity,
@@ -124,8 +122,7 @@ export class Versioning {
         hasEntity: 0,
         operations: localUncommittedOperations,
         prevVersionId,
-        versionId: latestVersionId,
-        newOperation
+        versionId: latestVersionId
       };
     }
     return {
@@ -133,8 +130,7 @@ export class Versioning {
       hasEntity: 1,
       entity: updatedEntity,
       prevVersionId,
-      versionId: latestVersionId,
-      newOperation
+      versionId: latestVersionId
     };
   }
 
@@ -181,6 +177,35 @@ export class Versioning {
     });
     const newOperation = Object.assign({}, normalizedOperation, { $push });
     return Object.assign({}, command, { operation: newOperation });
+  }
+
+  /**
+   * Create meta info of starting transaction
+   */
+  public static createStartTransactionOperation(
+    clientHeadVersionId: string | null,
+    operations: GeneralUpdateOperation[]
+  ): GeneralUpdateOperation {
+    return {
+      $set: {
+        "_PhenylMeta.locked": {
+          timestamp: new Date().toISOString(),
+          clientHeadVersionId,
+          ops: operations.map(op => JSON.stringify(op))
+        }
+      }
+    };
+  }
+
+  /**
+   * Clear meta info of transaction
+   */
+  public static createEndTransactionOperation(): GeneralUpdateOperation {
+    return {
+      $unset: {
+        "_PhenylMeta.locked": ""
+      }
+    };
   }
 
   /**

@@ -49,7 +49,6 @@ export type PushCommandResult<E extends Entity> =
       n: number; // TODO necessary?
       hasEntity: 0;
       operations: GeneralUpdateOperation[];
-      newOperation: GeneralUpdateOperation;
       versionId: string;
       prevVersionId: string | null;
     }
@@ -59,7 +58,6 @@ export type PushCommandResult<E extends Entity> =
       entity: E;
       versionId: string;
       prevVersionId: string | null;
-      newOperation: GeneralUpdateOperation;
     };
 
 export type CustomCommandResult<CR extends Object = Object> = {

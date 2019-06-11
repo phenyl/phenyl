@@ -5,13 +5,19 @@ import {
   MultiUpdateCommand,
   SingleInsertCommand
 } from "./command";
-import { GeneralEntityMap } from "./type-map";
+import { Entity, PreEntity } from "./entity";
 import { IdQuery, IdsQuery, WhereQuery } from "./query";
 
+import { GeneralEntityMap } from "./type-map";
 import { Key } from "./utils";
-import { PreEntity } from "./entity";
 
 export type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];
+
+export type ReplaceOneCommand<EN extends string, E extends Entity> = {
+  id: string;
+  entityName: EN;
+  entity: E;
+};
 
 export interface DbClient<M extends GeneralEntityMap> {
   find<EN extends Key<M>>(
@@ -41,6 +47,12 @@ export interface DbClient<M extends GeneralEntityMap> {
   insertAndGetMulti<EN extends Key<M>>(
     command: MultiInsertCommand<EN, PreEntity<EntityOf<M, EN>>>
   ): Promise<EntityOf<M, EN>[]>;
+
+  replaceOne<EN extends Key<M>>(
+    command: ReplaceOneCommand<EN, EntityOf<M, EN>>
+  ): Promise<void>;
+
+  updateById<EN extends Key<M>>(command: IdUpdateCommand<EN>): Promise<void>;
 
   updateAndGet<EN extends Key<M>>(
     command: IdUpdateCommand<EN>
