@@ -4,8 +4,8 @@ executors:
   default:
     working_directory: ~/repo
     docker:
-      - image: circleci/node:8.11.3
-      - image: circleci/mongo:3.6.9
+      - image: circleci/node:dubnium
+      - image: circleci/mongo:latest
 
 commands:
   prepare:
@@ -15,10 +15,10 @@ commands:
       - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - run:
           # https://yarnpkg.com/ja/docs/install#linux-tab
-          name: Install Yarn@1.12.3
+          name: Install Yarn@1.16.0
           command: |
             sudo unlink $(which yarn)
-            sudo npm i -g yarn@1.12.3
+            sudo npm i -g yarn@1.16.0
       - run:
           name: Display version of Node.js, npm, Yarn and mongodb
           command: |
