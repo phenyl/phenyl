@@ -110,14 +110,14 @@ describe("MongoDBEntityClient", () => {
       generatedId = result.entity.id;
       versionId = result.versionId;
 
-      const manyOpesA = new Array(4000).fill(0).map((_, index) => {
+      const manyOpesA = new Array(10000).fill(0).map((_, index) => {
         return {
           $push: {
             hobbies: "A" + index
           }
         };
       });
-      const manyOpesB = new Array(4000).fill(0).map((_, index) => {
+      const manyOpesB = new Array(10000).fill(0).map((_, index) => {
         return {
           $push: {
             hobbies: "B" + index
