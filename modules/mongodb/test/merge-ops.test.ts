@@ -99,8 +99,7 @@ describe("MongoDBEntityClient", () => {
       ]);
     });
 
-    // TODO: enable after upgrade node v10
-    it.skip("should throw error because of too long locked entity", async () => {
+    it("should throw error because of too long locked entity", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
         value: {
@@ -111,34 +110,42 @@ describe("MongoDBEntityClient", () => {
       generatedId = result.entity.id;
       versionId = result.versionId;
 
-      const ope = {
-        $push: {
-          hobbies: "JavaScript"
-        }
-      };
-      const manyOpes = new Array(10000).fill(0).map((_, index) => {
+      const manyOpesA = new Array(4000).fill(0).map((_, index) => {
         return {
           $push: {
-            hobbies: "JavaScript" + index
+            hobbies: "A" + index
+          }
+        };
+      });
+      const manyOpesB = new Array(4000).fill(0).map((_, index) => {
+        return {
+          $push: {
+            hobbies: "B" + index
           }
         };
       });
 
-      // lock entity
-      entityClient.push({
+      // lock entity by many operations
+      const pushA = entityClient.push({
         entityName: "user",
         id: generatedId,
-        operations: manyOpes,
+        operations: manyOpesA,
         versionId
       });
 
-      await entityClient.push({
+      const pushB = entityClient.push({
         entityName: "user",
         id: generatedId,
-        operations: [ope],
+        operations: manyOpesB,
         versionId
       });
-      // assert.rejects()
+
+      await assert.rejects(
+        Promise.all([pushA, pushB]),
+        Error(
+          `Operation timed out. Can not acquire lock.\nentityName: user\nid: ${generatedId}`
+        )
+      );
     });
     it("should rollback", async () => {
       const result = await entityClient.insertAndGet({
