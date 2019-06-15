@@ -19,7 +19,7 @@ import {
 import { PhenylStateFinder, PhenylStateUpdater } from "@phenyl/state";
 import { createServerError, timeStampWithRandomString } from "@phenyl/utils";
 
-import { update } from "sp2";
+import { update, retrieve } from "sp2";
 
 type MemoryClientParams<M extends GeneralEntityMap> = {
   entityState?: EntityState<M>;
@@ -213,9 +213,19 @@ export class PhenylMemoryDbClient<M extends GeneralEntityMap>
   async updateAndGet<N extends Key<M>>(
     command: IdUpdateCommand<N>
   ): Promise<M[N]> {
-    const { entityName, id } = command;
-
+    const { entityName, id, filter } = command;
     try {
+      const entity = PhenylStateFinder.get(this.entityState, {
+        entityName,
+        id
+      });
+      const matched = filter ? retrieve([entity], filter).length === 1 : true;
+
+      if (!matched) {
+        throw createServerError(
+          `Entity has been locked. entityName:${entityName}, id: ${id}`
+        );
+      }
       const operation = PhenylStateUpdater.updateById(
         this.entityState,
         command
