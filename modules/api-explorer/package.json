@@ -14,10 +14,14 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/PhenylApiExplorer.js",
-  "types": "lib/PhenylApiExplorer.d.ts",
+  "main": "lib/cjs/PhenylApiExplorer.js",
+  "types": "lib/esm/PhenylApiExplorer.d.ts",
+  "module": "lib/esm/PhenylApiExplorer.js",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "clean": "rm -rf lib",
+    "build": "upbin npm-run-all clean build:*",
+    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
+    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "start": "nodemon --exec upbin ts-node examples/index.ts --watch src --watch examples --extensions '.ts'",
     "test": "echo no test specified in phenyl-api-explorer",
