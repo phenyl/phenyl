@@ -44,7 +44,7 @@ export type MiddlewareOptions<TM extends GeneralTypeMap> = {
 export class MiddlewareCreator {
   static create<GM extends GeneralTypeMap, S>(
     options: MiddlewareOptions<GM>
-  ): Middleware<S, Dispatch<PhenylAction>> {
+  ): Middleware<{}, S, Dispatch<PhenylAction>> {
     const storeKey = options.storeKey || "phenyl";
     return (store: any) => (next: Dispatch<AnyAction>) => {
       const client = options.client;
