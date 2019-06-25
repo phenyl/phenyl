@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/redux",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
@@ -27,17 +27,17 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.0-alpha.8",
-    "@phenyl/utils": "^1.0.0-alpha.8",
+    "@phenyl/interfaces": "^1.0.0-alpha.9",
+    "@phenyl/utils": "^1.0.0-alpha.9",
     "fast-deep-equal": "^1.0.0",
     "sp2": "~1.4.1"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.8",
-    "@phenyl/http-server": "^1.0.0-alpha.8",
-    "@phenyl/memory-db": "^1.0.0-alpha.8",
-    "@phenyl/rest-api": "^1.0.0-alpha.8",
-    "@phenyl/standards": "^1.0.0-alpha.8",
+    "@phenyl/http-client": "^1.0.0-alpha.9",
+    "@phenyl/http-server": "^1.0.0-alpha.9",
+    "@phenyl/memory-db": "^1.0.0-alpha.9",
+    "@phenyl/rest-api": "^1.0.0-alpha.9",
+    "@phenyl/standards": "^1.0.0-alpha.9",
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
   },

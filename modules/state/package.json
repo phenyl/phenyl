@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/state",
-  "version": "1.0.0-alpha.8",
+  "version": "1.0.0-alpha.9",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -23,7 +23,7 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.0-alpha.8",
+    "@phenyl/interfaces": "^1.0.0-alpha.9",
     "sp2": "^1.4.1"
   },
   "devDependencies": {
