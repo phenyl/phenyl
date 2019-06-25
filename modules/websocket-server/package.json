@@ -14,10 +14,14 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "types": "lib/esm/index.d.ts",
+  "module": "lib/esm/index.js",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "clean": "rm -rf lib",
+    "build": "upbin npm-run-all clean build:*",
+    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
+    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {

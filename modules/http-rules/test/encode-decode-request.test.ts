@@ -1,4 +1,4 @@
-import { GeneralRequestData } from "@phenyl/interfaces/lib";
+import { GeneralRequestData } from "@phenyl/interfaces";
 /* eslint-env mocha */
 import assert from "assert";
 import decodeRequest from "../src/decode-request";
