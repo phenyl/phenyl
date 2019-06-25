@@ -160,11 +160,12 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   async find<N extends Key<M>>(
     query: WhereQuery<N>
   ): Promise<Array<EntityOf<M, N>>> {
-    const { entityName, where, skip, limit } = query;
+    const { entityName, where, skip, limit, sort } = query;
     const coll = this.conn.collection(entityName);
     const options: FindOperation = {};
     if (skip) options.skip = skip;
     if (limit) options.limit = limit;
+    if (sort) options.sort = sort;
 
     const result = await coll.find(filterFindOperation(where), options);
     return result.map<any>(restoreIdInEntity);
@@ -173,9 +174,12 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   async findOne<N extends Key<M>>(
     query: WhereQuery<N>
   ): Promise<EntityOf<M, N>> {
-    const { entityName, where } = query;
+    const { entityName, where, skip, sort } = query;
     const coll = this.conn.collection(entityName);
-    const result = await coll.find(filterFindOperation(where), { limit: 1 });
+    const options: FindOperation = { limit: 1 };
+    if (skip) options.skip = skip;
+    if (sort) options.sort = sort;
+    const result = await coll.find(filterFindOperation(where), options);
     if (result.length === 0) {
       throw createServerError("findOne()", "NotFound");
     }

@@ -5,7 +5,7 @@ import {
 } from "./change-stream";
 // Sorry for poor typing
 import { Collection, MongoClient } from "mongodb";
-import { FindOperation, GeneralUpdateOperation } from "sp2";
+import { FindOperation, GeneralUpdateOperation, SortNotation } from "sp2";
 
 // @ts-ignore no types
 import promisify from "es6-promisify";
@@ -20,7 +20,7 @@ export interface MongoDbConnection {
 export type MongoDbCollection = {
   find(
     op?: FindOperation,
-    options?: { limit?: number; skip?: number }
+    options?: { limit?: number; skip?: number; sort?: SortNotation }
   ): Promise<Array<Object>>;
   insertOne(
     obj: Object
