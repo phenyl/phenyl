@@ -14,13 +14,16 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "types": "lib/esm/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
-    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "build": "upbin npm-run-all clean build:*",
+    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
+    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
     "ci-test": "yarn test",
-    "clean": "upbin rimraf $(cat ../../.temporary-files)",
+    "clean": "rm -rf lib",
+    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
@@ -30,10 +33,10 @@
     "sp2": "~1.4.1"
   },
   "devDependencies": {
-    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "@phenyl/http-client": "^1.0.0-alpha.8",
     "@phenyl/http-server": "^1.0.0-alpha.8",
     "@phenyl/memory-db": "^1.0.0-alpha.8",
+    "@phenyl/rest-api": "^1.0.0-alpha.8",
     "@phenyl/standards": "^1.0.0-alpha.8",
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
