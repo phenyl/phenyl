@@ -10,14 +10,11 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/esm/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin npm-run-all clean build:*",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
-    "clean": "rm -rf lib",
+    "build": "upbin tsc --declaration",
+    "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
