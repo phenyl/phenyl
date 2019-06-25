@@ -10,12 +10,15 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/cjs/index.js",
+  "types": "lib/esm/index.d.ts",
+  "module": "lib/esm/index.js",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "clean": "rm -rf lib",
+    "build": "upbin npm-run-all clean build:*",
+    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
+    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
     "ci-test": "upbin nyc mocha --require ts-node/register 'test/**/*.test.ts' --color always",
-    "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
