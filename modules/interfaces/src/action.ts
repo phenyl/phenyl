@@ -6,7 +6,7 @@ import {
   LogoutCommand
 } from "./command";
 
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { IdQuery } from "./query";
 import { Session } from "./session";
 import { VersionDiff } from "./versioning";

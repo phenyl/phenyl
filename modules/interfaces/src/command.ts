@@ -2,7 +2,7 @@ import {
   FindOperation,
   GeneralUpdateOperation,
   SimpleFindOperation
-} from "@sp2/format";
+} from "sp2";
 
 import { ProEntity } from "./entity";
 

@@ -1,5 +1,5 @@
 import { GeneralEntityMap } from "./type-map";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 import { ProEntity } from "./entity";
 import { PushCommand } from "./command";

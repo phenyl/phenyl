@@ -1,4 +1,4 @@
-import { FindOperation, SortNotation } from "@sp2/format";
+import { FindOperation, SortNotation } from "sp2";
 
 export interface WhereQuery<EN extends string> {
   entityName: EN;
