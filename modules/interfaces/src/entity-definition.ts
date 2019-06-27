@@ -6,7 +6,30 @@ import {
 
 import { Session } from "./session";
 
-export interface EntityDefinition {
+export interface GeneralDefinition {
+  authorize?: (
+    reqData: GeneralRequestData,
+    session?: Session
+  ) => Promise<boolean>;
+
+  normalize?: (
+    reqData: GeneralRequestData,
+    session?: Session
+  ) => Promise<GeneralRequestData>;
+
+  validate?: (reqData: GeneralRequestData, session?: Session) => Promise<void>;
+
+  wrapExecution?: (
+    reqData: GeneralRequestData,
+    session: Session | undefined,
+    executeFn: (
+      reqData: GeneralRequestData,
+      session?: Session
+    ) => Promise<GeneralResponseData>
+  ) => Promise<GeneralResponseData>;
+}
+
+export interface EntityDefinition extends GeneralDefinition {
   authorize?: (
     reqData: GeneralEntityRequestData,
     session?: Session
@@ -20,11 +43,11 @@ export interface EntityDefinition {
   validate?: (reqData: GeneralRequestData, session?: Session) => Promise<void>;
 
   wrapExecution?: (
-    reqData: GeneralRequestData,
-    session: Session,
+    reqData: GeneralEntityRequestData,
+    session: Session | undefined,
     executeFn: (
-      reqData: GeneralRequestData,
+      reqData: GeneralEntityRequestData,
       session?: Session
-    ) => Promise<GeneralResponseData>
+    ) => Promise<GeneralEntityResponseData>
   ) => Promise<GeneralEntityResponseData>;
 }

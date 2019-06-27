@@ -1,9 +1,10 @@
 import { CustomQuery } from "./query";
 import { CustomQueryResult } from "./query-result";
 import { GeneralCustomQueryRequestData } from "./request-data";
+import { GeneralDefinition } from "./entity-definition";
 import { Session } from "./session";
 
-export interface CustomQueryDefinition {
+export interface CustomQueryDefinition extends GeneralDefinition {
   authorize?: (
     reqData: GeneralCustomQueryRequestData,
     session?: Session
