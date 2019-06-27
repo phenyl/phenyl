@@ -6,7 +6,6 @@ import {
   GeneralRequestData,
   GeneralResponseData,
   GeneralTypeMap,
-  HandlerResult,
   Nullable,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
@@ -14,7 +13,8 @@ import {
   RestApiHandler,
   SessionClient,
   VersionDiffPublisher,
-  ResponseEntityMapOf
+  ResponseEntityMapOf,
+  ErrorResponseData
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
@@ -71,7 +71,8 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
     N extends EveryNameOf<TM, MN>
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
+    // TODO: use HandlerRequest Type instead of Promise
     try {
       assertValidRequestData(reqData);
       const session = await this.sessionClient.get(reqData.sessionId!);
@@ -105,10 +106,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
       this.publishVersionDiff(normalizedReqData, resData);
       return resData as ResponseDataWithTypeMap<TM, MN, N>;
     } catch (e) {
-      return {
-        type: "error",
-        payload: createServerError(e)
-      };
+      return { type: "error", payload: createServerError(e) };
     }
   }
 

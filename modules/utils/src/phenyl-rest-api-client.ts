@@ -20,7 +20,6 @@ import {
   EveryNameOf,
   GeneralTypeMap,
   GetCommandResult,
-  HandlerResult,
   IdQuery,
   IdUpdateCommand,
   IdUpdateCommandResult,
@@ -50,7 +49,8 @@ import {
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  WhereQuery
+  WhereQuery,
+  ErrorResponseData
 } from "@phenyl/interfaces";
 
 import { createServerError } from "./create-error";
@@ -76,7 +76,7 @@ export abstract class PhenylRestApiClient<
     N extends EveryNameOf<TM, MN>
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>>;
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData>; // TODO: use HandlerRequest Type instead of Promise
   /**
    *
    */

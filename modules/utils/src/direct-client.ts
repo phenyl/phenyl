@@ -2,11 +2,11 @@
 import {
   EveryNameOf,
   GeneralTypeMap,
-  HandlerResult,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
-  RestApiHandler
+  RestApiHandler,
+  ErrorResponseData
 } from "@phenyl/interfaces";
 
 import { PhenylRestApiClient } from "./phenyl-rest-api-client";
@@ -34,7 +34,8 @@ export class PhenylRestApiDirectClient<
     N extends EveryNameOf<TM, MN>
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
+    // TODO: use HandlerRequest Type instead of Promise
     return this.restApiHandler.handleRequestData(reqData);
   }
 }
