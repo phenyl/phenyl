@@ -80,6 +80,7 @@ export abstract class DefinitionExecutor {
   ): Promise<GeneralResponseData>;
 }
 
+/* eslint-disable-next-line */
 export class EntityDefinitionExecutor extends DefinitionExecutor {
   definition: EntityDefinition;
   client: EntityClient;
@@ -191,6 +192,7 @@ async function executeEntityRequestData(
   }
 }
 
+/* eslint-disable-next-line */
 export class UserDefinitionExecutor extends DefinitionExecutor {
   definition: UserDefinition;
   client: EntityClient;
@@ -254,6 +256,7 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
   }
 }
 
+/* eslint-disable-next-line */
 export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
   definition: CustomQueryDefinition;
   client: EntityClient;
@@ -275,6 +278,7 @@ export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
   }
 }
 
+/* eslint-disable-next-line */
 export class CustomCommandDefinitionExecutor extends DefinitionExecutor {
   definition: CustomCommandDefinition;
   client: EntityClient;
