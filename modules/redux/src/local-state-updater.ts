@@ -1,5 +1,5 @@
 import { update, createDocumentPath } from "sp2";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { createError } from "@phenyl/utils";
 import { removeOne } from "./utils";
 import {

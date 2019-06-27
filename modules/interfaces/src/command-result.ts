@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { Session } from "./session";
 
 type IdMap = { [id: string]: string | null };

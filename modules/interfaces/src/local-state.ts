@@ -7,7 +7,7 @@ import {
 import { PhenylError } from "./error";
 
 import { Entity } from "./entity";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 
 export type LocalEntityInfo<E extends Entity> = {

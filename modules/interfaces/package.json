@@ -20,7 +20,7 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "sp2": "^1.4.1"
+    "sp2": "^1.5.1"
   },
   "devDependencies": {
     "upbin": "^0.9.0"

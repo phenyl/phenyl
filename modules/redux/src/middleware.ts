@@ -30,7 +30,7 @@ import {
   Entity,
   ReqResEntityMapOf
 } from "@phenyl/interfaces";
-import { GeneralUpdateOperation } from "@sp2/format";
+import { GeneralUpdateOperation } from "sp2";
 
 type Id = string;
 type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;

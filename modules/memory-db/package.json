@@ -25,7 +25,7 @@
     "@phenyl/interfaces": "^1.0.0-alpha.15",
     "@phenyl/state": "^1.0.0-alpha.15",
     "@phenyl/utils": "^1.0.0-alpha.15",
-    "sp2": "^1.4.1"
+    "sp2": "^1.5.1"
   },
   "devDependencies": {
     "@phenyl/rest-api": "^1.0.0-alpha.15",
