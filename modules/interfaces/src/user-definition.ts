@@ -1,10 +1,9 @@
-import { UserEntityRequestData } from "./request-data";
-
 import { Entity } from "./entity";
+import { GeneralDefinition } from "./entity-definition";
 import { LoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
-
+import { UserEntityRequestData } from "./request-data";
 import { UserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
@@ -17,14 +16,12 @@ export type AuthenticationResult<
   versionId: string | null;
 };
 
-export interface AuthDefinition {
+export interface UserDefinition extends GeneralDefinition {
   authenticate(
     loginCommand: LoginCommand,
     session?: Session
   ): Promise<AuthenticationResult>;
-}
 
-export interface UserDefinition extends AuthDefinition {
   authorize?: (
     reqData: UserEntityRequestData,
     session?: Session
@@ -49,3 +46,5 @@ export interface UserDefinition extends AuthDefinition {
     ) => Promise<UserEntityResponseData>
   ) => Promise<UserEntityResponseData>;
 }
+
+export type AuthDefinition = Pick<UserDefinition, "authenticate">;

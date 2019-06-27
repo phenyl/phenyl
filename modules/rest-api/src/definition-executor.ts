@@ -8,85 +8,94 @@ import {
   GeneralCustomCommandResponseData,
   GeneralCustomQueryRequestData,
   GeneralCustomQueryResponseData,
+  GeneralDefinition,
   GeneralEntityRequestData,
   GeneralEntityResponseData,
   GeneralRequestData,
   GeneralResponseData,
   GeneralUserEntityRequestData,
-  UserEntityResponseData,
   LoginCommand,
   LoginResponseData,
   LogoutCommand,
   LogoutResponseData,
   Session,
   SessionClient,
-  UserDefinition
+  UserDefinition,
+  UserEntityResponseData
 } from "@phenyl/interfaces";
 
-import { createServerError } from "@phenyl/utils";
 import { ErrorResponseData } from "@phenyl/interfaces";
+import { createServerError } from "@phenyl/utils";
 
-export class EntityDefinitionExecutor implements DefinitionExecutor {
+export abstract class DefinitionExecutor {
+  definition: GeneralDefinition;
+
+  constructor(definition: GeneralDefinition) {
+    this.definition = definition;
+  }
+
+  async authorize(
+    reqData: GeneralRequestData,
+    session?: Session
+  ): Promise<boolean> {
+    return this.definition.authorize
+      ? this.definition.authorize(reqData, session)
+      : true;
+  }
+
+  async normalize(
+    reqData: GeneralRequestData,
+    session?: Session
+  ): Promise<GeneralRequestData> {
+    return this.definition.normalize
+      ? this.definition.normalize(reqData, session)
+      : reqData;
+  }
+
+  async validate(
+    reqData: GeneralRequestData,
+    session?: Session
+  ): Promise<void> {
+    if (this.definition.validate) {
+      await this.definition.validate(reqData, session);
+    }
+  }
+
+  async execute(
+    reqData: GeneralRequestData,
+    session?: Session
+  ): Promise<GeneralResponseData> {
+    return this.definition.wrapExecution
+      ? this.definition.wrapExecution(
+          reqData,
+          session,
+          this.executeOwn.bind(this)
+        )
+      : this.executeOwn(reqData, session);
+  }
+
+  abstract executeOwn(
+    reqData: GeneralRequestData,
+    session?: Session
+  ): Promise<GeneralResponseData>;
+}
+
+/* eslint-disable-next-line */
+export class EntityDefinitionExecutor extends DefinitionExecutor {
   definition: EntityDefinition;
   client: EntityClient;
 
   constructor(definition: EntityDefinition, client: EntityClient) {
+    super(definition);
     this.definition = definition;
     this.client = client;
-
-    if (this.definition.authorize == null) {
-      this.authorize = () => Promise.resolve(true);
-    }
-    if (this.definition.normalize == null) {
-      this.normalize = val => Promise.resolve(val);
-    }
-    if (this.definition.validate == null) {
-      this.validate = () => Promise.resolve();
-    }
-    if (this.definition.wrapExecution == null) {
-      this.execute = executeEntityRequestData.bind(this, this.client);
-    }
   }
 
-  async authorize(
-    reqData: GeneralEntityRequestData,
-    session?: Session
-  ): Promise<boolean> {
-    return this.definition.authorize!(reqData, session);
-  }
-
-  async validate(
-    reqData: GeneralEntityRequestData,
-    session?: Session
-  ): Promise<void> {
-    return this.definition.validate!(reqData, session);
-  }
-
-  async normalize(
-    reqData: GeneralEntityRequestData,
-    session?: Session
-  ): Promise<GeneralEntityRequestData> {
-    return this.definition.normalize!(reqData, session);
-  }
-
-  async execute(
+  async executeOwn(
     reqData: GeneralEntityRequestData,
     session?: Session
   ): Promise<GeneralEntityResponseData | ErrorResponseData> {
-    if (session === undefined) {
-      const errorResult: ErrorResponseData = {
-        type: "error",
-        payload: createServerError(
-          `Execute method ${reqData.method} must needs session`
-        )
-      };
-      return errorResult;
-    }
-    return this.definition.wrapExecution!(
-      reqData,
-      session,
-      executeEntityRequestData.bind(this, this.client)
-    );
+    return executeEntityRequestData(this.client, reqData, session);
   }
 }
 
@@ -183,7 +192,8 @@ async function executeEntityRequestData(
   }
 }
 
-export class UserDefinitionExecutor implements DefinitionExecutor {
+/* eslint-disable-next-line */
+export class UserDefinitionExecutor extends DefinitionExecutor {
   definition: UserDefinition;
   client: EntityClient;
   sessionClient: SessionClient;
@@ -193,50 +203,16 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
     client: EntityClient,
     sessionClient: SessionClient
   ) {
+    super(definition);
     this.definition = definition;
     this.client = client;
     this.sessionClient = sessionClient;
-
-    if (this.definition.authorize == null) {
-      this.authorize = () => Promise.resolve(true);
-    }
-    if (this.definition.normalize == null) {
-      this.normalize = val => Promise.resolve(val);
-    }
-    if (this.definition.validate == null) {
-      this.validate = () => Promise.resolve();
-    }
-    if (this.definition.wrapExecution == null) {
-      this.execute = executeEntityRequestData.bind(this, this.client);
-    }
   }
 
-  async authorize(
+  async executeOwn(
     reqData: GeneralUserEntityRequestData,
     session?: Session
-  ): Promise<boolean> {
-    return this.definition.authorize!(reqData, session);
-  }
-
-  async validate(
-    reqData: GeneralUserEntityRequestData,
-    session?: Session
-  ): Promise<void> {
-    return this.definition.validate!(reqData, session);
-  }
-
-  async normalize(
-    reqData: GeneralUserEntityRequestData,
-    session?: Session
-  ): Promise<GeneralUserEntityRequestData> {
-    return this.definition.normalize!(reqData, session);
-  }
-
-  async execute(
-    reqData: GeneralUserEntityRequestData,
-    session?: Session
-  ): Promise<UserEntityResponseData | ErrorResponseData> {
-    // TODO: use HandlerRequest Type instead of Promise
+  ): Promise<UserEntityResponseData> {
     if (reqData.method == "logout") {
       return this.logout(reqData.payload);
     }
@@ -244,21 +220,7 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
       return this.login(reqData.payload, session);
     }
 
-    if (session === undefined) {
-      const errorResult: ErrorResponseData = {
-        type: "error",
-        payload: createServerError(
-          `Method ${reqData.method} requires an active session`,
-          "Unauthorized"
-        )
-      };
-      return errorResult;
-    }
-    return this.definition.wrapExecution!(
-      reqData,
-      session,
-      executeEntityRequestData.bind(this, this.client)
-    );
+    return executeEntityRequestData(this.client, reqData, session);
   }
 
   private async login(
@@ -294,47 +256,18 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
   }
 }
 
-export class CustomQueryDefinitionExecutor implements DefinitionExecutor {
+/* eslint-disable-next-line */
+export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
   definition: CustomQueryDefinition;
   client: EntityClient;
 
   constructor(definition: CustomQueryDefinition, client: EntityClient) {
+    super(definition);
     this.definition = definition;
     this.client = client;
-
-    if (this.definition.authorize == null) {
-      this.authorize = () => Promise.resolve(true);
-    }
-    if (this.definition.normalize == null) {
-      this.normalize = val => Promise.resolve(val);
-    }
-    if (this.definition.validate == null) {
-      this.validate = () => Promise.resolve();
-    }
   }
 
-  async authorize(
-    reqData: GeneralCustomQueryRequestData,
-    session?: Session
-  ): Promise<boolean> {
-    return this.definition.authorize!(reqData, session);
-  }
-
-  async validate(
-    reqData: GeneralCustomQueryRequestData,
-    session?: Session
-  ): Promise<void> {
-    return this.definition.validate!(reqData, session);
-  }
-
-  async normalize(
-    reqData: GeneralCustomQueryRequestData,
-    session?: Session
-  ): Promise<GeneralCustomQueryRequestData> {
-    return this.definition.normalize!(reqData, session);
-  }
-
-  async execute(
+  async executeOwn(
     reqData: GeneralCustomQueryRequestData,
     session?: Session
   ): Promise<GeneralCustomQueryResponseData | ErrorResponseData> {
@@ -345,47 +278,18 @@ export class CustomQueryDefinitionExecutor implements DefinitionExecutor {
   }
 }
 
-export class CustomCommandDefinitionExecutor implements DefinitionExecutor {
+/* eslint-disable-next-line */
+export class CustomCommandDefinitionExecutor extends DefinitionExecutor {
   definition: CustomCommandDefinition;
   client: EntityClient;
 
   constructor(definition: CustomCommandDefinition, client: EntityClient) {
+    super(definition);
     this.definition = definition;
     this.client = client;
-
-    if (this.definition.authorize == null) {
-      this.authorize = () => Promise.resolve(true);
-    }
-    if (this.definition.normalize == null) {
-      this.normalize = val => Promise.resolve(val);
-    }
-    if (this.definition.validate == null) {
-      this.validate = () => Promise.resolve();
-    }
   }
 
-  async authorize(
-    reqData: GeneralCustomCommandRequestData,
-    session?: Session
-  ): Promise<boolean> {
-    return this.definition.authorize!(reqData, session);
-  }
-
-  async validate(
-    reqData: GeneralCustomCommandRequestData,
-    session?: Session
-  ): Promise<void> {
-    return this.definition.validate!(reqData, session);
-  }
-
-  async normalize(
-    reqData: GeneralCustomCommandRequestData,
-    session?: Session
-  ): Promise<GeneralCustomCommandRequestData> {
-    return this.definition.normalize!(reqData, session);
-  }
-
-  async execute(
+  async executeOwn(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
   ): Promise<GeneralCustomCommandResponseData | ErrorResponseData> {
@@ -394,20 +298,4 @@ export class CustomCommandDefinitionExecutor implements DefinitionExecutor {
       payload: await this.definition.execute(reqData.payload, session)
     };
   }
-}
-
-export interface DefinitionExecutor {
-  authorize(reqData: GeneralRequestData, session?: Session): Promise<boolean>;
-
-  normalize(
-    reqData: GeneralRequestData,
-    session?: Session
-  ): Promise<GeneralRequestData>;
-
-  validate(reqData: GeneralRequestData, session?: Session): Promise<void>;
-
-  execute(
-    reqData: GeneralRequestData,
-    session?: Session
-  ): Promise<GeneralResponseData>;
 }
