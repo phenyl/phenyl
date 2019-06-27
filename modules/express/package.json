@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/express",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "Express middleware to use Phenyl in it.",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -19,23 +19,22 @@
   "scripts": {
     "build": "upbin tsc --declaration",
     "ci-test": "yarn test",
-    
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.0.0-alpha.13",
-    "@phenyl/interfaces": "^1.0.0-alpha.13",
-    "@phenyl/utils": "^1.0.0-alpha.13",
+    "@phenyl/http-rules": "^1.0.0-alpha.14",
+    "@phenyl/interfaces": "^1.0.0-alpha.14",
+    "@phenyl/utils": "^1.0.0-alpha.14",
     "express": "^4.16.4",
     "raw-body": "^2.3.2"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.13",
-    "@phenyl/memory-db": "^1.0.0-alpha.13",
-    "@phenyl/rest-api": "^1.0.0-alpha.13",
+    "@phenyl/http-client": "^1.0.0-alpha.14",
+    "@phenyl/memory-db": "^1.0.0-alpha.14",
+    "@phenyl/rest-api": "^1.0.0-alpha.14",
     "upbin": "^0.8.1"
   },
   "publishConfig": {
