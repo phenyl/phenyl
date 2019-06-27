@@ -14,18 +14,17 @@ import {
   GeneralResponseData,
   GeneralUserEntityRequestData,
   UserEntityResponseData,
-  HandlerResult,
   LoginCommand,
   LoginResponseData,
   LogoutCommand,
   LogoutResponseData,
   Session,
   SessionClient,
-  UserDefinition,
-  ErrorResponseData
+  UserDefinition
 } from "@phenyl/interfaces";
 
 import { createServerError } from "@phenyl/utils";
+import { ErrorResponseData } from "@phenyl/interfaces";
 
 export class EntityDefinitionExecutor implements DefinitionExecutor {
   definition: EntityDefinition;
@@ -73,7 +72,7 @@ export class EntityDefinitionExecutor implements DefinitionExecutor {
   async execute(
     reqData: GeneralEntityRequestData,
     session?: Session
-  ): HandlerResult<GeneralEntityResponseData> {
+  ): Promise<GeneralEntityResponseData | ErrorResponseData> {
     if (session === undefined) {
       const errorResult: ErrorResponseData = {
         type: "error",
@@ -236,7 +235,8 @@ export class UserDefinitionExecutor implements DefinitionExecutor {
   async execute(
     reqData: GeneralUserEntityRequestData,
     session?: Session
-  ): HandlerResult<UserEntityResponseData> {
+  ): Promise<UserEntityResponseData | ErrorResponseData> {
+    // TODO: use HandlerRequest Type instead of Promise
     if (reqData.method == "logout") {
       return this.logout(reqData.payload);
     }
@@ -337,7 +337,7 @@ export class CustomQueryDefinitionExecutor implements DefinitionExecutor {
   async execute(
     reqData: GeneralCustomQueryRequestData,
     session?: Session
-  ): HandlerResult<GeneralCustomQueryResponseData> {
+  ): Promise<GeneralCustomQueryResponseData | ErrorResponseData> {
     return {
       type: "runCustomQuery",
       payload: await this.definition.execute(reqData.payload, session)
@@ -388,7 +388,7 @@ export class CustomCommandDefinitionExecutor implements DefinitionExecutor {
   async execute(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
-  ): HandlerResult<GeneralCustomCommandResponseData> {
+  ): Promise<GeneralCustomCommandResponseData | ErrorResponseData> {
     return {
       type: "runCustomCommand",
       payload: await this.definition.execute(reqData.payload, session)

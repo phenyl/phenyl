@@ -2,12 +2,12 @@ import {
   ClientPathModifier,
   EveryNameOf,
   GeneralTypeMap,
-  HandlerResult,
   HttpClientParams,
   QueryStringParams,
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
-  ResponseDataWithTypeMap
+  ResponseDataWithTypeMap,
+  ErrorResponseData
 } from "@phenyl/interfaces";
 import { PhenylRestApiClient, createLocalError } from "@phenyl/utils";
 import { decodeResponse, encodeRequest } from "@phenyl/http-rules";
@@ -68,26 +68,23 @@ export default class PhenylHttpClient<
     N extends EveryNameOf<TM, MN>
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
-  ): HandlerResult<ResponseDataWithTypeMap<TM, MN, N>> {
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
+    // TODO: use HandlerRequest Type instead of Promise
     const { method, headers, path, qsParams, body } = encodeRequest(reqData);
     const qs = stringifyQsParams(qsParams);
     const url = `${this.url}${this.modifyPath(path)}${qs}`;
     const response = await fetch(
       url,
       // @ts-ignore incompatible fetch type and EncodedHttpRequest
-      {
-        method,
-        headers,
-        body
-      }
+      { method, headers, body }
     ).catch((e: Error) => {
       throw createLocalError(e, "NetworkFailed");
     });
     const encodedResponse = {
       body: await response.json(),
       statusCode: response.status,
-      headers: response.headers // FIXME: headers from polyfilled fetch don't implement Headers API.
-    };
+      headers: response.headers
+    }; // FIXME: headers from polyfilled fetch don't implement Headers API.
     // @ts-ignore http-client will not receive any types beyond this point
     return decodeResponse(encodedResponse);
   }
