@@ -14,13 +14,11 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/esm/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin npm-run-all clean build:*",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
+    "build": "upbin tsc --declaration",
     "ci-test": "yarn test",
     "clean": "rm -rf lib",
     "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
@@ -43,5 +41,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }

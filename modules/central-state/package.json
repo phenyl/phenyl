@@ -10,14 +10,11 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/index.js",
-  "types": "lib/esm/index.d.ts",
-  "module": "lib/esm/index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib/index.js",
   "scripts": {
-    "clean": "rm -rf lib",
-    "build": "upbin npm-run-all clean build:*",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
+    "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
@@ -30,5 +27,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }

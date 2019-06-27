@@ -14,14 +14,11 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/PhenylApiExplorer.js",
-  "types": "lib/esm/PhenylApiExplorer.d.ts",
-  "module": "lib/esm/PhenylApiExplorer.js",
+  "main": "lib/PhenylApiExplorer.js",
+  "types": "lib/PhenylApiExplorer.d.ts",
   "scripts": {
     "clean": "rm -rf lib",
-    "build": "upbin npm-run-all clean build:*",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
+    "build": "upbin tsc --declaration",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "start": "nodemon --exec upbin ts-node examples/index.ts --watch src --watch examples --extensions '.ts'",
     "test": "echo no test specified in phenyl-api-explorer",
@@ -46,5 +43,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }
