@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/central-state",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
@@ -10,19 +10,16 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/index.js",
-  "types": "lib/esm/index.d.ts",
-  "module": "lib/esm/index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib/index.js",
   "scripts": {
-    "clean": "rm -rf lib",
-    "build": "upbin npm-run-all clean build:*",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
+    "build": "upbin tsc --declaration",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.0-alpha.13",
-    "@phenyl/utils": "^1.0.0-alpha.13",
+    "@phenyl/interfaces": "^1.0.0-alpha.14",
+    "@phenyl/utils": "^1.0.0-alpha.14",
     "sp2": "^1.4.1"
   },
   "devDependencies": {
@@ -30,5 +27,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/redux",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
@@ -14,34 +14,33 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/esm/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin npm-run-all clean build:*",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
+    "build": "upbin tsc --declaration",
     "ci-test": "yarn test",
     "clean": "rm -rf lib",
     "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.0-alpha.13",
-    "@phenyl/utils": "^1.0.0-alpha.13",
+    "@phenyl/interfaces": "^1.0.0-alpha.14",
+    "@phenyl/utils": "^1.0.0-alpha.14",
     "fast-deep-equal": "^1.0.0",
     "sp2": "~1.4.1"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.13",
-    "@phenyl/http-server": "^1.0.0-alpha.13",
-    "@phenyl/memory-db": "^1.0.0-alpha.13",
-    "@phenyl/rest-api": "^1.0.0-alpha.13",
-    "@phenyl/standards": "^1.0.0-alpha.13",
+    "@phenyl/http-client": "^1.0.0-alpha.14",
+    "@phenyl/http-server": "^1.0.0-alpha.14",
+    "@phenyl/memory-db": "^1.0.0-alpha.14",
+    "@phenyl/rest-api": "^1.0.0-alpha.14",
+    "@phenyl/standards": "^1.0.0-alpha.14",
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }

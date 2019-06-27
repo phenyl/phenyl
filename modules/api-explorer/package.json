@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer",
-  "version": "1.0.0-alpha.13",
+  "version": "1.0.0-alpha.14",
   "description": "Automatically renders API explorer pages like swagger",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-api-explorer",
   "license": "Apache-2.0",
@@ -14,37 +14,35 @@
     "LICENSE",
     "README.md"
   ],
-  "main": "lib/cjs/PhenylApiExplorer.js",
-  "types": "lib/esm/PhenylApiExplorer.d.ts",
-  "module": "lib/esm/PhenylApiExplorer.js",
+  "main": "lib/PhenylApiExplorer.js",
+  "types": "lib/PhenylApiExplorer.d.ts",
   "scripts": {
     "clean": "rm -rf lib",
-    "build": "upbin npm-run-all clean build:*",
-    "build:esm": "upbin tsc --target es6 --outDir lib/esm --module es6",
-    "build:cjs": "upbin tsc --target es5 --outDir lib/cjs --module commonjs",
+    "build": "upbin tsc --declaration",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "start": "nodemon --exec upbin ts-node examples/index.ts --watch src --watch examples --extensions '.ts'",
     "test": "echo no test specified in phenyl-api-explorer",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/api-explorer-client": "^1.0.0-alpha.13",
+    "@phenyl/api-explorer-client": "^1.0.0-alpha.14",
     "ejs": "^2.6.1",
     "upbin": "^0.9.0"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.13",
-    "@phenyl/http-server": "^1.0.0-alpha.13",
-    "@phenyl/interfaces": "^1.0.0-alpha.13",
-    "@phenyl/lambda-adapter": "^1.0.0-alpha.13",
-    "@phenyl/memory-db": "^1.0.0-alpha.13",
-    "@phenyl/rest-api": "^1.0.0-alpha.13",
-    "@phenyl/standards": "^1.0.0-alpha.13",
+    "@phenyl/http-client": "^1.0.0-alpha.14",
+    "@phenyl/http-server": "^1.0.0-alpha.14",
+    "@phenyl/interfaces": "^1.0.0-alpha.14",
+    "@phenyl/lambda-adapter": "^1.0.0-alpha.14",
+    "@phenyl/memory-db": "^1.0.0-alpha.14",
+    "@phenyl/rest-api": "^1.0.0-alpha.14",
+    "@phenyl/standards": "^1.0.0-alpha.14",
     "@types/ejs": "^2.6.2",
     "nodemon": "^1.18.3",
     "power-crypt": "^0.2.2"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "fc31a5e585f024ab28f8b1bcb46768fe684fd582"
 }
