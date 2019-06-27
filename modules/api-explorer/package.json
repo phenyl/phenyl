@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer",
-  "version": "1.0.0-alpha.15",
+  "version": "1.0.0-alpha.16",
   "description": "Automatically renders API explorer pages like swagger",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-api-explorer",
   "license": "Apache-2.0",
@@ -25,18 +25,18 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/api-explorer-client": "^1.0.0-alpha.15",
+    "@phenyl/api-explorer-client": "^1.0.0-alpha.16",
     "ejs": "^2.6.1",
     "upbin": "^0.9.0"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.0-alpha.15",
-    "@phenyl/http-server": "^1.0.0-alpha.15",
-    "@phenyl/interfaces": "^1.0.0-alpha.15",
-    "@phenyl/lambda-adapter": "^1.0.0-alpha.15",
-    "@phenyl/memory-db": "^1.0.0-alpha.15",
-    "@phenyl/rest-api": "^1.0.0-alpha.15",
-    "@phenyl/standards": "^1.0.0-alpha.15",
+    "@phenyl/http-client": "^1.0.0-alpha.16",
+    "@phenyl/http-server": "^1.0.0-alpha.16",
+    "@phenyl/interfaces": "^1.0.0-alpha.16",
+    "@phenyl/lambda-adapter": "^1.0.0-alpha.16",
+    "@phenyl/memory-db": "^1.0.0-alpha.16",
+    "@phenyl/rest-api": "^1.0.0-alpha.16",
+    "@phenyl/standards": "^1.0.0-alpha.16",
     "@types/ejs": "^2.6.2",
     "nodemon": "^1.18.3",
     "power-crypt": "^0.2.2"
