@@ -10,29 +10,33 @@ Within these two environments, States are Synchronized in various ways.
 # State Synchronization over Environments (SSoE)
 State Synchronization over Environments is the main concept of modern applications.
 
-If you use RESTful API, you syncronize server and client state through HTTP methods.
-Followings are examples.
+For example, if you use RESTful API, you can synchronize server and client state through following HTTP methods:
 - Acquire server state of user by GET `/user` and provide user profile view by acquired user entity.
 - User updates user name at profile view, app update user entity in the client side and app POST or PATCH `/user`.
 - User delete account, app clear the client state and app execute DELETE `/user`
 
 It's popular method of SSoE. So, many people create RDB, write API server to transform Data to Entity and communicate with client, write fetch code in client, client transform Entity to data for view, client update entity and notify to server, server save updated entity to DB and so on. Additionally error handlings are neccessary in practice.
 
-Phenyl provides more simple solution to handle SSoE base on 4 concepts.
+Phenyl provides simpler solution to handle SSoE based on the following 4 concepts:
 
-## State is one big JSON
+ - State as one big JSON
+ - OAD: Operations as Data
+ - MongoDB-like operations
+ - Git-like synchronization
+
+## State as one big JSON
 JSON is very useful format for JavaScript. It has some basic types like string or boolean and it's easy to serialize and deserialize.
 We represent the entire app state as one big JSON.
 
 ## OAD: Operations As Data
-Phenyl handle all operations that like create an entity , update property in an entity or delete an entity as data. 
-All operations history is also the state of application.
-This concept allow us easy to reproduce and debug any situations we want.
+Phenyl handles all CRUD operations on data, such as creating an entity, reading the data in an entity, updating a property in an entity, and deleting an entity as data. 
+The history of all operations is also saved as in the state.
+This concept allows us to easily reproduce and debug any situations we want.
 
 ## MongoDB-like operations
 Phenyl provides MongoDB-like operations.
 
-In mongoDB shell, example CRUD operations are like following.
+In a mongoDB shell, CRUD operations are performed as following:
 
 ```shell
 > db.testUser.insertOne({_id: "test1", name: "Test1"})
@@ -54,7 +58,7 @@ In mongoDB shell, example CRUD operations are like following.
 null
 ```
 
-In Phenyl client, the operations are like following. (This code is abbreviated.)
+In Phenyl client, the operations are performed as following. (This code is simplified.)
 ```ts
 // omission prepare httpClient and preSession
 const inserted = await phenylClient.insertAndGet(
@@ -91,7 +95,7 @@ await phenylClient.delete({ entityName: "testUser", id: "test1" })
 If you have used mongodb, you will soon get to be friendly with the API of Phenyl😎.
 
 ## Git-like synchronization
-Phenyl synchronize between server and client by git-like command.
+Phenyl synchronizes between server and client by using git-like command.
 You can acquire server side entity by `pull` and update by `push`.
 This allows us to handle offline oepration easily.
 
@@ -123,9 +127,9 @@ Phenyl is powered by [sp2](https://github.com/phenyl-js/sp2), a set of JavaScrip
 
 # Usage
 
-Phenyl needs you to implement 2 features, one is GeneralTypeMap and the other is functionalGroup.
-GeneralTypeMap is type definition that describes request and response of each entity and auth information.
-functionalGroup is implementation to notify Phenyl about the domain that we want to use. 
+Phenyl needs you to implement 2 features, one is **GeneralTypeMap** and the other is **functionalGroup**.
+**GeneralTypeMap** is type definition that describes shape of request and response of each entity and auth information.
+**functionalGroup** is implementation to notify Phenyl about the domain that we want to use. 
 If you want to know more details, see [example](./modules/standards/test/standard-definition-authentication.test).
 
 # License
