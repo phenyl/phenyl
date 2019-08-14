@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/rest-api",
-  "version": "1.0.0-alpha.18",
+  "version": "1.0.0",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -21,9 +21,9 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.0.0-alpha.18",
-    "@phenyl/interfaces": "^1.0.0-alpha.18",
-    "@phenyl/utils": "^1.0.0-alpha.18"
+    "@phenyl/central-state": "^1.0.0",
+    "@phenyl/interfaces": "^1.0.0",
+    "@phenyl/utils": "^1.0.0"
   },
   "devDependencies": {
     "upbin": "^0.9.0"
