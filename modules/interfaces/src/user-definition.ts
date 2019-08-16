@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { GeneralDefinition } from "./entity-definition";
+import { EntityDefinition } from "./entity-definition";
 import { LoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
@@ -16,35 +16,32 @@ export type AuthenticationResult<
   versionId: string | null;
 };
 
-export interface UserDefinition extends GeneralDefinition {
+export interface UserDefinition extends EntityDefinition {
   authenticate(
     loginCommand: LoginCommand,
     session?: Session
   ): Promise<AuthenticationResult>;
 
-  authorize?: (
+  authorize?(
     reqData: UserEntityRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<boolean>;
 
-  normalize?: (
-    reqData: UserEntityRequestData,
+  normalize?<T extends UserEntityRequestData>(
+    reqData: T,
     session?: Session
-  ) => Promise<UserEntityRequestData>;
+  ): Promise<T>;
 
-  validate?: (
-    reqData: UserEntityRequestData,
-    session?: Session
-  ) => Promise<void>;
+  validate?(reqData: UserEntityRequestData, session?: Session): Promise<void>;
 
-  wrapExecution?: (
-    reqData: UserEntityRequestData,
+  wrapExecution?<
+    T extends UserEntityRequestData,
+    S extends UserEntityResponseData
+  >(
+    reqData: T,
     session: Session,
-    executeFn: (
-      reqData: UserEntityRequestData,
-      session?: Session
-    ) => Promise<UserEntityResponseData>
-  ) => Promise<UserEntityResponseData>;
+    executeFn: (reqData: T, session?: Session) => Promise<S>
+  ): Promise<S>;
 }
 
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;
