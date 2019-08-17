@@ -66,7 +66,7 @@ const sessionClient = memoryClient.createSessionClient() as KvsClient<
 >;
 
 class PatientDefinition extends StandardUserDefinition<
-  MyGeneralReqResEntityMap,
+  MyEntityMap,
   MyAuthSetting
 > {
   constructor() {
@@ -97,7 +97,7 @@ before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,
     {
-      client: memoryClient,
+      entityClient: memoryClient,
       sessionClient
     }
   );
