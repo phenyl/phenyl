@@ -15,10 +15,9 @@
     "README.md"
   ],
   "scripts": {
-    "build": "react-scripts build && node scripts/prepare-assets.js",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build && node scripts/prepare-assets.js",
     "eject": "react-scripts eject",
     "start": "react-scripts start",
-    "test": "react-scripts test",
     "type-check": "upbin tsc --noEmit"
   },
   "browserslist": {
