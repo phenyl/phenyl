@@ -5,7 +5,7 @@ executors:
     working_directory: ~/repo
     docker:
       - image: circleci/node:dubnium
-      - image: circleci/mongo:latest
+      - image: circleci/mongo:4.1.9
 
 commands:
   prepare:
