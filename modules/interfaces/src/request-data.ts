@@ -16,11 +16,11 @@ import { Entity, PreEntity, ProEntity } from "./entity";
  * Type of request data handled in servers and clients.
  * This is a union type of all specific RequestData, so parameters cannot be inferred using this type.
  */
-export type GeneralRequestData<N extends string = string> =
-  | GeneralEntityRequestData<N>
-  | GeneralCustomQueryRequestData<N>
-  | GeneralCustomCommandRequestData<N>
-  | GeneralAuthRequestData<N>;
+export type GeneralRequestData =
+  | GeneralEntityRequestData
+  | GeneralCustomQueryRequestData
+  | GeneralCustomCommandRequestData
+  | GeneralAuthRequestData;
 
 /**
  * Acceptable method name in RequestData.
@@ -51,22 +51,22 @@ export type EntityRequestData<EN extends string, E extends Entity> =
  * RequestData handled by EntityDefinition.
  * Pre-entity values in isnert data are not validated and any objects can be passed.
  */
-export type GeneralEntityRequestData<N extends string = string> =
-  | FindRequestData<N>
-  | FindOneRequestData<N>
-  | GetRequestData<N>
-  | GetByIdsRequestData<N>
-  | PullRequestData<N>
-  | InsertOneRequestData<N, ProEntity>
-  | InsertMultiRequestData<N, ProEntity>
-  | InsertAndGetRequestData<N, ProEntity>
-  | InsertAndGetMultiRequestData<N, ProEntity>
-  | UpdateOneRequestData<N>
-  | UpdateMultiRequestData<N>
-  | UpdateAndGetRequestData<N>
-  | UpdateAndFetchRequestData<N>
-  | PushRequestData<N>
-  | DeleteRequestData<N>;
+export type GeneralEntityRequestData =
+  | GeneralFindRequestData
+  | GeneralFindOneRequestData
+  | GeneralGetRequestData
+  | GeneralGetByIdsRequestData
+  | GeneralPullRequestData
+  | GeneralInsertOneRequestData
+  | GeneralInsertMultiRequestData
+  | GeneralInsertAndGetRequestData
+  | GeneralInsertAndGetMultiRequestData
+  | GeneralUpdateOneRequestData
+  | GeneralUpdateMultiRequestData
+  | GeneralUpdateAndGetRequestData
+  | GeneralUpdateAndFetchRequestData
+  | GeneralPushRequestData
+  | GeneralDeleteRequestData;
 
 /**
  * RequestData handled by authentication.
@@ -80,9 +80,9 @@ export type AuthRequestData<EN extends string, C extends Object> =
  * RequestData handled by authentication.
  * Credentials are not validated and any objects can be passed.
  */
-export type GeneralAuthRequestData<
-  EN extends string = string
-> = AuthRequestData<EN, Object>;
+export type GeneralAuthRequestData =
+  | GeneralLoginRequestData
+  | GeneralLogoutRequestData;
 
 /**
  * RequestData handled by UserDefinition (EntityRequestData | AuthRequestData).
@@ -98,43 +98,9 @@ export type UserEntityRequestData<
  * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
  * Credentials are not validated and any objects can be passed.
  */
-export type GeneralUserEntityRequestData<EN extends string = string> =
-  | GeneralEntityRequestData<EN>
-  | GeneralAuthRequestData<EN>;
-
-/**
- * RequestData handled by CustomQueryDefinition.
- * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
- */
-export type CustomQueryRequestData<
-  QN extends string,
-  QP extends Object
-> = RunCustomQueryRequestData<QN, QP>;
-
-/**
- * RequestData handled by CustomQueryDefinition.
- * Params are not validated and any objects can be passed.
- */
-export type GeneralCustomQueryRequestData<
-  QN extends string = string
-> = CustomQueryRequestData<QN, Object>;
-
-/**
- * RequestData handled by CustomCommandDefinition.
- * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
- */
-export type CustomCommandRequestData<
-  N extends string,
-  CP extends Object
-> = RunCustomCommandRequestData<N, CP>;
-
-/**
- * RequestData handled by CustomCommandDefinition.
- * Params are not validated and any objects can be passed.
- */
-export type GeneralCustomCommandRequestData<
-  CN extends string = string
-> = CustomCommandRequestData<CN, Object>;
+export type GeneralUserEntityRequestData =
+  | GeneralEntityRequestData
+  | GeneralAuthRequestData;
 
 export type FindRequestData<N extends string> = {
   method: "find";
@@ -235,11 +201,20 @@ export type RunCustomQueryRequestData<N extends string, QP extends Object> = {
   sessionId?: string | null;
 };
 
+export type CustomQueryRequestData<
+  N extends string,
+  QP extends Object
+> = RunCustomQueryRequestData<N, QP>;
+
 export type RunCustomCommandRequestData<N extends string, P extends Object> = {
   method: "runCustomCommand";
   payload: CustomCommand<N, P>;
   sessionId?: string | null;
 };
+export type CustomCommandRequestData<
+  N extends string,
+  CP extends Object
+> = RunCustomCommandRequestData<N, CP>;
 
 export type LoginRequestData<N extends string, C extends Object> = {
   method: "login";
@@ -252,3 +227,66 @@ export type LogoutRequestData<N extends string> = {
   payload: LogoutCommand<N>;
   sessionId?: string | null;
 };
+
+export type GeneralFindRequestData = FindRequestData<string>;
+
+export type GeneralFindOneRequestData = FindOneRequestData<string>;
+
+export type GeneralGetRequestData = GetRequestData<string>;
+
+export type GeneralGetByIdsRequestData = GetByIdsRequestData<string>;
+
+export type GeneralPullRequestData = PullRequestData<string>;
+
+export type GeneralInsertOneRequestData = InsertOneRequestData<
+  string,
+  ProEntity
+>;
+
+export type GeneralInsertMultiRequestData = InsertMultiRequestData<
+  string,
+  ProEntity
+>;
+
+export type GeneralInsertAndGetRequestData = InsertAndGetRequestData<
+  string,
+  ProEntity
+>;
+
+export type GeneralInsertAndGetMultiRequestData = InsertAndGetMultiRequestData<
+  string,
+  ProEntity
+>;
+
+export type GeneralUpdateOneRequestData = UpdateOneRequestData<string>;
+
+export type GeneralUpdateMultiRequestData = UpdateMultiRequestData<string>;
+
+export type GeneralUpdateAndGetRequestData = UpdateAndGetRequestData<string>;
+
+export type GeneralUpdateAndFetchRequestData = UpdateAndFetchRequestData<
+  string
+>;
+
+export type GeneralPushRequestData = PushRequestData<string>;
+
+export type GeneralDeleteRequestData = DeleteRequestData<string>;
+
+export type GeneralRunCustomQueryRequestData = RunCustomQueryRequestData<
+  string,
+  Object
+>;
+// Alias
+export type GeneralCustomQueryRequestData = GeneralRunCustomQueryRequestData;
+
+export type GeneralRunCustomCommandRequestData = RunCustomCommandRequestData<
+  string,
+  Object
+>;
+
+// Alias
+export type GeneralCustomCommandRequestData = GeneralRunCustomCommandRequestData;
+
+export type GeneralLoginRequestData = LoginRequestData<string, Object>;
+
+export type GeneralLogoutRequestData = LogoutRequestData<string>;
