@@ -1,5 +1,5 @@
-import { CustomCommand } from "./command";
-import { CustomCommandResult } from "./command-result";
+import { GeneralCustomCommand } from "./command";
+import { GeneralCustomCommandResult } from "./command-result";
 import { GeneralCustomCommandRequestData } from "./request-data";
 import { GeneralDefinition } from "./entity-definition";
 import { Session } from "./session";
@@ -21,7 +21,7 @@ export interface CustomCommandDefinition extends GeneralDefinition {
   ): Promise<void>;
 
   execute(
-    command: CustomCommand,
+    command: GeneralCustomCommand,
     session?: Session
-  ): Promise<CustomCommandResult>;
+  ): Promise<GeneralCustomCommandResult>;
 }

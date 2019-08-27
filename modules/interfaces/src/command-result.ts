@@ -60,7 +60,7 @@ export type PushCommandResult<E extends Entity> =
       prevVersionId: string | null;
     };
 
-export type CustomCommandResult<CR extends Object = Object> = {
+export type CustomCommandResult<CR extends Object> = {
   result: CR;
 };
 
@@ -77,3 +77,19 @@ export type LoginCommandResult<
 export type LogoutCommandResult = {
   ok: 1;
 };
+
+export type GeneralDeleteCommandResult = DeleteCommandResult;
+export type GeneralSingleInsertCommandResult = SingleInsertCommandResult;
+export type GeneralMultiInsertCommandResult = MultiInsertCommandResult;
+export type GeneralIdUpdateCommandResult = IdUpdateCommandResult;
+export type GeneralMultiUpdateCommandResult = MultiUpdateCommandResult;
+export type GeneralMultiValuesCommandResult = MultiValuesCommandResult<Entity>;
+export type GeneralGetCommandResult = GetCommandResult<Entity>;
+export type GeneralPushCommandResult = PushCommandResult<Entity>;
+export type GeneralCustomCommandResult = CustomCommandResult<Object>;
+export type GeneralLoginCommandResult = LoginCommandResult<
+  string,
+  Entity,
+  Object
+>;
+export type GeneralLogoutCommandResult = LogoutCommandResult;
