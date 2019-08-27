@@ -8,7 +8,7 @@ import {
   GeneralCustomQueryRequestData,
   GeneralRequestData,
   GeneralResponseData,
-  QueryResult,
+  GeneralQueryResult,
   UserDefinition
 } from "@phenyl/interfaces";
 /* eslint-env mocha */
@@ -40,7 +40,7 @@ const findReqData2: GeneralRequestData = {
   payload: { entityName: "bar", where: {} }
 };
 
-const queryResult: QueryResult = { entities: [], versionsById: {} };
+const queryResult: GeneralQueryResult = { entities: [], versionsById: {} };
 const findResData: GeneralResponseData = {
   type: "find",
   // @ts-ignore

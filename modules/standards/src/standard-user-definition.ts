@@ -14,7 +14,7 @@ import {
   UserDefinition,
   Session,
   AuthenticationResult,
-  UserEntityRequestData,
+  GeneralUserEntityRequestData,
   UserEntityResponseData,
   GeneralEntityMap
 } from "@phenyl/interfaces";
@@ -85,10 +85,10 @@ export class StandardUserDefinition<
   }
 
   async wrapExecution(
-    reqData: UserEntityRequestData,
+    reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
     executeFn: (
-      reqData: UserEntityRequestData,
+      reqData: GeneralUserEntityRequestData,
       session?: Session
     ) => Promise<UserEntityResponseData>
   ): Promise<UserEntityResponseData> {

@@ -1,9 +1,9 @@
 import { Entity } from "./entity";
 import { GeneralDefinition } from "./entity-definition";
-import { LoginCommand } from "./command";
+import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
-import { UserEntityRequestData } from "./request-data";
+import { GeneralUserEntityRequestData } from "./request-data";
 import { UserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
@@ -18,27 +18,30 @@ export type AuthenticationResult<
 
 export interface UserDefinition extends GeneralDefinition {
   authenticate(
-    loginCommand: LoginCommand,
+    loginCommand: GeneralLoginCommand,
     session?: Session
   ): Promise<AuthenticationResult>;
 
   authorize?(
-    reqData: UserEntityRequestData,
+    reqData: GeneralUserEntityRequestData,
     session?: Session
   ): Promise<boolean>;
 
   normalize?(
-    reqData: UserEntityRequestData,
+    reqData: GeneralUserEntityRequestData,
     session?: Session
-  ): Promise<UserEntityRequestData>;
+  ): Promise<GeneralUserEntityRequestData>;
 
-  validate?(reqData: UserEntityRequestData, session?: Session): Promise<void>;
+  validate?(
+    reqData: GeneralUserEntityRequestData,
+    session?: Session
+  ): Promise<void>;
 
   wrapExecution?(
-    reqData: UserEntityRequestData,
+    reqData: GeneralUserEntityRequestData,
     session: Session,
     executeFn: (
-      reqData: UserEntityRequestData,
+      reqData: GeneralUserEntityRequestData,
       session?: Session
     ) => Promise<UserEntityResponseData>
   ): Promise<UserEntityResponseData>;

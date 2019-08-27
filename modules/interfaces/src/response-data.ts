@@ -26,31 +26,31 @@ import { ServerError } from "./error";
  * This is a union type of all specific ResponseData, so parameters cannot be inferred using this type.
  */
 export type GeneralResponseData =
-  | FindResponseData<Entity>
-  | FindOneResponseData<Entity>
-  | GetResponseData<Entity>
-  | GetByIdsResponseData<Entity>
-  | PullResponseData<Entity>
-  | InsertOneResponseData
-  | InsertMultiResponseData
-  | InsertAndGetResponseData<Entity>
-  | InsertAndGetMultiResponseData<Entity>
-  | UpdateOneResponseData
-  | UpdateMultiResponseData
-  | UpdateAndGetResponseData<Entity>
-  | UpdateAndFetchResponseData<Entity>
-  | PushResponseData<Entity>
-  | DeleteResponseData
-  | RunCustomQueryResponseData<Object>
-  | RunCustomCommandResponseData<Object>
-  | LoginResponseData<string, Entity, Object>
-  | LogoutResponseData
+  | GeneralFindResponseData
+  | GeneralFindOneResponseData
+  | GeneralGetResponseData
+  | GeneralGetByIdsResponseData
+  | GeneralPullResponseData
+  | GeneralInsertOneResponseData
+  | GeneralInsertMultiResponseData
+  | GeneralInsertAndGetResponseData
+  | GeneralInsertAndGetMultiResponseData
+  | GeneralUpdateOneResponseData
+  | GeneralUpdateMultiResponseData
+  | GeneralUpdateAndGetResponseData
+  | GeneralUpdateAndFetchResponseData
+  | GeneralPushResponseData
+  | GeneralDeleteResponseData
+  | GeneralRunCustomQueryResponseData
+  | GeneralRunCustomCommandResponseData
+  | GeneralLoginResponseData
+  | GeneralLogoutResponseData
   | ErrorResponseData;
 
 /**
  * ResponseData handled by EntityDefinition.
  */
-export type EntityResponseData<E extends Entity = Entity> =
+export type EntityResponseData<E extends Entity> =
   | FindResponseData<E>
   | FindOneResponseData<E>
   | GetResponseData<E>
@@ -68,7 +68,23 @@ export type EntityResponseData<E extends Entity = Entity> =
   | DeleteResponseData
   | ErrorResponseData;
 
-export type GeneralEntityResponseData = EntityResponseData<Entity>;
+export type GeneralEntityResponseData =
+  | GeneralFindResponseData
+  | GeneralFindOneResponseData
+  | GeneralGetResponseData
+  | GeneralGetByIdsResponseData
+  | GeneralPullResponseData
+  | GeneralInsertOneResponseData
+  | GeneralInsertMultiResponseData
+  | GeneralInsertAndGetResponseData
+  | GeneralInsertAndGetMultiResponseData
+  | GeneralUpdateOneResponseData
+  | GeneralUpdateMultiResponseData
+  | GeneralUpdateAndGetResponseData
+  | GeneralUpdateAndFetchResponseData
+  | GeneralPushResponseData
+  | GeneralDeleteResponseData
+  | ErrorResponseData;
 
 /**
  * ResponseData handled by authentication.
@@ -80,6 +96,11 @@ export type AuthResponseData<
   S extends Object
 > = LoginResponseData<EN, E, S> | LogoutResponseData | ErrorResponseData;
 
+export type GeneralAuthResponseData =
+  | GeneralLoginResponseData
+  | GeneralLogoutResponseData
+  | ErrorResponseData;
+
 /**
  * ResponseData handled by UserDefinition (EntityResponseData | AuthResponseData).
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -90,6 +111,10 @@ export type UserEntityResponseData<
   S extends Object = Object
 > = EntityResponseData<E> | AuthResponseData<EN, E, S>;
 
+export type GeneralUserEntityResponseData =
+  | GeneralEntityResponseData
+  | GeneralAuthResponseData;
+
 /**
  * ResponseData handled by CustomQueryDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -98,8 +123,6 @@ export type CustomQueryResponseData<
   QR extends Object
 > = RunCustomQueryResponseData<QR>;
 
-export type GeneralCustomQueryResponseData = CustomQueryResponseData<Object>;
-
 /**
  * ResponseData handled by CustomCommandDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -107,10 +130,6 @@ export type GeneralCustomQueryResponseData = CustomQueryResponseData<Object>;
 export type CustomCommandResponseData<
   CR extends Object
 > = RunCustomCommandResponseData<CR>;
-
-export type GeneralCustomCommandResponseData = CustomCommandResponseData<
-  Object
->;
 
 export type FindResponseData<E extends Entity> = {
   type: "find";
@@ -215,3 +234,37 @@ export type ErrorResponseData = {
   type: "error";
   payload: ServerError;
 };
+
+export type GeneralFindResponseData = FindResponseData<Entity>;
+export type GeneralFindOneResponseData = FindOneResponseData<Entity>;
+export type GeneralGetResponseData = GetResponseData<Entity>;
+export type GeneralGetByIdsResponseData = GetByIdsResponseData<Entity>;
+export type GeneralPullResponseData = PullResponseData<Entity>;
+export type GeneralInsertOneResponseData = InsertOneResponseData;
+export type GeneralInsertMultiResponseData = InsertMultiResponseData;
+export type GeneralInsertAndGetResponseData = InsertAndGetResponseData<Entity>;
+export type GeneralInsertAndGetMultiResponseData = InsertAndGetMultiResponseData<
+  Entity
+>;
+export type GeneralUpdateOneResponseData = UpdateOneResponseData;
+export type GeneralUpdateMultiResponseData = UpdateMultiResponseData;
+export type GeneralUpdateAndGetResponseData = UpdateAndGetResponseData<Entity>;
+export type GeneralUpdateAndFetchResponseData = UpdateAndFetchResponseData<
+  Entity
+>;
+export type GeneralPushResponseData = PushResponseData<Entity>;
+export type GeneralDeleteResponseData = DeleteResponseData;
+export type GeneralRunCustomQueryResponseData = RunCustomQueryResponseData<
+  Object
+>;
+export type GeneralCustomQueryResponseData = GeneralRunCustomQueryResponseData;
+export type GeneralCustomCommandResponseData = GeneralRunCustomCommandResponseData;
+export type GeneralRunCustomCommandResponseData = RunCustomCommandResponseData<
+  Object
+>;
+export type GeneralLoginResponseData = LoginResponseData<
+  string,
+  Entity,
+  Object
+>;
+export type GeneralLogoutResponseData = LogoutResponseData;
