@@ -18,7 +18,6 @@
   "module": "lib/index.js",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "yarn test",
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "test": "upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit",

@@ -15,7 +15,6 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "yarn test",
     "clean": "rm -rf lib",
     "test": "upbin nyc upbin mocha --require ts-node/register test/*.ts --color always",
     "type-check": "upbin tsc --noEmit"
