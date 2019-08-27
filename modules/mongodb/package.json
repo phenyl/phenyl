@@ -18,7 +18,6 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "upbin nyc npm test --color always",
     "clean": "rm -rf lib",
     "pretest": "test/scripts/init-mongodb.sh",
     "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always --timeout 20000 || (npm run posttest && exit 1)",

@@ -18,7 +18,6 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc --declaration",
-    "ci-test": "echo no test",
     "clean": "rm -rf lib",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
