@@ -5,20 +5,20 @@ import { GeneralDefinition } from "./entity-definition";
 import { Session } from "./session";
 
 export interface CustomCommandDefinition extends GeneralDefinition {
-  authorize?: (
+  authorize?(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<boolean>;
 
-  normalize?: (
+  normalize?(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
-  ) => Promise<GeneralCustomCommandRequestData>;
+  ): Promise<GeneralCustomCommandRequestData>;
 
-  validate?: (
+  validate?(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
-  ) => Promise<void>;
+  ): Promise<void>;
 
   execute(
     command: CustomCommand,

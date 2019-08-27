@@ -22,29 +22,26 @@ export interface UserDefinition extends GeneralDefinition {
     session?: Session
   ): Promise<AuthenticationResult>;
 
-  authorize?: (
+  authorize?(
     reqData: UserEntityRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<boolean>;
 
-  normalize?: (
+  normalize?(
     reqData: UserEntityRequestData,
     session?: Session
-  ) => Promise<UserEntityRequestData>;
+  ): Promise<UserEntityRequestData>;
 
-  validate?: (
-    reqData: UserEntityRequestData,
-    session?: Session
-  ) => Promise<void>;
+  validate?(reqData: UserEntityRequestData, session?: Session): Promise<void>;
 
-  wrapExecution?: (
+  wrapExecution?(
     reqData: UserEntityRequestData,
     session: Session,
     executeFn: (
       reqData: UserEntityRequestData,
       session?: Session
     ) => Promise<UserEntityResponseData>
-  ) => Promise<UserEntityResponseData>;
+  ): Promise<UserEntityResponseData>;
 }
 
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;
