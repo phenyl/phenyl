@@ -43,7 +43,7 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
    */
   async validation(
     reqData: GeneralRequestData,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<void> {
     // eslint-disable-line no-unused-vars
     return switchByRequestMethod(reqData, {

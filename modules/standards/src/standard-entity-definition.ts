@@ -15,7 +15,7 @@ export class StandardEntityDefinition implements EntityDefinition {
 
   async authorize(
     reqData: GeneralRequestData,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<boolean> {
     // TODO
     return false;
@@ -23,7 +23,7 @@ export class StandardEntityDefinition implements EntityDefinition {
 
   async validate(
     reqData: GeneralRequestData,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<void> {
     // eslint-disable-line no-unused-vars
   }

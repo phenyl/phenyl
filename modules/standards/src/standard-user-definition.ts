@@ -56,7 +56,7 @@ export class StandardUserDefinition<
 
   async authenticate<N extends Key<M>>(
     loginCommand: LoginCommandOf<A, N>,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<AuthenticationResult<string, any>> {
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
@@ -86,7 +86,7 @@ export class StandardUserDefinition<
 
   async wrapExecution(
     reqData: UserEntityRequestData,
-    session: Session,
+    session: Session | undefined,
     executeFn: (
       reqData: UserEntityRequestData,
       session?: Session
