@@ -4,7 +4,7 @@ import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
 import { GeneralUserEntityRequestData } from "./request-data";
-import { UserEntityResponseData } from "./response-data";
+import { GeneralUserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
   EN extends string = string,
@@ -43,8 +43,11 @@ export interface UserDefinition extends GeneralDefinition {
     executeFn: (
       reqData: GeneralUserEntityRequestData,
       session?: Session
-    ) => Promise<UserEntityResponseData>
-  ): Promise<UserEntityResponseData>;
+    ) => Promise<GeneralUserEntityResponseData>
+  ): Promise<GeneralUserEntityResponseData>;
 }
+
+// alias
+export type UserEntityDefinition = UserDefinition;
 
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;

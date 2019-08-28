@@ -15,7 +15,7 @@ import {
   Session,
   AuthenticationResult,
   GeneralUserEntityRequestData,
-  UserEntityResponseData,
+  GeneralUserEntityResponseData,
   GeneralEntityMap
 } from "@phenyl/interfaces";
 
@@ -90,8 +90,8 @@ export class StandardUserDefinition<
     executeFn: (
       reqData: GeneralUserEntityRequestData,
       session?: Session
-    ) => Promise<UserEntityResponseData>
-  ): Promise<UserEntityResponseData> {
+    ) => Promise<GeneralUserEntityResponseData>
+  ): Promise<GeneralUserEntityResponseData> {
     const newReqData = encryptPasswordInRequestData(
       reqData,
       this.passwordPropName,
