@@ -27,7 +27,8 @@ import {
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  WhereQuery
+  WhereQuery,
+  GeneralAuthCommandMap
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation, mergeUpdateOperations } from "sp2";
@@ -346,7 +347,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   /**
    *
    */
-  createSessionClient(): SessionClient {
+  createSessionClient<AM extends GeneralAuthCommandMap>(): SessionClient<AM> {
     return new PhenylSessionClient(this.dbClient);
   }
   /**
