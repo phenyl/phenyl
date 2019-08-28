@@ -1,5 +1,4 @@
 import {
-  AuthCommandMapOf,
   AuthCredentialsOf,
   AuthEntityNameOf,
   AuthSessionOf,
@@ -45,7 +44,6 @@ import {
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiClient,
-  SessionClient,
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
@@ -381,13 +379,5 @@ export abstract class PhenylRestApiClient<
     });
     if (resData.type === "logout") return resData.payload;
     throw createServerError(resData.payload);
-  }
-
-  /**
-   * Create session client.
-   * RestApiClient cannot create SessionClient.
-   */
-  createSessionClient(): SessionClient<AuthCommandMapOf<TM>> {
-    throw new Error("Cannot create SessionClient from RestApiClient.");
   }
 }
