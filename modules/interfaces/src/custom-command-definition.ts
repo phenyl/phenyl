@@ -25,3 +25,8 @@ export interface CustomCommandDefinition extends GeneralDefinition {
     session?: Session
   ): Promise<GeneralCustomCommandResult>;
 }
+
+export type GeneralCustomCommandExecuteFn = (
+  query: GeneralCustomCommand,
+  session?: Session
+) => Promise<GeneralCustomCommandResult>;

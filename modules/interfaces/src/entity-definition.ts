@@ -26,6 +26,11 @@ export interface GeneralDefinition {
   ): Promise<GeneralResponseData>;
 }
 
+export type GeneralExecuteFn = (
+  reqData: GeneralRequestData,
+  session?: Session
+) => Promise<GeneralResponseData>;
+
 export interface EntityDefinition extends GeneralDefinition {
   authorize?(
     reqData: GeneralEntityRequestData,
@@ -48,3 +53,8 @@ export interface EntityDefinition extends GeneralDefinition {
     ) => Promise<GeneralEntityResponseData>
   ): Promise<GeneralEntityResponseData>;
 }
+
+export type GeneralEntityExecuteFn = (
+  reqData: GeneralEntityRequestData,
+  session?: Session
+) => Promise<GeneralEntityResponseData>;

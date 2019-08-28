@@ -25,3 +25,8 @@ export interface CustomQueryDefinition extends GeneralDefinition {
     session?: Session
   ): Promise<GeneralCustomQueryResult>;
 }
+
+export type GeneralCustomQueryExecuteFn = (
+  query: GeneralCustomQuery,
+  session?: Session
+) => Promise<GeneralCustomQueryResult>;

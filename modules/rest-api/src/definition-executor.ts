@@ -21,7 +21,7 @@ import {
   Session,
   SessionClient,
   UserDefinition,
-  UserEntityResponseData
+  GeneralUserEntityResponseData
 } from "@phenyl/interfaces";
 
 import { ErrorResponseData } from "@phenyl/interfaces";
@@ -212,7 +212,7 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
   async executeOwn(
     reqData: GeneralUserEntityRequestData,
     session?: Session
-  ): Promise<UserEntityResponseData> {
+  ): Promise<GeneralUserEntityResponseData> {
     if (reqData.method == "logout") {
       return this.logout(reqData.payload);
     }
