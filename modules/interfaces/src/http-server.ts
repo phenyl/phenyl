@@ -10,6 +10,8 @@ export type ServerParams<TM extends GeneralTypeMap> = {
   customRequestHandler?: CustomRequestHandler<TM>;
 };
 
+export type GeneralServerParams = ServerParams<GeneralTypeMap>;
+
 /**
  * (path: string) => string
  * Real server path to regular path.
@@ -21,6 +23,15 @@ export type PathModifier = (path: string) => string;
 
 /**
  * Custom Request Handler.
+ * See `GeneralCustomRequestHandler` for details.
+ */
+export type CustomRequestHandler<TM extends GeneralTypeMap> = (
+  encodedHttpRequest: EncodedHttpRequest,
+  restApiClient: RestApiClient<TM>
+) => Promise<EncodedHttpResponse>;
+
+/**
+ * Custom Request Handler.
  * Receive non-API HTTP request and return HTTP response in 'phenyl-http-server' and 'phenyl-lambda-adapter' modules.
  *  (non-API Request: request whose path doesn't start with "/api/")
  * Response can be any type, like HTML/CSS/JavaScript/Image.
@@ -29,8 +40,7 @@ export type PathModifier = (path: string) => string;
  * Example: Rich API explorer like swagger.
  *
  * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
+ *
+ * When you need to pass `TypeMap`, use `CustomRequestHandler` instead.
  */
-export type CustomRequestHandler<TM extends GeneralTypeMap> = (
-  encodedHttpRequest: EncodedHttpRequest,
-  restApiClient: RestApiClient<TM>
-) => Promise<EncodedHttpResponse>;
+export type GeneralCustomRequestHandler = CustomRequestHandler<GeneralTypeMap>;
