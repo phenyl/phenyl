@@ -34,3 +34,23 @@ export type EntitiesInfo<N extends string, T extends Entity> = {
   entities: T[];
   versionsById: { [entityId: string]: string };
 };
+
+export type GeneralT = {
+  [key: string]: string;
+};
+
+type CondName<T extends GeneralT, K extends string> = K extends keyof T
+  ? T[K]
+  : "foo";
+
+interface FooHandler<T extends GeneralT> {
+  handleFoo<K extends string>(key: K, name: string): void;
+}
+
+export type GeneralFooHandler = FooHandler<GeneralT>;
+
+export class RealFooHandler<T extends GeneralT> implements GeneralFooHandler {
+  handleFoo<K extends string>(key: K, name: CondName<T, K>): void {
+    return;
+  }
+}

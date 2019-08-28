@@ -2,7 +2,7 @@ import { EncodedHttpRequest, EncodedHttpResponse } from "./http";
 
 import { GeneralTypeMap } from "./type-map";
 import { RestApiClient } from "./client";
-import { RestApiHandler } from "./rest-api-handler";
+import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 
 export type ServerParams<TM extends GeneralTypeMap> = {
   restApiHandler: RestApiHandler<TM>;
@@ -10,7 +10,11 @@ export type ServerParams<TM extends GeneralTypeMap> = {
   customRequestHandler?: CustomRequestHandler<TM>;
 };
 
-export type GeneralServerParams = ServerParams<GeneralTypeMap>;
+export type GeneralServerParams = {
+  restApiHandler: GeneralRestApiHandler;
+  modifyPath?: PathModifier;
+  customRequestHandler?: GeneralCustomRequestHandler;
+};
 
 /**
  * (path: string) => string

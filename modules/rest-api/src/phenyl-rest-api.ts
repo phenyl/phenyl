@@ -14,7 +14,8 @@ import {
   SessionClient,
   VersionDiffPublisher,
   ResponseEntityMapOf,
-  ErrorResponseData
+  ErrorResponseData,
+  GeneralRestApiHandler
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
@@ -43,7 +44,7 @@ type DefinitionExecutorMap = {
  *
  */
 export class PhenylRestApi<TM extends GeneralTypeMap>
-  implements RestApiHandler<TM> {
+  implements RestApiHandler<TM>, GeneralRestApiHandler {
   readonly client: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
@@ -66,6 +67,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   /**
    *
    */
+  // @ts-ignore
   public async handleRequestData<
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>

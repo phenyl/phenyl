@@ -124,7 +124,7 @@ const store = createStore<Store, GeneralAction, {}, {}>(
   )
 );
 
-let server: PhenylHttpServer<MyTypeMap>;
+let server: PhenylHttpServer;
 before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,
