@@ -16,6 +16,7 @@
     "build": "upbin tsc --declaration",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' 'type-test/**/*.ts' --fix",
+    "test": "upbin tsc --noEmit type-test/**/*.ts",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc --declaration --watch"
   },
