@@ -92,3 +92,8 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
 
   notMatch(reqData: GeneralRequestData): Promise<T>;
 }>;
+
+export type GeneralRequestDataHandlers<T> = RequestDataHandlers<
+  GeneralTypeMap,
+  T
+>;
