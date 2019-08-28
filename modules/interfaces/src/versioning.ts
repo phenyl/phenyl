@@ -63,9 +63,18 @@ export interface VersionDiffPublisher {
 
 /**
  * Validate PushCommand in PhenylEntityClient.
+ *
+ * When you don't need to pass `EM`(`GeneralEntityMap`), use `GeneralPushValidation` instead.
  */
 export type PushValidation<EM extends GeneralEntityMap> = <EN extends Key<EM>>(
   command: PushCommand<EN>,
   entity: EM[EN],
   masterOperations?: GeneralUpdateOperation[] | null
 ) => void;
+
+/**
+ * Validate PushCommand in PhenylEntityClient.
+ *
+ * When you need to pass `EntityMap`, use `PushValidation` instead.
+ */
+export type GeneralPushValidation = PushValidation<GeneralEntityMap>;
