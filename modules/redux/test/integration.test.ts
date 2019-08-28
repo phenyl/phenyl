@@ -8,7 +8,7 @@ import {
   GeneralTypeMap,
   KvsClient,
   Session,
-  PhenylAction,
+  GeneralAction,
   LocalState,
   GetCommandResult,
   ReqRes
@@ -114,7 +114,7 @@ type Store = {
   phenyl: LocalState<MyGeneralReqResEntityMap, MyAuthCommandMap>;
 };
 
-const store = createStore<Store, PhenylAction, {}, {}>(
+const store = createStore<Store, GeneralAction, {}, {}>(
   combineReducers({ phenyl: reducer }),
   applyMiddleware(
     phenylRedux.createMiddleware({

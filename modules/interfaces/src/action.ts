@@ -164,7 +164,7 @@ export type OfflineAction = {
   type: "phenyl/offline";
 };
 
-export type PhenylAction =
+export type GeneralAction =
   | AssignAction
   | ReplaceAction<Object>
   | ResetAction
