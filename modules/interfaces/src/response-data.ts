@@ -106,9 +106,9 @@ export type GeneralAuthResponseData =
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type UserEntityResponseData<
-  EN extends string = string,
-  E extends Entity = Entity,
-  S extends Object = Object
+  EN extends string,
+  E extends Entity,
+  S extends Object
 > = EntityResponseData<E> | AuthResponseData<EN, E, S>;
 
 export type GeneralUserEntityResponseData =

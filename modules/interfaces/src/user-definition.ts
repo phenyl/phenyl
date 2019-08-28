@@ -51,3 +51,8 @@ export interface UserDefinition extends GeneralDefinition {
 export type UserEntityDefinition = UserDefinition;
 
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;
+
+export type GeneralUserEntityExecuteFn = (
+  reqData: GeneralUserEntityRequestData,
+  session?: Session
+) => Promise<GeneralUserEntityResponseData>;
