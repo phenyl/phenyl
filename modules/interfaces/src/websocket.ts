@@ -7,7 +7,7 @@ import {
 
 import { GeneralRequestData } from "./request-data";
 import { GeneralResponseData } from "./response-data";
-import { RestApiHandler } from "./rest-api-handler";
+import { GeneralRestApiHandler } from "./rest-api-handler";
 import { ServerError } from "./error";
 
 export type WebSocketClientMessage =
@@ -50,6 +50,6 @@ export type WebSocketServerErrorMessage = {
 };
 
 export type WebSocketServerParams = {
-  restApiHandler: RestApiHandler;
+  restApiHandler: GeneralRestApiHandler;
   versionDiffSubscriber?: VersionDiffSubscriber;
 };

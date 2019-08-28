@@ -34,7 +34,7 @@ Create express middleware to handle Phenyl REST APIs.
 
 ```js
 createPhenylApiMiddleware(
-  restApiHandler: RestApiHandler,
+  restApiHandler: GeneralRestApiHandler,
   pathRegex: RegExp = /\^/api\/.*$/,
 ): Function // express middleware
 ```
@@ -82,7 +82,7 @@ Create express middleware to handle Phenyl REST APIs and non-REST-API paths defi
 
 ```js
 createPhenylMiddleware(
-  params: ServerParams,
+  params: GeneralServerParams,
   pathRegex: RegExp = /^\/api\/.*$|^\/explorer($|\/.*$)/
 ): Function // express middleware
 ```
@@ -92,11 +92,11 @@ It's true that Express can be easier to set your custom pages than Phenyl's `cus
 Some non-rest entrypoints, however, are offered by Phenyl Family (like [phenyl-api-explorer](https://github.com/phenyl-js/phenyl/blob/master/modules/phenyl-api-explorer)) and this function will be suitable for using them.
 
 ### Parameters
-#### params: ServerParams
+#### params: GeneralServerParams
 Type of params is here:
 ```js
-type ServerParams = {
-  restApiHandler: RestApiHandler,
+type GeneralServerParams = {
+  restApiHandler: GeneralRestApiHandler,
   customRequestHandler?: (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient) => Promise<EncodedHttpResponse>,
   modifyPath?: (path: string) => string,
 }

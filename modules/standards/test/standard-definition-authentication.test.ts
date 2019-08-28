@@ -92,7 +92,7 @@ const functionalGroup = {
   nonUsers: {}
 };
 
-let server: PhenylHttpServer<MyTypeMap>;
+let server: PhenylHttpServer;
 before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,

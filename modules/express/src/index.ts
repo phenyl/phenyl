@@ -3,10 +3,9 @@ import { decodeRequest, getStatusCode, ServerLogic } from "@phenyl/http-rules";
 import { createServerError } from "@phenyl/utils";
 
 import {
-  ServerParams,
-  RestApiHandler,
+  GeneralServerParams,
+  GeneralRestApiHandler,
   EncodedHttpRequest,
-  GeneralTypeMap,
   GeneralResponseData
 } from "@phenyl/interfaces";
 import { Request, Response, NextFunction } from "express";
@@ -17,7 +16,7 @@ export class PhenylExpressMiddlewareCreator {
    * By default, paths start with "/api" will be handled by restApiHandler.
    */
   static createPhenylApiMiddleware(
-    restApiHandler: RestApiHandler,
+    restApiHandler: GeneralRestApiHandler,
     pathRegex: RegExp = /^\/api\/.*$/
   ) {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -63,7 +62,7 @@ export class PhenylExpressMiddlewareCreator {
    * (/explorer is reserved for phenyl-explorer.)
    */
   static createPhenylMiddleware(
-    serverParams: ServerParams<GeneralTypeMap>,
+    serverParams: GeneralServerParams,
     pathRegex: RegExp = /^\/api\/.*$|^\/explorer($|\/.*$)/
   ) {
     return async (req: Request, res: Response, next: NextFunction) => {

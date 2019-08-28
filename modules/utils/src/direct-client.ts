@@ -6,7 +6,8 @@ import {
   RequestMethodName,
   ResponseDataWithTypeMap,
   RestApiHandler,
-  ErrorResponseData
+  ErrorResponseData,
+  GeneralRestApiHandler
 } from "@phenyl/interfaces";
 
 import { PhenylRestApiClient } from "./phenyl-rest-api-client";
@@ -20,8 +21,12 @@ export class PhenylRestApiDirectClient<
 > extends PhenylRestApiClient<TM> {
   restApiHandler: RestApiHandler<TM>;
 
-  constructor(restApiHandler: RestApiHandler<TM>) {
+  constructor(restApiHandler: RestApiHandler<TM>);
+  constructor(restApiHandler: GeneralRestApiHandler);
+  // This line was added due to TypeScript's miscompilation to .d.ts. The last overload definition will be deleted there.
+  constructor(restApiHandler: any) {
     super();
+    // @ts-ignore related to #275
     this.restApiHandler = restApiHandler;
   }
 

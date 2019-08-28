@@ -19,7 +19,7 @@ import {
   LoginCommand,
   LogoutAction,
   LogoutCommand,
-  PhenylAction,
+  GeneralAction,
   PullAction,
   PushAndCommitAction,
   ResolveErrorAction,
@@ -65,7 +65,7 @@ export class PhenylReduxModule {
     GCM extends GeneralAuthCommandMap
   >(
     state: LocalState<GEM, GCM> | undefined | null,
-    action: PhenylAction
+    action: GeneralAction
   ): LocalState<GEM, GCM> {
     if (state == null) {
       return this.createInitialState();

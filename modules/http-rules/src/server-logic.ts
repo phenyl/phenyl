@@ -1,13 +1,12 @@
 /*eslint-env node*/
 import {
-  CustomRequestHandler,
+  GeneralCustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
   GeneralResponseData,
-  GeneralTypeMap,
   PathModifier,
-  RestApiHandler,
-  ServerParams
+  GeneralRestApiHandler,
+  GeneralServerParams
 } from "@phenyl/interfaces";
 import { PhenylRestApiDirectClient, createServerError } from "@phenyl/utils";
 
@@ -18,12 +17,12 @@ import { isApiRequest } from "./encode-request";
 /**
  *
  */
-export default class ServerLogic<TM extends GeneralTypeMap> {
+export default class ServerLogic {
   /**
    * Instance containing API logic invoked via run().
    * PhenylRestApi instance is expected.
    */
-  restApiHandler: RestApiHandler<TM>;
+  restApiHandler: GeneralRestApiHandler;
 
   /**
    * (path: string) => string
@@ -44,9 +43,9 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
    *
    * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
    */
-  customRequestHandler: CustomRequestHandler<TM>;
+  customRequestHandler: GeneralCustomRequestHandler;
 
-  constructor(params: ServerParams<TM>) {
+  constructor(params: GeneralServerParams) {
     this.restApiHandler = params.restApiHandler;
 
     this.modifyPath = params.modifyPath || (path => path);
@@ -56,8 +55,8 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
 
   /**
    * Handle request to get response.
-   * If modified path starts with "/api/", invoke RestApiHandler#run().
-   * Otherwise, invoke registered customRequestHandler.
+   * If modified path starts with "/api/", it will invoke GeneralRestApiHandler#handleRequestData().
+   * Otherwise, it will invoke registered customRequestHandler.
    */
   async handleRequest(
     encodedHttpRequest: EncodedHttpRequest
@@ -75,12 +74,12 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
 
   /**
    * @private
-   * Invoke RestApiHandler#run().
+   * Invoke GeneralRestApiHandler#handleRequestData().
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
     let responseData: GeneralResponseData;
     // This line casts restApiHandler to supertype so that it should receive pre-sanitized data.
-    const restApiHandler: RestApiHandler<GeneralTypeMap> = this.restApiHandler;
+    const restApiHandler: GeneralRestApiHandler = this.restApiHandler;
 
     try {
       // 1. Decoding Request

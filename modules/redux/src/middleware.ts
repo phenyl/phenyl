@@ -14,7 +14,7 @@ import {
   LoginAction,
   LogoutAction,
   PatchAction,
-  PhenylAction,
+  GeneralAction,
   PushAndCommitAction,
   ResolveErrorAction,
   PushCommand,
@@ -44,7 +44,7 @@ export type MiddlewareOptions<TM extends GeneralTypeMap> = {
 export class MiddlewareCreator {
   static create<GM extends GeneralTypeMap, S>(
     options: MiddlewareOptions<GM>
-  ): Middleware<{}, S, Dispatch<PhenylAction>> {
+  ): Middleware<{}, S, Dispatch<GeneralAction>> {
     const storeKey = options.storeKey || "phenyl";
     return (store: any) => (next: Dispatch<AnyAction>) => {
       const client = options.client;
@@ -56,7 +56,7 @@ export class MiddlewareCreator {
         client,
         next
       );
-      return (action: PhenylAction): Promise<AnyAction> | AnyAction => {
+      return (action: GeneralAction): Promise<AnyAction> | AnyAction => {
         switch (action.type) {
           case "phenyl/useEntities":
             return handler.useEntities(action);
@@ -154,14 +154,16 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Invoke reducer 1: Assign operation(s) to state.
    */
 
-  async assignToState(...ops: GeneralUpdateOperation[]): Promise<PhenylAction> {
+  async assignToState(
+    ...ops: GeneralUpdateOperation[]
+  ): Promise<GeneralAction> {
     return this.next(MiddlewareHandler.PhenylReduxModule.assign(ops));
   }
   /**
    * Invoke reducer 2: Reset state.
    */
 
-  async resetState(): Promise<PhenylAction> {
+  async resetState(): Promise<GeneralAction> {
     return this.next(MiddlewareHandler.PhenylReduxModule.reset());
   }
   /**
@@ -178,7 +180,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async useEntities<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: UseEntitiesAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const entityNames = action.payload;
     const ops = entityNames
       .filter(
@@ -196,7 +198,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async commitAndPush<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: CommitAndPushAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName } = action.payload;
 
@@ -274,7 +276,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async commit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: CommitAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(
       LocalStateUpdater.commit(this.state, action.payload)
@@ -289,7 +291,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async push<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: PushAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName, until } = action.payload;
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
@@ -372,7 +374,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
 
-  async repush(action: RePushAction): Promise<PhenylAction> {
+  async repush(action: RePushAction): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
 
     for (let unreachedCommit of this.state.unreachedCommits) {
@@ -445,7 +447,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async delete<EN extends Key<ReqResEntityMapOf<TM>>>(
     action: DeleteAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, id } = action.payload;
     this.assignToState(
@@ -470,7 +472,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async follow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: FollowAction<EN, Entity>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, entity, versionId } = action.payload;
     return this.assignToState(
@@ -483,7 +485,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async followAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: FollowAllAction<EN, Entity>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, entities, versionsById } = action.payload;
     return this.assignToState(
@@ -501,7 +503,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async login<AM extends GeneralAuthCommandMap, EN extends Key<AM>>(
     action: LoginAction<EN, Object>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const command = action.payload;
     await this.assignToState(
@@ -533,7 +535,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async logout<AM extends GeneralAuthCommandMap, EN extends Key<AM>>(
     action: LogoutAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const command = action.payload;
     await this.client.logout(command, this.sessionId);
     return this.resetState();
@@ -542,7 +544,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Apply the VersionDiff.
    */
 
-  async patch(action: PatchAction): Promise<PhenylAction> {
+  async patch(action: PatchAction): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const versionDiff = action.payload;
     return this.assignToState(LocalStateUpdater.patch(this.state, versionDiff));
@@ -554,7 +556,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async pushAndCommit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: PushAndCommitAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     await this.assignToState(
       LocalStateUpdater.networkRequest(this.state, action.tag)
@@ -614,7 +616,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Unset error.
    */
 
-  async resolveError(action: ResolveErrorAction): Promise<PhenylAction> {
+  async resolveError(action: ResolveErrorAction): Promise<GeneralAction> {
     return this.assignToState(LocalStateUpdater.resolveError());
   }
   /**
@@ -623,7 +625,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async pull<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: PullAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName } = action.payload;
     const { versionId } = LocalStateFinder.getEntityInfo(
@@ -666,7 +668,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async setSession<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: SetSessionAction<EN, Entity>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { user, versionId, session } = action.payload;
     return this.assignToState(
@@ -679,7 +681,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   async unfollow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
     action: UnfollowAction<EN>
-  ): Promise<PhenylAction> {
+  ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, id } = action.payload;
     return this.assignToState(
@@ -690,7 +692,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Unset session info. It doesn't remove the user info.
    */
 
-  async unsetSession(): Promise<PhenylAction> {
+  async unsetSession(): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.unsetSession());
   }
@@ -698,7 +700,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Mark as online.
    */
 
-  async online(): Promise<PhenylAction> {
+  async online(): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.online());
   }
@@ -706,7 +708,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Mark as offline.
    */
 
-  async offline(): Promise<PhenylAction> {
+  async offline(): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.offline());
   }

@@ -1,9 +1,8 @@
 import {
   EncodedHttpResponse,
-  GeneralTypeMap,
   HttpMethod,
   QueryStringParams,
-  ServerParams
+  GeneralServerParams
 } from "@phenyl/interfaces";
 import http, { IncomingMessage, ServerResponse } from "http";
 
@@ -15,7 +14,7 @@ import url from "url";
  * HTTP(s) server wrapping ServerLogic (implemented at "phenyl-http-rules") and Node.js server.
  */
 
-export default class PhenylHttpServer<TM extends GeneralTypeMap> {
+export default class PhenylHttpServer {
   /**
    * Instance of the result: require('http').createServer()
    */
@@ -25,9 +24,9 @@ export default class PhenylHttpServer<TM extends GeneralTypeMap> {
    * Offers the flow: EncodedHttpRequest => EncodedHttpResponse
    */
 
-  logic: ServerLogic<TM>;
+  logic: ServerLogic;
 
-  constructor(server: http.Server | https.Server, params: ServerParams<TM>) {
+  constructor(server: http.Server | https.Server, params: GeneralServerParams) {
     this.server = server;
     this.logic = new ServerLogic(params);
   }
