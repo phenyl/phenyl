@@ -225,6 +225,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   async updateMulti<EN extends Key<M>>(
     command: MultiUpdateCommand<EN>
   ): Promise<MultiUpdateCommandResult> {
+    // TODO #276
     const result = await this.updateAndFetch(command);
     return {
       n: result.n,
@@ -347,7 +348,9 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   /**
    *
    */
-  createSessionClient<AM extends GeneralAuthCommandMap>(): SessionClient<AM> {
+  createSessionClient<
+    AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+  >(): SessionClient<AM> {
     return new PhenylSessionClient(this.dbClient);
   }
   /**

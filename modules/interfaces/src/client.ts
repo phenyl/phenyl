@@ -29,7 +29,16 @@ import {
   MultiInsertCommand,
   MultiUpdateCommand,
   PushCommand,
-  SingleInsertCommand
+  SingleInsertCommand,
+  GeneralSingleInsertCommand,
+  GeneralMultiInsertCommand,
+  GeneralIdUpdateCommand,
+  GeneralMultiUpdateCommand,
+  GeneralPushCommand,
+  GeneralDeleteCommand,
+  GeneralCustomCommand,
+  GeneralLoginCommand,
+  GeneralLogoutCommand
 } from "./command";
 import {
   CustomCommandResult,
@@ -42,21 +51,120 @@ import {
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
   PushCommandResult,
-  SingleInsertCommandResult
+  SingleInsertCommandResult,
+  GeneralSingleInsertCommandResult,
+  GeneralMultiInsertCommandResult,
+  GeneralGetCommandResult,
+  GeneralMultiValuesCommandResult,
+  GeneralIdUpdateCommandResult,
+  GeneralPushCommandResult,
+  GeneralDeleteCommandResult,
+  GeneralCustomCommandResult,
+  GeneralLogoutCommandResult,
+  GeneralLoginCommandResult
 } from "./command-result";
-import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
+import {
+  CustomQuery,
+  IdQuery,
+  IdsQuery,
+  PullQuery,
+  WhereQuery,
+  GeneralWhereQuery,
+  GeneralIdsQuery,
+  GeneralIdQuery,
+  GeneralPullQuery,
+  GeneralCustomQuery
+} from "./query";
 import {
   CustomQueryResult,
   PullQueryResult,
   QueryResult,
-  SingleQueryResult
+  SingleQueryResult,
+  GeneralQueryResult,
+  GeneralSingleQueryResult,
+  GeneralPullQueryResult,
+  GeneralCustomQueryResult
 } from "./query-result";
 
 import { Key } from "./utils";
 import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
-import { RestApiHandler } from "./rest-api-handler";
-import { DbClient } from "./db-client";
+import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
+import { DbClient, GeneralDbClient } from "./db-client";
+
+/**
+ * A common interface for client-side and server-side client to access to entities.
+ */
+export interface BaseEntityClient {
+  find(
+    query: GeneralWhereQuery,
+    sessionId?: string | null
+  ): Promise<GeneralQueryResult>;
+  findOne(
+    query: GeneralWhereQuery,
+    sessionId?: string | null
+  ): Promise<GeneralSingleQueryResult>;
+  get(
+    query: GeneralIdQuery,
+    sessionId?: string | null
+  ): Promise<GeneralSingleQueryResult>;
+  getByIds(
+    query: GeneralIdsQuery,
+    sessionId?: string | null
+  ): Promise<GeneralQueryResult>;
+  pull(
+    query: GeneralPullQuery,
+    sessionId?: string | null
+  ): Promise<GeneralPullQueryResult>;
+  insertOne(
+    command: GeneralSingleInsertCommand,
+    sessionId?: string | null
+  ): Promise<GeneralSingleInsertCommandResult>;
+  insertMulti(
+    command: GeneralMultiInsertCommand,
+    sessionId?: string | null
+  ): Promise<GeneralMultiInsertCommandResult>;
+  insertAndGet(
+    command: GeneralSingleInsertCommand,
+    sessionId?: string | null
+  ): Promise<GeneralGetCommandResult>;
+  insertAndGetMulti(
+    command: GeneralMultiInsertCommand,
+    sessionId?: string | null
+  ): Promise<GeneralMultiValuesCommandResult>;
+  updateById(
+    command: GeneralIdUpdateCommand,
+    sessionId?: string | null
+  ): Promise<GeneralIdUpdateCommandResult>;
+  updateMulti(
+    command: GeneralMultiUpdateCommand,
+    sessionId?: string | null
+  ): Promise<MultiUpdateCommandResult>;
+  updateAndGet(
+    command: GeneralIdUpdateCommand,
+    sessionId?: string | null
+  ): Promise<GeneralGetCommandResult>;
+  updateAndFetch(
+    command: GeneralMultiUpdateCommand,
+    sessionId?: string | null
+  ): Promise<GeneralMultiValuesCommandResult>;
+  push(
+    command: GeneralPushCommand,
+    sessionId?: string | null
+  ): Promise<GeneralPushCommandResult>;
+  delete(
+    command: GeneralDeleteCommand,
+    sessionId?: string | null
+  ): Promise<GeneralDeleteCommandResult>;
+}
+
+/**
+ * A client-side client to access to entities via RestApi.
+ *
+ * See `ReqResEntityClient` for details.
+ * When you need to pass `EntityMap`, use `ReqResEntityClient` instead.
+ */
+export interface GeneralReqResEntityClient extends BaseEntityClient {}
 
 /**
  * A client-side client to access to entities via RestApi.
@@ -68,7 +176,8 @@ import { DbClient } from "./db-client";
  *
  * When you need to pass `M`(`EntityMap`), use `GeneralReqResEntityClient` instead.
  */
-export interface ReqResEntityClient<M extends GeneralReqResEntityMap> {
+export interface ReqResEntityClient<M extends GeneralReqResEntityMap>
+  extends GeneralReqResEntityClient {
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
@@ -132,14 +241,14 @@ export interface ReqResEntityClient<M extends GeneralReqResEntityMap> {
 }
 
 /**
- * A client-side client to access to entities via RestApi.
- *
- * See `ReqResEntityClient` for details.
- * When you need to pass `EntityMap`, use `ReqResEntityClient` instead.
+ * A server-side client to access to entities via DbClient.
+ * See `EntityClient` for details.
+ * When you need to pass `EntityMap`, use `EntityClient` instead.
  */
-export type GeneralReqResEntityClient = ReqResEntityClient<
-  GeneralReqResEntityMap
->;
+export interface GeneralEntityClient extends BaseEntityClient {
+  getDbClient(): GeneralDbClient;
+  createSessionClient(): GeneralSessionClient;
+}
 
 /**
  * A server-side client to access to entities via DbClient.
@@ -152,8 +261,9 @@ export type GeneralReqResEntityClient = ReqResEntityClient<
  *
  * When you don't need to pass `M`(`GeneralEntityMap`), use `GeneralEntityClient` instead.
  */
-export interface EntityClient<M extends GeneralEntityMap> {
-  getDbClient: () => DbClient<M>;
+export interface EntityClient<M extends GeneralEntityMap>
+  extends GeneralEntityClient {
+  getDbClient(): DbClient<M>;
   find<EN extends Key<M>>(
     query: WhereQuery<EN>,
     sessionId?: string | null
@@ -214,15 +324,23 @@ export interface EntityClient<M extends GeneralEntityMap> {
     command: DeleteCommand<EN>,
     sessionId?: string | null
   ): Promise<DeleteCommandResult>;
-  createSessionClient<AM extends GeneralAuthCommandMap>(): SessionClient<AM>;
 }
 
 /**
- * A server-side client to access to entities via DbClient.
- * See `EntityClient` for details.
- * When you need to pass `EntityMap`, use `EntityClient` instead.
+ * A client-side client to access to custom queries/commands via RestApi.
+ *
+ * When you need to pass `CustomQueryMap` and `CustomCommandMap`, use `CustomClient`.
  */
-export type GeneralEntityClient = EntityClient<GeneralEntityMap>;
+export interface GeneralCustomClient {
+  runCustomQuery(
+    query: GeneralCustomQuery,
+    sessionId?: string | null
+  ): Promise<GeneralCustomQueryResult>;
+  runCustomCommand(
+    command: GeneralCustomCommand,
+    sessionId?: string | null
+  ): Promise<GeneralCustomCommandResult>;
+}
 
 /**
  * A client-side client to access to custom queries/commands via RestApi.
@@ -232,7 +350,7 @@ export type GeneralEntityClient = EntityClient<GeneralEntityMap>;
 export interface CustomClient<
   QM extends GeneralCustomMap,
   CM extends GeneralCustomMap
-> {
+> extends GeneralCustomClient {
   runCustomQuery<QN extends Key<QM>>(
     query: CustomQuery<QN, CustomQueryParams<QM, QN>>,
     sessionId?: string | null
@@ -244,14 +362,20 @@ export interface CustomClient<
 }
 
 /**
- * A client-side client to access to custom queries/commands via RestApi.
+ * A client-side client to authenticate via RestApi.
  *
- * When you need to pass `CustomQueryMap` and `CustomCommandMap`, use `CustomClient`.
+ * When you need to pass `ReqResEntityMap` and `AuthCommandMap`, use `AuthClient` instead.
  */
-export type GeneralCustomClient = CustomClient<
-  GeneralCustomMap,
-  GeneralCustomMap
->;
+export interface GeneralAuthClient {
+  login(
+    command: GeneralLoginCommand,
+    sessionId?: string | null
+  ): Promise<GeneralLoginCommandResult>;
+  logout(
+    command: GeneralLogoutCommand,
+    sessionId?: string | null
+  ): Promise<GeneralLogoutCommandResult>;
+}
 
 /**
  * A client-side client to authenticate via RestApi.
@@ -261,7 +385,7 @@ export type GeneralCustomClient = CustomClient<
 export interface AuthClient<
   M extends GeneralReqResEntityMap,
   AM extends GeneralAuthCommandMap
-> {
+> extends GeneralAuthClient {
   login<EN extends Key<AM>>(
     command: LoginCommand<EN, AuthCredentials<AM, EN>>,
     sessionId?: string | null
@@ -273,16 +397,6 @@ export interface AuthClient<
     sessionId?: string | null
   ): Promise<LogoutCommandResult>;
 }
-
-/**
- * A client-side client to authenticate via RestApi.
- *
- * When you need to pass `ReqResEntityMap` and `AuthCommandMap`, use `AuthClient` instead.
- */
-export type GeneralAuthClient = AuthClient<
-  GeneralReqResEntityMap,
-  GeneralAuthCommandMap
->;
 
 /**
  * A client-side client to access to entities and custom queries/commands and to authenticate via RestApi.
@@ -301,7 +415,9 @@ export type RestApiClient<TM extends GeneralTypeMap> = ReqResEntityClient<
  *
  * When you need to pass `TypeMap`, use `RestApiClient` instead.
  */
-export type GeneralRestApiClient = RestApiClient<GeneralTypeMap>;
+export type GeneralRestApiClient = GeneralCustomClient &
+  GeneralAuthClient &
+  GeneralRestApiHandler;
 
 /**
  * A server-side client to access to session.
@@ -319,22 +435,26 @@ export type GeneralSessionClient = SessionClient<GeneralAuthCommandMap>;
 
 /**
  * A set of server-side clients.
- * 1. `EntityClient` to access to entities via DbClient.
- * 2. `SessionClient` to access to session.
- *
- * When you don't need to pass `TM`(`GeneralTypeMap`), use `GeneralPhenylClients` instead.
- */
-export type PhenylClients<TM extends GeneralTypeMap> = {
-  entityClient: EntityClient<ResponseEntityMapOf<TM>>;
-  sessionClient: SessionClient<AuthCommandMapOf<TM>>;
-};
-
-/**
- * A set of server-side clients.
  *
  * 1. `EntityClient` to access to entities via DbClient.
  * 2. `SessionClient` to access to session.
  *
  * When you need to pass `TypeMap`, use `PhenylClients` instead.
  */
-export type GeneralPhenylClients = PhenylClients<GeneralTypeMap>;
+export interface GeneralPhenylClients {
+  entityClient: GeneralEntityClient;
+  sessionClient: GeneralSessionClient;
+}
+
+/**
+ * A set of server-side clients.
+ * 1. `EntityClient` to access to entities via DbClient.
+ * 2. `SessionClient` to access to session.
+ *
+ * When you don't need to pass `TM`(`GeneralTypeMap`), use `GeneralPhenylClients` instead.
+ */
+export interface PhenylClients<TM extends GeneralTypeMap>
+  extends GeneralPhenylClients {
+  entityClient: EntityClient<ResponseEntityMapOf<TM>>;
+  sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+}

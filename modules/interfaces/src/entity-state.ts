@@ -1,5 +1,19 @@
-import { DeleteCommand, IdUpdateCommand, MultiUpdateCommand } from "./command";
-import { IdQuery, IdsQuery, WhereQuery } from "./query";
+import {
+  DeleteCommand,
+  IdUpdateCommand,
+  MultiUpdateCommand,
+  GeneralIdUpdateCommand,
+  GeneralMultiUpdateCommand,
+  GeneralDeleteCommand
+} from "./command";
+import {
+  IdQuery,
+  IdsQuery,
+  WhereQuery,
+  GeneralWhereQuery,
+  GeneralIdQuery,
+  GeneralIdsQuery
+} from "./query";
 
 import { Entity } from "./entity";
 import { GeneralEntityMap } from "./type-map";
@@ -15,7 +29,20 @@ export interface EntityState<M extends GeneralEntityMap> {
   pool: EntityPool<M>;
 }
 
-export interface EntityStateFinder<M extends GeneralEntityMap> {
+export interface GeneralEntityStateFinder {
+  find(query: GeneralWhereQuery): Entity[];
+
+  findOne(query: GeneralWhereQuery): Entity | null;
+
+  get(query: GeneralIdQuery): Entity | null;
+
+  getByIds(query: GeneralIdsQuery): Entity[];
+
+  has(query: GeneralIdQuery): boolean;
+}
+
+export interface EntityStateFinder<M extends GeneralEntityMap>
+  extends GeneralEntityStateFinder {
   find<EN extends Key<M>>(query: WhereQuery<EN>): M[EN][];
 
   findOne<EN extends Key<M>>(query: WhereQuery<EN>): M[EN] | null;
@@ -27,7 +54,18 @@ export interface EntityStateFinder<M extends GeneralEntityMap> {
   has<EN extends Key<M>>(query: IdQuery<EN>): boolean;
 }
 
-export interface EntityStateUpdater<M extends GeneralEntityMap> {
+export interface GeneralEntityStateUpdater {
+  register(entityName: string, ...entities: Entity[]): GeneralUpdateOperation;
+
+  updateById(command: GeneralIdUpdateCommand): GeneralUpdateOperation;
+
+  updateMulti(command: GeneralMultiUpdateCommand): GeneralUpdateOperation;
+
+  delete(command: GeneralDeleteCommand): GeneralUpdateOperation;
+}
+
+export interface EntityStateUpdater<M extends GeneralEntityMap>
+  extends GeneralEntityStateUpdater {
   register<EN extends Key<M>>(
     entityName: EN,
     ...entities: M[EN][]
