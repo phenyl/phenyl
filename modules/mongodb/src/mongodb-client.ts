@@ -168,7 +168,8 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     if (sort) options.sort = sort;
 
     const result = await coll.find(filterFindOperation(where), options);
-    return result.map<any>(restoreIdInEntity);
+    // @ts-ignore #278
+    return result.map(restoreIdInEntity);
   }
 
   async findOne<N extends Key<M>>(
@@ -213,7 +214,8 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
         "NotFound"
       );
     }
-    return result.map<any>(restoreIdInEntity);
+    // @ts-ignore #278
+    return result.map(restoreIdInEntity);
   }
 
   async insertOne<N extends Key<M>>(
