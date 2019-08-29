@@ -7,14 +7,20 @@ import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 export interface GeneralServerParams {
   restApiHandler: GeneralRestApiHandler;
   modifyPath?: PathModifier;
-  customRequestHandler?: GeneralCustomRequestHandler;
+  customRequestHandler?(
+    encodedHttpRequest: EncodedHttpRequest,
+    restApiClient: GeneralRestApiClient
+  ): Promise<EncodedHttpResponse>;
 }
 
 export interface ServerParams<TM extends GeneralTypeMap>
   extends GeneralServerParams {
   restApiHandler: RestApiHandler<TM>;
   modifyPath?: PathModifier;
-  customRequestHandler?: CustomRequestHandler<TM>;
+  customRequestHandler?(
+    encodedHttpRequest: EncodedHttpRequest,
+    restApiClient: RestApiClient<TM>
+  ): Promise<EncodedHttpResponse>;
 }
 
 /**
@@ -39,16 +45,14 @@ export type PathModifier = (path: string) => string;
  *
  * When you need to pass `TypeMap`, use `CustomRequestHandler` instead.
  */
-export type GeneralCustomRequestHandler = (
-  encodedHttpRequest: EncodedHttpRequest,
-  restApiClient: GeneralRestApiClient
-) => Promise<EncodedHttpResponse>;
+export type GeneralCustomRequestHandler = Required<
+  GeneralServerParams
+>["customRequestHandler"];
 
 /**
  * Custom Request Handler.
  * See `GeneralCustomRequestHandler` for details.
  */
-export type CustomRequestHandler<TM extends GeneralTypeMap> = (
-  encodedHttpRequest: EncodedHttpRequest,
-  restApiClient: RestApiClient<TM>
-) => Promise<EncodedHttpResponse>;
+export type CustomRequestHandler<TM extends GeneralTypeMap> = Required<
+  ServerParams<TM>
+>["customRequestHandler"];
