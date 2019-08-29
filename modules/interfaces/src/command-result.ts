@@ -60,9 +60,7 @@ export type PushCommandResult<E extends Entity> =
       prevVersionId: string | null;
     };
 
-export type CustomCommandResult<CR extends Object> = {
-  result: CR;
-};
+export type CustomCommandResult<CR extends Object> = CR;
 
 export type LoginCommandResult<
   EN extends string,
