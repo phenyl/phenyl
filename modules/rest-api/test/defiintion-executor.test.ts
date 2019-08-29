@@ -9,7 +9,8 @@ import {
   GeneralRequestData,
   GeneralResponseData,
   GeneralQueryResult,
-  UserDefinition
+  UserDefinition,
+  Entity
 } from "@phenyl/interfaces";
 /* eslint-env mocha */
 import {
@@ -31,7 +32,6 @@ const sessionClientMock: SessionClient = {
 
 const findReqData: GeneralRequestData = {
   method: "find",
-  // @ts-ignore
   payload: { entityName: "foo", where: {} }
 };
 
@@ -43,9 +43,8 @@ const findReqData2: GeneralRequestData = {
 const queryResult: GeneralQueryResult = { entities: [], versionsById: {} };
 const findResData: GeneralResponseData = {
   type: "find",
-  // @ts-ignore
   payload: {
-    entities: [{ id: "foo", name: "bar" }],
+    entities: [{ id: "foo", name: "bar" } as Entity],
     versionsById: {}
   }
 };
@@ -241,7 +240,6 @@ describe("UserDefinitionExecutor", () => {
     });
 
     it("should run definition's authenticate() method when LoginRequestData is given", async () => {
-      // @ts-ignore
       const authenticate = async () =>
         ({ versionId: "abcd" } as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
