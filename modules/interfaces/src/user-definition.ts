@@ -7,20 +7,26 @@ import { GeneralUserEntityRequestData } from "./request-data";
 import { GeneralUserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
-  EN extends string = string,
-  E extends Entity = Entity,
-  S extends Object = Object
+  EN extends string,
+  E extends Entity,
+  S extends Object
 > = {
   preSession: PreSession<EN, S>;
   user: E | null;
   versionId: string | null;
 };
 
+export type GeneralAuthenticationResult = AuthenticationResult<
+  string,
+  Entity,
+  Object
+>;
+
 export interface UserDefinition extends GeneralDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
     session?: Session
-  ): Promise<AuthenticationResult>;
+  ): Promise<GeneralAuthenticationResult>;
 
   authorize?(
     reqData: GeneralUserEntityRequestData,
