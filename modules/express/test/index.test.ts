@@ -40,10 +40,8 @@ class GetVersionDefinition implements CustomQueryDefinition {
   }
   async execute(query: CustomQuery<"getVersion", GetVersionParams>) {
     return {
-      result: {
-        name: query.params.name,
-        version: "1.2.3"
-      }
+      name: query.params.name,
+      version: "1.2.3"
     };
   }
 }
@@ -134,7 +132,7 @@ describe("createPhenylApiMiddleware", () => {
       name: "getVersion",
       params: { name: "foo" }
     });
-    assert(queryResult.result && queryResult.result.version === "1.2.3");
+    assert(queryResult && queryResult.version === "1.2.3");
   });
 
   it("can handle non-API request by express", async () => {
@@ -157,7 +155,7 @@ describe("createPhenylApiMiddleware", () => {
       name: "getVersion",
       params: { name: "foo" }
     });
-    assert.strictEqual(queryResult.result.version, "1.2.3");
+    assert.strictEqual(queryResult.version, "1.2.3");
   });
   it("can handle non-API request with path modifier", async () => {
     app.use("/foo/bar", createPhenylApiMiddleware(restApiHandler));
@@ -214,7 +212,7 @@ describe("createPhenylMiddleware", () => {
       params: { name: "bar" }
     });
 
-    assert(queryResult.result && queryResult.result.version === "1.2.3");
+    assert(queryResult && queryResult.version === "1.2.3");
   });
 
   it("can handle non-API request by Phenyl Custom Request", async () => {
@@ -278,10 +276,7 @@ describe("createPhenylMiddleware", () => {
       params: { name: "bar" }
     });
 
-    assert.strictEqual(
-      queryResult.result && queryResult.result.version,
-      "1.2.3"
-    );
+    assert.strictEqual(queryResult && queryResult.version, "1.2.3");
   });
   it("can handle non-API request with path modifier", async () => {
     const modifyPath = "/foo/bar";

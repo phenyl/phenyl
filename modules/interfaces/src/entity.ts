@@ -1,7 +1,9 @@
 /**
  * Object containing id.
  */
-export type Entity = { id: string };
+export interface Entity {
+  id: string;
+}
 
 /**
  * Object with or without id.

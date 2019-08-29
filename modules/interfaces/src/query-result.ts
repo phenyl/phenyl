@@ -1,9 +1,7 @@
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
 
-export type CustomQueryResult<QR extends Object> = {
-  result: QR;
-};
+export type CustomQueryResult<QR extends Object> = QR;
 
 export type QueryResult<E extends Entity> = {
   entities: E[];

@@ -56,11 +56,11 @@ import { createPhenylApiMiddleware } from 'phenyl-express'
 import PhenylRestApi from 'phenyl-rest-api'
 import { createEntityClient } from 'phenyl-memory-db' // create DB Client used in Phenyl REST API
 
-const getVersion = async (customQuery) => ({ ok: 1, result: { version: '1.2.3' } })
+const getVersion = async (customQuery) => ({ version: '1.2.3' })
 
 // Settings of Phenyl REST API
-const fg = { users: {}, nonUsers: {}, customQueries: { getVersion }, customCommands: {} }
-const phenylRestApi = PhenylRestApi.createFromFunctionalGroup(fg, { client: createEntityClient() })
+const fg = { users: {}, nonUsers: {}, customQueries: { getVersion: { execute: getVersion } }, customCommands: {} }
+const phenylRestApi = PhenylRestApi.createFromFunctionalGroup(fg, { entityClient: createEntityClient() })
 const app = express()
 app.use(createPhenylApiMiddleware(phenylRestApi))
 app.get('/foo/bar', (req, res) => res.text(`Hello, Express!`))
@@ -71,7 +71,7 @@ Client-side code will be like the following.
 ```js
 import PhenylHttpClient from 'phenyl-http-client'
 const client = new PhenylHttpClient({ url: 'http://localhost:3000' })
-const { result } = await client.runCustomQuery({ name: 'getVersion' })
+const result = await client.runCustomQuery({ name: 'getVersion' })
 console.log(result.version) // 1.2.3
 const text = await client.requestText('/foo/bar')
 console.log(text) // Hello, Express!
