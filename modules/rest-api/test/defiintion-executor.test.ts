@@ -1,5 +1,5 @@
 import {
-  AuthenticationResult,
+  GeneralAuthenticationResult,
   CustomCommandDefinition,
   CustomQueryDefinition,
   EntityClient,
@@ -151,7 +151,7 @@ describe("UserDefinitionExecutor", () => {
     });
 
     it("should return the result of a given definition's authorize() method when it exists", async () => {
-      const authenticate = async () => ({} as AuthenticationResult);
+      const authenticate = async () => ({} as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         { authenticate, authorize: async () => false } as UserDefinition,
         clientMock,
@@ -175,7 +175,7 @@ describe("UserDefinitionExecutor", () => {
 
     it("should run a given definition's validate() method when it exists", async () => {
       let counter = 0;
-      const authenticate = async () => ({} as AuthenticationResult);
+      const authenticate = async () => ({} as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         {
           authenticate,
@@ -204,7 +204,7 @@ describe("UserDefinitionExecutor", () => {
     });
 
     it("should return the result of a given definition's normalize() method when it exists", async () => {
-      const authenticate = async () => ({} as AuthenticationResult);
+      const authenticate = async () => ({} as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         { authenticate, normalize: async () => findReqData2 } as UserDefinition,
         clientMock,
@@ -227,7 +227,7 @@ describe("UserDefinitionExecutor", () => {
     });
 
     it("should return the wrapped result of a given definition's wrapExecution() method when it exists", async () => {
-      const authenticate = async () => ({} as AuthenticationResult);
+      const authenticate = async () => ({} as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         {
           authenticate,
@@ -243,7 +243,7 @@ describe("UserDefinitionExecutor", () => {
     it("should run definition's authenticate() method when LoginRequestData is given", async () => {
       // @ts-ignore
       const authenticate = async () =>
-        ({ versionId: "abcd" } as AuthenticationResult);
+        ({ versionId: "abcd" } as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         {
           authenticate
