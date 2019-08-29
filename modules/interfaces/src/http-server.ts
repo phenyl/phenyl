@@ -1,20 +1,21 @@
 import { EncodedHttpRequest, EncodedHttpResponse } from "./http";
 
 import { GeneralTypeMap } from "./type-map";
-import { RestApiClient } from "./client";
+import { RestApiClient, GeneralRestApiClient } from "./client";
 import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 
-export type ServerParams<TM extends GeneralTypeMap> = {
-  restApiHandler: RestApiHandler<TM>;
-  modifyPath?: PathModifier;
-  customRequestHandler?: CustomRequestHandler<TM>;
-};
-
-export type GeneralServerParams = {
+export interface GeneralServerParams {
   restApiHandler: GeneralRestApiHandler;
   modifyPath?: PathModifier;
   customRequestHandler?: GeneralCustomRequestHandler;
-};
+}
+
+export interface ServerParams<TM extends GeneralTypeMap>
+  extends GeneralServerParams {
+  restApiHandler: RestApiHandler<TM>;
+  modifyPath?: PathModifier;
+  customRequestHandler?: CustomRequestHandler<TM>;
+}
 
 /**
  * (path: string) => string
@@ -24,15 +25,6 @@ export type GeneralServerParams = {
  * e.g. (path) => path.split(/^\/path\/to/)[1]
  */
 export type PathModifier = (path: string) => string;
-
-/**
- * Custom Request Handler.
- * See `GeneralCustomRequestHandler` for details.
- */
-export type CustomRequestHandler<TM extends GeneralTypeMap> = (
-  encodedHttpRequest: EncodedHttpRequest,
-  restApiClient: RestApiClient<TM>
-) => Promise<EncodedHttpResponse>;
 
 /**
  * Custom Request Handler.
@@ -47,4 +39,16 @@ export type CustomRequestHandler<TM extends GeneralTypeMap> = (
  *
  * When you need to pass `TypeMap`, use `CustomRequestHandler` instead.
  */
-export type GeneralCustomRequestHandler = CustomRequestHandler<GeneralTypeMap>;
+export type GeneralCustomRequestHandler = (
+  encodedHttpRequest: EncodedHttpRequest,
+  restApiClient: GeneralRestApiClient
+) => Promise<EncodedHttpResponse>;
+
+/**
+ * Custom Request Handler.
+ * See `GeneralCustomRequestHandler` for details.
+ */
+export type CustomRequestHandler<TM extends GeneralTypeMap> = (
+  encodedHttpRequest: EncodedHttpRequest,
+  restApiClient: RestApiClient<TM>
+) => Promise<EncodedHttpResponse>;

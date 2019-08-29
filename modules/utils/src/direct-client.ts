@@ -7,10 +7,26 @@ import {
   ResponseDataWithTypeMap,
   RestApiHandler,
   ErrorResponseData,
-  GeneralRestApiHandler
+  GeneralRestApiHandler,
+  RestApiClient,
+  GeneralRestApiClient
 } from "@phenyl/interfaces";
 
 import { PhenylRestApiClient } from "./phenyl-rest-api-client";
+
+export function createDirectClient<TM extends GeneralTypeMap>(
+  restApiHandler: RestApiHandler<TM>
+): RestApiClient<TM>;
+export function createDirectClient(
+  restApiHandler: GeneralRestApiHandler
+): GeneralRestApiClient;
+// This deliberate duplication was added due to TypeScript's miscompilation to .d.ts. The last overload definition will be deleted there.
+export function createDirectClient(
+  restApiHandler: GeneralRestApiHandler
+): GeneralRestApiClient {
+  // @ts-ignore casting to subtype
+  return new PhenylRestApiDirectClient(restApiHandler);
+}
 
 /**
  * Client to access to the given RestApiHandler directly.
@@ -20,13 +36,8 @@ export class PhenylRestApiDirectClient<
   TM extends GeneralTypeMap = GeneralTypeMap
 > extends PhenylRestApiClient<TM> {
   restApiHandler: RestApiHandler<TM>;
-
-  constructor(restApiHandler: RestApiHandler<TM>);
-  constructor(restApiHandler: GeneralRestApiHandler);
-  // This line was added due to TypeScript's miscompilation to .d.ts. The last overload definition will be deleted there.
-  constructor(restApiHandler: any) {
+  constructor(restApiHandler: RestApiHandler<TM>) {
     super();
-    // @ts-ignore related to #275
     this.restApiHandler = restApiHandler;
   }
 

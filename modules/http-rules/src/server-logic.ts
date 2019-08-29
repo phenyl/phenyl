@@ -6,9 +6,10 @@ import {
   GeneralResponseData,
   PathModifier,
   GeneralRestApiHandler,
-  GeneralServerParams
+  GeneralServerParams,
+  GeneralRestApiClient
 } from "@phenyl/interfaces";
-import { PhenylRestApiDirectClient, createServerError } from "@phenyl/utils";
+import { createDirectClient, createServerError } from "@phenyl/utils";
 
 import decodeRequest from "./decode-request";
 import encodeResponse from "./encode-response";
@@ -45,12 +46,16 @@ export default class ServerLogic {
    */
   customRequestHandler: GeneralCustomRequestHandler;
 
+  /**
+   * A client for the rest api of the given restApiHandler.
+   */
+  restApiClient: GeneralRestApiClient;
+
   constructor(params: GeneralServerParams) {
     this.restApiHandler = params.restApiHandler;
-
     this.modifyPath = params.modifyPath || (path => path);
-
     this.customRequestHandler = params.customRequestHandler || notFoundHandler;
+    this.restApiClient = createDirectClient(this.restApiHandler);
   }
 
   /**
@@ -78,15 +83,13 @@ export default class ServerLogic {
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
     let responseData: GeneralResponseData;
-    // This line casts restApiHandler to supertype so that it should receive pre-sanitized data.
-    const restApiHandler: GeneralRestApiHandler = this.restApiHandler;
 
     try {
       // 1. Decoding Request
       const requestData = decodeRequest(encodedHttpRequest);
 
       // 2. Invoking PhenylRestApi
-      responseData = await restApiHandler.handleRequestData(requestData);
+      responseData = await this.restApiHandler.handleRequestData(requestData);
     } catch (err) {
       responseData = {
         type: "error",
@@ -105,10 +108,9 @@ export default class ServerLogic {
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
-      const restApiClient = new PhenylRestApiDirectClient(this.restApiHandler);
       const customResponse = await this.customRequestHandler(
         encodedHttpRequest,
-        restApiClient
+        this.restApiClient
       );
       return customResponse;
     } catch (err) {
