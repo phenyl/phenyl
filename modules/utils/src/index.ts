@@ -5,7 +5,7 @@ export {
   createLocalError
 } from "./create-error";
 export { PhenylRestApiClient } from "./phenyl-rest-api-client";
-export { PhenylRestApiDirectClient } from "./direct-client";
+export { createDirectClient, PhenylRestApiDirectClient } from "./direct-client";
 export { switchByRequestMethod } from "./switch-by-request-method";
 export {
   randomString,

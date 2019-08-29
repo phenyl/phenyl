@@ -3,10 +3,22 @@ import {
   IdUpdateCommand,
   MultiInsertCommand,
   MultiUpdateCommand,
-  SingleInsertCommand
+  SingleInsertCommand,
+  GeneralSingleInsertCommand,
+  GeneralMultiInsertCommand,
+  GeneralIdUpdateCommand,
+  GeneralMultiUpdateCommand,
+  GeneralDeleteCommand
 } from "./command";
 import { Entity, PreEntity } from "./entity";
-import { IdQuery, IdsQuery, WhereQuery } from "./query";
+import {
+  IdQuery,
+  IdsQuery,
+  WhereQuery,
+  GeneralWhereQuery,
+  GeneralIdQuery,
+  GeneralIdsQuery
+} from "./query";
 
 import { GeneralEntityMap } from "./type-map";
 import { Key } from "./utils";
@@ -19,7 +31,27 @@ export type ReplaceOneCommand<EN extends string, E extends Entity> = {
   entity: E;
 };
 
-export interface DbClient<M extends GeneralEntityMap> {
+export type GeneralReplaceOneCommand = ReplaceOneCommand<string, Entity>;
+
+export interface GeneralDbClient {
+  find(query: GeneralWhereQuery): Promise<Entity[]>;
+  findOne(query: GeneralWhereQuery): Promise<Entity>;
+  get(query: GeneralIdQuery): Promise<Entity>;
+  getByIds(query: GeneralIdsQuery): Promise<Entity[]>;
+  insertOne(command: GeneralSingleInsertCommand): Promise<number>;
+  insertMulti(command: GeneralMultiInsertCommand): Promise<number>;
+  insertAndGet(command: GeneralSingleInsertCommand): Promise<Entity>;
+  insertAndGetMulti(command: GeneralMultiInsertCommand): Promise<Entity[]>;
+  replaceOne(command: GeneralReplaceOneCommand): Promise<void>;
+  updateById(command: GeneralIdUpdateCommand): Promise<void>;
+  // TODO #276
+  //updateMulti(command: GeneralMultiUpdateCommand): Promise<number>;
+  updateAndGet(command: GeneralIdUpdateCommand): Promise<Entity>;
+  updateAndFetch(command: GeneralMultiUpdateCommand): Promise<Entity[]>;
+  delete(command: GeneralDeleteCommand): Promise<number>;
+}
+
+export interface DbClient<M extends GeneralEntityMap> extends GeneralDbClient {
   find<EN extends Key<M>>(
     query: WhereQuery<EN>
   ): Promise<Array<EntityOf<M, EN>>>;

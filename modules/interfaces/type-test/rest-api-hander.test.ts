@@ -19,16 +19,6 @@ import { TypeEq, assertNotType, assertType, IsExtends } from "./helpers";
 import { SampleTypeMap } from "./helpers/sample-type-map";
 
 /**
- * This is to declare the issue #275.
- * RestApiHandler<GeneralTypeMap> is not equal to GeneralRestApiHandler.
- */
-{
-  assertNotType<
-    TypeEq<RestApiHandler<GeneralTypeMap>, GeneralRestApiHandler>
-  >();
-}
-
-/**
  * Tests for arguments and return values of
  *  RestApiHandler#handleRequestData().
  */
