@@ -6,12 +6,11 @@ import PhenylRestApi from "@phenyl/rest-api";
 import PhenylHttpClient from "@phenyl/http-client";
 import {
   GeneralTypeMap,
-  KvsClient,
-  Session,
   GeneralAction,
   LocalState,
   GetCommandResult,
-  ReqRes
+  AuthCommandMapOf,
+  ResponseEntityMapOf
 } from "../..//interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
 import { StandardUserDefinition } from "@phenyl/standards";
@@ -27,60 +26,38 @@ type PlainPatient = {
   password: string;
 };
 
-type PatientRequest = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-};
+type PatientRequest = PlainPatient;
 
-type PatientResponse = {
-  id: string;
-  name: string;
-  email: string;
-};
+type PatientResponse = PlainPatient;
 
-type Credentials = {
-  email: string;
-  password: string;
-};
-
-type MyAuthSetting = {
-  credentials: Credentials;
-  options: {};
-};
-
-type MyEntityMap = {
-  patient: PlainPatient;
-};
 type MyGeneralReqResEntityMap = {
-  patient: ReqRes<PatientRequest, PatientResponse>;
+  patient: {
+    request: PatientRequest;
+    response: PatientResponse;
+  };
 };
-
-type MyAuthCommandMap = {
-  patient: MyAuthSetting;
-};
-
-type MemberSessionValue = { externalId: string; ttl: number };
 
 interface MyTypeMap extends GeneralTypeMap {
   entities: MyGeneralReqResEntityMap;
   customQueries: {};
   customCommands: {};
   auths: {
-    patient: MyAuthSetting;
+    patient: {
+      credentials: {
+        email: string;
+        password: string;
+      };
+      session: { externalId: string; ttl: number };
+    };
   };
 }
 
-const memoryClient = createEntityClient<MyEntityMap>();
-const sessionClient = memoryClient.createSessionClient() as KvsClient<
-  Session<"patient", MemberSessionValue>
->;
+const memoryClient = createEntityClient<ResponseEntityMapOf<MyTypeMap>>();
+const sessionClient = memoryClient.createSessionClient<
+  AuthCommandMapOf<MyTypeMap>
+>();
 
-class PatientDefinition extends StandardUserDefinition<
-  MyEntityMap,
-  MyAuthSetting
-> {
+class PatientDefinition extends StandardUserDefinition {
   constructor() {
     super({
       accountPropName: "email",
@@ -111,7 +88,7 @@ const httpClient: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
 });
 
 type Store = {
-  phenyl: LocalState<MyGeneralReqResEntityMap, MyAuthCommandMap>;
+  phenyl: LocalState<MyGeneralReqResEntityMap, AuthCommandMapOf<MyTypeMap>>;
 };
 
 const store = createStore<Store, GeneralAction, {}, {}>(

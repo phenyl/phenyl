@@ -3,7 +3,12 @@ import { it, describe, before, after } from "mocha";
 import PhenylHttpServer from "@phenyl/http-server";
 import PhenylRestApi from "@phenyl/rest-api";
 import PhenylHttpClient from "@phenyl/http-client";
-import { GeneralTypeMap, KvsClient, Session } from "@phenyl/interfaces";
+import {
+  GeneralTypeMap,
+  Session,
+  AuthCommandMapOf,
+  ResponseEntityMapOf
+} from "@phenyl/interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
 import { StandardUserDefinition } from "../src";
 import assert from "assert";
@@ -15,32 +20,10 @@ type PlainPatient = {
   password: string;
 };
 
-type PatientRequest = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-};
+type PatientRequest = PlainPatient;
 
-type PatientResponse = {
-  id: string;
-  name: string;
-  email: string;
-};
+type PatientResponse = PlainPatient;
 
-type Credentials = {
-  email: string;
-  password: string;
-};
-
-type MyAuthSetting = {
-  credentials: Credentials;
-  options: {};
-};
-
-type MyEntityMap = {
-  patient: PlainPatient;
-};
 type MyGeneralReqResEntityMap = {
   patient: {
     request: PatientRequest;
@@ -48,27 +31,27 @@ type MyGeneralReqResEntityMap = {
   };
 };
 
-type MemberSessionValue = { externalId: string; ttl: number };
-
 interface MyTypeMap extends GeneralTypeMap {
   entities: MyGeneralReqResEntityMap;
   customQueries: {};
   customCommands: {};
   auths: {
-    patient: MyAuthSetting;
+    patient: {
+      credentials: {
+        email: string;
+        password: string;
+      };
+      session: { externalId: string; ttl: number };
+    };
   };
 }
 
-const memoryClient = createEntityClient<MyEntityMap>();
-// TODO: need refinement
-const sessionClient = memoryClient.createSessionClient() as KvsClient<
-  Session<"patient", MemberSessionValue>
->;
+const memoryClient = createEntityClient<ResponseEntityMapOf<MyTypeMap>>();
+const sessionClient = memoryClient.createSessionClient<
+  AuthCommandMapOf<MyTypeMap>
+>();
 
-class PatientDefinition extends StandardUserDefinition<
-  MyEntityMap,
-  MyAuthSetting
-> {
+class PatientDefinition extends StandardUserDefinition {
   constructor() {
     super({
       accountPropName: "email",

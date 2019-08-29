@@ -1,7 +1,6 @@
 import powerCrypt from "power-crypt";
 import { createServerError } from "@phenyl/utils";
 
-import { StandardEntityDefinition } from "./standard-entity-definition";
 import { encryptPasswordInRequestData } from "./encrypt-password-in-request-data";
 import {
   removePasswordFromResponseData,
@@ -9,66 +8,77 @@ import {
 } from "./remove-password-from-response-data";
 
 import {
-  Key,
-  EntityClient,
   UserDefinition,
   Session,
-  AuthenticationResult,
+  GeneralAuthenticationResult,
   GeneralUserEntityRequestData,
   GeneralUserEntityResponseData,
-  GeneralEntityMap
+  GeneralEntityClient,
+  GeneralLoginCommand
 } from "@phenyl/interfaces";
 
-import { EncryptFunction, AuthSetting, LoginCommandOf } from "./decls";
+import { EncryptFunction } from "./decls";
 
-export type StandardUserDefinitionParams<
-  M extends GeneralEntityMap,
-  A extends AuthSetting
-> = {
-  entityClient: EntityClient<M>;
+export type StandardUserDefinitionParams = {
+  entityClient: GeneralEntityClient;
   encrypt?: EncryptFunction;
-  accountPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName?: Key<M[Key<M>]> & Key<A["credentials"]>;
+  accountPropName?: string;
+  passwordPropName?: string;
   ttl?: number;
 };
 
-// Q: is it necessary and possible to implement EntityDefinition and UserDefinition both?
-export class StandardUserDefinition<
-  M extends GeneralEntityMap,
-  A extends AuthSetting
-> extends StandardEntityDefinition implements UserDefinition {
-  entityClient: EntityClient<M>;
+export class StandardUserDefinition implements UserDefinition {
+  entityClient: GeneralEntityClient;
   encrypt: EncryptFunction;
-  accountPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
-  passwordPropName: Key<M[Key<M>]> & Key<A["credentials"]>;
+  accountPropName: string;
+  passwordPropName: string;
   ttl: number;
 
-  constructor(params: StandardUserDefinitionParams<M, A>) {
-    super(params);
+  constructor(params: StandardUserDefinitionParams) {
     this.entityClient = params.entityClient;
     this.encrypt = params.encrypt || powerCrypt; // TODO: pass salt string to powerCrypt
-    // @ts-ignore default
     this.accountPropName = params.accountPropName || "account";
-    // @ts-ignore default
     this.passwordPropName = params.passwordPropName || "password";
     this.ttl = params.ttl || 60 * 60 * 24 * 365; // one year
   }
 
-  async authenticate<N extends Key<M>>(
-    loginCommand: LoginCommandOf<A, N>,
+  async authenticate(
+    loginCommand: GeneralLoginCommand,
     session?: Session
-  ): Promise<AuthenticationResult<string, any>> {
+  ): Promise<GeneralAuthenticationResult> {
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
+    if (credentials == null) {
+      throw createServerError(
+        "Invalid credentials: No credentials found.",
+        "Unauthorized"
+      );
+    }
 
-    const account = credentials[accountPropName];
-    const password = credentials[passwordPropName];
+    // @ts-ignore
+    const account: string = credentials[accountPropName];
+    // @ts-ignore
+    const password: string = credentials[passwordPropName];
+
+    if (!account) {
+      throw createServerError(
+        `Invalid credentials: the given account field "${accountPropName}" is empty.`,
+        "Unauthorized"
+      );
+    }
+
+    if (!password) {
+      throw createServerError(
+        `Invalid credentials: the given password field "${passwordPropName}" is empty.`,
+        "Unauthorized"
+      );
+    }
+
     try {
       const result = await this.entityClient.findOne({
         entityName,
         where: {
           [accountPropName]: account,
-          // @ts-ignore
           [passwordPropName]: this.encrypt(password)
         }
       });
@@ -105,5 +115,3 @@ export class StandardUserDefinition<
     return newResData;
   }
 }
-
-export const GeneralStandardUserDefinition: typeof StandardUserDefinition = StandardUserDefinition;
