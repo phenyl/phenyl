@@ -15,7 +15,8 @@ import {
   VersionDiffPublisher,
   ResponseEntityMapOf,
   ErrorResponseData,
-  GeneralRestApiHandler
+  GeneralRestApiHandler,
+  GeneralFunctionalGroup
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
@@ -51,7 +52,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   private readonly definitionExecutors: DefinitionExecutorMap;
 
   constructor(
-    fg: FunctionalGroup,
+    fg: FunctionalGroup<TM>,
     params: {
       entityClient: EntityClient<ResponseEntityMapOf<TM>>;
       sessionClient?: SessionClient<AuthCommandMapOf<TM>>;
@@ -184,7 +185,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   }
 
   private createDefinitionExecutors(
-    fg: FunctionalGroup
+    fg: GeneralFunctionalGroup
   ): DefinitionExecutorMap {
     const user = fg.users
       ? Object.entries(fg.users).reduce(
