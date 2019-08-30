@@ -1,6 +1,0 @@
-// @flow
-type deepEqual = (a: any, b: any) => boolean
-
-declare module 'fast-deep-equal' {
-  declare export default deepEqual
-}

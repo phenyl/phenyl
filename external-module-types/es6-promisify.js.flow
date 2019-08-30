@@ -1,7 +1,0 @@
-// @flow
-type Promisified = (...args: Array<any>) => Promise<any>
-type promisify = (fn: Function, b?: Object) => Promisified
-
-declare module 'es6-promisify' {
-  declare export default promisify
-}
