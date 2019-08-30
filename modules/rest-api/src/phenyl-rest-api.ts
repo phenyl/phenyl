@@ -47,7 +47,7 @@ type DefinitionExecutorMap = {
  */
 export class PhenylRestApi<TM extends GeneralTypeMap>
   implements RestApiHandler<TM>, GeneralRestApiHandler {
-  readonly client: EntityClient<ResponseEntityMapOf<TM>>;
+  readonly entityClient: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
   private readonly definitionExecutors: DefinitionExecutorMap;
@@ -59,11 +59,15 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
       sessionClient?: GeneralSessionClient;
     }
   ) {
-    this.client = params.entityClient;
+    this.entityClient = params.entityClient;
     this.sessionClient =
       (params.sessionClient as SessionClient<AuthCommandMapOf<TM>>) ||
-      this.client.createSessionClient<AuthCommandMapOf<TM>>();
+      this.entityClient.createSessionClient<AuthCommandMapOf<TM>>();
     this.definitionExecutors = this.createDefinitionExecutors(fg);
+  }
+
+  get client(): EntityClient<ResponseEntityMapOf<TM>> {
+    return this.entityClient;
   }
 
   /**
@@ -194,7 +198,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
             ...acc,
             [name]: new UserDefinitionExecutor(
               def,
-              this.client,
+              this.entityClient,
               this.sessionClient
             )
           }),
@@ -205,7 +209,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
       ? Object.entries(fg.nonUsers).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new EntityDefinitionExecutor(def, this.client)
+            [name]: new EntityDefinitionExecutor(def, this.entityClient)
           }),
           {}
         )
@@ -214,7 +218,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
       ? Object.entries(fg.customQueries).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomQueryDefinitionExecutor(def, this.client)
+            [name]: new CustomQueryDefinitionExecutor(def, this.entityClient)
           }),
           {}
         )
@@ -223,7 +227,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
       ? Object.entries(fg.customCommands).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomCommandDefinitionExecutor(def, this.client)
+            [name]: new CustomCommandDefinitionExecutor(def, this.entityClient)
           }),
           {}
         )
