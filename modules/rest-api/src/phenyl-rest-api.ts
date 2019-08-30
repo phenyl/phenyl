@@ -45,7 +45,7 @@ type DefinitionExecutorMap = {
 /**
  *
  */
-export class PhenylRestApi<TM extends GeneralTypeMap>
+export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   implements RestApiHandler<TM>, GeneralRestApiHandler {
   readonly entityClient: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
