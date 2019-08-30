@@ -21,7 +21,6 @@
     "watch": "upbin tsc --declaration --watch"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.1.1",
     "@phenyl/interfaces": "^1.1.1",
     "@phenyl/utils": "^1.1.1"
   },

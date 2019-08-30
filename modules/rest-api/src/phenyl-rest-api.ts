@@ -16,14 +16,15 @@ import {
   ResponseEntityMapOf,
   ErrorResponseData,
   GeneralRestApiHandler,
-  GeneralFunctionalGroup
+  GeneralFunctionalGroup,
+  GeneralSessionClient,
+  GeneralEntityClient
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
   assertValidRequestData,
   createServerError
 } from "@phenyl/utils";
-import { PhenylSessionClient } from "@phenyl/central-state";
 
 import {
   CustomCommandDefinitionExecutor,
@@ -54,14 +55,14 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
   constructor(
     fg: FunctionalGroup<TM>,
     params: {
-      entityClient: EntityClient<ResponseEntityMapOf<TM>>;
-      sessionClient?: SessionClient<AuthCommandMapOf<TM>>;
+      entityClient: GeneralEntityClient;
+      sessionClient?: GeneralSessionClient;
     }
   ) {
     this.client = params.entityClient;
     this.sessionClient =
-      params.sessionClient ||
-      new PhenylSessionClient<AuthCommandMapOf<TM>>(this.client.getDbClient());
+      (params.sessionClient as SessionClient<AuthCommandMapOf<TM>>) ||
+      this.client.createSessionClient<AuthCommandMapOf<TM>>();
     this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
 
