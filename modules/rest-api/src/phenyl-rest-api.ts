@@ -57,12 +57,17 @@ export class PhenylRestApi<TM extends GeneralTypeMap>
     params: {
       entityClient: GeneralEntityClient;
       sessionClient?: GeneralSessionClient;
+      versionDiffPublisher?: VersionDiffPublisher;
     }
   ) {
     this.entityClient = params.entityClient;
+
     this.sessionClient =
       (params.sessionClient as SessionClient<AuthCommandMapOf<TM>>) ||
       this.entityClient.createSessionClient<AuthCommandMapOf<TM>>();
+
+    this.versionDiffPublisher = params.versionDiffPublisher;
+
     this.definitionExecutors = this.createDefinitionExecutors(fg);
   }
 
