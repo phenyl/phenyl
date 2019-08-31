@@ -18,13 +18,6 @@ app.listen(3000)
 npm install phenyl-express
 ```
 
-## Using types with flow
-For [Flow](https://flowtype.org) annotations, just use `/jsnext` entrypoint.
-
-```js
-import { createPhenylApiMiddleware } from 'phenyl-express/jsnext'
-```
-
 # API Documentation
 - createPhenylApiMiddleware()
 - createPhenylMiddleware()
@@ -119,9 +112,7 @@ type EncodedHttpRequest = {
 ```
 
 The second argument `restApiClient` is a client for `PhenylRestApi`.
-See [phenyl-interfaces](https://github.com/phenyl-js/phenyl/blob/master/modules/phenyl-interfaces/decls/client.js.flow) for the detailed interface.
 It implements `EntityClient`, `AuthClient` and `CustomClient`.
-
 
 The return value must be `Promise<EncodedHttpResponse>`.
 
