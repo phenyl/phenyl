@@ -366,22 +366,24 @@ export type AuthCommandOf<
 > = TM["auths"][EN];
 
 /**
- * Name of user entities in given TypeMap.
+ * Name of auths in given TypeMap.
  */
-export type UserEntityNameOf<TM extends GeneralTypeMap> = Key<TM["auths"]>;
+export type AuthEntityNameOf<TM extends GeneralTypeMap> = Key<TM["auths"]>;
 
 /**
- * Name of auths in given TypeMap.
- * Alias for UserEntityNameOf
+ * Name of user entities in given TypeMap.
+ * It's an intersection of AuthEntityNameOf<TM> & EntityNameOf<TM>,
  */
-export type AuthEntityNameOf<TM extends GeneralTypeMap> = UserEntityNameOf<TM>;
+export type UserEntityNameOf<TM extends GeneralTypeMap> = AuthEntityNameOf<TM> &
+  EntityNameOf<TM>;
 
 /**
  * Name of non-user entities in given TypeMap.
+ * It's a subtraction of EntityNameOf<TM> from AuthEntityNameOf<TM>,
  */
 export type NonUserEntityNameOf<TM extends GeneralTypeMap> = Exclude<
   EntityNameOf<TM>,
-  UserEntityNameOf<TM>
+  AuthEntityNameOf<TM>
 >;
 
 /**

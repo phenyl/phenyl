@@ -387,13 +387,13 @@ export interface AuthClient<
   M extends GeneralReqResEntityMap,
   AM extends GeneralAuthCommandMap
 > extends GeneralAuthClient {
-  login<EN extends Key<AM>>(
+  login<EN extends Key<M> & Key<AM>>(
     command: LoginCommand<EN, AuthCredentials<AM, EN>>,
     sessionId?: string | null
   ): Promise<
     LoginCommandResult<EN, ResponseAuthUser<AM, EN, M>, AuthSessions<AM, EN>>
   >;
-  logout<EN extends Key<AM>>(
+  logout<EN extends Key<M> & Key<AM>>(
     command: LogoutCommand<EN>,
     sessionId?: string | null
   ): Promise<LogoutCommandResult>;
