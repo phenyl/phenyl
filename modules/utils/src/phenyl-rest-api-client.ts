@@ -1,6 +1,6 @@
 import {
   AuthCredentialsOf,
-  AuthEntityNameOf,
+  UserEntityNameOf,
   AuthSessionOf,
   RequestEntityOf,
   CustomCommand,
@@ -350,7 +350,7 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async login<N extends AuthEntityNameOf<TM>>(
+  async login<N extends UserEntityNameOf<TM>>(
     command: LoginCommand<N, AuthCredentialsOf<TM, N>>,
     sessionId?: string | undefined | null
   ): Promise<
@@ -368,7 +368,7 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async logout<N extends AuthEntityNameOf<TM>>(
+  async logout<N extends UserEntityNameOf<TM>>(
     command: LogoutCommand<N>,
     sessionId?: string | undefined | null
   ): Promise<LogoutCommandResult> {

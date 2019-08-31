@@ -23,7 +23,7 @@ export type CustomCommandDefinitions = {
 };
 
 export type UserDefinitions = {
-  [EntityName: string]: UserDefinition;
+  [UserEntityName: string]: UserDefinition;
 };
 
 export type GeneralNormalizedFunctionalGroup = {
@@ -35,7 +35,7 @@ export type GeneralNormalizedFunctionalGroup = {
 
 export interface NormalizedFunctionalGroup<TM extends GeneralTypeMap>
   extends GeneralNormalizedFunctionalGroup {
-  users: { [AN in UserEntityNameOf<TM>]: UserDefinition };
+  users: { [UN in UserEntityNameOf<TM>]: UserDefinition };
   nonUsers: { [EN in NonUserEntityNameOf<TM>]: EntityDefinition };
   customQueries: { [QN in CustomQueryNameOf<TM>]: CustomQueryDefinition };
   customCommands: { [CN in CustomCommandNameOf<TM>]: CustomCommandDefinition };

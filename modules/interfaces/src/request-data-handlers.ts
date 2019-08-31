@@ -1,6 +1,6 @@
 import {
   AuthCredentialsOf,
-  AuthEntityNameOf,
+  UserEntityNameOf,
   RequestEntityOf,
   CustomCommandNameOf,
   CustomCommandParamsOf,
@@ -82,11 +82,11 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
     command: CustomCommand<CN, CustomCommandParamsOf<TM, CN>>
   ): Promise<T>;
 
-  login<EN extends AuthEntityNameOf<TM>>(
+  login<EN extends UserEntityNameOf<TM>>(
     command: LoginCommand<EN, AuthCredentialsOf<TM, EN>>
   ): Promise<T>;
 
-  logout<EN extends AuthEntityNameOf<TM>>(
+  logout<EN extends UserEntityNameOf<TM>>(
     command: LogoutCommand<EN>
   ): Promise<T>;
 
