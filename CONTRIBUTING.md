@@ -59,7 +59,7 @@ yarn lint
 ## Compilation
 
 ```
-npm run build
+yarn build
 ```
 
 This command generates `lib/**/*.js` and `lib/**/*.d.ts` from `src/**/*.ts`.
