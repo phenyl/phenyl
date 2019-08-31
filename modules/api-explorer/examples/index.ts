@@ -15,7 +15,7 @@ import {
   CustomQuery,
   CustomQueryDefinition,
   CustomQueryResult,
-  FunctionalGroup,
+  GeneralFunctionalGroup,
   ReqRes,
   KvsClient
 } from "@phenyl/interfaces";
@@ -58,10 +58,7 @@ type AppEntityMap = {
 
 const memoryClient = createEntityClient<AppEntityMap>();
 
-class PatientDefinition extends StandardUserDefinition<
-  AppReqResEntityMap,
-  PatientAuthSetting
-> {
+class PatientDefinition extends StandardUserDefinition {
   constructor() {
     super({
       entityClient: memoryClient,
@@ -108,10 +105,8 @@ class TestCustomCommand implements CustomCommandDefinition {
     session?: Session
   ): Promise<CustomCommandResult<CustomCommandResponse>> {
     return {
-      result: {
-        echo: command.params.echo,
-        session
-      }
+      echo: command.params.echo,
+      session
     };
   }
 }
@@ -140,15 +135,13 @@ class TestCustomQuery implements CustomQueryDefinition {
     session?: Session
   ): Promise<CustomQueryResult<CustomQueryResponse>> {
     return {
-      result: {
-        echo: command.params.echo,
-        session
-      }
+      echo: command.params.echo,
+      session
     };
   }
 }
 
-const functionalGroup: FunctionalGroup = {
+const functionalGroup: GeneralFunctionalGroup = {
   customQueries: {
     test: new TestCustomCommand()
   },
@@ -159,7 +152,7 @@ const functionalGroup: FunctionalGroup = {
     patient: new PatientDefinition()
   },
   nonUsers: {
-    hospital: new HospitalDefinition({})
+    hospital: new HospitalDefinition()
   }
 };
 

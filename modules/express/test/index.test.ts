@@ -16,7 +16,8 @@ import {
   GeneralRestApiHandler,
   EncodedHttpRequest,
   GeneralTypeMap,
-  ReqRes
+  ReqRes,
+  FunctionalGroup
 } from "@phenyl/interfaces";
 
 type Diary = ReqRes<{ id: string }>;
@@ -46,10 +47,6 @@ class GetVersionDefinition implements CustomQueryDefinition {
   }
 }
 
-type EntityMap = {
-  member: any;
-  diary: any;
-};
 type MemberRequest = { id: string };
 type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
@@ -80,17 +77,6 @@ class MemberDefinition implements EntityDefinition {
   }
 }
 
-const fg = {
-  users: { member: new MemberDefinition() },
-  nonUsers: {
-    diary: new DiaryDefinition()
-  },
-  customQueries: {
-    getVersion: new GetVersionDefinition()
-  },
-  customCommands: {}
-};
-
 interface MyTypeMap extends GeneralTypeMap {
   entities: {
     member: ReqRes<MemberRequest, MemberResponse>;
@@ -105,10 +91,25 @@ interface MyTypeMap extends GeneralTypeMap {
       };
     };
   };
+  auths: {
+    member: {
+      credentials: Object;
+    };
+  };
 }
 
-const restApiHandler = new PhenylRestApi<MyTypeMap>(fg, {
-  entityClient: createEntityClient<EntityMap>()
+const fg: FunctionalGroup<MyTypeMap> = {
+  users: { member: new MemberDefinition() },
+  nonUsers: {
+    diary: new DiaryDefinition()
+  },
+  customQueries: {
+    getVersion: new GetVersionDefinition()
+  }
+};
+
+const restApiHandler = new PhenylRestApi(fg, {
+  entityClient: createEntityClient()
 });
 
 describe("createPhenylApiMiddleware", () => {

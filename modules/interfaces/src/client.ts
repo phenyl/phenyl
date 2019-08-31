@@ -248,6 +248,7 @@ export interface ReqResEntityClient<M extends GeneralReqResEntityMap>
 export interface GeneralEntityClient extends BaseEntityClient {
   getDbClient(): GeneralDbClient;
   createSessionClient(): GeneralSessionClient;
+  createSessionClient<AM extends GeneralAuthCommandMap>(): SessionClient<AM>;
 }
 
 /**

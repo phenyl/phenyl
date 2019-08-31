@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import ejs from "ejs";
 import {
-  FunctionalGroup,
+  GeneralFunctionalGroup,
   EncodedHttpResponse,
   EncodedHttpRequest
 } from "@phenyl/interfaces";
@@ -13,12 +13,12 @@ export type ExplorerParams = {
   phenylApiUrlBase?: string;
 };
 export default class PhenylApiExplorer {
-  functionalGroup: FunctionalGroup;
+  functionalGroup: GeneralFunctionalGroup;
   path: string;
   phenylApiUrlBase: string;
   html: string;
 
-  constructor(functionalGroup: FunctionalGroup, params: ExplorerParams) {
+  constructor(functionalGroup: GeneralFunctionalGroup, params: ExplorerParams) {
     this.functionalGroup = functionalGroup;
     this.path = params.path;
     this.phenylApiUrlBase = params.phenylApiUrlBase || "";
