@@ -301,7 +301,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const commitsToPush = until >= 0 ? commits.slice(0, until) : commits;
 
     if (commitsToPush.length === 0) {
-      // $FlowIssue(Cannot call this.next with action bound to action)
       return this.next(action);
     }
 

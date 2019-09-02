@@ -270,7 +270,7 @@ function decodePUTRequest(request: EncodedHttpRequest): GeneralRequestData {
         payload.entityName
       }", in URL: "${entityName}".`
     );
-  } // $FlowIssue(this-is-always-valid-request-data)
+  }
 
   return {
     // @ts-ignore
@@ -320,7 +320,6 @@ function decodeDELETERequest(request: EncodedHttpRequest): GeneralRequestData {
 }
 
 function decodeBody(request: EncodedHttpRequest): any {
-  // return "any" type for suppressing flow error
   const { body, parsedBody } = request;
   if (parsedBody) return parsedBody;
   if (!body) return {};
@@ -335,7 +334,6 @@ function decodeBody(request: EncodedHttpRequest): any {
 function decodeDataInQsParams(
   qsParams: QueryStringParams | undefined | null
 ): Object {
-  // return "any" type for suppressing flow error
   if (qsParams == null || qsParams.d == null) {
     return {};
   }
