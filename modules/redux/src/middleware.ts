@@ -28,7 +28,8 @@ import {
   GeneralAuthCommandMap,
   Key,
   Entity,
-  ReqResEntityMapOf
+  ReqResEntityMapOf,
+  UserEntityNameOf
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 
@@ -84,9 +85,11 @@ export class MiddlewareCreator {
             return handler.followAll(action);
 
           case "phenyl/login":
+            // @ts-ignore TODO: #287
             return handler.login(action);
 
           case "phenyl/logout":
+            // @ts-ignore TODO: #287
             return handler.logout(action);
 
           case "phenyl/patch":
@@ -500,8 +503,8 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Login with credentials, then register the user.
    */
 
-  async login<AM extends GeneralAuthCommandMap, EN extends Key<AM>>(
-    action: LoginAction<EN, Object>
+  async login<UN extends UserEntityNameOf<TM>>(
+    action: LoginAction<UN, Object>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const command = action.payload;
@@ -528,21 +531,21 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
     return this.assignToState(...ops);
   }
+
   /**
    * Remove the session in CentralState and reset the LocalState.
    */
-
-  async logout<AM extends GeneralAuthCommandMap, EN extends Key<AM>>(
-    action: LogoutAction<EN>
+  async logout<UN extends UserEntityNameOf<TM>>(
+    action: LogoutAction<UN>
   ): Promise<GeneralAction> {
     const command = action.payload;
     await this.client.logout(command, this.sessionId);
     return this.resetState();
   }
+
   /**
    * Apply the VersionDiff.
    */
-
   async patch(action: PatchAction): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const versionDiff = action.payload;

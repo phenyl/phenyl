@@ -1,5 +1,5 @@
 import {
-  AuthEntityNameOf,
+  UserEntityNameOf,
   CustomCommandNameOf,
   CustomQueryNameOf,
   EntityNameOf,
@@ -13,10 +13,10 @@ export async function switchByRequestMethod<
   EN extends EntityNameOf<TM>,
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
-  AN extends AuthEntityNameOf<TM>,
+  UN extends UserEntityNameOf<TM>,
   T
 >(
-  reqData: RequestDataWithTypeMap<TM, EN, QN, CN, AN>,
+  reqData: RequestDataWithTypeMap<TM, EN, QN, CN, UN>,
   funcs: RequestDataHandlers<TM, T>
 ): Promise<T> {
   // prettier-ignore

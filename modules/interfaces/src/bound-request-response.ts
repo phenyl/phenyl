@@ -1,6 +1,6 @@
 import {
   AuthCredentialsOf,
-  AuthEntityNameOf,
+  UserEntityNameOf,
   AuthSessionOf,
   RequestEntityOf,
   CustomCommandNameOf,
@@ -84,7 +84,7 @@ export type RequestDataWithTypeMapForResponse<
     N & EntityNameOf<TM>,
     N & CustomQueryNameOf<TM>,
     N & CustomCommandNameOf<TM>,
-    N & AuthEntityNameOf<TM>
+    N & UserEntityNameOf<TM>
   >,
   { method: MN }
 >;
@@ -101,7 +101,7 @@ export type RequestDataWithTypeMap<
   EN extends EntityNameOf<TM>,
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
-  AN extends AuthEntityNameOf<TM>
+  UN extends UserEntityNameOf<TM>
 > =
   | FindRequestData<EN>
   | FindOneRequestData<EN>
@@ -138,8 +138,8 @@ export type RequestDataWithTypeMap<
       CN,
       CustomCommandParamsOf<TM, CN & CustomCommandNameOf<TM>>
     >
-  | LoginRequestData<AN, AuthCredentialsOf<TM, AN & AuthEntityNameOf<TM>>>
-  | LogoutRequestData<AN>;
+  | LoginRequestData<UN, AuthCredentialsOf<TM, UN & UserEntityNameOf<TM>>>
+  | LogoutRequestData<UN>;
 
 /**
  * All possible `ResponseData` from the given `TypeMap`, `RequestMethodName` and `EveryNameOf<TM, MN>`.
@@ -153,7 +153,7 @@ export type ResponseDataWithTypeMap<
   N & EntityNameOf<TM>,
   N & CustomQueryNameOf<TM>,
   N & CustomCommandNameOf<TM>,
-  N & AuthEntityNameOf<TM>
+  N & UserEntityNameOf<TM>
 >[MN];
 
 type ResponseDataMapWithTypeMap<
@@ -161,7 +161,7 @@ type ResponseDataMapWithTypeMap<
   EN extends EntityNameOf<TM>,
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
-  AN extends AuthEntityNameOf<TM>
+  UN extends UserEntityNameOf<TM>
 > = {
   find: FindResponseData<ResponseEntityOf<TM, EN>>;
   findOne: FindOneResponseData<ResponseEntityOf<TM, EN>>;
@@ -183,9 +183,9 @@ type ResponseDataMapWithTypeMap<
     CustomCommandResultValueOf<TM, CN>
   >;
   login: LoginResponseData<
-    AN,
-    ResponseAuthUserOf<TM, AN>,
-    AuthSessionOf<TM, AN>
+    UN,
+    ResponseAuthUserOf<TM, UN>,
+    AuthSessionOf<TM, UN>
   >;
   logout: LogoutResponseData;
 };
@@ -195,7 +195,7 @@ type ResponseDataMapWithTypeMap<
  * - EntityName
  * - CustomQueryName
  * - CustomCommandName
- * - AuthEntityName
+ * - UserEntityName
  *
  * 2nd type parameter `MN` is `RequestMethodName`.
  * Only the names compatible with given method name are allowed.
@@ -242,5 +242,5 @@ export type EveryNameOf<
   : MN extends "runCustomCommand"
   ? CustomCommandNameOf<TM>
   : MN extends ("login" | "logout")
-  ? AuthEntityNameOf<TM>
+  ? UserEntityNameOf<TM>
   : string;
