@@ -9,13 +9,15 @@ import {
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
   PushCommandResult,
-  SingleInsertCommandResult
+  SingleInsertCommandResult,
+  CustomCommandResultObject
 } from "./command-result";
 import {
   CustomQueryResult,
   PullQueryResult,
   QueryResult,
-  SingleQueryResult
+  SingleQueryResult,
+  CustomQueryResultObject
 } from "./query-result";
 
 import { Entity } from "./entity";
@@ -120,7 +122,7 @@ export type GeneralUserEntityResponseData =
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomQueryResponseData<
-  QR extends Object
+  QR extends CustomQueryResultObject
 > = RunCustomQueryResponseData<QR>;
 
 /**
@@ -128,7 +130,7 @@ export type CustomQueryResponseData<
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomCommandResponseData<
-  CR extends Object
+  CR extends CustomCommandResultObject
 > = RunCustomCommandResponseData<CR>;
 
 export type FindResponseData<E extends Entity> = {
@@ -206,12 +208,14 @@ export type DeleteResponseData = {
   payload: DeleteCommandResult;
 };
 
-export type RunCustomQueryResponseData<QR extends Object> = {
+export type RunCustomQueryResponseData<QR extends CustomQueryResultObject> = {
   type: "runCustomQuery";
   payload: CustomQueryResult<QR>;
 };
 
-export type RunCustomCommandResponseData<CR extends Object> = {
+export type RunCustomCommandResponseData<
+  CR extends CustomCommandResultObject
+> = {
   type: "runCustomCommand";
   payload: CustomCommandResult<CR>;
 };
@@ -255,12 +259,12 @@ export type GeneralUpdateAndFetchResponseData = UpdateAndFetchResponseData<
 export type GeneralPushResponseData = PushResponseData<Entity>;
 export type GeneralDeleteResponseData = DeleteResponseData;
 export type GeneralRunCustomQueryResponseData = RunCustomQueryResponseData<
-  Object
+  CustomQueryResultObject
 >;
 export type GeneralCustomQueryResponseData = GeneralRunCustomQueryResponseData;
 export type GeneralCustomCommandResponseData = GeneralRunCustomCommandResponseData;
 export type GeneralRunCustomCommandResponseData = RunCustomCommandResponseData<
-  Object
+  CustomCommandResultObject
 >;
 export type GeneralLoginResponseData = LoginResponseData<
   string,

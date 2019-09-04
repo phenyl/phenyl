@@ -11,6 +11,7 @@ import {
 } from "./command";
 import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
 import { Entity, PreEntity, ProEntity } from "./entity";
+import { ObjectMap } from "./utils";
 
 /**
  * Type of request data handled in servers and clients.
@@ -195,7 +196,10 @@ export type DeleteRequestData<N extends string> = {
   sessionId?: string | null;
 };
 
-export type RunCustomQueryRequestData<N extends string, QP extends Object> = {
+export type RunCustomQueryRequestData<
+  N extends string,
+  QP extends ObjectMap
+> = {
   method: "runCustomQuery";
   payload: CustomQuery<N, QP>;
   sessionId?: string | null;
@@ -203,17 +207,20 @@ export type RunCustomQueryRequestData<N extends string, QP extends Object> = {
 
 export type CustomQueryRequestData<
   N extends string,
-  QP extends Object
+  QP extends ObjectMap
 > = RunCustomQueryRequestData<N, QP>;
 
-export type RunCustomCommandRequestData<N extends string, P extends Object> = {
+export type RunCustomCommandRequestData<
+  N extends string,
+  CP extends ObjectMap
+> = {
   method: "runCustomCommand";
-  payload: CustomCommand<N, P>;
+  payload: CustomCommand<N, CP>;
   sessionId?: string | null;
 };
 export type CustomCommandRequestData<
   N extends string,
-  CP extends Object
+  CP extends ObjectMap
 > = RunCustomCommandRequestData<N, CP>;
 
 export type LoginRequestData<N extends string, C extends Object> = {
@@ -274,14 +281,14 @@ export type GeneralDeleteRequestData = DeleteRequestData<string>;
 
 export type GeneralRunCustomQueryRequestData = RunCustomQueryRequestData<
   string,
-  Object
+  ObjectMap
 >;
 // Alias
 export type GeneralCustomQueryRequestData = GeneralRunCustomQueryRequestData;
 
 export type GeneralRunCustomCommandRequestData = RunCustomCommandRequestData<
   string,
-  Object
+  ObjectMap
 >;
 
 // Alias

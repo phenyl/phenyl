@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { Key } from "./utils";
+import { Key, ObjectMap } from "./utils";
 import { Session } from "./session";
 
 /**
@@ -141,9 +141,11 @@ export type GeneralCustomQueryMap = GeneralCustomMap;
  */
 export type GeneralCustomCommandMap = GeneralCustomMap;
 
+type CustomResultObject = ObjectMap & { extra?: undefined };
+
 type GeneralCustomInOut = {
-  params?: Object;
-  result?: Object;
+  params?: ObjectMap;
+  result?: CustomResultObject;
 };
 
 /**
@@ -256,7 +258,7 @@ export type CustomQueryNameOf<TM extends GeneralTypeMap> = Key<
 
 /**
  * Params of given custom query name in given TypeMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `ObjectMap`.
  */
 export type CustomQueryParamsOf<
   TM extends GeneralTypeMap,
@@ -265,7 +267,7 @@ export type CustomQueryParamsOf<
 
 /**
  * Params of given custom query name in given CustomQueryMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `ObjectMap`.
  */
 export type CustomQueryParams<
   QM extends GeneralCustomMap,
@@ -274,7 +276,7 @@ export type CustomQueryParams<
 
 /**
  * Result of given custom query name in given TypeMap.
- * If result is not set, parsed as "Object".
+ * If result is not set, parsed as `CustomQueryResultObject`.
  */
 export type CustomQueryResultValueOf<
   TM extends GeneralTypeMap,
@@ -283,7 +285,7 @@ export type CustomQueryResultValueOf<
 
 /**
  * Result of given custom query name in given CustomQueryMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `CustomQueryResultObject`.
  */
 export type CustomQueryResultValue<
   QM extends GeneralCustomMap,
@@ -316,7 +318,7 @@ export type CustomCommandNameOf<TM extends GeneralTypeMap> = Key<
 
 /**
  * Params of given custom command name in given TypeMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `ObjectMap`.
  */
 export type CustomCommandParamsOf<
   TM extends GeneralTypeMap,
@@ -325,7 +327,7 @@ export type CustomCommandParamsOf<
 
 /**
  * Params of given custom command name in given CustomCommandMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `ObjectMap`.
  */
 export type CustomCommandParams<
   CM extends GeneralCustomMap,
@@ -334,7 +336,7 @@ export type CustomCommandParams<
 
 /**
  * Result of given custom command name in given TypeMap.
- * If result is not set, parsed as "Object".
+ * If result is not set, parsed as `CustomCommandResultObject`.
  */
 export type CustomCommandResultValueOf<
   TM extends GeneralTypeMap,
@@ -343,7 +345,7 @@ export type CustomCommandResultValueOf<
 
 /**
  * Result of given custom command name in given CustomCommandMap.
- * If params is not set, parsed as "Object".
+ * If params is not set, parsed as `CustomCommandResultObject`.
  */
 export type CustomCommandResultValue<
   CM extends GeneralCustomMap,
@@ -494,19 +496,19 @@ type CustomParams<
   T extends GeneralCustomMap,
   N extends Key<T>
 > = "params" extends Key<T[N]>
-  ? T[N]["params"] extends Object
+  ? T[N]["params"] extends ObjectMap
     ? Exclude<T[N]["params"], undefined>
-    : Object
-  : Object; // If "params" is not set, set Object.
+    : ObjectMap
+  : ObjectMap; // If "params" is not set, set ObjectMap.
 
 type CustomResultValue<
   T extends GeneralCustomMap,
   N extends Key<T>
 > = "result" extends Key<T[N]>
-  ? T[N]["result"] extends Object
+  ? T[N]["result"] extends CustomResultObject
     ? Exclude<T[N]["result"], undefined>
-    : Object
-  : Object; // If "result" is not set, set Object.
+    : CustomResultObject
+  : CustomResultObject; // If "result" is not set, set CustomResultObject.
 
 type Request<T extends ReqRes<Entity>> = T["request"];
 type Response<T extends ReqRes<Entity>> = T["response"];
