@@ -16,11 +16,10 @@ import {
   GeneralRestApiHandler,
   EncodedHttpRequest,
   GeneralTypeMap,
-  ReqRes,
   FunctionalGroup
 } from "@phenyl/interfaces";
 
-type Diary = ReqRes<{ id: string }>;
+type Diary = { id: string };
 class DiaryDefinition implements EntityDefinition {
   async authorize() {
     return true;
@@ -79,8 +78,8 @@ class MemberDefinition implements EntityDefinition {
 
 interface MyTypeMap extends GeneralTypeMap {
   entities: {
-    member: ReqRes<MemberRequest, MemberResponse>;
-    diary: Diary;
+    member: { request: MemberRequest; response: MemberResponse };
+    diary: { type: Diary };
   };
   customQueries: {
     getVersion: {

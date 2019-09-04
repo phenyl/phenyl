@@ -3,7 +3,7 @@ import {
   LocalState,
   GeneralAction,
   GeneralTypeMap,
-  ReqResEntityMapOf
+  EntityRestInfoMapOf
 } from "@phenyl/interfaces";
 import { Middleware, Dispatch } from "redux";
 import { MiddlewareCreator, MiddlewareOptions } from "./middleware";
@@ -17,7 +17,7 @@ export class PhenylRedux<TM extends GeneralTypeMap> {
     return MC.create(options);
   }
   get reducer(): <
-    RREM extends ReqResEntityMapOf<TM>,
+    RREM extends EntityRestInfoMapOf<TM>,
     ACM extends AuthCommandMapOf<TM>
   >(
     state: LocalState<RREM, ACM> | undefined | null,

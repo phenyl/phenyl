@@ -30,7 +30,7 @@ type PatientRequest = PlainPatient;
 
 type PatientResponse = PlainPatient;
 
-type MyGeneralReqResEntityMap = {
+type MyGeneralEntityRestInfoMap = {
   patient: {
     request: PatientRequest;
     response: PatientResponse;
@@ -38,7 +38,7 @@ type MyGeneralReqResEntityMap = {
 };
 
 interface MyTypeMap extends GeneralTypeMap {
-  entities: MyGeneralReqResEntityMap;
+  entities: MyGeneralEntityRestInfoMap;
   customQueries: {};
   customCommands: {};
   auths: {
@@ -88,7 +88,7 @@ const httpClient: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
 });
 
 type Store = {
-  phenyl: LocalState<MyGeneralReqResEntityMap, AuthCommandMapOf<MyTypeMap>>;
+  phenyl: LocalState<MyGeneralEntityRestInfoMap, AuthCommandMapOf<MyTypeMap>>;
 };
 
 const store = createStore<Store, GeneralAction, {}, {}>(

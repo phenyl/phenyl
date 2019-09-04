@@ -24,17 +24,17 @@ import {
   GeneralTypeMap,
   UnfollowAction,
   UseEntitiesAction,
-  GeneralReqResEntityMap,
+  GeneralEntityRestInfoMap,
   GeneralAuthCommandMap,
   Key,
   Entity,
-  ReqResEntityMapOf,
+  EntityRestInfoMapOf,
   UserEntityNameOf
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 
 type Id = string;
-type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
+type LocalStateOf = LocalState<GeneralEntityRestInfoMap, GeneralAuthCommandMap>;
 type Next = Dispatch<AnyAction>;
 
 export type MiddlewareOptions<TM extends GeneralTypeMap> = {
@@ -181,7 +181,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Initialize entity fields with an empty map object if not exists.
    */
 
-  async useEntities<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async useEntities<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: UseEntitiesAction<EN>
   ): Promise<GeneralAction> {
     const entityNames = action.payload;
@@ -199,7 +199,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
 
-  async commitAndPush<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async commitAndPush<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: CommitAndPushAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -277,7 +277,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Commit to LocalState.
    */
 
-  async commit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async commit<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: CommitAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -292,7 +292,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
 
-  async push<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async push<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: PushAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -394,7 +394,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
         LocalStateUpdater.networkRequest(this.state, action.tag)
       );
 
-      const pushCommand: PushCommand<Key<ReqResEntityMapOf<TM>>> = {
+      const pushCommand: PushCommand<Key<EntityRestInfoMapOf<TM>>> = {
         id,
         operations,
         // @ts-ignore entityName is string
@@ -447,7 +447,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Delete the entity in the CentralState, then unfollow the entity in LocalState.
    */
 
-  async delete<EN extends Key<ReqResEntityMapOf<TM>>>(
+  async delete<EN extends Key<EntityRestInfoMapOf<TM>>>(
     action: DeleteAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -472,7 +472,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Register the given entity.
    */
 
-  async follow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async follow<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: FollowAction<EN, Entity>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -485,7 +485,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Register all the given entities.
    */
 
-  async followAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async followAll<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: FollowAllAction<EN, Entity>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -556,7 +556,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * If push failed, the commit is not applied.
    */
 
-  async pushAndCommit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async pushAndCommit<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: PushAndCommitAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -625,7 +625,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Pull the differences from CentralState, then rebase the diffs.
    */
 
-  async pull<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async pull<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: PullAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -668,7 +668,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Set session info. Register user if exists.
    */
 
-  async setSession<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async setSession<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: SetSessionAction<EN, Entity>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -681,7 +681,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Unregister the entity.
    */
 
-  async unfollow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  async unfollow<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: UnfollowAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;

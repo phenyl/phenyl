@@ -48,6 +48,7 @@ export type EntityRequestData<EN extends string, E extends Entity> =
   | PushRequestData<EN>
   | DeleteRequestData<EN>;
 
+export type EntityRequestMethodName = GeneralEntityRequestData["method"];
 /**
  * RequestData handled by EntityDefinition.
  * Pre-entity values in isnert data are not validated and any objects can be passed.
@@ -84,6 +85,8 @@ export type AuthRequestData<EN extends string, C extends Object> =
 export type GeneralAuthRequestData =
   | GeneralLoginRequestData
   | GeneralLogoutRequestData;
+
+export type AuthRequestMethodName = GeneralAuthRequestData["method"];
 
 /**
  * RequestData handled by UserDefinition (EntityRequestData | AuthRequestData).

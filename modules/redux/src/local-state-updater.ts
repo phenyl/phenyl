@@ -10,13 +10,13 @@ import {
   Session,
   VersionDiff,
   UnreachedCommit,
-  GeneralReqResEntityMap,
+  GeneralEntityRestInfoMap,
   GeneralAuthCommandMap,
   Key,
   Entity
 } from "@phenyl/interfaces";
 import { LocalStateFinder } from "./local-state-finder";
-type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
+type LocalStateOf = LocalState<GeneralEntityRestInfoMap, GeneralAuthCommandMap>;
 
 type EntityName = string;
 type Id = string;
@@ -34,7 +34,7 @@ export class LocalStateUpdater {
   /**
    * Initialize the given entity field.
    */
-  static initialize<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static initialize<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     state: LocalStateOf,
     entityName: EN
   ): GeneralUpdateOperation {
@@ -49,7 +49,7 @@ export class LocalStateUpdater {
    * Error is thrown when no entity is registered.
    */
 
-  static commit<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static commit<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     command: IdUpdateCommand<EN>
   ): GeneralUpdateOperation {
@@ -85,7 +85,7 @@ export class LocalStateUpdater {
    * Error is thrown when no entity is registered.
    */
 
-  static revert<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static revert<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     command: RevertCommand<EN>
   ): GeneralUpdateOperation {
@@ -123,7 +123,7 @@ export class LocalStateUpdater {
    * Overwrite if already exists.
    */
 
-  static follow<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static follow<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     entityName: EN,
     entity: Entity,
@@ -144,7 +144,7 @@ export class LocalStateUpdater {
    * Remove the entity info from LocalState.
    */
 
-  static unfollow<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static unfollow<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     entityName: EN,
     id: Id
@@ -160,7 +160,7 @@ export class LocalStateUpdater {
    */
 
   static addUnreachedCommits<
-    GM extends GeneralReqResEntityMap,
+    GM extends GeneralEntityRestInfoMap,
     EN extends Key<GM>
   >(state: LocalStateOf, commit: UnreachedCommit<EN>): GeneralUpdateOperation {
     const { entityName, id, commitCount } = commit;
@@ -187,7 +187,7 @@ export class LocalStateUpdater {
    */
 
   static removeUnreachedCommits<
-    GM extends GeneralReqResEntityMap,
+    GM extends GeneralEntityRestInfoMap,
     EN extends Key<GM>
   >(state: LocalStateOf, commit: UnreachedCommit<EN>): GeneralUpdateOperation {
     return {
@@ -269,7 +269,7 @@ export class LocalStateUpdater {
    * If local commits exist, apply them after master commits.
    */
 
-  static rebase<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static rebase<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     pushCommand: PushCommand<EN>
   ): GeneralUpdateOperation {
@@ -300,7 +300,7 @@ export class LocalStateUpdater {
    * Apply the master commits, then apply the given local commits.
    */
 
-  static synchronize<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static synchronize<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     pushCommand: PushCommand<EN>,
     localCommits: Array<GeneralUpdateOperation>
@@ -331,7 +331,7 @@ export class LocalStateUpdater {
    * NOTICE: if returned type of this.follow() changes, this implementation must be changed.
    */
 
-  static followAll<GM extends GeneralReqResEntityMap, EN extends Key<GM>>(
+  static followAll<GM extends GeneralEntityRestInfoMap, EN extends Key<GM>>(
     state: LocalStateOf,
     entityName: EN,
     entities: Entity[],

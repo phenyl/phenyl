@@ -32,10 +32,10 @@ import {
   UnfollowAction,
   UnsetSessionAction,
   UseEntitiesAction,
-  GeneralReqResEntityMap,
+  GeneralEntityRestInfoMap,
   GeneralAuthCommandMap,
   GeneralTypeMap,
-  ReqResEntityMapOf,
+  EntityRestInfoMapOf,
   Key
 } from "@phenyl/interfaces";
 
@@ -43,7 +43,7 @@ type Id = string;
 
 export class PhenylReduxModule {
   static createInitialState<
-    GEM extends GeneralReqResEntityMap,
+    GEM extends GeneralEntityRestInfoMap,
     GCM extends GeneralAuthCommandMap
   >(): LocalState<GEM, GCM> {
     return {
@@ -61,7 +61,7 @@ export class PhenylReduxModule {
    */
 
   static phenylReducer<
-    GEM extends GeneralReqResEntityMap,
+    GEM extends GeneralEntityRestInfoMap,
     GCM extends GeneralAuthCommandMap
   >(
     state: LocalState<GEM, GCM> | undefined | null,
@@ -90,7 +90,7 @@ export class PhenylReduxModule {
   }
 
   static replace<
-    GEM extends GeneralReqResEntityMap,
+    GEM extends GeneralEntityRestInfoMap,
     GCM extends GeneralAuthCommandMap
   >(state: LocalState<GEM, GCM>): ReplaceAction<LocalState<GEM, GCM>> {
     return {
@@ -100,7 +100,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static useEntities<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static useEntities<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     entityNames: EN[]
   ): UseEntitiesAction<EN> {
     return {
@@ -146,7 +146,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static follow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static follow<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     entityName: EN,
     entity: Entity,
     versionId: Id
@@ -162,7 +162,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static followAll<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static followAll<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     entityName: EN,
     entities: Entity[],
     versionsById: {
@@ -180,7 +180,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static unfollow<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static unfollow<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     entityName: EN,
     id: string
   ): UnfollowAction<EN> {
@@ -196,7 +196,7 @@ export class PhenylReduxModule {
 
   static delete<
     TM extends GeneralTypeMap,
-    EN extends Key<ReqResEntityMapOf<TM>>
+    EN extends Key<EntityRestInfoMapOf<TM>>
   >(command: IdDeleteCommand<EN>): DeleteAction<EN> {
     return {
       type: "phenyl/delete",
@@ -205,7 +205,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static pushAndCommit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static pushAndCommit<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     command: IdUpdateCommand<EN>
   ): PushAndCommitAction<EN> {
     return {
@@ -215,7 +215,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static commit<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static commit<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     command: IdUpdateCommand<EN>
   ): CommitAction<EN> {
     return {
@@ -225,7 +225,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static push<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static push<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     payload: PushActionPayload<EN>
   ): PushAction<EN> {
     return {
@@ -242,7 +242,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static commitAndPush<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static commitAndPush<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     command: IdUpdateCommand<EN>
   ): CommitAndPushAction<EN> {
     return {
@@ -252,7 +252,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static pull<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static pull<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     query: IdQuery<EN>
   ): PullAction<EN> {
     return {
@@ -264,7 +264,7 @@ export class PhenylReduxModule {
 
   static login<
     TM extends GeneralTypeMap,
-    EN extends Key<ReqResEntityMapOf<TM>>,
+    EN extends Key<EntityRestInfoMapOf<TM>>,
     C extends Object
   >(command: LoginCommand<EN, C>): LoginAction<EN, C> {
     return {
@@ -274,7 +274,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static logout<M extends GeneralReqResEntityMap, EN extends Key<M>>(
+  static logout<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     command: LogoutCommand<EN>
   ): LogoutAction<EN> {
     return {
