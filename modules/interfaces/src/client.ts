@@ -1,26 +1,4 @@
 import {
-  AllSessions,
-  AuthCommandMapOf,
-  AuthCredentials,
-  AuthSessions,
-  CustomCommandMapOf,
-  CustomCommandParams,
-  CustomCommandResultValue,
-  CustomQueryMapOf,
-  CustomQueryParams,
-  CustomQueryResultValue,
-  GeneralAuthCommandMap,
-  GeneralCustomMap,
-  GeneralEntityRestInfoMap,
-  GeneralTypeMap,
-  EntityRestInfoMapOf,
-  ResponseAuthUser,
-  GeneralEntityMap,
-  RequestEntity,
-  ResponseEntity,
-  ResponseEntityMapOf
-} from "./type-map";
-import {
   CustomCommand,
   DeleteCommand,
   IdUpdateCommand,
@@ -91,6 +69,32 @@ import { KvsClient } from "./kvs-client";
 import { PreEntity } from "./entity";
 import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 import { DbClient, GeneralDbClient } from "./db-client";
+import {
+  GeneralEntityRestInfoMap,
+  ResponseEntity,
+  RequestEntity,
+  GeneralEntityMap,
+  EntityRestInfoMapOf,
+  ResponseEntityMapOf
+} from "./entity-rest-info-map";
+import {
+  GeneralAuthCommandMap,
+  AuthCredentials,
+  ResponseAuthUser,
+  AuthSessions,
+  AuthCommandMapOf,
+  AllSessions
+} from "./auth-command-map";
+import {
+  GeneralCustomMap,
+  CustomQueryParams,
+  CustomQueryResultValue,
+  CustomCommandParams,
+  CustomCommandResultValue,
+  CustomQueryMapOf,
+  CustomCommandMapOf
+} from "./custom-map";
+import { GeneralTypeMap } from "./type-map";
 
 /**
  * A common interface for client-side and server-side client to access to entities.

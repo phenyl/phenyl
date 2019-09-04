@@ -1,20 +1,4 @@
 import {
-  AuthCredentialsOf,
-  UserEntityNameOf,
-  AuthSessionOf,
-  RequestEntityOf,
-  CustomCommandNameOf,
-  CustomCommandParamsOf,
-  CustomCommandResultValueOf,
-  CustomQueryNameOf,
-  CustomQueryParamsOf,
-  CustomQueryResultValueOf,
-  EntityNameOf,
-  GeneralTypeMap,
-  ResponseAuthUserOf,
-  ResponseEntityOf
-} from "./type-map";
-import {
   DeleteRequestData,
   FindOneRequestData,
   FindRequestData,
@@ -59,6 +43,26 @@ import {
 } from "./response-data";
 
 import { PreEntity } from "./entity";
+import { GeneralTypeMap } from "./type-map";
+import {
+  EntityNameOf,
+  RequestEntityOf,
+  ResponseEntityOf
+} from "./entity-rest-info-map";
+import {
+  CustomQueryNameOf,
+  CustomCommandNameOf,
+  CustomQueryParamsOf,
+  CustomCommandParamsOf,
+  CustomQueryResultValueOf,
+  CustomCommandResultValueOf
+} from "./custom-map";
+import {
+  UserEntityNameOf,
+  AuthCredentialsOf,
+  ResponseAuthUserOf,
+  AuthSessionOf
+} from "./auth-command-map";
 
 /**
  * All possible `RequestData` from the given `TypeMap`.

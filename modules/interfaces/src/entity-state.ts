@@ -16,7 +16,7 @@ import {
 } from "./query";
 
 import { Entity } from "./entity";
-import { GeneralEntityMap } from "./type-map";
+import { GeneralEntityMap } from "./entity-rest-info-map";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 

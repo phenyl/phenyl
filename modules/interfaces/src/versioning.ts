@@ -1,8 +1,8 @@
-import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 import { ProEntity } from "./entity";
 import { PushCommand } from "./command";
+import { GeneralEntityMap } from "./entity-rest-info-map";
 
 export type EntityVersion = {
   id: string;

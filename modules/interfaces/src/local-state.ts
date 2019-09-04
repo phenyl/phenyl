@@ -1,14 +1,13 @@
-import {
-  AllSessions,
-  GeneralAuthCommandMap,
-  ResponseEntity,
-  GeneralEntityRestInfoMap
-} from "./type-map";
 import { PhenylError } from "./error";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
+import {
+  GeneralEntityRestInfoMap,
+  ResponseEntity
+} from "./entity-rest-info-map";
+import { GeneralAuthCommandMap, AllSessions } from "./auth-command-map";
 
 export type LocalEntityInfo<E extends Entity> = {
   origin: E;
