@@ -20,7 +20,15 @@ import {
 
 import { Entity } from "./entity";
 import { ServerError } from "./error";
-import { CustomQueryResultObject, CustomCommandResultObject } from "./extra";
+import {
+  CustomQueryResultObject,
+  CustomCommandResultObject,
+  ExtraResult
+} from "./extra";
+import {
+  ExtraResultMethodMap,
+  EntityExtraResultByMethodMap
+} from "./entity-rest-info-map";
 
 /**
  * Type of response data handled in servers and clients.
@@ -51,22 +59,37 @@ export type GeneralResponseData =
 /**
  * ResponseData handled by EntityDefinition.
  */
-export type EntityResponseData<E extends Entity> =
-  | FindResponseData<E>
-  | FindOneResponseData<E>
-  | GetResponseData<E>
-  | GetByIdsResponseData<E>
-  | PullResponseData<E>
-  | InsertOneResponseData
-  | InsertMultiResponseData
-  | InsertAndGetResponseData<E>
-  | InsertAndGetMultiResponseData<E>
-  | UpdateOneResponseData
-  | UpdateMultiResponseData
-  | UpdateAndGetResponseData<E>
-  | UpdateAndFetchResponseData<E>
-  | PushResponseData<E>
-  | DeleteResponseData
+export type EntityResponseData<
+  E extends Entity,
+  ERMM extends ExtraResultMethodMap = ExtraResultMethodMap
+> =
+  | FindResponseData<E, EntityExtraResultByMethodMap<ERMM, "find">>
+  | FindOneResponseData<E, EntityExtraResultByMethodMap<ERMM, "findOne">>
+  | GetResponseData<E, EntityExtraResultByMethodMap<ERMM, "get">>
+  | GetByIdsResponseData<E, EntityExtraResultByMethodMap<ERMM, "getByIds">>
+  | PullResponseData<E, EntityExtraResultByMethodMap<ERMM, "pull">>
+  | InsertOneResponseData<EntityExtraResultByMethodMap<ERMM, "insertOne">>
+  | InsertMultiResponseData<EntityExtraResultByMethodMap<ERMM, "insertMulti">>
+  | InsertAndGetResponseData<
+      E,
+      EntityExtraResultByMethodMap<ERMM, "insertAndGet">
+    >
+  | InsertAndGetMultiResponseData<
+      E,
+      EntityExtraResultByMethodMap<ERMM, "insertAndGetMulti">
+    >
+  | UpdateOneResponseData<EntityExtraResultByMethodMap<ERMM, "updateById">>
+  | UpdateMultiResponseData<EntityExtraResultByMethodMap<ERMM, "updateMulti">>
+  | UpdateAndGetResponseData<
+      E,
+      EntityExtraResultByMethodMap<ERMM, "updateAndGet">
+    >
+  | UpdateAndFetchResponseData<
+      E,
+      EntityExtraResultByMethodMap<ERMM, "updateAndFetch">
+    >
+  | PushResponseData<E, EntityExtraResultByMethodMap<ERMM, "push">>
+  | DeleteResponseData<EntityExtraResultByMethodMap<ERMM, "delete">>
   | ErrorResponseData;
 
 export type GeneralEntityResponseData =
@@ -94,8 +117,12 @@ export type GeneralEntityResponseData =
 export type AuthResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object
-> = LoginResponseData<EN, E, S> | LogoutResponseData | ErrorResponseData;
+  S extends Object,
+  ERMM extends ExtraResultMethodMap = ExtraResultMethodMap
+> =
+  | LoginResponseData<EN, E, S, EntityExtraResultByMethodMap<ERMM, "login">>
+  | LogoutResponseData<EntityExtraResultByMethodMap<ERMM, "logout">>
+  | ErrorResponseData;
 
 export type GeneralAuthResponseData =
   | GeneralLoginResponseData
@@ -109,8 +136,9 @@ export type GeneralAuthResponseData =
 export type UserEntityResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object
-> = EntityResponseData<E> | AuthResponseData<EN, E, S>;
+  S extends Object,
+  ERMM extends ExtraResultMethodMap = ExtraResultMethodMap
+> = EntityResponseData<E, ERMM> | AuthResponseData<EN, E, S, ERMM>;
 
 export type GeneralUserEntityResponseData =
   | GeneralEntityResponseData
@@ -121,116 +149,153 @@ export type GeneralUserEntityResponseData =
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomQueryResponseData<
-  QR extends CustomQueryResultObject
-> = RunCustomQueryResponseData<QR>;
+  QR extends CustomQueryResultObject,
+  ER extends ExtraResult = ExtraResult
+> = RunCustomQueryResponseData<QR, ER>;
 
 /**
  * ResponseData handled by CustomCommandDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomCommandResponseData<
-  CR extends CustomCommandResultObject
-> = RunCustomCommandResponseData<CR>;
+  CR extends CustomCommandResultObject,
+  ER extends ExtraResult = ExtraResult
+> = RunCustomCommandResponseData<CR, ER>;
 
-export type FindResponseData<E extends Entity> = {
+export type FindResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "find";
-  payload: QueryResult<E>;
+  payload: QueryResult<E, ER>;
 };
 
-export type FindOneResponseData<E extends Entity> = {
+export type FindOneResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "findOne";
-  payload: SingleQueryResult<E>;
+  payload: SingleQueryResult<E, ER>;
 };
 
-export type GetResponseData<E extends Entity> = {
+export type GetResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "get";
-  payload: SingleQueryResult<E>;
+  payload: SingleQueryResult<E, ER>;
 };
 
-export type GetByIdsResponseData<E extends Entity> = {
+export type GetByIdsResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "getByIds";
-  payload: QueryResult<E>;
+  payload: QueryResult<E, ER>;
 };
 
-export type PullResponseData<E extends Entity> = {
+export type PullResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "pull";
-  payload: PullQueryResult<E>;
+  payload: PullQueryResult<E, ER>;
 };
 
-export type InsertOneResponseData = {
+export type InsertOneResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "insertOne";
-  payload: SingleInsertCommandResult;
+  payload: SingleInsertCommandResult<ER>;
 };
 
-export type InsertMultiResponseData = {
+export type InsertMultiResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "insertMulti";
-  payload: MultiInsertCommandResult;
+  payload: MultiInsertCommandResult<ER>;
 };
 
-export type InsertAndGetResponseData<E extends Entity> = {
+export type InsertAndGetResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "insertAndGet";
-  payload: GetCommandResult<E>;
+  payload: GetCommandResult<E, ER>;
 };
 
-export type InsertAndGetMultiResponseData<E extends Entity> = {
+export type InsertAndGetMultiResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "insertAndGetMulti";
-  payload: MultiValuesCommandResult<E>;
+  payload: MultiValuesCommandResult<E, ER>;
 };
 
-export type UpdateOneResponseData = {
+export type UpdateOneResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "updateById";
-  payload: IdUpdateCommandResult;
+  payload: IdUpdateCommandResult<ER>;
 };
 
-export type UpdateMultiResponseData = {
+export type UpdateMultiResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "updateMulti";
-  payload: MultiUpdateCommandResult;
+  payload: MultiUpdateCommandResult<ER>;
 };
 
-export type UpdateAndGetResponseData<E extends Entity> = {
+export type UpdateAndGetResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "updateAndGet";
-  payload: GetCommandResult<E>;
+  payload: GetCommandResult<E, ER>;
 };
 
-export type UpdateAndFetchResponseData<E extends Entity> = {
+export type UpdateAndFetchResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "updateAndFetch";
-  payload: MultiValuesCommandResult<E>;
+  payload: MultiValuesCommandResult<E, ER>;
 };
 
-export type PushResponseData<E extends Entity> = {
+export type PushResponseData<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "push";
-  payload: PushCommandResult<E>;
+  payload: PushCommandResult<E, ER>;
 };
 
-export type DeleteResponseData = {
+export type DeleteResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "delete";
-  payload: DeleteCommandResult;
+  payload: DeleteCommandResult<ER>;
 };
 
-export type RunCustomQueryResponseData<QR extends CustomQueryResultObject> = {
+export type RunCustomQueryResponseData<
+  QR extends CustomQueryResultObject,
+  ER extends ExtraResult = ExtraResult
+> = {
   type: "runCustomQuery";
-  payload: CustomQueryResult<QR>;
+  payload: CustomQueryResult<QR, ER>;
 };
 
 export type RunCustomCommandResponseData<
-  CR extends CustomCommandResultObject
+  CR extends CustomCommandResultObject,
+  ER extends ExtraResult = ExtraResult
 > = {
   type: "runCustomCommand";
-  payload: CustomCommandResult<CR>;
+  payload: CustomCommandResult<CR, ER>;
 };
 
 export type LoginResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object
+  S extends Object,
+  ER extends ExtraResult = ExtraResult
 > = {
   type: "login";
-  payload: LoginCommandResult<EN, E, S>;
+  payload: LoginCommandResult<EN, E, S, ER>;
 };
 
-export type LogoutResponseData = {
+export type LogoutResponseData<ER extends ExtraResult = ExtraResult> = {
   type: "logout";
-  payload: LogoutCommandResult;
+  payload: LogoutCommandResult<ER>;
 };
 
 export type ErrorResponseData = {
