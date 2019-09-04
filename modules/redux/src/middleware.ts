@@ -7,17 +7,12 @@ import {
   PushAction,
   RePushAction,
   CommitAndPushAction,
-  DeleteAction,
   FollowAction,
   FollowAllAction,
   LocalState,
-  LoginAction,
-  LogoutAction,
   PatchAction,
   GeneralAction,
-  PushAndCommitAction,
   ResolveErrorAction,
-  PushCommand,
   PullAction,
   RestApiClient,
   SetSessionAction,
@@ -28,8 +23,14 @@ import {
   GeneralAuthCommandMap,
   Key,
   Entity,
-  EntityRestInfoMapOf,
-  UserEntityNameOf
+  UserEntityNameOf,
+  PushCommandOf,
+  ActionWithTypeMap,
+  EntityNameOf,
+  DeleteActionOf,
+  LoginActionOf,
+  LogoutActionOf,
+  PushAndCommitActionOf
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 
@@ -43,8 +44,8 @@ export type MiddlewareOptions<TM extends GeneralTypeMap> = {
 };
 
 export class MiddlewareCreator {
-  static create<GM extends GeneralTypeMap, S>(
-    options: MiddlewareOptions<GM>
+  static create<TM extends GeneralTypeMap, S>(
+    options: MiddlewareOptions<TM>
   ): Middleware<{}, S, Dispatch<GeneralAction>> {
     const storeKey = options.storeKey || "phenyl";
     return (store: any) => (next: Dispatch<AnyAction>) => {
@@ -52,12 +53,14 @@ export class MiddlewareCreator {
 
       const getState = () => store.getState()[storeKey];
 
-      const handler: MiddlewareHandler<GM> = new MiddlewareHandler(
+      const handler: MiddlewareHandler<TM> = new MiddlewareHandler(
         getState,
         client,
         next
       );
-      return (action: GeneralAction): Promise<AnyAction> | AnyAction => {
+      return <EN extends EntityNameOf<TM>, UN extends UserEntityNameOf<TM>>(
+        action: ActionWithTypeMap<TM, EN, UN>
+      ): Promise<AnyAction> | AnyAction => {
         switch (action.type) {
           case "phenyl/useEntities":
             return handler.useEntities(action);
@@ -75,7 +78,6 @@ export class MiddlewareCreator {
             return handler.repush(action);
 
           case "phenyl/delete":
-            // @ts-ignore entityName is always string
             return handler.delete(action);
 
           case "phenyl/follow":
@@ -85,11 +87,9 @@ export class MiddlewareCreator {
             return handler.followAll(action);
 
           case "phenyl/login":
-            // @ts-ignore TODO: #287
             return handler.login(action);
 
           case "phenyl/logout":
-            // @ts-ignore TODO: #287
             return handler.logout(action);
 
           case "phenyl/patch":
@@ -162,26 +162,26 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   ): Promise<GeneralAction> {
     return this.next(MiddlewareHandler.PhenylReduxModule.assign(ops));
   }
+
   /**
    * Invoke reducer 2: Reset state.
    */
-
   async resetState(): Promise<GeneralAction> {
     return this.next(MiddlewareHandler.PhenylReduxModule.reset());
   }
+
   /**
    *
    */
-
   get sessionId(): Id | undefined | null {
     const { session } = this.state;
     return session ? session.id : null;
   }
+
   /**
    * Initialize entity fields with an empty map object if not exists.
    */
-
-  async useEntities<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
+  async useEntities<RM extends GeneralEntityRestInfoMap, EN extends Key<RM>>(
     action: UseEntitiesAction<EN>
   ): Promise<GeneralAction> {
     const entityNames = action.payload;
@@ -192,13 +192,13 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
       .map(entityName => LocalStateUpdater.initialize(this.state, entityName));
     return this.assignToState(...ops);
   }
+
   /**
    * Commit to LocalState and then Push to the CentralState.
    * If failed, the commit is still applied.
    * In such cases, pull the entity first.
    * Only when Authorization Error occurred, it will be rollbacked.
    */
-
   async commitAndPush<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
     action: CommitAndPushAction<EN>
   ): Promise<GeneralAction> {
@@ -213,7 +213,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
       entityName,
       id
     });
-    const pushCommand: PushCommand<EN> = {
+    const pushCommand: PushCommandOf<TM, EN> = {
       id,
       operations: commits,
       entityName,
@@ -292,7 +292,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
 
-  async push<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
+  async push<RM extends GeneralEntityRestInfoMap, EN extends Key<RM>>(
     action: PushAction<EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
@@ -310,7 +310,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     this.assignToState(
       LocalStateUpdater.networkRequest(this.state, action.tag)
     );
-    const pushCommand: PushCommand<EN> = {
+    const pushCommand = {
       id,
       operations: commitsToPush,
       entityName,
@@ -394,15 +394,15 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
         LocalStateUpdater.networkRequest(this.state, action.tag)
       );
 
-      const pushCommand: PushCommand<Key<EntityRestInfoMapOf<TM>>> = {
+      const pushCommand = {
         id,
         operations,
-        // @ts-ignore entityName is string
         entityName,
         versionId
       };
 
       try {
+        // @ts-ignore
         const result = await this.client.push(pushCommand, this.sessionId);
         ops.push(
           LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit)
@@ -447,8 +447,8 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Delete the entity in the CentralState, then unfollow the entity in LocalState.
    */
 
-  async delete<EN extends Key<EntityRestInfoMapOf<TM>>>(
-    action: DeleteAction<EN>
+  async delete<EN extends EntityNameOf<TM>>(
+    action: DeleteActionOf<TM, EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, id } = action.payload;
@@ -504,7 +504,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    */
 
   async login<UN extends UserEntityNameOf<TM>>(
-    action: LoginAction<UN, Object>
+    action: LoginActionOf<TM, UN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const command = action.payload;
@@ -536,7 +536,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Remove the session in CentralState and reset the LocalState.
    */
   async logout<UN extends UserEntityNameOf<TM>>(
-    action: LogoutAction<UN>
+    action: LogoutActionOf<TM, UN>
   ): Promise<GeneralAction> {
     const command = action.payload;
     await this.client.logout(command, this.sessionId);
@@ -556,8 +556,8 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * If push failed, the commit is not applied.
    */
 
-  async pushAndCommit<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
-    action: PushAndCommitAction<EN>
+  async pushAndCommit<EN extends EntityNameOf<TM>>(
+    action: PushAndCommitActionOf<TM, EN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     await this.assignToState(
@@ -572,7 +572,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     });
     const operations = commits.slice();
     operations.push(operation);
-    const pushCommand: PushCommand<EN> = {
+    const pushCommand = {
       id,
       operations,
       entityName,
