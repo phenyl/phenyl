@@ -15,7 +15,6 @@ import {
   ResolveErrorAction,
   PullAction,
   RestApiClient,
-  SetSessionAction,
   GeneralTypeMap,
   UnfollowAction,
   UseEntitiesAction,
@@ -30,7 +29,8 @@ import {
   DeleteActionOf,
   LoginActionOf,
   LogoutActionOf,
-  PushAndCommitActionOf
+  PushAndCommitActionOf,
+  SetSessionActionOf
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 
@@ -668,8 +668,8 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Set session info. Register user if exists.
    */
 
-  async setSession<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
-    action: SetSessionAction<EN, Entity>
+  async setSession<UN extends UserEntityNameOf<TM>>(
+    action: SetSessionActionOf<TM, UN>
   ): Promise<GeneralAction> {
     const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { user, versionId, session } = action.payload;

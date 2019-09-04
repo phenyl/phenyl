@@ -1,30 +1,26 @@
 import {
-  AuthCommandMapOf,
-  LocalState,
-  GeneralAction,
+  LocalStateOf,
   GeneralTypeMap,
-  EntityRestInfoMapOf
+  ActionWithTypeMap,
+  EntityNameOf,
+  UserEntityNameOf
 } from "@phenyl/interfaces";
-import { Middleware, Dispatch } from "redux";
+import { Middleware } from "redux";
 import { MiddlewareCreator, MiddlewareOptions } from "./middleware";
 import { PhenylReduxModule } from "./phenyl-redux-module";
 
 export class PhenylRedux<TM extends GeneralTypeMap> {
-  createMiddleware<T, S>(
-    options: MiddlewareOptions<TM>
-  ): Middleware<S, Dispatch<GeneralAction>> {
-    const MC = MiddlewareCreator;
-    return MC.create(options);
+  createMiddleware(options: MiddlewareOptions<TM>): Middleware {
+    return MiddlewareCreator.create(options);
   }
-  get reducer(): <
-    RREM extends EntityRestInfoMapOf<TM>,
-    ACM extends AuthCommandMapOf<TM>
-  >(
-    state: LocalState<RREM, ACM> | undefined | null,
-    action: GeneralAction
-  ) => LocalState<RREM, ACM> {
+
+  get reducer(): <EN extends EntityNameOf<TM>, UN extends UserEntityNameOf<TM>>(
+    state: LocalStateOf<TM> | undefined | null,
+    action: ActionWithTypeMap<TM, EN, UN>
+  ) => LocalStateOf<TM> {
     return PhenylReduxModule.phenylReducer.bind(PhenylReduxModule);
   }
+
   get actions(): PhenylReduxModule {
     return PhenylReduxModule;
   }

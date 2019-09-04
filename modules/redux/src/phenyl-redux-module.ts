@@ -36,19 +36,19 @@ import {
   GeneralAuthCommandMap,
   GeneralTypeMap,
   EntityRestInfoMapOf,
-  Key
+  Key,
+  LocalEntityState
 } from "@phenyl/interfaces";
 
 type Id = string;
 
 export class PhenylReduxModule {
   static createInitialState<
-    GEM extends GeneralEntityRestInfoMap,
-    GCM extends GeneralAuthCommandMap
-  >(): LocalState<GEM, GCM> {
+    RM extends GeneralEntityRestInfoMap,
+    AM extends GeneralAuthCommandMap
+  >(): LocalState<RM, AM> {
     return {
-      // @ts-ignore: enetities can empty object
-      entities: {},
+      entities: {} as LocalEntityState<RM>,
       unreachedCommits: [],
       network: {
         requests: [],
@@ -56,17 +56,17 @@ export class PhenylReduxModule {
       }
     };
   }
+
   /**
    * Reducer.
    */
-
   static phenylReducer<
-    GEM extends GeneralEntityRestInfoMap,
-    GCM extends GeneralAuthCommandMap
+    RM extends GeneralEntityRestInfoMap,
+    AM extends GeneralAuthCommandMap
   >(
-    state: LocalState<GEM, GCM> | undefined | null,
+    state: LocalState<RM, AM> | undefined | null,
     action: GeneralAction
-  ): LocalState<GEM, GCM> {
+  ): LocalState<RM, AM> {
     if (state == null) {
       return this.createInitialState();
     }
@@ -82,7 +82,7 @@ export class PhenylReduxModule {
         return this.createInitialState();
 
       case "phenyl/assign":
-        return update(state, ...action.payload) as LocalState<GEM, GCM>;
+        return update(state, ...action.payload) as LocalState<RM, AM>;
 
       default:
         return state;
@@ -90,9 +90,9 @@ export class PhenylReduxModule {
   }
 
   static replace<
-    GEM extends GeneralEntityRestInfoMap,
-    GCM extends GeneralAuthCommandMap
-  >(state: LocalState<GEM, GCM>): ReplaceAction<LocalState<GEM, GCM>> {
+    RM extends GeneralEntityRestInfoMap,
+    AM extends GeneralAuthCommandMap
+  >(state: LocalState<RM, AM>): ReplaceAction<LocalState<RM, AM>> {
     return {
       type: "phenyl/replace",
       payload: state,
@@ -100,7 +100,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static useEntities<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
+  static useEntities<RM extends GeneralEntityRestInfoMap, EN extends Key<RM>>(
     entityNames: EN[]
   ): UseEntitiesAction<EN> {
     return {
@@ -274,7 +274,7 @@ export class PhenylReduxModule {
     };
   }
 
-  static logout<M extends GeneralEntityRestInfoMap, EN extends Key<M>>(
+  static logout<RM extends GeneralEntityRestInfoMap, EN extends Key<RM>>(
     command: LogoutCommand<EN>
   ): LogoutAction<EN> {
     return {

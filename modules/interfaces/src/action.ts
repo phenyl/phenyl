@@ -15,13 +15,16 @@ import { GeneralTypeMap } from "./type-map";
 import {
   EntityNameOf,
   EntityExtraParamsOf,
-  ResponseEntityOf
+  ResponseEntityOf,
+  EntityRestInfoMapOf
 } from "./entity-rest-info-map";
 import {
   UserEntityNameOf,
   AuthCredentialsOf,
-  AuthSessionOf
+  AuthSessionOf,
+  AuthCommandMapOf
 } from "./auth-command-map";
+import { LocalState } from "./local-state";
 
 /**
  *
@@ -197,6 +200,10 @@ export type OfflineAction = {
   type: "phenyl/offline";
 };
 
+export type ReplaceActionOf<TM extends GeneralTypeMap> = ReplaceAction<
+  LocalState<EntityRestInfoMapOf<TM>, AuthCommandMapOf<TM>>
+>;
+
 export type DeleteActionOf<
   TM extends GeneralTypeMap,
   EN extends EntityNameOf<TM>
@@ -257,7 +264,7 @@ export type ActionWithTypeMap<
   UN extends UserEntityNameOf<TM>
 > =
   | AssignAction
-  | ReplaceAction<Object>
+  | ReplaceActionOf<TM>
   | ResetAction
   | CommitAction<EN>
   | PushActionOf<TM, EN>

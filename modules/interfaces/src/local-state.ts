@@ -5,9 +5,15 @@ import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 import {
   GeneralEntityRestInfoMap,
-  ResponseEntity
+  ResponseEntity,
+  EntityRestInfoMapOf
 } from "./entity-rest-info-map";
-import { GeneralAuthCommandMap, AllSessions } from "./auth-command-map";
+import {
+  GeneralAuthCommandMap,
+  AllSessions,
+  AuthCommandMapOf
+} from "./auth-command-map";
+import { GeneralTypeMap } from "./type-map";
 
 export type LocalEntityInfo<E extends Entity> = {
   origin: E;
@@ -43,3 +49,8 @@ export type LocalState<
   error?: PhenylError;
   session?: AllSessions<AM> | null;
 };
+
+export type LocalStateOf<TM extends GeneralTypeMap> = LocalState<
+  EntityRestInfoMapOf<TM>,
+  AuthCommandMapOf<TM>
+>;
