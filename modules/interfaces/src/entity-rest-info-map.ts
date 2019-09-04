@@ -175,9 +175,9 @@ export type EntityExtraParams<
   : ExtraParams;
 
 export type EntityExtraParamsByMethodMap<
-  EMM extends ExtraParamsMethodMap,
+  EPMM extends ExtraParamsMethodMap,
   MN extends MethodName
-> = ExtraByMethodMap<ExtraParams, EMM, MN>;
+> = ExtraByMethodMap<ExtraParams, EPMM, MN>;
 
 /**
  * Extra response result of given entity name and given method name in given TypeMap.
@@ -197,9 +197,9 @@ export type EntityExtraResult<
   : ExtraResult;
 
 export type EntityExtraResultByMethodMap<
-  EMM extends ExtraResultMethodMap,
+  ERMM extends ExtraResultMethodMap,
   MN extends MethodName
-> = ExtraByMethodMap<ExtraResult, EMM, MN>;
+> = ExtraByMethodMap<ExtraResult, ERMM, MN>;
 
 /**
  * Name of entities in given TypeMap.
