@@ -1,5 +1,7 @@
 export * from "./action";
 export * from "./auth-command-map";
+export * from "./bound-query-command-result";
+export * from "./bound-query-command";
 export * from "./bound-request-response";
 export * from "./client";
 export * from "./command-result";

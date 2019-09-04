@@ -51,20 +51,8 @@ export interface CustomQuery<
   extra?: EP;
 }
 
-export interface WhereQuery<
-  EN extends string,
-  EP extends ExtraParams = ExtraParams
-> {
-  entityName: EN;
-  where: FindOperation;
-  skip?: number;
-  limit?: number;
-  sort?: SortNotation;
-  extra?: EP;
-}
-
+export type GeneralWhereQuery = WhereQuery<string>;
 export type GeneralIdQuery = IdQuery<string>;
 export type GeneralIdsQuery = IdsQuery<string>;
 export type GeneralPullQuery = PullQuery<string>;
 export type GeneralCustomQuery = CustomQuery<string, Object>;
-export type GeneralWhereQuery = WhereQuery<string>;

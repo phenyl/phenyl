@@ -54,7 +54,7 @@ export type CustomQueryMapOf<TM extends GeneralTypeMap> = TM["customQueries"];
 /**
  * Pair of params and result of given query command name in given TypeMap.
  */
-export type CustomQueryOf<
+export type CustomQueryInfoOf<
   TM extends GeneralTypeMap,
   QN extends Key<TM["customQueries"]>
 > = TM["customQueries"][QN];
@@ -150,7 +150,7 @@ export type CustomCommandMapOf<
 /**
  * Pair of params and result of given custom command name in given TypeMap.
  */
-export type CustomCommandOf<
+export type CustomCommandInfoOf<
   TM extends GeneralTypeMap,
   CN extends Key<TM["customCommands"]>
 > = TM["customCommands"][CN];
