@@ -23,19 +23,20 @@ export type SingleQueryResult<
   entity: E;
   versionId: string | null;
   extra?: ER;
+  pulled?: undefined; // To distinguish from PulledPullQueryResult
+};
+
+export type PulledPullQueryResult<ER extends ExtraResult = ExtraResult> = {
+  pulled: 1;
+  operations: GeneralUpdateOperation[];
+  versionId: string | null;
+  extra?: ER;
 };
 
 export type PullQueryResult<
   E extends Entity,
   ER extends ExtraResult = ExtraResult
-> =
-  | {
-      pulled: 1;
-      operations: GeneralUpdateOperation[];
-      versionId: string | null;
-      extra?: ER;
-    }
-  | SingleQueryResult<E, ER>;
+> = PulledPullQueryResult<ER> | SingleQueryResult<E, ER>;
 
 export type GeneralCustomQueryResult = CustomQueryResult<
   CustomQueryResultObject
