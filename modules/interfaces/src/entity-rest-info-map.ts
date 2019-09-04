@@ -2,7 +2,7 @@ import { EntityRequestMethodName, AuthRequestMethodName } from "./request-data";
 import { Entity } from "./entity";
 import { ExtraParams, ExtraResult } from "./extra";
 import { GeneralTypeMap } from "./type-map";
-import { Key } from "./utils";
+import { Key, ObjectMap } from "./utils";
 
 type MethodName = EntityRequestMethodName | AuthRequestMethodName;
 type MethodNameTypeMap = {
@@ -29,21 +29,18 @@ export interface GeneralEntityMap {
   [entityName: string]: Entity;
 }
 
-export type EntityExtraParamsMap = { [MN in MethodName]?: ExtraParams } & {
-  common?: ExtraParams;
-  create?: ExtraParams;
-  read?: ExtraParams;
-  update?: ExtraParams;
-  auth?: ExtraParams;
+export type ExtraMethodMap<EX extends ObjectMap> = {
+  [MN in MethodName]?: EX
+} & {
+  common?: EX;
+  create?: EX;
+  read?: EX;
+  update?: EX;
+  auth?: EX;
 };
 
-export type EntityExtraResultMap = { [MN in MethodName]?: ExtraResult } & {
-  common?: ExtraResult;
-  create?: ExtraResult;
-  read?: ExtraResult;
-  update?: ExtraResult;
-  auth?: ExtraResult;
-};
+export type ExtraParamsMethodMap = ExtraMethodMap<ExtraParams>;
+export type ExtraResultMethodMap = ExtraMethodMap<ExtraResult>;
 
 /**
  * REST API information of an entity.
@@ -51,8 +48,8 @@ export type EntityExtraResultMap = { [MN in MethodName]?: ExtraResult } & {
  * ### Properties
  * - request: Request form of entity.
  * - response: Response form of entity.
- * - extraParams: Extra parameters for request.
- * - extraResult: Extra result for response.
+ * - extraParams: Extra parameters by request method for request.
+ * - extraResult: Extra result by request method for response.
  *
  * Request and Response may have different types, for example, when making an authorization
  * request, a request of entity will need an `name`, `id`, and `password`, but response entity will only contain `name` and `id`.
@@ -66,14 +63,14 @@ export type GeneralEntityRestInfo =
 export type DetailedEntityRestInfo = {
   request: Entity;
   response: Entity;
-  extraParams?: EntityExtraParamsMap;
-  extraResult?: EntityExtraResultMap;
+  extraParams?: ExtraParamsMethodMap;
+  extraResult?: ExtraResultMethodMap;
 };
 
 export type SimpleEntityRestInfo = {
   type: Entity;
-  extraParams?: EntityExtraParamsMap;
-  extraResult?: EntityExtraResultMap;
+  extraParams?: ExtraParamsMethodMap;
+  extraResult?: ExtraResultMethodMap;
 };
 
 /**
@@ -166,28 +163,21 @@ export type ResponseEntity<
 export type EntityExtraParamsOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>,
-  MN extends EntityRequestMethodName
+  MN extends MethodName
 > = EntityExtraParams<TM["entities"], EN, MN>;
-
-type ObjKeyDefault<O, K, D> = K extends keyof O
-  ? (O[K] extends D ? Exclude<O[K], undefined> : D)
-  : D;
-
-export type EntityExtra<
-  EEPM extends EntityExtraParamsMap,
-  MN extends EntityRequestMethodName,
-  D
-> = ObjKeyDefault<EEPM, MN, D> &
-  ObjKeyDefault<EEPM, MethodNameTypeMap[MN], D> &
-  ObjKeyDefault<EEPM, "common", D>;
 
 export type EntityExtraParams<
   EM extends GeneralEntityRestInfoMap,
   EN extends Key<EM>,
-  MN extends EntityRequestMethodName
-> = EM[EN]["extraParams"] extends EntityExtraParamsMap
-  ? EntityExtra<EM[EN]["extraParams"], MN, ExtraParams>
+  MN extends MethodName
+> = EM[EN]["extraParams"] extends ExtraParamsMethodMap
+  ? EntityExtraParamsByMethodMap<EM[EN]["extraParams"], MN>
   : ExtraParams;
+
+export type EntityExtraParamsByMethodMap<
+  EMM extends ExtraParamsMethodMap,
+  MN extends MethodName
+> = ExtraByMethodMap<ExtraParams, EMM, MN>;
 
 /**
  * Extra response result of given entity name and given method name in given TypeMap.
@@ -195,16 +185,21 @@ export type EntityExtraParams<
 export type EntityExtraResultOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>,
-  MN extends EntityRequestMethodName
+  MN extends MethodName
 > = EntityExtraResult<TM["entities"], EN, MN>;
 
 export type EntityExtraResult<
   EM extends GeneralEntityRestInfoMap,
   EN extends Key<EM>,
-  MN extends EntityRequestMethodName
-> = EM[EN]["extraResult"] extends EntityExtraResultMap
-  ? EntityExtra<EM[EN]["extraResult"], MN, ExtraResult>
+  MN extends MethodName
+> = EM[EN]["extraResult"] extends ExtraResultMethodMap
+  ? EntityExtraResultByMethodMap<EM[EN]["extraResult"], MN>
   : ExtraResult;
+
+export type EntityExtraResultByMethodMap<
+  EMM extends ExtraResultMethodMap,
+  MN extends MethodName
+> = ExtraByMethodMap<ExtraResult, EMM, MN>;
 
 /**
  * Name of entities in given TypeMap.
@@ -226,3 +221,15 @@ export type Response<
   : T extends SimpleEntityRestInfo
   ? T["type"]
   : Entity;
+
+type ObjKeyDefault<O, K, D> = K extends keyof O
+  ? (O[K] extends D ? Exclude<O[K], undefined> : D)
+  : D;
+
+type ExtraByMethodMap<
+  EX extends ObjectMap,
+  EMM extends ExtraMethodMap<EX>,
+  MN extends MethodName
+> = ObjKeyDefault<EMM, MN, EX> &
+  ObjKeyDefault<EMM, MethodNameTypeMap[MN], EX> &
+  ObjKeyDefault<EMM, "common", EX>;
