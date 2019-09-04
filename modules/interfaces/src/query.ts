@@ -1,7 +1,5 @@
 import { FindOperation, SortNotation } from "sp2";
-import { ObjectMap } from "./utils";
-
-type ExtraParams = ObjectMap;
+import { ExtraParams } from "./extra";
 
 export interface WhereQuery<
   EN extends string,

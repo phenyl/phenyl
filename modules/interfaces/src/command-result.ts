@@ -1,13 +1,9 @@
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
 import { Session } from "./session";
-import { ObjectMap } from "./utils";
-
-type ExtraResult = ObjectMap;
+import { ExtraResult, CustomCommandResultObject } from "./extra";
 
 type IdMap = { [id: string]: string | null };
-
-export type CustomCommandResultObject = ObjectMap & { extra?: undefined };
 
 export type DeleteCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;

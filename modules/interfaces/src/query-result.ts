@@ -1,10 +1,6 @@
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
-import { ObjectMap } from "./utils";
-
-type ExtraResult = ObjectMap;
-
-export type CustomQueryResultObject = ObjectMap & { extra?: undefined };
+import { ExtraResult, CustomQueryResultObject } from "./extra";
 
 export type CustomQueryResult<
   QR extends CustomQueryResultObject,

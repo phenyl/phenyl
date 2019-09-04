@@ -5,8 +5,7 @@ import {
 } from "sp2";
 
 import { ProEntity } from "./entity";
-import { ObjectMap } from "./utils";
-type ExtraParams = ObjectMap;
+import { ExtraParams } from "./extra";
 
 /**
  * Type of a parameter for creating an entity.

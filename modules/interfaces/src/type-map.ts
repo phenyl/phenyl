@@ -2,6 +2,7 @@ import { Entity } from "./entity";
 import { Key, ObjectMap } from "./utils";
 import { Session } from "./session";
 import { EntityRequestMethodName, AuthRequestMethodName } from "./request-data";
+import { ExtraParams, ExtraResult, CustomResultObject } from "./extra";
 
 type MethodName = EntityRequestMethodName | AuthRequestMethodName;
 type MethodNameTypeMap = {
@@ -23,10 +24,6 @@ type MethodNameTypeMap = {
   login: "auth";
   logout: "auth";
 };
-
-type ExtraParams = ObjectMap;
-type ExtraResult = ObjectMap;
-type CustomResultObject = ObjectMap & { extra?: undefined };
 
 /**
  * This type includes all the types in API.

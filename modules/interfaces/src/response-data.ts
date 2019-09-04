@@ -9,19 +9,18 @@ import {
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
   PushCommandResult,
-  SingleInsertCommandResult,
-  CustomCommandResultObject
+  SingleInsertCommandResult
 } from "./command-result";
 import {
   CustomQueryResult,
   PullQueryResult,
   QueryResult,
-  SingleQueryResult,
-  CustomQueryResultObject
+  SingleQueryResult
 } from "./query-result";
 
 import { Entity } from "./entity";
 import { ServerError } from "./error";
+import { CustomQueryResultObject, CustomCommandResultObject } from "./extra";
 
 /**
  * Type of response data handled in servers and clients.

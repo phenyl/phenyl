@@ -10,6 +10,7 @@ export * from "./entity-definition";
 export * from "./entity-state";
 export * from "./entity";
 export * from "./error";
+export * from "./extra";
 export * from "./functional-group";
 export * from "./http-client";
 export * from "./http-server";
