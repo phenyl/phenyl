@@ -1,6 +1,32 @@
 import { Entity } from "./entity";
 import { Key, ObjectMap } from "./utils";
 import { Session } from "./session";
+import { EntityRequestMethodName, AuthRequestMethodName } from "./request-data";
+
+type MethodName = EntityRequestMethodName | AuthRequestMethodName;
+type MethodNameTypeMap = {
+  find: "read";
+  findOne: "read";
+  get: "read";
+  getByIds: "read";
+  pull: "read";
+  insertOne: "create";
+  insertMulti: "create";
+  insertAndGet: "create";
+  insertAndGetMulti: "create";
+  updateById: "update";
+  updateMulti: "update";
+  updateAndGet: "update";
+  updateAndFetch: "update";
+  push: "update";
+  delete: "delete";
+  login: "auth";
+  logout: "auth";
+};
+
+type ExtraParams = ObjectMap;
+type ExtraResult = ObjectMap;
+type CustomResultObject = ObjectMap & { extra?: undefined };
 
 /**
  * This type includes all the types in API.
@@ -16,6 +42,8 @@ import { Session } from "./session";
  *        member: {
  *          request: { id: string; name: string };
  *          response: { id: string; name: string };
+ *          extraParams: { find: { externalId: string } },
+ *          extraResult: { find: { externalEntity: Entity } },
  *        };
  *        message: {
  *          request: {
@@ -34,6 +62,7 @@ import { Session } from "./session";
  *        countMessagesOfMember: {
  *          params: { memberId: string };
  *          result: { count: number };
+ *          extraResult: { foo: number };
  *        };
  *        getCurrentVersion: {
  *          // params: {} // optional
@@ -53,7 +82,7 @@ import { Session } from "./session";
  */
 
 export interface GeneralTypeMap {
-  entities: GeneralReqResEntityMap;
+  entities: GeneralEntityRestInfoMap;
   customQueries: GeneralCustomMap;
   customCommands: GeneralCustomMap;
   auths: GeneralAuthCommandMap;
@@ -63,36 +92,60 @@ export interface GeneralEntityMap {
   [entityName: string]: Entity;
 }
 
+export type EntityExtraParamsMap = { [MN in MethodName]?: ExtraParams } & {
+  common?: ExtraParams;
+  create?: ExtraParams;
+  read?: ExtraParams;
+  update?: ExtraParams;
+  auth?: ExtraParams;
+};
+
+export type EntityExtraResultMap = { [MN in MethodName]?: ExtraResult } & {
+  common?: ExtraResult;
+  create?: ExtraParams;
+  read?: ExtraParams;
+  update?: ExtraParams;
+  auth?: ExtraParams;
+};
+
 /**
- * Request and Response of a given Entity
+ * REST API information of an entity.
+ *
+ * ### Properties
+ * - request: Request form of entity.
+ * - response: Response form of entity.
+ * - extraParams: Extra parameters for request.
+ * - extraResult: Extra result for response.
  *
  * Request and Response may have different types, for example, when making an authorization
  * request, a request of entity will need an `name`, `id`, and `password`, but response entity will only contain `name` and `id`.
- *
  * In such cases, you will need to provide different types to request and response entities.
  *
- * `ReqRes` provides you with both types by grouping them together.
- *
- * If request and response have the same type, you can omit the second type argument and provide a single Entity.
- *
- * See the following example:
- *
- *    interface MyTypeMap extends GeneralTypeMap {
- *      entities: {
- *        member: ReqRes<
- *          { id: string; name: string; password: string }, // request
- *          { id: string; name: string } // response
- *        >;
- *        message: ReqRes<{ id: string; body: string }>; // both request and response have the same type
- *      };
- *      ...
- *    }
  */
+export type DetailedEntityRestInfo = {
+  request: Entity;
+  response: Entity;
+  extraParams?: EntityExtraParamsMap;
+  extraResult?: EntityExtraResultMap;
+};
 
-export type ReqRes<
-  Trequest extends Entity,
-  Tresponse extends Entity = Trequest
-> = { request: Trequest; response: Tresponse };
+export type SimpleEntityRestInfo = {
+  type: Entity;
+  extraParams?: EntityExtraParamsMap;
+  extraResult?: EntityExtraResultMap;
+};
+
+/**
+ *  Deprecated. Use `SimpleEntityRestInfo`.
+ */
+export type ReqRes<Treq extends Entity, Tres extends Entity = Treq> = {
+  request: Treq;
+  response: Tres;
+};
+
+export type GeneralEntityRestInfo =
+  | DetailedEntityRestInfo
+  | SimpleEntityRestInfo;
 
 /**
  * Key-value map of entities.
@@ -102,8 +155,8 @@ export type ReqRes<
  * Library users implement concrete EntityMap in TypeMap.
  * See description of TypeMap.
  */
-export interface GeneralReqResEntityMap {
-  [entityName: string]: ReqRes<Entity, Entity>;
+export interface GeneralEntityRestInfoMap {
+  [entityName: string]: GeneralEntityRestInfo;
 }
 
 /**
@@ -141,11 +194,11 @@ export type GeneralCustomQueryMap = GeneralCustomMap;
  */
 export type GeneralCustomCommandMap = GeneralCustomMap;
 
-type CustomResultObject = ObjectMap & { extra?: undefined };
-
 type GeneralCustomInOut = {
   params?: ObjectMap;
   result?: CustomResultObject;
+  extraParams?: ExtraParams;
+  extraResult?: ExtraResult;
 };
 
 /**
@@ -170,7 +223,7 @@ type GeneralAuthSetting = {
  * - Key: name of entity
  * - Value: types of given entity's request and response
  */
-export type ReqResEntityMapOf<TM extends GeneralTypeMap> = TM["entities"];
+export type EntityRestInfoMapOf<TM extends GeneralTypeMap> = TM["entities"];
 
 /**
  * Key-value map of entities in given TypeMap.
@@ -191,15 +244,15 @@ export type ResponseEntityMapOf<TM extends GeneralTypeMap> = {
 };
 
 /**
- * ReqResEntity of given entity name in given TypeMap.
+ * EntityRestInfo of given entity name in given TypeMap.
  */
-export type ReqResEntityOf<
+export type EntityRestInfoOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["entities"]>
-> = ReqResEntity<TM["entities"], EN>;
+> = EntityRestInfo<TM["entities"], EN>;
 
-export type ReqResEntity<
-  EM extends GeneralReqResEntityMap,
+export type EntityRestInfo<
+  EM extends GeneralEntityRestInfoMap,
   EN extends Key<EM>
 > = EM[EN];
 
@@ -212,7 +265,7 @@ export type RequestEntityOf<
 > = RequestEntity<TM["entities"], EN>;
 
 export type RequestEntity<
-  EM extends GeneralReqResEntityMap,
+  EM extends GeneralEntityRestInfoMap,
   EN extends Key<EM>
 > = Request<EM[EN]>;
 
@@ -225,9 +278,55 @@ export type ResponseEntityOf<
 > = ResponseEntity<TM["entities"], EN>;
 
 export type ResponseEntity<
-  EM extends GeneralReqResEntityMap,
+  EM extends GeneralEntityRestInfoMap,
   EN extends Key<EM>
 > = Response<EM[EN]>;
+
+/**
+ * Extra params of given entity name and given method name in given TypeMap.
+ */
+export type EntityExtraParamsOf<
+  TM extends GeneralTypeMap,
+  EN extends Key<TM["entities"]>,
+  MN extends EntityRequestMethodName
+> = EntityExtraParams<TM["entities"], EN, MN>;
+
+type ObjKeyDefault<O, K, D> = K extends keyof O
+  ? (O[K] extends D ? Exclude<O[K], undefined> : D)
+  : D;
+
+export type EntityExtra<
+  EEPM extends EntityExtraParamsMap,
+  MN extends EntityRequestMethodName,
+  D
+> = ObjKeyDefault<EEPM, MN, D> &
+  ObjKeyDefault<EEPM, MethodNameTypeMap[MN], D> &
+  ObjKeyDefault<EEPM, "common", D>;
+
+export type EntityExtraParams<
+  EM extends GeneralEntityRestInfoMap,
+  EN extends Key<EM>,
+  MN extends EntityRequestMethodName
+> = EM[EN]["extraParams"] extends EntityExtraParamsMap
+  ? EntityExtra<EM[EN]["extraParams"], MN, ExtraParams>
+  : ExtraParams;
+
+/**
+ * Extra response result of given entity name and given method name in given TypeMap.
+ */
+export type EntityExtraResultOf<
+  TM extends GeneralTypeMap,
+  EN extends Key<TM["entities"]>,
+  MN extends EntityRequestMethodName
+> = EntityExtraResult<TM["entities"], EN, MN>;
+
+export type EntityExtraResult<
+  EM extends GeneralEntityRestInfoMap,
+  EN extends Key<EM>,
+  MN extends EntityRequestMethodName
+> = EM[EN]["extraResult"] extends EntityExtraResultMap
+  ? EntityExtra<EM[EN]["extraResult"], MN, ExtraResult>
+  : ExtraResult;
 
 /**
  * Name of entities in given TypeMap.
@@ -285,12 +384,48 @@ export type CustomQueryResultValueOf<
 
 /**
  * Result of given custom query name in given CustomQueryMap.
- * If params is not set, parsed as `CustomQueryResultObject`.
+ * If result is not set, parsed as `CustomQueryResultObject`.
  */
 export type CustomQueryResultValue<
   QM extends GeneralCustomMap,
   QN extends Key<QM>
 > = CustomResultValue<QM, QN>;
+
+/**
+ * Extra params of given custom query name in given TypeMap.
+ * If extraParams is not set, parsed as `ObjectMap`.
+ */
+export type CustomQueryExtraParamsOf<
+  TM extends GeneralTypeMap,
+  QN extends Key<TM["customQueries"]>
+> = CustomQueryExtraParams<TM["customQueries"], QN>;
+
+/**
+ * Extra params of given custom query name in given CustomQueryMap.
+ * If extraParams is not set, parsed as `ObjectMap`.
+ */
+export type CustomQueryExtraParams<
+  QM extends GeneralCustomMap,
+  QN extends Key<QM>
+> = CustomExtraParams<QM, QN>;
+
+/**
+ * Extra result of given custom query name in given TypeMap.
+ * If extraResult is not set, parsed as `ObjectMap`.
+ */
+export type CustomQueryExtraResultOf<
+  TM extends GeneralTypeMap,
+  QN extends Key<TM["customQueries"]>
+> = CustomQueryExtraResult<TM["customQueries"], QN>;
+
+/**
+ * Extra result of given custom query name in given CustomQueryMap.
+ * If result is not set, parsed as `ObjectMap`.
+ */
+export type CustomQueryExtraResult<
+  QM extends GeneralCustomMap,
+  QN extends Key<QM>
+> = CustomExtraResult<QM, QN>;
 
 /**
  * Key-value map of custom command settings in given TypeMap.
@@ -336,7 +471,7 @@ export type CustomCommandParams<
 
 /**
  * Result of given custom command name in given TypeMap.
- * If result is not set, parsed as `CustomCommandResultObject`.
+ * If params is not set, parsed as `CustomCommandResultObject`.
  */
 export type CustomCommandResultValueOf<
   TM extends GeneralTypeMap,
@@ -351,6 +486,42 @@ export type CustomCommandResultValue<
   CM extends GeneralCustomMap,
   CN extends Key<CM>
 > = CustomResultValue<CM, CN>;
+
+/**
+ * Extra params of given custom command name in given TypeMap.
+ * If extraParams is not set, parsed as `ObjectMap`.
+ */
+export type CustomCommandExtraParamsOf<
+  TM extends GeneralTypeMap,
+  CN extends Key<TM["customCommands"]>
+> = CustomCommandExtraParams<TM["customCommands"], CN>;
+
+/**
+ * Extra params of given custom command name in given CustomCommandMap.
+ * If extraParams is not set, parsed as `ObjectMap`.
+ */
+export type CustomCommandExtraParams<
+  CM extends GeneralCustomMap,
+  CN extends Key<CM>
+> = CustomExtraParams<CM, CN>;
+
+/**
+ * Extra result of given custom command name in given TypeMap.
+ * If extraResult is not set, parsed as `ObjectMap`.
+ */
+export type CustomCommandExtraResultOf<
+  TM extends GeneralTypeMap,
+  CN extends Key<TM["customCommands"]>
+> = CustomCommandExtraResult<TM["customCommands"], CN>;
+
+/**
+ * Extra result of given custom command name in given CustomCommandMap.
+ * If result is not set, parsed as `ObjectMap`.
+ */
+export type CustomCommandExtraResult<
+  CM extends GeneralCustomMap,
+  CN extends Key<CM>
+> = CustomExtraResult<CM, CN>;
 
 /**
  * Key-value map of user auth settings in given TypeMap.
@@ -451,24 +622,24 @@ export type AllSessions<AM extends GeneralAuthCommandMap> = ValueOf<
 export type ResponseAuthUserOf<
   TM extends GeneralTypeMap,
   EN extends Key<TM["auths"]>
-> = ResponseAuthUser<AuthCommandMapOf<TM>, EN, ReqResEntityMapOf<TM>>;
+> = ResponseAuthUser<AuthCommandMapOf<TM>, EN, EntityRestInfoMapOf<TM>>;
 
-type EntityOfAuth<
+type EntityRestInfoOfAuth<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = EN extends Key<EM> ? ReqResEntity<EM, EN> : ReqRes<Entity>;
+  EM extends GeneralEntityRestInfoMap = GeneralEntityRestInfoMap
+> = EN extends Key<EM> ? EntityRestInfo<EM, EN> : GeneralEntityRestInfo;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
  * If not given in AuthCommandMap, entity in given EntityMap(optional) is selected.
  * If neither exist, parsed as "Entity".
  */
-export type ReqResAuthUser<
+export type AuthUserEntityRestInfo<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = EntityOfAuth<AM, EN, EM>;
+  EM extends GeneralEntityRestInfoMap = GeneralEntityRestInfoMap
+> = EntityRestInfoOfAuth<AM, EN, EM>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -478,8 +649,8 @@ export type ReqResAuthUser<
 export type RequestAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = Request<EntityOfAuth<AM, EN, EM>>;
+  EM extends GeneralEntityRestInfoMap = GeneralEntityRestInfoMap
+> = Request<EntityRestInfoOfAuth<AM, EN, EM>>;
 
 /**
  * Logined user type of given user entity name in given AuthCommandMap.
@@ -489,8 +660,8 @@ export type RequestAuthUser<
 export type ResponseAuthUser<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>,
-  EM extends GeneralReqResEntityMap = GeneralReqResEntityMap
-> = Response<EntityOfAuth<AM, EN, EM>>;
+  EM extends GeneralEntityRestInfoMap = GeneralEntityRestInfoMap
+> = Response<EntityRestInfoOfAuth<AM, EN, EM>>;
 
 type CustomParams<
   T extends GeneralCustomMap,
@@ -510,5 +681,34 @@ type CustomResultValue<
     : CustomResultObject
   : CustomResultObject; // If "result" is not set, set CustomResultObject.
 
-type Request<T extends ReqRes<Entity>> = T["request"];
-type Response<T extends ReqRes<Entity>> = T["response"];
+type CustomExtraParams<
+  T extends GeneralCustomMap,
+  N extends Key<T>
+> = "extraParams" extends Key<T[N]>
+  ? T[N]["extraParams"] extends ExtraParams
+    ? Exclude<T[N]["extraParams"], undefined>
+    : ExtraParams
+  : ExtraParams;
+
+type CustomExtraResult<
+  T extends GeneralCustomMap,
+  N extends Key<T>
+> = "extraResult" extends Key<T[N]>
+  ? T[N]["extraResult"] extends ExtraResult
+    ? Exclude<T[N]["extraResult"], undefined>
+    : ExtraResult
+  : ExtraResult;
+
+type Request<T extends GeneralEntityRestInfo> = T extends DetailedEntityRestInfo
+  ? T["request"]
+  : T extends SimpleEntityRestInfo
+  ? T["type"]
+  : Entity;
+
+type Response<
+  T extends GeneralEntityRestInfo
+> = T extends DetailedEntityRestInfo
+  ? T["response"]
+  : T extends SimpleEntityRestInfo
+  ? T["type"]
+  : Entity;
