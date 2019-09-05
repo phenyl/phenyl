@@ -3,7 +3,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import { createEntityClient } from "@phenyl/memory-db";
 import {
   StandardUserDefinition,
-  StandardEntityDefinition
+  StandardEntityRestApiDefinition
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
 import {
@@ -28,7 +28,7 @@ type PlainHospital = {
   name: string;
 };
 
-class HospitalDefinition extends StandardEntityDefinition {
+class HospitalDefinition extends StandardEntityRestApiDefinition {
   async authorize(
     reqData: GeneralRequestData,
     session?: Session

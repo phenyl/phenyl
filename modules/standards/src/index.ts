@@ -1,4 +1,7 @@
-export { StandardEntityDefinition } from "./standard-entity-definition";
+export {
+  StandardEntityRestApiDefinition,
+  StandardEntityDefinition
+} from "./standard-entity-definition";
 export { StandardUserDefinition } from "./standard-user-definition";
 export {
   encryptPasswordInRequestData

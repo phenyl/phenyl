@@ -2,17 +2,17 @@ import { AuthDefinition, UserDefinition } from "./user-definition";
 
 import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
-import { EntityDefinition } from "./entity-definition";
+import { EntityRestApiDefinition } from "./entity-definition";
 
-export interface OlderEntityDefinition {
-  authorization?: EntityDefinition["authorize"];
-  normalization?: EntityDefinition["normalize"];
-  validation?: EntityDefinition["validate"];
-  wrapExecution?: EntityDefinition["wrapExecution"];
+export interface OlderEntityRestApiDefinition {
+  authorization?: EntityRestApiDefinition["authorize"];
+  normalization?: EntityRestApiDefinition["normalize"];
+  validation?: EntityRestApiDefinition["validate"];
+  wrapExecution?: EntityRestApiDefinition["wrapExecution"];
 }
 
-type OlderEntityDefinitions = {
-  [EntityName: string]: OlderEntityDefinition | EntityDefinition;
+type OlderEntityRestApiDefinitions = {
+  [EntityName: string]: OlderEntityRestApiDefinition | EntityRestApiDefinition;
 };
 
 export interface OlderCustomQueryDefinition {
@@ -37,7 +37,7 @@ type OlderCustomCommandDefinitions = {
   [CommandName: string]: OlderCustomCommandDefinition | CustomCommandDefinition;
 };
 
-export interface OlderUserDefinition extends OlderEntityDefinition {
+export interface OlderUserDefinition extends OlderEntityRestApiDefinition {
   authentication: AuthDefinition["authenticate"];
 }
 
@@ -47,7 +47,7 @@ type OlderUserDefinitions = {
 
 export type OlderFunctionalGroup = Partial<{
   users: OlderUserDefinitions;
-  nonUsers: OlderEntityDefinitions;
+  nonUsers: OlderEntityRestApiDefinitions;
   customQueries: OlderCustomQueryDefinitions;
   customCommands: OlderCustomCommandDefinitions;
 }>;

@@ -57,7 +57,7 @@ export type GeneralResponseData =
   | ErrorResponseData;
 
 /**
- * ResponseData handled by EntityDefinition.
+ * ResponseData handled by EntityRestApiDefinition.
  */
 export type EntityResponseData<
   E extends Entity,

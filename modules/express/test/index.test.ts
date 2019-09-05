@@ -8,7 +8,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import { createPhenylApiMiddleware, createPhenylMiddleware } from "../src";
 
 import {
-  EntityDefinition,
+  EntityRestApiDefinition,
   CustomQueryDefinition,
   CustomQuery,
   LoginCommand,
@@ -20,7 +20,7 @@ import {
 } from "@phenyl/interfaces";
 
 type Diary = { id: string };
-class DiaryDefinition implements EntityDefinition {
+class DiaryDefinition implements EntityRestApiDefinition {
   async authorize() {
     return true;
   }
@@ -50,7 +50,7 @@ type MemberRequest = { id: string };
 type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
 type Credentials = { email: string; password: string };
-class MemberDefinition implements EntityDefinition {
+class MemberDefinition implements EntityRestApiDefinition {
   async authorize() {
     return true;
   }

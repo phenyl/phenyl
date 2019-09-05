@@ -3,7 +3,7 @@ import {
   CustomCommandDefinition,
   CustomQueryDefinition,
   EntityClient,
-  EntityDefinition,
+  EntityRestApiDefinition,
   GeneralCustomCommandRequestData,
   GeneralCustomQueryRequestData,
   GeneralRequestData,
@@ -16,7 +16,7 @@ import {
 import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,
-  EntityDefinitionExecutor,
+  EntityRestApiDefinitionExecutor,
   UserDefinitionExecutor
 } from "../src/definition-executor";
 
@@ -49,11 +49,11 @@ const findResData: GeneralResponseData = {
   }
 };
 
-describe("EntityDefinitionExecutor", () => {
+describe("EntityRestApiDefinitionExecutor", () => {
   describe("authorize()", () => {
     it("should return true when a definition without authorize() method is given", async () => {
-      const executor = new EntityDefinitionExecutor(
-        {} as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        {} as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.authorize(findReqData);
@@ -61,8 +61,8 @@ describe("EntityDefinitionExecutor", () => {
     });
 
     it("should return the result of a given definition's authorize() method when it exists", async () => {
-      const executor = new EntityDefinitionExecutor(
-        { authorize: async () => false } as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        { authorize: async () => false } as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.authorize(findReqData);
@@ -72,8 +72,8 @@ describe("EntityDefinitionExecutor", () => {
 
   describe("validate()", () => {
     it("should do nothing when a definition without validate() method is given", async () => {
-      const executor = new EntityDefinitionExecutor(
-        {} as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        {} as EntityRestApiDefinition,
         clientMock
       );
       await executor.validate(findReqData);
@@ -82,13 +82,13 @@ describe("EntityDefinitionExecutor", () => {
 
     it("should run a given definition's validate() method when it exists", async () => {
       let counter = 0;
-      const executor = new EntityDefinitionExecutor(
+      const executor = new EntityRestApiDefinitionExecutor(
         {
           validate: async () => {
             counter++;
             return;
           }
-        } as EntityDefinition,
+        } as EntityRestApiDefinition,
         clientMock
       );
       await executor.validate(findReqData);
@@ -98,8 +98,8 @@ describe("EntityDefinitionExecutor", () => {
 
   describe("normalize()", () => {
     it("should return the same RequestData when a definition without normalize() method is given", async () => {
-      const executor = new EntityDefinitionExecutor(
-        {} as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        {} as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.normalize(findReqData);
@@ -107,8 +107,8 @@ describe("EntityDefinitionExecutor", () => {
     });
 
     it("should return the result of a given definition's normalize() method when it exists", async () => {
-      const executor = new EntityDefinitionExecutor(
-        { normalize: async () => findReqData2 } as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        { normalize: async () => findReqData2 } as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.normalize(findReqData);
@@ -118,8 +118,8 @@ describe("EntityDefinitionExecutor", () => {
 
   describe("execute()", () => {
     it("should run the client's method when a definition without wrapExecution() method is given", async () => {
-      const executor = new EntityDefinitionExecutor(
-        {} as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        {} as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.execute(findReqData);
@@ -127,8 +127,8 @@ describe("EntityDefinitionExecutor", () => {
     });
 
     it("should return the wrapped result of a given definition's wrapExecution() method when it exists", async () => {
-      const executor = new EntityDefinitionExecutor(
-        { wrapExecution: async () => findResData } as EntityDefinition,
+      const executor = new EntityRestApiDefinitionExecutor(
+        { wrapExecution: async () => findResData } as EntityRestApiDefinition,
         clientMock
       );
       const result = await executor.execute(findReqData);

@@ -31,7 +31,7 @@ export type GeneralExecuteFn = (
   session?: Session
 ) => Promise<GeneralResponseData>;
 
-export interface EntityDefinition extends RestApiDefinition {
+export interface EntityRestApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralEntityRequestData,
     session?: Session
@@ -53,6 +53,9 @@ export interface EntityDefinition extends RestApiDefinition {
     ) => Promise<GeneralEntityResponseData>
   ): Promise<GeneralEntityResponseData>;
 }
+
+// Alias for backward compatibility.
+export type EntityDefinition = EntityRestApiDefinition;
 
 export type GeneralEntityExecuteFn = (
   reqData: GeneralEntityRequestData,
