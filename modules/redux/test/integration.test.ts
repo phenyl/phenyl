@@ -16,8 +16,7 @@ import { createEntityClient } from "@phenyl/memory-db";
 import { StandardUserDefinition } from "@phenyl/standards";
 import assert from "assert";
 
-import { PhenylRedux, LocalStateFinder } from "../src";
-import { PhenylReduxModule } from "../src/phenyl-redux-module";
+import { useRedux, LocalStateFinder } from "../src";
 
 type PlainPatient = {
   id: string;
@@ -30,7 +29,7 @@ type PatientRequest = PlainPatient;
 
 type PatientResponse = PlainPatient;
 
-type MyGeneralEntityRestInfoMap = {
+type MyEntityRestInfoMap = {
   patient: {
     request: PatientRequest;
     response: PatientResponse;
@@ -38,7 +37,7 @@ type MyGeneralEntityRestInfoMap = {
 };
 
 interface MyTypeMap extends GeneralTypeMap {
-  entities: MyGeneralEntityRestInfoMap;
+  entities: MyEntityRestInfoMap;
   customQueries: {};
   customCommands: {};
   auths: {
@@ -81,24 +80,22 @@ const functionalGroup = {
   nonUsers: {}
 };
 
-const phenylRedux: PhenylRedux<MyTypeMap> = new PhenylRedux();
-const { reducer } = phenylRedux;
 const httpClient: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
   url: "http://localhost:8080"
 });
 
+const { reducer, middleware, actions } = useRedux({
+  client: httpClient,
+  storeKey: "phenyl"
+});
+
 type Store = {
-  phenyl: LocalState<MyGeneralEntityRestInfoMap, AuthCommandMapOf<MyTypeMap>>;
+  phenyl: LocalState<MyEntityRestInfoMap, AuthCommandMapOf<MyTypeMap>>;
 };
 
 const store = createStore<Store, GeneralAction, {}, {}>(
   combineReducers({ phenyl: reducer }),
-  applyMiddleware(
-    phenylRedux.createMiddleware({
-      client: httpClient,
-      storeKey: "phenyl"
-    })
-  )
+  applyMiddleware(middleware)
 );
 
 let server: PhenylHttpServer;
@@ -150,7 +147,7 @@ describe("Integration", () => {
 
   it("should be follow patient", () => {
     store.dispatch(
-      PhenylReduxModule.follow("patient", inserted.entity, inserted.versionId)
+      actions.follow("patient", inserted.entity, inserted.versionId)
     );
     const state = store.getState().phenyl;
     const value = LocalStateFinder.getHeadEntity(state, {
@@ -168,7 +165,7 @@ describe("Integration", () => {
   it("should be success to login", async () => {
     // wait for login command
     await store.dispatch(
-      PhenylReduxModule.login({
+      actions.login({
         entityName: "patient",
         credentials: {
           email: "shinout@example.com",
@@ -191,9 +188,8 @@ describe("Integration", () => {
   });
 
   it("should be use entities", () => {
-    store.dispatch(
-      PhenylReduxModule.useEntities(["patient", "dummy001", "dummy002"])
-    );
+    // @ts-ignore entityName cannot contain "dummy001" and "dummy002"
+    store.dispatch(actions.useEntities(["patient", "dummy001", "dummy002"]));
     const { entities } = store.getState().phenyl;
     assert.strictEqual(Object.keys(entities.patient).length, 1);
     // @ts-ignore entities has dummy
@@ -211,7 +207,7 @@ describe("Integration", () => {
 
     // wait for logout command
     await store.dispatch(
-      PhenylReduxModule.logout({
+      actions.logout({
         entityName: "patient",
         sessionId: session.id,
         userId: inserted.entity.id

@@ -1,28 +1,30 @@
-import {
-  LocalStateOf,
-  GeneralTypeMap,
-  ActionWithTypeMap,
-  EntityNameOf,
-  UserEntityNameOf
-} from "@phenyl/interfaces";
-import { Middleware } from "redux";
-import { MiddlewareCreator, MiddlewareOptions } from "./middleware";
-import { PhenylReduxModule } from "./phenyl-redux-module";
+import { GeneralTypeMap } from "@phenyl/interfaces";
+import { createMiddleware, MiddlewareOptions } from "./middleware";
+import { createReducer, PhenylReducerFunction } from "./reducer";
+import { ActionCreator } from "./action-creator";
 
+export function useRedux<TM extends GeneralTypeMap>(
+  options: MiddlewareOptions<TM>
+) {
+  return {
+    middleware: createMiddleware(options),
+    reducer: createReducer<TM>(),
+    actions: new ActionCreator<TM>()
+  };
+}
+
+/**
+ * Deprecated.
+ * Use `useRedux()`
+ */
 export class PhenylRedux<TM extends GeneralTypeMap> {
-  createMiddleware(options: MiddlewareOptions<TM>): Middleware {
-    return MiddlewareCreator.create(options);
+  createMiddleware() {
+    return createMiddleware;
   }
-
-  get reducer(): <EN extends EntityNameOf<TM>, UN extends UserEntityNameOf<TM>>(
-    state: LocalStateOf<TM> | undefined | null,
-    action: ActionWithTypeMap<TM, EN, UN>
-  ) => LocalStateOf<TM> {
-    const reduxModule = new PhenylReduxModule();
-    return reduxModule.phenylReducer.bind(reduxModule);
+  get reducer(): PhenylReducerFunction<TM> {
+    return createReducer<TM>();
   }
-
-  get actions(): PhenylReduxModule<TM> {
-    return new PhenylReduxModule();
+  get actions(): ActionCreator<TM> {
+    return new ActionCreator<TM>();
   }
 }

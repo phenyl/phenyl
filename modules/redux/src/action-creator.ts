@@ -247,3 +247,5 @@ export class ActionCreator<TM extends GeneralTypeMap> {
     };
   }
 }
+
+export const actions = new ActionCreator();

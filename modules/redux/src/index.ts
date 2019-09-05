@@ -1,14 +1,17 @@
-import { PhenylRedux } from "./phenyl-redux";
-import phenylReducer, { actions } from "./phenyl-redux-module";
-import { MiddlewareCreator, createMiddleware } from "./middleware";
+import { useRedux } from "./phenyl-redux";
+import { ActionCreator, actions } from "./action-creator";
+import { createReducer, createInitialState, reducer } from "./reducer";
+import { createMiddleware } from "./middleware";
 import { LocalStateFinder } from "./local-state-finder";
 import { LocalStateUpdater } from "./local-state-updater";
 export {
-  PhenylRedux,
   actions,
+  reducer,
+  useRedux,
+  createInitialState,
+  createReducer,
+  ActionCreator,
   createMiddleware,
-  MiddlewareCreator,
   LocalStateFinder,
   LocalStateUpdater
 };
-export default phenylReducer;
