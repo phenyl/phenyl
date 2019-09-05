@@ -112,7 +112,7 @@ export type GeneralEntityResponseData =
 
 /**
  * ResponseData handled by authentication.
- * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
+ * By inputting types to the UserRestApiDefinition, the type parameters of this type are inferred in the definition's methods.
  */
 export type AuthResponseData<
   EN extends string,
@@ -130,7 +130,7 @@ export type GeneralAuthResponseData =
   | ErrorResponseData;
 
 /**
- * ResponseData handled by UserDefinition (EntityResponseData | AuthResponseData).
+ * ResponseData handled by UserRestApiDefinition (EntityResponseData | AuthResponseData).
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type UserEntityResponseData<

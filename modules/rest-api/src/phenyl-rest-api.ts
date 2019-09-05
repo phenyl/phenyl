@@ -31,12 +31,12 @@ import {
   CustomQueryDefinitionExecutor,
   DefinitionExecutor,
   EntityRestApiDefinitionExecutor,
-  UserDefinitionExecutor
+  UserRestApiDefinitionExecutor
 } from "./definition-executor";
 import { createVersionDiff } from "./create-version-diff";
 
 type DefinitionExecutorMap = {
-  user: { [key: string]: UserDefinitionExecutor };
+  user: { [key: string]: UserRestApiDefinitionExecutor };
   entity: { [key: string]: EntityRestApiDefinitionExecutor };
   customQuery: { [key: string]: CustomQueryDefinitionExecutor };
   customCommand: { [key: string]: CustomCommandDefinitionExecutor };
@@ -203,7 +203,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.users).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new UserDefinitionExecutor(
+            [name]: new UserRestApiDefinitionExecutor(
               def,
               this.entityClient,
               this.sessionClient

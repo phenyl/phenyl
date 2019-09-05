@@ -22,7 +22,7 @@ export type GeneralAuthenticationResult = AuthenticationResult<
   Object
 >;
 
-export interface UserDefinition extends RestApiDefinition {
+export interface UserRestApiDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
     session?: Session
@@ -54,9 +54,10 @@ export interface UserDefinition extends RestApiDefinition {
 }
 
 // alias
-export type UserEntityRestApiDefinition = UserDefinition;
+export type UserEntityRestApiDefinition = UserRestApiDefinition;
+export type UserDefinition = UserRestApiDefinition;
 
-export type AuthDefinition = Pick<UserDefinition, "authenticate">;
+export type AuthDefinition = Pick<UserRestApiDefinition, "authenticate">;
 
 export type GeneralUserEntityExecuteFn = (
   reqData: GeneralUserEntityRequestData,

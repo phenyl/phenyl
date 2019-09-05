@@ -8,7 +8,7 @@ import {
   EntityRequestData,
   GeneralTypeMap,
   LoginCommand,
-  UserDefinition
+  UserRestApiDefinition
 } from "../src";
 import { IsExtends, TypeEq, assertType } from "./helpers";
 
@@ -21,7 +21,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type Credentials = { email: string; password: string };
   type MemberSessionValue = { externalId: string; ttl: number };
 
-  class MemberDefinition implements UserDefinition {
+  class MemberDefinition implements UserRestApiDefinition {
     async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
       const { entityName, credentials } = loginCommand;
 
@@ -49,7 +49,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     type Credentials = { email: string; password: string };
     type MemberSessionValue = { externalId: string; ttl: number };
 
-    class MemberDefinitionWithResultType implements UserDefinition {
+    class MemberDefinitionWithResultType implements UserRestApiDefinition {
       async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
         const { entityName, credentials } = loginCommand;
 
