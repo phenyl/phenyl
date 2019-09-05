@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { GeneralDefinition } from "./entity-definition";
+import { RestApiDefinition } from "./entity-definition";
 import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
@@ -22,7 +22,7 @@ export type GeneralAuthenticationResult = AuthenticationResult<
   Object
 >;
 
-export interface UserDefinition extends GeneralDefinition {
+export interface UserDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
     session?: Session

@@ -7,7 +7,7 @@ import {
   GeneralCustomCommandResponseData,
   GeneralCustomQueryRequestData,
   GeneralCustomQueryResponseData,
-  GeneralDefinition,
+  RestApiDefinition,
   GeneralEntityRequestData,
   GeneralEntityResponseData,
   GeneralRequestData,
@@ -28,9 +28,9 @@ import { ErrorResponseData } from "@phenyl/interfaces";
 import { createServerError } from "@phenyl/utils";
 
 export abstract class DefinitionExecutor {
-  definition: GeneralDefinition;
+  definition: RestApiDefinition;
 
-  constructor(definition: GeneralDefinition) {
+  constructor(definition: RestApiDefinition) {
     this.definition = definition;
   }
 
