@@ -1,7 +1,7 @@
-import { CustomCommandApiDefinition } from "./custom-command-definition";
-import { CustomQueryApiDefinition } from "./custom-query-definition";
-import { EntityRestApiDefinition } from "./entity-definition";
-import { UserRestApiDefinition } from "./user-definition";
+import { CustomCommandApiDefinition } from "./custom-command-api-definition";
+import { CustomQueryApiDefinition } from "./custom-query-api-definition";
+import { EntityRestApiDefinition } from "./entity-rest-api-definition";
+import { UserRestApiDefinition } from "./user-rest-api-definition";
 import { GeneralTypeMap } from "./type-map";
 import { UserEntityNameOf, NonUserEntityNameOf } from "./auth-command-map";
 import { CustomQueryNameOf, CustomCommandNameOf } from "./custom-map";

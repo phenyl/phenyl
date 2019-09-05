@@ -1,7 +1,7 @@
 import { GeneralCustomQuery } from "./query";
 import { GeneralCustomQueryResult } from "./query-result";
 import { GeneralCustomQueryRequestData } from "./request-data";
-import { RestApiDefinition } from "./entity-definition";
+import { RestApiDefinition } from "./entity-rest-api-definition";
 import { Session } from "./session";
 
 export interface CustomQueryApiDefinition extends RestApiDefinition {

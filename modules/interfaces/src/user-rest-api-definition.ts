@@ -1,5 +1,5 @@
 import { Entity } from "./entity";
-import { RestApiDefinition } from "./entity-definition";
+import { RestApiDefinition } from "./entity-rest-api-definition";
 import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
