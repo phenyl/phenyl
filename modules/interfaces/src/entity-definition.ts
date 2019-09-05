@@ -6,7 +6,7 @@ import {
 
 import { Session } from "./session";
 
-export interface GeneralDefinition {
+export interface RestApiDefinition {
   authorize?(reqData: GeneralRequestData, session?: Session): Promise<boolean>;
 
   normalize?(
@@ -31,7 +31,7 @@ export type GeneralExecuteFn = (
   session?: Session
 ) => Promise<GeneralResponseData>;
 
-export interface EntityDefinition extends GeneralDefinition {
+export interface EntityDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralEntityRequestData,
     session?: Session

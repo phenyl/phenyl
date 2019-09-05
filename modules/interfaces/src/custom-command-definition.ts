@@ -1,10 +1,10 @@
 import { GeneralCustomCommand } from "./command";
 import { GeneralCustomCommandResult } from "./command-result";
 import { GeneralCustomCommandRequestData } from "./request-data";
-import { GeneralDefinition } from "./entity-definition";
+import { RestApiDefinition } from "./entity-definition";
 import { Session } from "./session";
 
-export interface CustomCommandDefinition extends GeneralDefinition {
+export interface CustomCommandDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
