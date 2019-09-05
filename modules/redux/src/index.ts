@@ -1,4 +1,4 @@
-import { useRedux } from "./phenyl-redux";
+import { usePhenylRedux } from "./phenyl-redux";
 import { ActionCreator, actions } from "./action-creator";
 import { createReducer, createInitialState, reducer } from "./reducer";
 import { createMiddleware } from "./middleware";
@@ -7,7 +7,7 @@ import { LocalStateUpdater } from "./local-state-updater";
 export {
   actions,
   reducer,
-  useRedux,
+  usePhenylRedux as useRedux,
   createInitialState,
   createReducer,
   ActionCreator,
