@@ -1,7 +1,7 @@
 import { GeneralCustomCommand } from "./command";
 import { GeneralCustomCommandResult } from "./command-result";
 import { GeneralCustomCommandRequestData } from "./request-data";
-import { RestApiDefinition } from "./entity-definition";
+import { RestApiDefinition } from "./entity-rest-api-definition";
 import { Session } from "./session";
 
 export interface CustomCommandApiDefinition extends RestApiDefinition {

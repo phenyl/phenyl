@@ -1,8 +1,11 @@
-import { AuthDefinition, UserRestApiDefinition } from "./user-definition";
+import {
+  AuthDefinition,
+  UserRestApiDefinition
+} from "./user-rest-api-definition";
 
-import { CustomCommandApiDefinition } from "./custom-command-definition";
-import { CustomQueryApiDefinition } from "./custom-query-definition";
-import { EntityRestApiDefinition } from "./entity-definition";
+import { CustomCommandApiDefinition } from "./custom-command-api-definition";
+import { CustomQueryApiDefinition } from "./custom-query-api-definition";
+import { EntityRestApiDefinition } from "./entity-rest-api-definition";
 
 export interface OlderEntityRestApiDefinition {
   authorization?: EntityRestApiDefinition["authorize"];
