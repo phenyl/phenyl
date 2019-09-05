@@ -1,7 +1,7 @@
 import { EncodedHttpRequest, EncodedHttpResponse } from "./http";
 
 import { GeneralTypeMap } from "./type-map";
-import { RestApiClient, GeneralRestApiClient } from "./client";
+import { RestApiClient, GeneralRestApiClient } from "./rest-api-client";
 import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 
 export interface GeneralServerParams {
