@@ -210,6 +210,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
         };
         assert.deepEqual(operation, expectedOp);
         i++;
+        // @ts-ignore
         currentUser = update(currentUser, operation);
       }
       const resultOfGet = await client.get({ entityName, id });
@@ -259,7 +260,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       });
       if (result.versionId == null)
         throw new Error("result.versionId should exist.");
-      // @ts-ignore always has _PhenylMetac:w
+      // @ts-ignore always has _PhenylMeta
       assert(client.entityState.pool.user.foo._PhenylMeta.versions, [
         // @ts-ignore
         { id: result.versionId, op: "" }
