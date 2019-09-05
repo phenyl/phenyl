@@ -54,7 +54,7 @@ export interface UserDefinition extends RestApiDefinition {
 }
 
 // alias
-export type UserEntityDefinition = UserDefinition;
+export type UserEntityRestApiDefinition = UserDefinition;
 
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;
 

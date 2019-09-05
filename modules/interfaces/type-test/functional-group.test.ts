@@ -4,7 +4,7 @@ import {
   CustomCommandDefinition,
   CustomQuery,
   CustomQueryDefinition,
-  EntityDefinition,
+  EntityRestApiDefinition,
   EntityRequestData,
   GeneralTypeMap,
   LoginCommand,
@@ -74,13 +74,13 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
 
     type MessageResponse = { id: string; body: string; createdAt: string };
     type MessageRequest = { id: string; body: string };
-    class MessageDefinition implements EntityDefinition {}
+    class MessageDefinition implements EntityRestApiDefinition {}
 
     type MedicalRecord = { id: string; body: string; createdAt: string };
     type N = "medicalRecord";
     type E = MedicalRecord;
 
-    class MedicalRecordDefinition implements EntityDefinition {
+    class MedicalRecordDefinition implements EntityRestApiDefinition {
       async normalize(reqData: EntityRequestData<N, E>, session) {
         return reqData;
       }

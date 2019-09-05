@@ -1,5 +1,5 @@
 import {
-  EntityDefinition,
+  EntityRestApiDefinition,
   GeneralRequestData,
   Session
 } from "@phenyl/interfaces";
@@ -7,9 +7,10 @@ import {
 /**
  * [deprecated] Standard entity definition.
  * You don't need to extend this almost-doing-nothing class.
- * Instead, implements `EntityDefinition`.
+ * Instead, implements `EntityRestApiDefinition`.
  */
-export class StandardEntityDefinition implements EntityDefinition {
+export class StandardEntityRestApiDefinition
+  implements EntityRestApiDefinition {
   async authorize(
     reqData: GeneralRequestData,
     session?: Session
@@ -17,3 +18,6 @@ export class StandardEntityDefinition implements EntityDefinition {
     return false;
   }
 }
+
+// alias for backward compatibility.
+export const StandardEntityDefinition = StandardEntityRestApiDefinition;

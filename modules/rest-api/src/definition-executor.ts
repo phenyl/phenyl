@@ -2,7 +2,7 @@ import {
   CustomCommandDefinition,
   CustomQueryDefinition,
   Entity,
-  EntityDefinition,
+  EntityRestApiDefinition,
   GeneralCustomCommandRequestData,
   GeneralCustomCommandResponseData,
   GeneralCustomQueryRequestData,
@@ -81,11 +81,14 @@ export abstract class DefinitionExecutor {
 }
 
 /* eslint-disable-next-line */
-export class EntityDefinitionExecutor extends DefinitionExecutor {
-  definition: EntityDefinition;
+export class EntityRestApiDefinitionExecutor extends DefinitionExecutor {
+  definition: EntityRestApiDefinition;
   client: GeneralEntityClient;
 
-  constructor(definition: EntityDefinition, client: GeneralEntityClient) {
+  constructor(
+    definition: EntityRestApiDefinition,
+    client: GeneralEntityClient
+  ) {
     super(definition);
     this.definition = definition;
     this.client = client;

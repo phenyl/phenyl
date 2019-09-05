@@ -34,7 +34,7 @@ export type GeneralRequestData =
 export type RequestMethodName = GeneralRequestData["method"];
 
 /**
- * RequestData handled by EntityDefinition.
+ * RequestData handled by EntityRestApiDefinition.
  */
 export type EntityRequestData<
   EN extends string,
@@ -84,7 +84,7 @@ export type EntityRequestData<
 
 export type EntityRequestMethodName = GeneralEntityRequestData["method"];
 /**
- * RequestData handled by EntityDefinition.
+ * RequestData handled by EntityRestApiDefinition.
  * Pre-entity values in isnert data are not validated and any objects can be passed.
  */
 export type GeneralEntityRequestData =

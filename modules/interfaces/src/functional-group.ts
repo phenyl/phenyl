@@ -1,13 +1,13 @@
 import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
-import { EntityDefinition } from "./entity-definition";
+import { EntityRestApiDefinition } from "./entity-definition";
 import { UserDefinition } from "./user-definition";
 import { GeneralTypeMap } from "./type-map";
 import { UserEntityNameOf, NonUserEntityNameOf } from "./auth-command-map";
 import { CustomQueryNameOf, CustomCommandNameOf } from "./custom-map";
 
-export type EntityDefinitions = {
-  [EntityName: string]: EntityDefinition;
+export type EntityRestApiDefinitions = {
+  [EntityName: string]: EntityRestApiDefinition;
 };
 
 export type CustomQueryDefinitions = {
@@ -24,7 +24,7 @@ export type UserDefinitions = {
 
 export type GeneralNormalizedFunctionalGroup = {
   users: UserDefinitions;
-  nonUsers: EntityDefinitions;
+  nonUsers: EntityRestApiDefinitions;
   customQueries: CustomQueryDefinitions;
   customCommands: CustomCommandDefinitions;
 };
@@ -32,7 +32,7 @@ export type GeneralNormalizedFunctionalGroup = {
 export interface NormalizedFunctionalGroup<TM extends GeneralTypeMap>
   extends GeneralNormalizedFunctionalGroup {
   users: { [UN in UserEntityNameOf<TM>]: UserDefinition };
-  nonUsers: { [EN in NonUserEntityNameOf<TM>]: EntityDefinition };
+  nonUsers: { [EN in NonUserEntityNameOf<TM>]: EntityRestApiDefinition };
   customQueries: { [QN in CustomQueryNameOf<TM>]: CustomQueryDefinition };
   customCommands: { [CN in CustomCommandNameOf<TM>]: CustomCommandDefinition };
 }
