@@ -22,7 +22,9 @@ import {
   DeleteCommand,
   CustomCommand,
   LoginCommand,
-  LogoutCommand
+  LogoutCommand,
+  IdDeleteCommand,
+  MultiDeleteCommand
 } from "./command";
 import { PreEntity } from "./entity";
 import { UserEntityNameOf, AuthCredentialsOf } from "./auth-command-map";
@@ -98,6 +100,16 @@ export type DeleteCommandOf<
   TM extends GeneralTypeMap,
   EN extends EntityNameOf<TM>
 > = DeleteCommand<EN, EntityExtraParamsOf<TM, EN, "delete">>;
+
+export type IdDeleteCommandOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = IdDeleteCommand<EN, EntityExtraParamsOf<TM, EN, "delete">>;
+
+export type MultiDeleteCommandOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = MultiDeleteCommand<EN, EntityExtraParamsOf<TM, EN, "delete">>;
 
 export type CustomCommandOf<
   TM extends GeneralTypeMap,

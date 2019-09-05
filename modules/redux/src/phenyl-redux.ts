@@ -18,10 +18,11 @@ export class PhenylRedux<TM extends GeneralTypeMap> {
     state: LocalStateOf<TM> | undefined | null,
     action: ActionWithTypeMap<TM, EN, UN>
   ) => LocalStateOf<TM> {
-    return PhenylReduxModule.phenylReducer.bind(PhenylReduxModule);
+    const reduxModule = new PhenylReduxModule();
+    return reduxModule.phenylReducer.bind(reduxModule);
   }
 
-  get actions(): PhenylReduxModule {
-    return PhenylReduxModule;
+  get actions(): PhenylReduxModule<TM> {
+    return new PhenylReduxModule();
   }
 }

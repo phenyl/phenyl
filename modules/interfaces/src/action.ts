@@ -59,9 +59,11 @@ export type UseEntitiesAction<EN extends string> = {
   tag: string;
 };
 
+export type CommitActionPayload<EN extends string> = IdUpdateCommand<EN, {}>;
+
 export type CommitAction<EN extends string> = {
   type: "phenyl/commit";
-  payload: IdUpdateCommand<EN, {}>;
+  payload: CommitActionPayload<EN>;
   tag: string;
 };
 
@@ -71,7 +73,7 @@ export type PushActionPayload<
 > = {
   entityName: EN;
   id: string;
-  until: number; // Index of commits
+  until?: number; // Index of commits
   extra?: EP;
 };
 
@@ -80,7 +82,7 @@ export type PushAction<
   EP extends ExtraParams = ExtraParams
 > = {
   type: "phenyl/push";
-  payload: PushActionPayload<EN, EP>;
+  payload: PushActionPayload<EN, EP> & { until: number };
   tag: string;
 };
 
@@ -89,12 +91,17 @@ export type RePushAction = {
   tag: string;
 };
 
+export type CommitAndPushActionPayload<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> = IdUpdateCommand<EN, EP>;
+
 export type CommitAndPushAction<
   EN extends string,
   EP extends ExtraParams = ExtraParams
 > = {
   type: "phenyl/commitAndPush";
-  payload: IdUpdateCommand<EN, EP>;
+  payload: CommitAndPushActionPayload<EN, EP>;
   tag: string;
 };
 
@@ -144,21 +151,31 @@ export type PatchAction = {
   tag: string;
 };
 
+export type PullActionPayload<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> = IdQuery<EN, EP>; // Not PullQuery here, as versionId is unnecessary.
+
 export type PullAction<
   EN extends string,
   EP extends ExtraParams = ExtraParams
 > = {
   type: "phenyl/pull";
-  payload: IdQuery<EN, EP>; // Not PullQuery here, as versionId is unnecessary.
+  payload: PullActionPayload<EN, EP>;
   tag: string;
 };
+
+export type PushAndCommitActionPayload<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> = IdUpdateCommand<EN, EP>;
 
 export type PushAndCommitAction<
   EN extends string,
   EP extends ExtraParams = ExtraParams
 > = {
   type: "phenyl/pushAndCommit";
-  payload: IdUpdateCommand<EN, EP>;
+  payload: PushAndCommitActionPayload<EN, EP>;
   tag: string;
 };
 
@@ -209,10 +226,20 @@ export type DeleteActionOf<
   EN extends EntityNameOf<TM>
 > = DeleteAction<EN, EntityExtraParamsOf<TM, EN, "delete">>;
 
+export type PushActionPayloadOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = PushActionPayload<EN, EntityExtraParamsOf<TM, EN, "push">>;
+
 export type PushActionOf<
   TM extends GeneralTypeMap,
   EN extends EntityNameOf<TM>
 > = PushAction<EN, EntityExtraParamsOf<TM, EN, "push">>;
+
+export type CommitAndPushActionPayloadOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = CommitAndPushActionPayload<EN, EntityExtraParamsOf<TM, EN, "push">>;
 
 export type CommitAndPushActionOf<
   TM extends GeneralTypeMap,
@@ -243,10 +270,20 @@ export type LogoutActionOf<
   UN extends UserEntityNameOf<TM>
 > = LogoutAction<UN, EntityExtraParamsOf<TM, UN, "logout">>;
 
+export type PullActionPayloadOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = PullActionPayload<EN, EntityExtraParamsOf<TM, EN, "pull">>;
+
 export type PullActionOf<
   TM extends GeneralTypeMap,
   EN extends EntityNameOf<TM>
 > = PullAction<EN, EntityExtraParamsOf<TM, EN, "pull">>;
+
+export type PushAndCommitActionPayloadOf<
+  TM extends GeneralTypeMap,
+  EN extends EntityNameOf<TM>
+> = PushAndCommitActionPayload<EN, EntityExtraParamsOf<TM, EN, "push">>;
 
 export type PushAndCommitActionOf<
   TM extends GeneralTypeMap,
@@ -257,6 +294,10 @@ export type SetSessionActionOf<
   TM extends GeneralTypeMap,
   UN extends UserEntityNameOf<TM>
 > = SetSessionAction<UN, ResponseEntityOf<TM, UN>, AuthSessionOf<TM, UN>>;
+
+export type UseEntitiesActionOf<TM extends GeneralTypeMap> = UseEntitiesAction<
+  EntityNameOf<TM>
+>;
 
 export type ActionWithTypeMap<
   TM extends GeneralTypeMap,
@@ -284,7 +325,7 @@ export type ActionWithTypeMap<
   | UnsetSessionAction
   | OnlineAction
   | OfflineAction
-  | UseEntitiesAction<EN>;
+  | UseEntitiesActionOf<TM>;
 
 export type GeneralAction =
   | AssignAction

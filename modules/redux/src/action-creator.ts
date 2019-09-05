@@ -1,4 +1,4 @@
-import { update, GeneralUpdateOperation } from "sp2";
+import { GeneralUpdateOperation } from "sp2";
 import { randomStringWithTimeStamp } from "@phenyl/utils";
 import {
   AssignAction,
@@ -14,10 +14,7 @@ import {
   UnsetSessionAction,
   UseEntitiesAction,
   GeneralTypeMap,
-  EntityRestInfoMapOf,
-  LocalEntityState,
   LocalStateOf,
-  ActionWithTypeMap,
   EntityNameOf,
   UserEntityNameOf,
   ReplaceActionOf,
@@ -42,49 +39,7 @@ import {
   LogoutActionOf
 } from "@phenyl/interfaces";
 
-type Id = string;
-
-export class PhenylReduxModule<TM extends GeneralTypeMap> {
-  createInitialState(): LocalStateOf<TM> {
-    return {
-      entities: {} as LocalEntityState<EntityRestInfoMapOf<TM>>,
-      unreachedCommits: [],
-      network: {
-        requests: [],
-        isOnline: true
-      }
-    };
-  }
-
-  /**
-   * Reducer.
-   */
-  phenylReducer<EN extends EntityNameOf<TM>, UN extends UserEntityNameOf<TM>>(
-    state: LocalStateOf<TM> | undefined | null,
-    action: ActionWithTypeMap<TM, EN, UN>
-  ): LocalStateOf<TM> {
-    if (state == null) {
-      return this.createInitialState();
-    }
-
-    switch (action.type) {
-      case "phenyl/replace":
-        return {
-          ...state,
-          ...action.payload
-        };
-
-      case "phenyl/reset":
-        return this.createInitialState();
-
-      case "phenyl/assign":
-        return update(state, ...action.payload) as LocalStateOf<TM>;
-
-      default:
-        return state;
-    }
-  }
-
+export class ActionCreator<TM extends GeneralTypeMap> {
   replace(state: LocalStateOf<TM>): ReplaceActionOf<TM> {
     return {
       type: "phenyl/replace",
@@ -132,7 +87,7 @@ export class PhenylReduxModule<TM extends GeneralTypeMap> {
     };
   }
 
-  static unsetSession(): UnsetSessionAction {
+  unsetSession(): UnsetSessionAction {
     return {
       type: "phenyl/unsetSession",
       tag: randomStringWithTimeStamp()
@@ -142,7 +97,7 @@ export class PhenylReduxModule<TM extends GeneralTypeMap> {
   follow<EN extends EntityNameOf<TM>>(
     entityName: EN,
     entity: ResponseEntityOf<TM, EN>,
-    versionId: Id
+    versionId: string
   ): FollowActionOf<TM, EN> {
     return {
       type: "phenyl/follow",
@@ -227,7 +182,7 @@ export class PhenylReduxModule<TM extends GeneralTypeMap> {
     };
   }
 
-  static repush(): RePushAction {
+  repush(): RePushAction {
     return {
       type: "phenyl/repush",
       tag: randomStringWithTimeStamp()
@@ -274,19 +229,19 @@ export class PhenylReduxModule<TM extends GeneralTypeMap> {
     };
   }
 
-  static online(): OnlineAction {
+  online(): OnlineAction {
     return {
       type: "phenyl/online"
     };
   }
 
-  static offline(): OfflineAction {
+  offline(): OfflineAction {
     return {
       type: "phenyl/offline"
     };
   }
 
-  static resolveError(): ResolveErrorAction {
+  resolveError(): ResolveErrorAction {
     return {
       type: "phenyl/resolveError"
     };
