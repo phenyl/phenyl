@@ -1,9 +1,9 @@
 import {
   AuthenticationResult,
   CustomCommand,
-  CustomCommandDefinition,
+  CustomCommandApiDefinition,
   CustomQuery,
-  CustomQueryDefinition,
+  CustomQueryApiDefinition,
   EntityRestApiDefinition,
   EntityRequestData,
   GeneralTypeMap,
@@ -88,7 +88,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
 
     type CountMessagesOfMemberParams = { memberId: string };
     type CountMessagesOfMemberResult = { count: number };
-    class CountMessagesOfMemberDefinition implements CustomQueryDefinition {
+    class CountMessagesOfMemberDefinition implements CustomQueryApiDefinition {
       async execute(
         query: CustomQuery<"countMessagesOfMember", CountMessagesOfMemberParams>
       ) {
@@ -101,7 +101,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     type RegisterParams = { name: string };
     type RegisterResult = { ok: 1 };
 
-    class RegisterDefinition implements CustomCommandDefinition {
+    class RegisterDefinition implements CustomCommandApiDefinition {
       async execute(query: CustomCommand<"register", RegisterParams>) {
         return {
           result: { ok: 1 } as RegisterResult

@@ -27,8 +27,8 @@ import {
 } from "@phenyl/utils";
 
 import {
-  CustomCommandDefinitionExecutor,
-  CustomQueryDefinitionExecutor,
+  CustomCommandApiDefinitionExecutor,
+  CustomQueryApiDefinitionExecutor,
   DefinitionExecutor,
   EntityRestApiDefinitionExecutor,
   UserRestApiDefinitionExecutor
@@ -38,8 +38,8 @@ import { createVersionDiff } from "./create-version-diff";
 type DefinitionExecutorMap = {
   user: { [key: string]: UserRestApiDefinitionExecutor };
   entity: { [key: string]: EntityRestApiDefinitionExecutor };
-  customQuery: { [key: string]: CustomQueryDefinitionExecutor };
-  customCommand: { [key: string]: CustomCommandDefinitionExecutor };
+  customQuery: { [key: string]: CustomQueryApiDefinitionExecutor };
+  customCommand: { [key: string]: CustomCommandApiDefinitionExecutor };
 };
 
 /**
@@ -225,7 +225,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customQueries).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomQueryDefinitionExecutor(def, this.entityClient)
+            [name]: new CustomQueryApiDefinitionExecutor(def, this.entityClient)
           }),
           {}
         )
@@ -234,7 +234,10 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customCommands).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomCommandDefinitionExecutor(def, this.entityClient)
+            [name]: new CustomCommandApiDefinitionExecutor(
+              def,
+              this.entityClient
+            )
           }),
           {}
         )
