@@ -9,7 +9,7 @@ import { createPhenylApiMiddleware, createPhenylMiddleware } from "../src";
 
 import {
   EntityRestApiDefinition,
-  CustomQueryDefinition,
+  CustomQueryApiDefinition,
   CustomQuery,
   LoginCommand,
   AuthenticationResult,
@@ -31,7 +31,7 @@ class DiaryDefinition implements EntityRestApiDefinition {
 }
 
 type GetVersionParams = { name: string };
-class GetVersionDefinition implements CustomQueryDefinition {
+class GetVersionDefinition implements CustomQueryApiDefinition {
   async authorize() {
     return true;
   }

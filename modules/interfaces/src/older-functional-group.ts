@@ -1,7 +1,7 @@
 import { AuthDefinition, UserRestApiDefinition } from "./user-definition";
 
-import { CustomCommandDefinition } from "./custom-command-definition";
-import { CustomQueryDefinition } from "./custom-query-definition";
+import { CustomCommandApiDefinition } from "./custom-command-definition";
+import { CustomQueryApiDefinition } from "./custom-query-definition";
 import { EntityRestApiDefinition } from "./entity-definition";
 
 export interface OlderEntityRestApiDefinition {
@@ -15,29 +15,32 @@ type OlderEntityRestApiDefinitions = {
   [EntityName: string]: OlderEntityRestApiDefinition | EntityRestApiDefinition;
 };
 
-export interface OlderCustomQueryDefinition {
-  authorization?: CustomQueryDefinition["authorize"];
-  normalization?: CustomQueryDefinition["normalize"];
-  validation?: CustomQueryDefinition["validate"];
-  execution: CustomQueryDefinition["execute"];
+export interface OlderCustomQueryApiDefinition {
+  authorization?: CustomQueryApiDefinition["authorize"];
+  normalization?: CustomQueryApiDefinition["normalize"];
+  validation?: CustomQueryApiDefinition["validate"];
+  execution: CustomQueryApiDefinition["execute"];
 }
 
-type OlderCustomQueryDefinitions = {
-  [QueryName: string]: OlderCustomQueryDefinition | CustomQueryDefinition;
+type OlderCustomQueryApiDefinitions = {
+  [QueryName: string]: OlderCustomQueryApiDefinition | CustomQueryApiDefinition;
 };
 
-export interface OlderCustomCommandDefinition {
-  authorization?: CustomCommandDefinition["authorize"];
-  normalization?: CustomCommandDefinition["normalize"];
-  validation?: CustomCommandDefinition["validate"];
-  execution: CustomCommandDefinition["execute"];
+export interface OlderCustomCommandApiDefinition {
+  authorization?: CustomCommandApiDefinition["authorize"];
+  normalization?: CustomCommandApiDefinition["normalize"];
+  validation?: CustomCommandApiDefinition["validate"];
+  execution: CustomCommandApiDefinition["execute"];
 }
 
-type OlderCustomCommandDefinitions = {
-  [CommandName: string]: OlderCustomCommandDefinition | CustomCommandDefinition;
+type OlderCustomCommandApiDefinitions = {
+  [CommandName: string]:
+    | OlderCustomCommandApiDefinition
+    | CustomCommandApiDefinition;
 };
 
-export interface OlderUserRestApiDefinition extends OlderEntityRestApiDefinition {
+export interface OlderUserRestApiDefinition
+  extends OlderEntityRestApiDefinition {
   authentication: AuthDefinition["authenticate"];
 }
 
@@ -48,6 +51,6 @@ type OlderUserRestApiDefinitions = {
 export type OlderFunctionalGroup = Partial<{
   users: OlderUserRestApiDefinitions;
   nonUsers: OlderEntityRestApiDefinitions;
-  customQueries: OlderCustomQueryDefinitions;
-  customCommands: OlderCustomCommandDefinitions;
+  customQueries: OlderCustomQueryApiDefinitions;
+  customCommands: OlderCustomCommandApiDefinitions;
 }>;

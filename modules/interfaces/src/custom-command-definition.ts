@@ -4,7 +4,7 @@ import { GeneralCustomCommandRequestData } from "./request-data";
 import { RestApiDefinition } from "./entity-definition";
 import { Session } from "./session";
 
-export interface CustomCommandDefinition extends RestApiDefinition {
+export interface CustomCommandApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralCustomCommandRequestData,
     session?: Session
@@ -25,6 +25,9 @@ export interface CustomCommandDefinition extends RestApiDefinition {
     session?: Session
   ): Promise<GeneralCustomCommandResult>;
 }
+
+// Alias for backward compatibility
+export type CustomCommandDefinition = CustomCommandApiDefinition;
 
 export type GeneralCustomCommandExecuteFn = (
   query: GeneralCustomCommand,

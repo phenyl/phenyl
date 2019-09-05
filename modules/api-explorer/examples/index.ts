@@ -10,10 +10,10 @@ import {
   Session,
   GeneralRequestData,
   CustomCommand,
-  CustomCommandDefinition,
+  CustomCommandApiDefinition,
   CustomCommandResult,
   CustomQuery,
-  CustomQueryDefinition,
+  CustomQueryApiDefinition,
   CustomQueryResult,
   GeneralFunctionalGroup,
   KvsClient
@@ -85,7 +85,7 @@ type CustomCommandResponse = {
   echo: string;
   session?: Session;
 };
-class TestCustomCommand implements CustomCommandDefinition {
+class TestCustomCommand implements CustomCommandApiDefinition {
   async authorization(
     command: CustomCommand<any, CustomCommandParams>,
     session?: Session
@@ -115,7 +115,7 @@ type CustomQueryResponse = {
   echo: string;
   session?: Session;
 };
-class TestCustomQuery implements CustomQueryDefinition {
+class TestCustomQuery implements CustomQueryApiDefinition {
   async authorization(
     command: CustomQuery<any, CustomQueryParams>,
     session?: Session

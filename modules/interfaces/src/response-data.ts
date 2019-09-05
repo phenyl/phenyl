@@ -145,7 +145,7 @@ export type GeneralUserEntityResponseData =
   | GeneralAuthResponseData;
 
 /**
- * ResponseData handled by CustomQueryDefinition.
+ * ResponseData handled by CustomQueryApiDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomQueryResponseData<
@@ -154,7 +154,7 @@ export type CustomQueryResponseData<
 > = RunCustomQueryResponseData<QR, ER>;
 
 /**
- * ResponseData handled by CustomCommandDefinition.
+ * ResponseData handled by CustomCommandApiDefinition.
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type CustomCommandResponseData<

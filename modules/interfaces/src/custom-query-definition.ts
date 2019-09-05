@@ -4,7 +4,7 @@ import { GeneralCustomQueryRequestData } from "./request-data";
 import { RestApiDefinition } from "./entity-definition";
 import { Session } from "./session";
 
-export interface CustomQueryDefinition extends RestApiDefinition {
+export interface CustomQueryApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralCustomQueryRequestData,
     session?: Session
@@ -25,6 +25,9 @@ export interface CustomQueryDefinition extends RestApiDefinition {
     session?: Session
   ): Promise<GeneralCustomQueryResult>;
 }
+
+// Alias for backward compatibility
+export type CustomQueryDefinition = CustomQueryApiDefinition;
 
 export type GeneralCustomQueryExecuteFn = (
   query: GeneralCustomQuery,
