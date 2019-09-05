@@ -106,7 +106,7 @@ export type GeneralEntityRequestData =
 
 /**
  * RequestData handled by authentication.
- * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
+ * By inputting types to the UserRestApiDefinition, the type parameters of this type are inferred in the definition's methods.
  */
 export type AuthRequestData<
   EN extends string,
@@ -127,7 +127,7 @@ export type GeneralAuthRequestData =
 export type AuthRequestMethodName = GeneralAuthRequestData["method"];
 
 /**
- * RequestData handled by UserDefinition (EntityRequestData | AuthRequestData).
+ * RequestData handled by UserRestApiDefinition (EntityRequestData | AuthRequestData).
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
  */
 export type UserEntityRequestData<
@@ -138,7 +138,7 @@ export type UserEntityRequestData<
 > = EntityRequestData<EN, E, EPMM> | AuthRequestData<EN, C, EPMM>;
 
 /**
- * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
+ * RequestData handled by UserRestApiDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
  * Credentials are not validated and any objects can be passed.
  */
 export type GeneralUserEntityRequestData =

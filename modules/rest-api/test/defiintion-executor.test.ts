@@ -9,7 +9,7 @@ import {
   GeneralRequestData,
   GeneralResponseData,
   GeneralQueryResult,
-  UserDefinition,
+  UserRestApiDefinition,
   Entity
 } from "@phenyl/interfaces";
 /* eslint-env mocha */
@@ -17,7 +17,7 @@ import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,
   EntityRestApiDefinitionExecutor,
-  UserDefinitionExecutor
+  UserRestApiDefinitionExecutor
 } from "../src/definition-executor";
 
 import assert from "assert";
@@ -137,11 +137,11 @@ describe("EntityRestApiDefinitionExecutor", () => {
   });
 });
 
-describe("UserDefinitionExecutor", () => {
+describe("UserRestApiDefinitionExecutor", () => {
   describe("authorize()", () => {
     it("should return true when a definition without authorize() method is given", async () => {
-      const executor = new UserDefinitionExecutor(
-        {} as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        {} as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -151,8 +151,8 @@ describe("UserDefinitionExecutor", () => {
 
     it("should return the result of a given definition's authorize() method when it exists", async () => {
       const authenticate = async () => ({} as GeneralAuthenticationResult);
-      const executor = new UserDefinitionExecutor(
-        { authenticate, authorize: async () => false } as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        { authenticate, authorize: async () => false } as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -163,8 +163,8 @@ describe("UserDefinitionExecutor", () => {
 
   describe("validate()", () => {
     it("should do nothing when a definition without validate() method is given", async () => {
-      const executor = new UserDefinitionExecutor(
-        {} as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        {} as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -175,14 +175,14 @@ describe("UserDefinitionExecutor", () => {
     it("should run a given definition's validate() method when it exists", async () => {
       let counter = 0;
       const authenticate = async () => ({} as GeneralAuthenticationResult);
-      const executor = new UserDefinitionExecutor(
+      const executor = new UserRestApiDefinitionExecutor(
         {
           authenticate,
           validate: async () => {
             counter++;
             return;
           }
-        } as UserDefinition,
+        } as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -193,8 +193,8 @@ describe("UserDefinitionExecutor", () => {
 
   describe("normalize()", () => {
     it("should return the same RequestData when a definition without normalize() method is given", async () => {
-      const executor = new UserDefinitionExecutor(
-        {} as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        {} as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -204,8 +204,8 @@ describe("UserDefinitionExecutor", () => {
 
     it("should return the result of a given definition's normalize() method when it exists", async () => {
       const authenticate = async () => ({} as GeneralAuthenticationResult);
-      const executor = new UserDefinitionExecutor(
-        { authenticate, normalize: async () => findReqData2 } as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        { authenticate, normalize: async () => findReqData2 } as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -216,8 +216,8 @@ describe("UserDefinitionExecutor", () => {
 
   describe("execute()", () => {
     it("should run the client's method when a definition without wrapExecution() method is given", async () => {
-      const executor = new UserDefinitionExecutor(
-        {} as UserDefinition,
+      const executor = new UserRestApiDefinitionExecutor(
+        {} as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -227,11 +227,11 @@ describe("UserDefinitionExecutor", () => {
 
     it("should return the wrapped result of a given definition's wrapExecution() method when it exists", async () => {
       const authenticate = async () => ({} as GeneralAuthenticationResult);
-      const executor = new UserDefinitionExecutor(
+      const executor = new UserRestApiDefinitionExecutor(
         {
           authenticate,
           wrapExecution: async () => findResData
-        } as UserDefinition,
+        } as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );
@@ -242,10 +242,10 @@ describe("UserDefinitionExecutor", () => {
     it("should run definition's authenticate() method when LoginRequestData is given", async () => {
       const authenticate = async () =>
         ({ versionId: "abcd" } as GeneralAuthenticationResult);
-      const executor = new UserDefinitionExecutor(
+      const executor = new UserRestApiDefinitionExecutor(
         {
           authenticate
-        } as UserDefinition,
+        } as UserRestApiDefinition,
         clientMock,
         sessionClientMock
       );

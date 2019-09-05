@@ -18,7 +18,7 @@ import {
   LogoutCommand,
   LogoutResponseData,
   Session,
-  UserDefinition,
+  UserRestApiDefinition,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
   GeneralSessionClient
@@ -196,13 +196,13 @@ async function executeEntityRequestData(
 }
 
 /* eslint-disable-next-line */
-export class UserDefinitionExecutor extends DefinitionExecutor {
-  definition: UserDefinition;
+export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
+  definition: UserRestApiDefinition;
   client: GeneralEntityClient;
   sessionClient: GeneralSessionClient;
 
   constructor(
-    definition: UserDefinition,
+    definition: UserRestApiDefinition,
     client: GeneralEntityClient,
     sessionClient: GeneralSessionClient
   ) {

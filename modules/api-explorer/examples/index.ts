@@ -2,7 +2,7 @@ import http from "http";
 import PhenylRestApi from "@phenyl/rest-api";
 import { createEntityClient } from "@phenyl/memory-db";
 import {
-  StandardUserDefinition,
+  StandardUserRestApiDefinition,
   StandardEntityRestApiDefinition
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
@@ -55,7 +55,7 @@ type AppEntityMap = {
 
 const memoryClient = createEntityClient<AppEntityMap>();
 
-class PatientDefinition extends StandardUserDefinition {
+class PatientDefinition extends StandardUserRestApiDefinition {
   constructor() {
     super({
       entityClient: memoryClient,
