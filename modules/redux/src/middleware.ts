@@ -24,7 +24,8 @@ import {
   PushActionOf,
   FollowActionOf,
   FollowAllActionOf,
-  PullActionOf
+  PullActionOf,
+  ResponseEntityOf
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 import { ActionCreator } from "./action-creator";
@@ -122,7 +123,6 @@ export function createMiddleware<TM extends GeneralTypeMap>(
  *
  */
 export class MiddlewareHandler<TM extends GeneralTypeMap> {
-  static LocalStateUpdater = LocalStateUpdater;
   getState: () => LocalStateOf<TM>;
   client: RestApiClient<TM>;
   next: Next;
@@ -190,7 +190,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   async commitAndPush<EN extends EntityNameOf<TM>>(
     action: CommitAndPushActionOf<TM, EN>
   ) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName } = action.payload;
 
     this.assignToState(
@@ -266,7 +265,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Commit to LocalState.
    */
   async commit<EN extends EntityNameOf<TM>>(action: CommitAction<EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(
       LocalStateUpdater.commit(this.state, action.payload)
     );
@@ -279,7 +277,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
   async push<EN extends EntityNameOf<TM>>(action: PushActionOf<TM, EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName, until } = action.payload;
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
       entityName,
@@ -361,8 +358,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Only when Authorization Error occurred, it will be rollbacked.
    */
   async repush(action: RePushAction) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
-
     for (let unreachedCommit of this.state.unreachedCommits) {
       const ops = [];
       const { entityName, id, commitCount } = unreachedCommit;
@@ -431,7 +426,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Delete the entity in the CentralState, then unfollow the entity in LocalState.
    */
   async delete<EN extends EntityNameOf<TM>>(action: DeleteActionOf<TM, EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, id } = action.payload;
     this.assignToState(
       LocalStateUpdater.networkRequest(this.state, action.tag)
@@ -454,7 +448,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Register the given entity.
    */
   async follow<EN extends EntityNameOf<TM>>(action: FollowActionOf<TM, EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, entity, versionId } = action.payload;
     return this.assignToState(
       LocalStateUpdater.follow(this.state, entityName, entity, versionId)
@@ -467,7 +460,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   async followAll<EN extends EntityNameOf<TM>>(
     action: FollowAllActionOf<TM, EN>
   ): Promise<GeneralAction> {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, entities, versionsById } = action.payload;
     return this.assignToState(
       LocalStateUpdater.followAll(
@@ -483,7 +475,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Login with credentials, then register the user.
    */
   async login<UN extends UserEntityNameOf<TM>>(action: LoginActionOf<TM, UN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const command = action.payload;
     await this.assignToState(
       LocalStateUpdater.networkRequest(this.state, action.tag)
@@ -496,7 +487,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
         LocalStateUpdater.setSession(
           this.state,
           result.session,
-          result.user,
+          result.user as ResponseEntityOf<TM, UN>, // TODO Remove "as"
           result.versionId
         )
       );
@@ -523,8 +514,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   /**
    * Apply the VersionDiff.
    */
-  async patch(action: PatchAction) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
+  async patch<EN extends EntityNameOf<TM>>(action: PatchAction<EN>) {
     const versionDiff = action.payload;
     return this.assignToState(LocalStateUpdater.patch(this.state, versionDiff));
   }
@@ -536,7 +526,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   async pushAndCommit<EN extends EntityNameOf<TM>>(
     action: PushAndCommitActionOf<TM, EN>
   ) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     await this.assignToState(
       LocalStateUpdater.networkRequest(this.state, action.tag)
     );
@@ -603,7 +592,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Pull the differences from CentralState, then rebase the diffs.
    */
   async pull<EN extends EntityNameOf<TM>>(action: PullActionOf<TM, EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { id, entityName } = action.payload;
     const { versionId } = LocalStateFinder.getEntityInfo(
       this.state,
@@ -646,7 +634,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   async setSession<UN extends UserEntityNameOf<TM>>(
     action: SetSessionActionOf<TM, UN>
   ) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { user, versionId, session } = action.payload;
     return this.assignToState(
       LocalStateUpdater.setSession(this.state, session, user, versionId)
@@ -657,7 +644,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Unregister the entity.
    */
   async unfollow<EN extends EntityNameOf<TM>>(action: UnfollowAction<EN>) {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     const { entityName, id } = action.payload;
     return this.assignToState(
       LocalStateUpdater.unfollow(this.state, entityName, id)
@@ -668,7 +654,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Unset session info. It doesn't remove the user info.
    */
   async unsetSession() {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.unsetSession());
   }
 
@@ -676,7 +661,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Mark as online.
    */
   async online() {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.online());
   }
 
@@ -684,7 +668,6 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
    * Mark as offline.
    */
   async offline() {
-    const LocalStateUpdater = MiddlewareHandler.LocalStateUpdater;
     return this.assignToState(LocalStateUpdater.offline());
   }
 }

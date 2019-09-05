@@ -145,9 +145,9 @@ export type LogoutAction<
   tag: string;
 };
 
-export type PatchAction = {
+export type PatchAction<EN extends string> = {
   type: "phenyl/patch";
-  payload: VersionDiff;
+  payload: VersionDiff<EN>;
   tag: string;
 };
 
@@ -316,7 +316,7 @@ export type ActionWithTypeMap<
   | FollowAllActionOf<TM, EN>
   | LoginActionOf<TM, UN>
   | LogoutActionOf<TM, UN>
-  | PatchAction
+  | PatchAction<EN>
   | PullActionOf<TM, EN>
   | PushAndCommitActionOf<TM, EN>
   | ResolveErrorAction
@@ -340,7 +340,7 @@ export type GeneralAction =
   | FollowAllAction<string, Entity>
   | LoginAction<string, Object>
   | LogoutAction<string>
-  | PatchAction
+  | PatchAction<string>
   | PullAction<string>
   | PushAndCommitAction<string>
   | ResolveErrorAction

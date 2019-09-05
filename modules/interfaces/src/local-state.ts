@@ -54,3 +54,5 @@ export type LocalStateOf<TM extends GeneralTypeMap> = LocalState<
   EntityRestInfoMapOf<TM>,
   AuthCommandMapOf<TM>
 >;
+
+export type GeneralLocalState = LocalStateOf<GeneralTypeMap>;
