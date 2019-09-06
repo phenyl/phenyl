@@ -10,7 +10,6 @@ import {
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
-  RestApiHandler,
   SessionClient,
   VersionDiffPublisher,
   ResponseEntityMapOf,
@@ -18,7 +17,9 @@ import {
   GeneralRestApiHandler,
   GeneralFunctionalGroup,
   GeneralSessionClient,
-  GeneralEntityClient
+  GeneralEntityClient,
+  DirectRestApiHandler,
+  DirectRestApiOptions
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
@@ -46,7 +47,7 @@ type DefinitionExecutorMap = {
  *
  */
 export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
-  implements RestApiHandler<TM>, GeneralRestApiHandler {
+  implements DirectRestApiHandler<TM>, GeneralRestApiHandler {
   readonly entityClient: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
@@ -80,14 +81,13 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   /**
    *
    */
-  // @ts-ignore
   public async handleRequestData<
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>,
+    options: DirectRestApiOptions = { skipAuthorization: false }
   ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
-    // TODO: use HandlerRequest Type instead of Promise
     try {
       assertValidRequestData(reqData);
       const session = await this.sessionClient.get(reqData.sessionId!);
@@ -95,12 +95,17 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
         reqData.method,
         this.extractName(reqData)
       );
-      const isAccessible = await executor.authorize(reqData, session);
-      if (!isAccessible) {
-        return {
-          type: "error",
-          payload: createServerError("Authorization Required.", "Unauthorized")
-        };
+      if (!options.skipAuthorization) {
+        const isAccessible = await executor.authorize(reqData, session);
+        if (!isAccessible) {
+          return {
+            type: "error",
+            payload: createServerError(
+              "Authorization Required.",
+              "Unauthorized"
+            )
+          };
+        }
       }
       const normalizedReqData = await executor.normalize(reqData, session);
 

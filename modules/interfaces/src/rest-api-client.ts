@@ -63,355 +63,400 @@ import {
   GeneralCustomQueryResult,
   CustomQueryResult
 } from "./query-result";
-import { Key } from "./utils";
+import { ObjectMap } from "./utils";
 import { PreEntity } from "./entity";
 import {
-  GeneralEntityRestInfoMap,
-  ResponseEntity,
-  RequestEntity,
-  EntityExtraParams,
-  EntityExtraResult,
-  EntityRestInfoMapOf
+  EntityNameOf,
+  ResponseEntityOf,
+  EntityExtraResultOf,
+  EntityExtraParamsOf,
+  RequestEntityOf
 } from "./entity-rest-info-map";
 import { BaseEntityClient } from "./entity-client";
 import {
-  GeneralCustomMap,
-  CustomQueryParams,
-  CustomQueryExtraParams,
-  CustomQueryResultValue,
-  CustomQueryExtraResult,
-  CustomCommandParams,
-  CustomCommandExtraParams,
-  CustomCommandResultValue,
-  CustomCommandExtraResult,
-  CustomQueryMapOf,
-  CustomCommandMapOf
+  CustomQueryNameOf,
+  CustomQueryResultValueOf,
+  CustomQueryExtraResultOf,
+  CustomCommandNameOf,
+  CustomCommandResultValueOf,
+  CustomQueryParamsOf,
+  CustomQueryExtraParamsOf,
+  CustomCommandParamsOf,
+  CustomCommandExtraParamsOf
 } from "./custom-map";
 import {
-  GeneralAuthCommandMap,
-  AuthCredentials,
-  ResponseAuthUser,
-  AuthSessions,
-  AuthCommandMapOf
+  UserEntityNameOf,
+  ResponseAuthUserOf,
+  AuthSessionOf,
+  AuthCredentialsOf
 } from "./auth-command-map";
 import { GeneralTypeMap } from "./type-map";
-import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
+import { RequestMethodName, GeneralRequestData } from "./request-data";
+import {
+  EveryNameOf,
+  ResponseDataWithTypeMap,
+  RequestDataWithTypeMapForResponse
+} from "./bound-request-response";
+import { ErrorResponseData, GeneralResponseData } from "./response-data";
 
 /**
  * A client-side client to access to entities via RestApi.
- *
- * See `RestApiEntityClient` for details.
- * When you need to pass `EntityRestInfoMap`, use `RestApiEntityClient` instead.
+ * When you need to pass `TypeMap`, use `RestApiClient<TM>` instead.
  */
-export interface GeneralRestApiEntityClient extends BaseEntityClient {
+export interface BaseRestApiClient<OP extends ObjectMap = {}>
+  extends BaseEntityClient {
+  handleRequestData(reqData: GeneralRequestData): Promise<GeneralResponseData>;
+
   find(
     query: GeneralWhereQuery,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralQueryResult>;
   findOne(
     query: GeneralWhereQuery,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralSingleQueryResult>;
   get(
     query: GeneralIdQuery,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralSingleQueryResult>;
   getByIds(
     query: GeneralIdsQuery,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralQueryResult>;
   pull(
     query: GeneralPullQuery,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralPullQueryResult>;
   insertOne(
     command: GeneralSingleInsertCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralSingleInsertCommandResult>;
   insertMulti(
     command: GeneralMultiInsertCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralMultiInsertCommandResult>;
   insertAndGet(
     command: GeneralSingleInsertCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralGetCommandResult>;
   insertAndGetMulti(
     command: GeneralMultiInsertCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralMultiValuesCommandResult>;
   updateById(
     command: GeneralIdUpdateCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralIdUpdateCommandResult>;
   updateMulti(
     command: GeneralMultiUpdateCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<MultiUpdateCommandResult>;
   updateAndGet(
     command: GeneralIdUpdateCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralGetCommandResult>;
   updateAndFetch(
     command: GeneralMultiUpdateCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralMultiValuesCommandResult>;
   push(
     command: GeneralPushCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralPushCommandResult>;
   delete(
     command: GeneralDeleteCommand,
-    sessionId?: string | null
+    sessionId?: string | null,
+    options?: OP
   ): Promise<GeneralDeleteCommandResult>;
+  runCustomQuery(
+    query: GeneralCustomQuery,
+    sessionId?: string | null,
+    options?: OP
+  ): Promise<GeneralCustomQueryResult>;
+  runCustomCommand(
+    command: GeneralCustomCommand,
+    sessionId?: string | null,
+    options?: OP
+  ): Promise<GeneralCustomCommandResult>;
+  login(
+    command: GeneralLoginCommand,
+    sessionId?: string | null,
+    options?: OP
+  ): Promise<GeneralLoginCommandResult>;
+  logout(
+    command: GeneralLogoutCommand,
+    sessionId?: string | null,
+    options?: OP
+  ): Promise<GeneralLogoutCommandResult>;
 }
+
+export type GeneralRestApiClient = BaseRestApiClient<{}>;
 
 /**
  * A client-side client to access to entities via RestApi.
  *
  * Unlike `EntityClient`, it accesses to rest api while `EntityClient` accesses to database.
  *
- * When you need to pass `RM`(`EntityRestInfoMap`), use `GeneralRestApiEntityClient` instead.
+ * When you need to pass `TM`(`TypeMap`), use `GeneralRestApiClient` instead.
  */
-export interface RestApiEntityClient<RM extends GeneralEntityRestInfoMap>
-  extends GeneralRestApiEntityClient {
-  find<EN extends Key<RM>>(
-    query: WhereQuery<EN, EntityExtraParams<RM, EN, "find">>,
+export interface RestApiClient<
+  TM extends GeneralTypeMap,
+  OP extends ObjectMap = {}
+> extends BaseRestApiClient<OP> {
+  handleRequestData<
+    MN extends RequestMethodName,
+    N extends EveryNameOf<TM, MN>
+  >(
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData>;
+
+  find<EN extends EntityNameOf<TM>>(
+    query: WhereQuery<EN, EntityExtraParamsOf<TM, EN, "find">>,
     sessionId?: string | null
   ): Promise<
-    QueryResult<ResponseEntity<RM, EN>, EntityExtraResult<RM, EN, "find">>
+    QueryResult<ResponseEntityOf<TM, EN>, EntityExtraResultOf<TM, EN, "find">>
   >;
-  findOne<EN extends Key<RM>>(
-    query: WhereQuery<EN, EntityExtraParams<RM, EN, "findOne">>,
+
+  findOne<EN extends EntityNameOf<TM>>(
+    query: WhereQuery<EN, EntityExtraParamsOf<TM, EN, "findOne">>,
     sessionId?: string | null
   ): Promise<
     SingleQueryResult<
-      ResponseEntity<RM, EN>,
-      EntityExtraResult<RM, EN, "findOne">
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "findOne">
     >
   >;
-  get<EN extends Key<RM>>(
-    query: IdQuery<EN, EntityExtraParams<RM, EN, "get">>,
+
+  get<EN extends EntityNameOf<TM>>(
+    query: IdQuery<EN, EntityExtraParamsOf<TM, EN, "get">>,
     sessionId?: string | null
   ): Promise<
-    SingleQueryResult<ResponseEntity<RM, EN>, EntityExtraResult<RM, EN, "get">>
+    SingleQueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "get">
+    >
   >;
-  getByIds<EN extends Key<RM>>(
-    query: IdsQuery<EN, EntityExtraParams<RM, EN, "getByIds">>,
+
+  getByIds<EN extends EntityNameOf<TM>>(
+    query: IdsQuery<EN, EntityExtraParamsOf<TM, EN, "getByIds">>,
     sessionId?: string | null
   ): Promise<
-    QueryResult<ResponseEntity<RM, EN>, EntityExtraResult<RM, EN, "getByIds">>
+    QueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "getByIds">
+    >
   >;
-  pull<EN extends Key<RM>>(
-    query: PullQuery<EN, EntityExtraParams<RM, EN, "pull">>,
+
+  pull<EN extends EntityNameOf<TM>>(
+    query: PullQuery<EN, EntityExtraParamsOf<TM, EN, "pull">>,
     sessionId?: string | null
   ): Promise<
-    PullQueryResult<ResponseEntity<RM, EN>, EntityExtraResult<RM, EN, "pull">>
+    PullQueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "pull">
+    >
   >;
-  insertOne<EN extends Key<RM>>(
+
+  insertOne<EN extends EntityNameOf<TM>>(
     command: SingleInsertCommand<
       EN,
-      PreEntity<RequestEntity<RM, EN>>,
-      EntityExtraParams<RM, EN, "insertOne">
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertOne">
     >,
     sessionId?: string | null
-  ): Promise<SingleInsertCommandResult<EntityExtraResult<RM, EN, "insertOne">>>;
-  insertMulti<EN extends Key<RM>>(
+  ): Promise<
+    SingleInsertCommandResult<EntityExtraResultOf<TM, EN, "insertOne">>
+  >;
+
+  insertMulti<EN extends EntityNameOf<TM>>(
     command: MultiInsertCommand<
       EN,
-      PreEntity<RequestEntity<RM, EN>>,
-      EntityExtraParams<RM, EN, "insertMulti">
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertMulti">
     >,
     sessionId?: string | null
   ): Promise<
-    MultiInsertCommandResult<EntityExtraResult<RM, EN, "insertMulti">>
+    MultiInsertCommandResult<EntityExtraResultOf<TM, EN, "insertMulti">>
   >;
-  insertAndGet<EN extends Key<RM>>(
+
+  insertAndGet<EN extends EntityNameOf<TM>>(
     command: SingleInsertCommand<
       EN,
-      PreEntity<RequestEntity<RM, EN>>,
-      EntityExtraParams<RM, EN, "insertAndGet">
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGet">
     >,
     sessionId?: string | null
   ): Promise<
     GetCommandResult<
-      ResponseEntity<RM, EN>,
-      EntityExtraResult<RM, EN, "insertAndGet">
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "insertAndGet">
     >
   >;
-  insertAndGetMulti<EN extends Key<RM>>(
+
+  insertAndGetMulti<EN extends EntityNameOf<TM>>(
     command: MultiInsertCommand<
       EN,
-      PreEntity<RequestEntity<RM, EN>>,
-      EntityExtraParams<RM, EN, "insertAndGetMulti">
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGetMulti">
     >,
     sessionId?: string | null
   ): Promise<
     MultiValuesCommandResult<
-      ResponseEntity<RM, EN>,
-      EntityExtraResult<RM, EN, "insertAndGetMulti">
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "insertAndGetMulti">
     >
   >;
-  updateById<EN extends Key<RM>>(
-    command: IdUpdateCommand<EN, EntityExtraParams<RM, EN, "updateById">>,
+
+  updateById<EN extends EntityNameOf<TM>>(
+    command: IdUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateById">>,
     sessionId?: string | null
-  ): Promise<IdUpdateCommandResult<EntityExtraResult<RM, EN, "updateById">>>;
-  updateMulti<EN extends Key<RM>>(
-    command: MultiUpdateCommand<EN, EntityExtraParams<RM, EN, "updateMulti">>,
+  ): Promise<IdUpdateCommandResult<EntityExtraResultOf<TM, EN, "updateById">>>;
+
+  updateMulti<EN extends EntityNameOf<TM>>(
+    command: MultiUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateMulti">>,
     sessionId?: string | null
   ): Promise<
-    MultiUpdateCommandResult<EntityExtraResult<RM, EN, "updateMulti">>
+    MultiUpdateCommandResult<EntityExtraResultOf<TM, EN, "updateMulti">>
   >;
-  updateAndGet<EN extends Key<RM>>(
-    command: IdUpdateCommand<EN, EntityExtraParams<RM, EN, "updateAndGet">>,
+
+  updateAndGet<EN extends EntityNameOf<TM>>(
+    command: IdUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateAndGet">>,
     sessionId?: string | null
   ): Promise<
     GetCommandResult<
-      ResponseEntity<RM, EN>,
-      EntityExtraResult<RM, EN, "updateAndGet">
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "updateAndGet">
     >
   >;
-  updateAndFetch<EN extends Key<RM>>(
+
+  updateAndFetch<EN extends EntityNameOf<TM>>(
     command: MultiUpdateCommand<
       EN,
-      EntityExtraParams<RM, EN, "updateAndFetch">
+      EntityExtraParamsOf<TM, EN, "updateAndFetch">
     >,
     sessionId?: string | null
   ): Promise<
     MultiValuesCommandResult<
-      ResponseEntity<RM, EN>,
-      EntityExtraResult<RM, EN, "updateAndFetch">
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "updateAndFetch">
     >
   >;
-  push<EN extends Key<RM>>(
-    command: PushCommand<EN, EntityExtraParams<RM, EN, "push">>,
+
+  push<EN extends EntityNameOf<TM>>(
+    command: PushCommand<EN, EntityExtraParamsOf<TM, EN, "push">>,
     sessionId?: string | null
   ): Promise<
-    PushCommandResult<ResponseEntity<RM, EN>, EntityExtraResult<RM, EN, "push">>
+    PushCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "push">
+    >
   >;
-  delete<EN extends Key<RM>>(
-    command: DeleteCommand<EN, EntityExtraParams<RM, EN, "delete">>,
-    sessionId?: string | null
-  ): Promise<DeleteCommandResult<EntityExtraResult<RM, EN, "delete">>>;
-}
 
-/**
- * A client-side client to access to custom queries/commands via RestApi.
- *
- * When you need to pass `CustomQueryMap` and `CustomCommandMap`, use `CustomClient`.
- */
-export interface GeneralCustomClient {
-  runCustomQuery(
-    query: GeneralCustomQuery,
+  delete<EN extends EntityNameOf<TM>>(
+    command: DeleteCommand<EN, EntityExtraParamsOf<TM, EN, "delete">>,
     sessionId?: string | null
-  ): Promise<GeneralCustomQueryResult>;
-  runCustomCommand(
-    command: GeneralCustomCommand,
-    sessionId?: string | null
-  ): Promise<GeneralCustomCommandResult>;
-}
+  ): Promise<DeleteCommandResult<EntityExtraResultOf<TM, EN, "delete">>>;
 
-/**
- * A client-side client to access to custom queries/commands via RestApi.
- *
- * When you don't need to pass `GeneralCustomMap`, use `GeneralCustomClient`.
- */
-export interface CustomClient<
-  QM extends GeneralCustomMap,
-  CM extends GeneralCustomMap
-> extends GeneralCustomClient {
-  runCustomQuery<QN extends Key<QM>>(
+  runCustomQuery<QN extends CustomQueryNameOf<TM>>(
     query: CustomQuery<
       QN,
-      CustomQueryParams<QM, QN>,
-      CustomQueryExtraParams<QM, QN>
+      CustomQueryParamsOf<TM, QN>,
+      CustomQueryExtraParamsOf<TM, QN>
     >,
     sessionId?: string | null
   ): Promise<
     CustomQueryResult<
-      CustomQueryResultValue<QM, QN>,
-      CustomQueryExtraResult<QM, QN>
+      CustomQueryResultValueOf<TM, QN>,
+      CustomQueryExtraResultOf<TM, QN>
     >
   >;
-  runCustomCommand<CN extends Key<CM>>(
+
+  runCustomCommand<CN extends CustomCommandNameOf<TM>>(
     command: CustomCommand<
       CN,
-      CustomCommandParams<CM, CN>,
-      CustomCommandExtraParams<CM, CN>
+      CustomCommandParamsOf<TM, CN>,
+      CustomCommandExtraParamsOf<TM, CN>
     >,
     sessionId?: string | null
   ): Promise<
     CustomCommandResult<
-      CustomCommandResultValue<CM, CN>,
-      CustomCommandExtraResult<CM, CN>
+      CustomCommandResultValueOf<TM, CN>,
+      CustomQueryExtraResultOf<TM, CN>
     >
   >;
-}
 
-/**
- * A client-side client to authenticate via RestApi.
- *
- * When you need to pass `EntityRestInfoMap` and `AuthCommandMap`, use `AuthClient` instead.
- */
-export interface GeneralAuthClient {
-  login(
-    command: GeneralLoginCommand,
-    sessionId?: string | null
-  ): Promise<GeneralLoginCommandResult>;
-  logout(
-    command: GeneralLogoutCommand,
-    sessionId?: string | null
-  ): Promise<GeneralLogoutCommandResult>;
-}
-
-/**
- * A client-side client to authenticate via RestApi.
- *
- * When you don't need to pass `RM`(`GeneralEntityRestInfoMap`) or `AM`(`GeneralAuthCommandMap`}), use `GeneralAuthClient` instead.
- */
-export interface AuthClient<
-  RM extends GeneralEntityRestInfoMap,
-  AM extends GeneralAuthCommandMap
-> extends GeneralAuthClient {
-  login<UN extends Key<RM> & Key<AM>>(
+  login<UN extends UserEntityNameOf<TM>>(
     command: LoginCommand<
       UN,
-      AuthCredentials<AM, UN>,
-      EntityExtraParams<RM, UN, "login">
+      AuthCredentialsOf<TM, UN>,
+      EntityExtraParamsOf<TM, UN, "login">
     >,
     sessionId?: string | null
   ): Promise<
     LoginCommandResult<
       UN,
-      ResponseAuthUser<AM, UN, RM>,
-      AuthSessions<AM, UN>,
-      EntityExtraResult<RM, UN, "login">
+      ResponseAuthUserOf<TM, UN>,
+      AuthSessionOf<TM, UN>,
+      EntityExtraResultOf<TM, UN, "login">
     >
   >;
-  logout<UN extends Key<RM> & Key<AM>>(
-    command: LogoutCommand<UN, EntityExtraParams<RM, UN, "logout">>,
+
+  logout<UN extends UserEntityNameOf<TM>>(
+    command: LogoutCommand<UN, EntityExtraParamsOf<TM, UN, "logout">>,
     sessionId?: string | null
-  ): Promise<LogoutCommandResult<EntityExtraResult<RM, UN, "logout">>>;
+  ): Promise<LogoutCommandResult<EntityExtraResultOf<TM, UN, "logout">>>;
 }
 
 /**
- * A client-side client to access to entities and custom queries/commands and to authenticate via RestApi.
+ * Options to pass to `handleRequestData(reqData ,options)` method of `DirectRestApiHandler`,
+ * This options contains powerful privileges, which cannot be set by clientside code.
+ * There are no other ways but `DirectRestApiClient` to pass this option to `DirectRestApiHandler`.
+ * Therefore, these options cannot be set via HTTP.
  *
- * When you don't need to pass GeneralTypeMap, use `GeneralRestApiClient` instead.
+ * `skipAuthorization` option is to skip authorization step in `PhenylRestApi`.
+ * It is useful for accessing data in `RestApiDefinition`.
  */
-export type RestApiClient<TM extends GeneralTypeMap> = RestApiEntityClient<
-  EntityRestInfoMapOf<TM>
-> &
-  CustomClient<CustomQueryMapOf<TM>, CustomCommandMapOf<TM>> &
-  AuthClient<EntityRestInfoMapOf<TM>, AuthCommandMapOf<TM>> &
-  RestApiHandler<TM>;
+export type DirectRestApiOptions = {
+  skipAuthorization?: boolean;
+};
 
 /**
- * A client-side client to access to entities and custom queries/commands and to authenticate via RestApi.
- *
- * When you need to pass `TypeMap`, use `RestApiClient` instead.
+ * Client to access `RestApiHandler` directly.
+ * This can pass `DirectRestApiOptions`, while a normal `RestApiClient` cannot.
  */
-export type GeneralRestApiClient = GeneralRestApiEntityClient &
-  GeneralCustomClient &
-  GeneralAuthClient &
-  GeneralRestApiHandler;
+export interface GeneralDirectRestApiClient
+  extends BaseRestApiClient<DirectRestApiOptions> {
+  handleRequestData(
+    reqData: GeneralRequestData,
+    options?: DirectRestApiOptions
+  ): Promise<GeneralResponseData>;
+}
+
+/**
+ * Client to access `RestApiHandler` directly.
+ * This can pass `DirectRestApiOptions`, while a normal `RestApiClient` cannot.
+ */
+export interface DirectRestApiClient<TM extends GeneralTypeMap>
+  extends RestApiClient<TM, DirectRestApiOptions> {
+  handleRequestData<
+    MN extends RequestMethodName,
+    N extends EveryNameOf<TM, MN>
+  >(
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>,
+    options?: DirectRestApiOptions
+  ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData>;
+}

@@ -69,7 +69,6 @@ export default class PhenylHttpClient<
   >(
     reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
   ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
-    // TODO: use HandlerRequest Type instead of Promise
     const { method, headers, path, qsParams, body } = encodeRequest(reqData);
     const qs = stringifyQsParams(qsParams);
     const url = `${this.url}${this.modifyPath(path)}${qs}`;
