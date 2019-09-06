@@ -1,23 +1,14 @@
-import {
-  UserEntityRequestData,
-  GeneralReqResEntityMap,
-  Key
-} from "@phenyl/interfaces";
+import { GeneralUserEntityRequestData } from "@phenyl/interfaces";
 
 import { $bind, update, DocumentPath, getNestedValue } from "sp2";
 
 import { EncryptFunction } from "./decls";
 
-export function encryptPasswordInRequestData<
-  M extends GeneralReqResEntityMap,
-  C extends Object,
-  EN extends Key<M>,
-  Ereqres extends M[EN]
->(
-  reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
+export function encryptPasswordInRequestData(
+  reqData: GeneralUserEntityRequestData,
   passwordPropName: DocumentPath,
   encrypt: EncryptFunction
-): UserEntityRequestData<EN, Ereqres["request"], C> {
+): GeneralUserEntityRequestData {
   switch (reqData.method) {
     case "insertOne":
     case "insertAndGet": {

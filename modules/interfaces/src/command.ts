@@ -5,6 +5,7 @@ import {
 } from "sp2";
 
 import { ProEntity } from "./entity";
+import { ExtraParams } from "./extra";
 
 /**
  * Type of a parameter for creating an entity.
@@ -12,11 +13,16 @@ import { ProEntity } from "./entity";
  *
  * See more for https://docs.mongodb.com/manual/reference/command/insert/
  */
-export type SingleInsertCommand<EN extends string, PE extends ProEntity> = {
+export interface SingleInsertCommand<
+  EN extends string,
+  PE extends ProEntity,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "insert" key in MongoDB reference
   value: PE; // "documents" key in MongoDB reference
   ordered?: boolean;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for creating multiple entities.
@@ -24,100 +30,141 @@ export type SingleInsertCommand<EN extends string, PE extends ProEntity> = {
  *
  * See more for https://docs.mongodb.com/manual/reference/command/insert/
  */
-export type MultiInsertCommand<EN extends string, PE extends ProEntity> = {
+export interface MultiInsertCommand<
+  EN extends string,
+  PE extends ProEntity,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "insert" key in MongoDB reference
   values: PE[]; // "documents" key in MongoDB reference
   ordered?: boolean;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for updating entity(s).
  *
  * See more for https://docs.mongodb.com/manual/reference/command/update/
  */
-export type UpdateCommand<EN extends string> =
-  | IdUpdateCommand<EN>
-  | MultiUpdateCommand<EN>;
+export type UpdateCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> = IdUpdateCommand<EN, EP> | MultiUpdateCommand<EN, EP>;
 
 /**
  * Type of a parameter for updating one entity.
  *
  * See more for https://docs.mongodb.com/manual/reference/command/update/
  */
-export type IdUpdateCommand<EN extends string> = {
+export interface IdUpdateCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "update" key in MongoDB reference
   id: string;
   operation: GeneralUpdateOperation; // "u" key in MongoDB reference
   filter?: SimpleFindOperation;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for updating multiple entities.
  *
  * See more for https://docs.mongodb.com/manual/reference/command/update/
  */
-export type MultiUpdateCommand<EN extends string> = {
+export interface MultiUpdateCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "update" key in MongoDB reference
   where: FindOperation; // "q" key in MongoDB reference
   operation: GeneralUpdateOperation; // "u" key in MongoDB reference
   ordered?: boolean;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for push (like Git does) the difference expressed by operations.
  */
-export type PushCommand<EN extends string> = {
+export interface PushCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN;
   id: string;
   operations: GeneralUpdateOperation[];
   versionId: string | null;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for removing entity(s).
  *
  * see https://docs.mongodb.com/manual/reference/command/delete/
  */
-export type DeleteCommand<EN extends string> =
-  | IdDeleteCommand<EN>
-  | MultiDeleteCommand<EN>;
+export type DeleteCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> = IdDeleteCommand<EN, EP> | MultiDeleteCommand<EN, EP>;
 
 /**
  * Type of a parameter for removing one entity.
  *
  * see https://docs.mongodb.com/manual/reference/command/delete/
  */
-export type IdDeleteCommand<EN extends string> = {
+export interface IdDeleteCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "delete" key in MongoDB reference
   id: string;
-};
+  extra?: EP;
+}
 
 /**
  * Type of a parameter for removing multiple entities.
  *
  * see https://docs.mongodb.com/manual/reference/command/delete/
  */
-export type MultiDeleteCommand<EN extends string> = {
+export interface MultiDeleteCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN; // "delete" key in MongoDB reference
   where: FindOperation; // "q" key in MongoDB reference
   limit?: number;
   ordered?: boolean;
-};
+  extra?: EP;
+}
 
-export interface CustomCommand<CN extends string, CP extends Object> {
+export interface CustomCommand<
+  CN extends string,
+  CP extends Object,
+  EP extends ExtraParams = ExtraParams
+> {
   name: CN; // custom insert command name
   params: CP;
+  extra?: EP;
 }
 
-export interface LoginCommand<EN extends string, C extends Object> {
+export interface LoginCommand<
+  EN extends string,
+  C extends Object,
+  EP extends ExtraParams = ExtraParams
+> {
   entityName: EN;
   credentials: C;
+  extra?: EP;
 }
 
-export interface LogoutCommand<EN extends string> {
+export interface LogoutCommand<
+  EN extends string,
+  EP extends ExtraParams = ExtraParams
+> {
   sessionId: string;
   userId: string;
   entityName: EN;
+  extra?: EP;
 }
 
 export type GeneralSingleInsertCommand = SingleInsertCommand<string, ProEntity>;

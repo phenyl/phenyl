@@ -1,14 +1,13 @@
 import {
-  IdQuery,
-  GeneralReqResEntityMap,
-  GeneralAuthCommandMap,
-  LocalState,
   LocalEntityInfo,
-  Key,
-  Entity
+  GeneralTypeMap,
+  EntityNameOf,
+  LocalStateOf,
+  ResponseEntityOf,
+  IdQuery
 } from "@phenyl/interfaces";
 import { getNestedValue, createDocumentPath } from "sp2";
-type LocalStateOf = LocalState<GeneralReqResEntityMap, GeneralAuthCommandMap>;
+
 /**
  * Get value(s) of LocalState.
  */
@@ -17,18 +16,18 @@ export class LocalStateFinder {
   /**
    * Check if LocalState has given id and entityName.
    */
-  static hasEntityField<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    state: LocalStateOf,
+  static hasEntityField<TM extends GeneralTypeMap, EN extends EntityNameOf<TM>>(
+    state: LocalStateOf<TM>,
     entityName: EN
   ): boolean {
     return state.entities[entityName] != null;
   }
+
   /**
    * Check if LocalState has given id and entityName.
    */
-
-  static hasEntity<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    state: LocalStateOf,
+  static hasEntity<TM extends GeneralTypeMap, EN extends EntityNameOf<TM>>(
+    state: LocalStateOf<TM>,
     query: IdQuery<EN>
   ): boolean {
     const { entityName, id } = query;
@@ -39,15 +38,15 @@ export class LocalStateFinder {
     );
     return entityInfo != null;
   }
+
   /**
    * Get head entity by id and entityName.
    * "head" is like git's "HEAD", the current entity in local state.
    */
-
-  static getHeadEntity<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    state: LocalStateOf,
+  static getHeadEntity<TM extends GeneralTypeMap, EN extends EntityNameOf<TM>>(
+    state: LocalStateOf<TM>,
     query: IdQuery<EN>
-  ): Entity {
+  ): ResponseEntityOf<TM, EN> {
     const { entityName, id } = query;
     if (state.entities[entityName] == null)
       throw new Error(
@@ -64,16 +63,16 @@ export class LocalStateFinder {
 
     return entityInfo.head ? entityInfo.head : entityInfo.origin;
   }
+
   /**
    * Get LocalEntityInfo by id and entityName.
    * It contains origin, head, commits and versionId.
    * head may be null.
    */
-
-  static getEntityInfo<M extends GeneralReqResEntityMap, EN extends Key<M>>(
-    state: LocalStateOf,
+  static getEntityInfo<TM extends GeneralTypeMap, EN extends EntityNameOf<TM>>(
+    state: LocalStateOf<TM>,
     query: IdQuery<EN>
-  ): LocalEntityInfo<Entity> {
+  ): LocalEntityInfo<ResponseEntityOf<TM, EN>> {
     const { entityName, id } = query;
     if (state.entities[entityName] == null)
       throw new Error(

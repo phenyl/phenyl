@@ -48,7 +48,12 @@ import {
   SingleInsertCommandResult,
   SingleQueryResult,
   WhereQuery,
-  ErrorResponseData
+  ErrorResponseData,
+  EntityExtraParamsOf,
+  CustomQueryExtraParamsOf,
+  CustomCommandExtraParamsOf,
+  EntityExtraResultOf,
+  CustomQueryExtraResultOf
 } from "@phenyl/interfaces";
 
 import { createServerError } from "./create-error";
@@ -78,10 +83,12 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async find<N extends EntityNameOf<TM>>(
-    query: WhereQuery<N>,
+  async find<EN extends EntityNameOf<TM>>(
+    query: WhereQuery<EN, EntityExtraParamsOf<TM, EN, "find">>,
     sessionId?: string | undefined | null
-  ): Promise<QueryResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    QueryResult<ResponseEntityOf<TM, EN>, EntityExtraResultOf<TM, EN, "find">>
+  > {
     const resData = await this.handleRequestData({
       method: "find",
       payload: query,
@@ -94,10 +101,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async findOne<N extends EntityNameOf<TM>>(
-    query: WhereQuery<N>,
+  async findOne<EN extends EntityNameOf<TM>>(
+    query: WhereQuery<EN, EntityExtraParamsOf<TM, EN, "findOne">>,
     sessionId?: string | undefined | null
-  ): Promise<SingleQueryResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    SingleQueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "findOne">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "findOne",
       payload: query,
@@ -110,10 +122,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async get<N extends EntityNameOf<TM>>(
-    query: IdQuery<N>,
+  async get<EN extends EntityNameOf<TM>>(
+    query: IdQuery<EN, EntityExtraParamsOf<TM, EN, "get">>,
     sessionId?: string | undefined | null
-  ): Promise<SingleQueryResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    SingleQueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "get">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "get",
       payload: query,
@@ -126,10 +143,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async getByIds<N extends EntityNameOf<TM>>(
-    query: IdsQuery<N>,
+  async getByIds<EN extends EntityNameOf<TM>>(
+    query: IdsQuery<EN, EntityExtraParamsOf<TM, EN, "getByIds">>,
     sessionId?: string | undefined | null
-  ): Promise<QueryResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    QueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "getByIds">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "getByIds",
       payload: query,
@@ -142,10 +164,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async pull<N extends EntityNameOf<TM>>(
-    query: PullQuery<N>,
+  async pull<EN extends EntityNameOf<TM>>(
+    query: PullQuery<EN, EntityExtraParamsOf<TM, EN, "pull">>,
     sessionId?: string | undefined | null
-  ): Promise<PullQueryResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    PullQueryResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "pull">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "pull",
       payload: query,
@@ -158,10 +185,16 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async insertOne<N extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<N, PreEntity<RequestEntityOf<TM, N>>>,
+  async insertOne<EN extends EntityNameOf<TM>>(
+    command: SingleInsertCommand<
+      EN,
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertOne">
+    >,
     sessionId?: string | undefined | null
-  ): Promise<SingleInsertCommandResult> {
+  ): Promise<
+    SingleInsertCommandResult<EntityExtraResultOf<TM, EN, "insertOne">>
+  > {
     const resData = await this.handleRequestData({
       method: "insertOne",
       payload: command,
@@ -174,10 +207,16 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async insertMulti<N extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<N, PreEntity<RequestEntityOf<TM, N>>>,
+  async insertMulti<EN extends EntityNameOf<TM>>(
+    command: MultiInsertCommand<
+      EN,
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertMulti">
+    >,
     sessionId?: string | undefined | null
-  ): Promise<MultiInsertCommandResult> {
+  ): Promise<
+    MultiInsertCommandResult<EntityExtraResultOf<TM, EN, "insertMulti">>
+  > {
     const resData = await this.handleRequestData({
       method: "insertMulti",
       payload: command,
@@ -190,10 +229,19 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async insertAndGet<N extends EntityNameOf<TM>>(
-    command: SingleInsertCommand<N, PreEntity<RequestEntityOf<TM, N>>>,
+  async insertAndGet<EN extends EntityNameOf<TM>>(
+    command: SingleInsertCommand<
+      EN,
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGet">
+    >,
     sessionId?: string | undefined | null
-  ): Promise<GetCommandResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    GetCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "insertAndGet">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "insertAndGet",
       payload: command,
@@ -206,10 +254,19 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async insertAndGetMulti<N extends EntityNameOf<TM>>(
-    command: MultiInsertCommand<N, PreEntity<RequestEntityOf<TM, N>>>,
+  async insertAndGetMulti<EN extends EntityNameOf<TM>>(
+    command: MultiInsertCommand<
+      EN,
+      PreEntity<RequestEntityOf<TM, EN>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGetMulti">
+    >,
     sessionId?: string | undefined | null
-  ): Promise<MultiValuesCommandResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    MultiValuesCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "insertAndGetMulti">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "insertAndGetMulti",
       payload: command,
@@ -222,10 +279,10 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async updateById<N extends EntityNameOf<TM>>(
-    command: IdUpdateCommand<N>,
+  async updateById<EN extends EntityNameOf<TM>>(
+    command: IdUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateById">>,
     sessionId?: string | undefined | null
-  ): Promise<IdUpdateCommandResult> {
+  ): Promise<IdUpdateCommandResult<EntityExtraResultOf<TM, EN, "updateById">>> {
     const resData = await this.handleRequestData({
       method: "updateById",
       payload: command,
@@ -238,10 +295,12 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async updateMulti<N extends EntityNameOf<TM>>(
-    command: MultiUpdateCommand<N>,
+  async updateMulti<EN extends EntityNameOf<TM>>(
+    command: MultiUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateMulti">>,
     sessionId?: string | undefined | null
-  ): Promise<MultiUpdateCommandResult> {
+  ): Promise<
+    MultiUpdateCommandResult<EntityExtraResultOf<TM, EN, "updateMulti">>
+  > {
     const resData = await this.handleRequestData({
       method: "updateMulti",
       payload: command,
@@ -254,10 +313,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async updateAndGet<N extends EntityNameOf<TM>>(
-    command: IdUpdateCommand<N>,
+  async updateAndGet<EN extends EntityNameOf<TM>>(
+    command: IdUpdateCommand<EN, EntityExtraParamsOf<TM, EN, "updateAndGet">>,
     sessionId?: string | undefined | null
-  ): Promise<GetCommandResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    GetCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "updateAndGet">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "updateAndGet",
       payload: command,
@@ -270,10 +334,18 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async updateAndFetch<N extends EntityNameOf<TM>>(
-    command: MultiUpdateCommand<N>,
+  async updateAndFetch<EN extends EntityNameOf<TM>>(
+    command: MultiUpdateCommand<
+      EN,
+      EntityExtraParamsOf<TM, EN, "updateAndFetch">
+    >,
     sessionId?: string | undefined | null
-  ): Promise<MultiValuesCommandResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    MultiValuesCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "updateAndFetch">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "updateAndFetch",
       payload: command,
@@ -286,10 +358,15 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async push<N extends EntityNameOf<TM>>(
-    command: PushCommand<N>,
+  async push<EN extends EntityNameOf<TM>>(
+    command: PushCommand<EN, EntityExtraParamsOf<TM, EN, "push">>,
     sessionId?: string | undefined | null
-  ): Promise<PushCommandResult<ResponseEntityOf<TM, N>>> {
+  ): Promise<
+    PushCommandResult<
+      ResponseEntityOf<TM, EN>,
+      EntityExtraResultOf<TM, EN, "push">
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "push",
       payload: command,
@@ -302,10 +379,10 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async delete<N extends EntityNameOf<TM>>(
-    command: DeleteCommand<N>,
+  async delete<EN extends EntityNameOf<TM>>(
+    command: DeleteCommand<EN, EntityExtraParamsOf<TM, EN, "delete">>,
     sessionId?: string | undefined | null
-  ): Promise<DeleteCommandResult> {
+  ): Promise<DeleteCommandResult<EntityExtraResultOf<TM, EN, "delete">>> {
     const resData = await this.handleRequestData({
       method: "delete",
       payload: command,
@@ -318,10 +395,19 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async runCustomQuery<N extends CustomQueryNameOf<TM>>(
-    query: CustomQuery<N, CustomQueryParamsOf<TM, N>>,
+  async runCustomQuery<QN extends CustomQueryNameOf<TM>>(
+    query: CustomQuery<
+      QN,
+      CustomQueryParamsOf<TM, QN>,
+      CustomQueryExtraParamsOf<TM, QN>
+    >,
     sessionId?: string | undefined | null
-  ): Promise<CustomQueryResult<CustomQueryResultValueOf<TM, N>>> {
+  ): Promise<
+    CustomQueryResult<
+      CustomQueryResultValueOf<TM, QN>,
+      CustomQueryExtraResultOf<TM, QN>
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "runCustomQuery",
       payload: query,
@@ -334,10 +420,19 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async runCustomCommand<N extends CustomCommandNameOf<TM>>(
-    command: CustomCommand<N, CustomCommandParamsOf<TM, N>>,
+  async runCustomCommand<CN extends CustomCommandNameOf<TM>>(
+    command: CustomCommand<
+      CN,
+      CustomCommandParamsOf<TM, CN>,
+      CustomCommandExtraParamsOf<TM, CN>
+    >,
     sessionId?: string | undefined | null
-  ): Promise<CustomCommandResult<CustomCommandResultValueOf<TM, N>>> {
+  ): Promise<
+    CustomCommandResult<
+      CustomCommandResultValueOf<TM, CN>,
+      CustomQueryExtraResultOf<TM, CN>
+    >
+  > {
     const resData = await this.handleRequestData({
       method: "runCustomCommand",
       payload: command,
@@ -350,11 +445,20 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async login<N extends UserEntityNameOf<TM>>(
-    command: LoginCommand<N, AuthCredentialsOf<TM, N>>,
+  async login<UN extends UserEntityNameOf<TM>>(
+    command: LoginCommand<
+      UN,
+      AuthCredentialsOf<TM, UN>,
+      EntityExtraParamsOf<TM, UN, "login">
+    >,
     sessionId?: string | undefined | null
   ): Promise<
-    LoginCommandResult<N, ResponseAuthUserOf<TM, N>, AuthSessionOf<TM, N>>
+    LoginCommandResult<
+      UN,
+      ResponseAuthUserOf<TM, UN>,
+      AuthSessionOf<TM, UN>,
+      EntityExtraResultOf<TM, UN, "login">
+    >
   > {
     const resData = await this.handleRequestData({
       method: "login",
@@ -368,10 +472,10 @@ export abstract class PhenylRestApiClient<
   /**
    *
    */
-  async logout<N extends UserEntityNameOf<TM>>(
-    command: LogoutCommand<N>,
+  async logout<UN extends UserEntityNameOf<TM>>(
+    command: LogoutCommand<UN, EntityExtraParamsOf<TM, UN, "logout">>,
     sessionId?: string | undefined | null
-  ): Promise<LogoutCommandResult> {
+  ): Promise<LogoutCommandResult<EntityExtraResultOf<TM, UN, "logout">>> {
     const resData = await this.handleRequestData({
       method: "logout",
       payload: command,

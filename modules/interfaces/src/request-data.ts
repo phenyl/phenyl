@@ -11,6 +11,12 @@ import {
 } from "./command";
 import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
 import { Entity, PreEntity, ProEntity } from "./entity";
+import { ObjectMap } from "./utils";
+import {
+  ExtraParamsMethodMap,
+  EntityExtraParamsByMethodMap
+} from "./entity-rest-info-map";
+import { ExtraParams } from "./extra";
 
 /**
  * Type of request data handled in servers and clients.
@@ -30,23 +36,53 @@ export type RequestMethodName = GeneralRequestData["method"];
 /**
  * RequestData handled by EntityDefinition.
  */
-export type EntityRequestData<EN extends string, E extends Entity> =
-  | FindRequestData<EN>
-  | FindOneRequestData<EN>
-  | GetRequestData<EN>
-  | GetByIdsRequestData<EN>
-  | PullRequestData<EN>
-  | InsertOneRequestData<EN, PreEntity<E>>
-  | InsertMultiRequestData<EN, PreEntity<E>>
-  | InsertAndGetRequestData<EN, PreEntity<E>>
-  | InsertAndGetMultiRequestData<EN, PreEntity<E>>
-  | UpdateOneRequestData<EN>
-  | UpdateMultiRequestData<EN>
-  | UpdateAndGetRequestData<EN>
-  | UpdateAndFetchRequestData<EN>
-  | PushRequestData<EN>
-  | DeleteRequestData<EN>;
+export type EntityRequestData<
+  EN extends string,
+  E extends Entity,
+  EPMM extends ExtraParamsMethodMap = ExtraParamsMethodMap
+> =
+  | FindRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "find">>
+  | FindOneRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "findOne">>
+  | GetRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "get">>
+  | GetByIdsRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "getByIds">>
+  | PullRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "pull">>
+  | InsertOneRequestData<
+      EN,
+      PreEntity<E>,
+      EntityExtraParamsByMethodMap<EPMM, "insertOne">
+    >
+  | InsertMultiRequestData<
+      EN,
+      PreEntity<E>,
+      EntityExtraParamsByMethodMap<EPMM, "insertMulti">
+    >
+  | InsertAndGetRequestData<
+      EN,
+      PreEntity<E>,
+      EntityExtraParamsByMethodMap<EPMM, "insertAndGet">
+    >
+  | InsertAndGetMultiRequestData<
+      EN,
+      PreEntity<E>,
+      EntityExtraParamsByMethodMap<EPMM, "insertAndGetMulti">
+    >
+  | UpdateOneRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "updateById">>
+  | UpdateMultiRequestData<
+      EN,
+      EntityExtraParamsByMethodMap<EPMM, "updateMulti">
+    >
+  | UpdateAndGetRequestData<
+      EN,
+      EntityExtraParamsByMethodMap<EPMM, "updateAndGet">
+    >
+  | UpdateAndFetchRequestData<
+      EN,
+      EntityExtraParamsByMethodMap<EPMM, "updateAndFetch">
+    >
+  | PushRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "push">>
+  | DeleteRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "delete">>;
 
+export type EntityRequestMethodName = GeneralEntityRequestData["method"];
 /**
  * RequestData handled by EntityDefinition.
  * Pre-entity values in isnert data are not validated and any objects can be passed.
@@ -72,9 +108,13 @@ export type GeneralEntityRequestData =
  * RequestData handled by authentication.
  * By inputting types to the UserDefinition, the type parameters of this type are inferred in the definition's methods.
  */
-export type AuthRequestData<EN extends string, C extends Object> =
-  | LoginRequestData<EN, C>
-  | LogoutRequestData<EN>;
+export type AuthRequestData<
+  EN extends string,
+  C extends Object,
+  EPMM extends ExtraParamsMethodMap = ExtraParamsMethodMap
+> =
+  | LoginRequestData<EN, C, EntityExtraParamsByMethodMap<EPMM, "login">>
+  | LogoutRequestData<EN, EntityExtraParamsByMethodMap<EPMM, "logout">>;
 
 /**
  * RequestData handled by authentication.
@@ -84,6 +124,8 @@ export type GeneralAuthRequestData =
   | GeneralLoginRequestData
   | GeneralLogoutRequestData;
 
+export type AuthRequestMethodName = GeneralAuthRequestData["method"];
+
 /**
  * RequestData handled by UserDefinition (EntityRequestData | AuthRequestData).
  * By inputting types to the definition, the type parameters of this type are inferred in the definition's methods.
@@ -91,8 +133,9 @@ export type GeneralAuthRequestData =
 export type UserEntityRequestData<
   EN extends string,
   E extends Entity,
-  C extends Object
-> = EntityRequestData<EN, E> | AuthRequestData<EN, C>;
+  C extends Object,
+  EPMM extends ExtraParamsMethodMap = ExtraParamsMethodMap
+> = EntityRequestData<EN, E, EPMM> | AuthRequestData<EN, C, EPMM>;
 
 /**
  * RequestData handled by UserDefinition (GeneralEntityRequestData | GeneralAuthRequestData).
@@ -102,129 +145,192 @@ export type GeneralUserEntityRequestData =
   | GeneralEntityRequestData
   | GeneralAuthRequestData;
 
-export type FindRequestData<N extends string> = {
+export type FindRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "find";
-  payload: WhereQuery<N>;
+  payload: WhereQuery<N, EP>;
   sessionId?: string | null;
 };
 
-export type FindOneRequestData<N extends string> = {
+export type FindOneRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "findOne";
-  payload: WhereQuery<N>;
+  payload: WhereQuery<N, EP>;
   sessionId?: string | null;
 };
 
-export type GetRequestData<N extends string> = {
+export type GetRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "get";
-  payload: IdQuery<N>;
+  payload: IdQuery<N, EP>;
   sessionId?: string | null;
 };
 
-export type GetByIdsRequestData<N extends string> = {
+export type GetByIdsRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "getByIds";
-  payload: IdsQuery<N>;
+  payload: IdsQuery<N, EP>;
   sessionId?: string | null;
 };
 
-export type PullRequestData<N extends string> = {
+export type PullRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "pull";
-  payload: PullQuery<N>;
+  payload: PullQuery<N, EP>;
   sessionId?: string | null;
 };
 
-export type InsertOneRequestData<N extends string, P extends ProEntity> = {
+export type InsertOneRequestData<
+  N extends string,
+  P extends ProEntity,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "insertOne";
-  payload: SingleInsertCommand<N, P>;
+  payload: SingleInsertCommand<N, P, EP>;
   sessionId?: string | null;
 };
 
-export type InsertMultiRequestData<N extends string, P extends ProEntity> = {
+export type InsertMultiRequestData<
+  N extends string,
+  P extends ProEntity,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "insertMulti";
-  payload: MultiInsertCommand<N, P>;
+  payload: MultiInsertCommand<N, P, EP>;
   sessionId?: string | null;
 };
 
-export type InsertAndGetRequestData<N extends string, P extends ProEntity> = {
+export type InsertAndGetRequestData<
+  N extends string,
+  P extends ProEntity,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "insertAndGet";
-  payload: SingleInsertCommand<N, P>;
+  payload: SingleInsertCommand<N, P, EP>;
   sessionId?: string | null;
 };
 
 export type InsertAndGetMultiRequestData<
   N extends string,
-  P extends ProEntity
+  P extends ProEntity,
+  EP extends ExtraParams = ExtraParams
 > = {
   method: "insertAndGetMulti";
-  payload: MultiInsertCommand<N, P>;
+  payload: MultiInsertCommand<N, P, EP>;
   sessionId?: string | null;
 };
 
-export type UpdateOneRequestData<N extends string> = {
+export type UpdateOneRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "updateById";
-  payload: IdUpdateCommand<N>;
+  payload: IdUpdateCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type UpdateMultiRequestData<N extends string> = {
+export type UpdateMultiRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "updateMulti";
-  payload: MultiUpdateCommand<N>;
+  payload: MultiUpdateCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type UpdateAndGetRequestData<N extends string> = {
+export type UpdateAndGetRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "updateAndGet";
-  payload: IdUpdateCommand<N>;
+  payload: IdUpdateCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type UpdateAndFetchRequestData<N extends string> = {
+export type UpdateAndFetchRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "updateAndFetch";
-  payload: MultiUpdateCommand<N>;
+  payload: MultiUpdateCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type PushRequestData<N extends string> = {
+export type PushRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "push";
-  payload: PushCommand<N>;
+  payload: PushCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type DeleteRequestData<N extends string> = {
+export type DeleteRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "delete";
-  payload: DeleteCommand<N>;
+  payload: DeleteCommand<N, EP>;
   sessionId?: string | null;
 };
 
-export type RunCustomQueryRequestData<N extends string, QP extends Object> = {
+export type RunCustomQueryRequestData<
+  N extends string,
+  QP extends ObjectMap,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "runCustomQuery";
-  payload: CustomQuery<N, QP>;
+  payload: CustomQuery<N, QP, EP>;
   sessionId?: string | null;
 };
 
 export type CustomQueryRequestData<
   N extends string,
-  QP extends Object
-> = RunCustomQueryRequestData<N, QP>;
+  QP extends ObjectMap,
+  EP extends ExtraParams = ExtraParams
+> = RunCustomQueryRequestData<N, QP, EP>;
 
-export type RunCustomCommandRequestData<N extends string, P extends Object> = {
+export type RunCustomCommandRequestData<
+  N extends string,
+  CP extends ObjectMap,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "runCustomCommand";
-  payload: CustomCommand<N, P>;
+  payload: CustomCommand<N, CP, EP>;
   sessionId?: string | null;
 };
 export type CustomCommandRequestData<
   N extends string,
-  CP extends Object
-> = RunCustomCommandRequestData<N, CP>;
+  CP extends ObjectMap,
+  EP extends ExtraParams = ExtraParams
+> = RunCustomCommandRequestData<N, CP, EP>;
 
-export type LoginRequestData<N extends string, C extends Object> = {
+export type LoginRequestData<
+  N extends string,
+  C extends Object,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "login";
-  payload: LoginCommand<N, C>;
+  payload: LoginCommand<N, C, EP>;
   sessionId?: string | null;
 };
 
-export type LogoutRequestData<N extends string> = {
+export type LogoutRequestData<
+  N extends string,
+  EP extends ExtraParams = ExtraParams
+> = {
   method: "logout";
-  payload: LogoutCommand<N>;
+  payload: LogoutCommand<N, EP>;
   sessionId?: string | null;
 };
 
@@ -274,14 +380,14 @@ export type GeneralDeleteRequestData = DeleteRequestData<string>;
 
 export type GeneralRunCustomQueryRequestData = RunCustomQueryRequestData<
   string,
-  Object
+  ObjectMap
 >;
 // Alias
 export type GeneralCustomQueryRequestData = GeneralRunCustomQueryRequestData;
 
 export type GeneralRunCustomCommandRequestData = RunCustomCommandRequestData<
   string,
-  Object
+  ObjectMap
 >;
 
 // Alias

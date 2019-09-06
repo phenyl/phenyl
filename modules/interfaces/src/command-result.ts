@@ -1,56 +1,74 @@
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
 import { Session } from "./session";
+import { ExtraResult, CustomCommandResultObject } from "./extra";
 
 type IdMap = { [id: string]: string | null };
 
-export type DeleteCommandResult = {
+export type DeleteCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;
+  extra?: ER;
 };
 
-export type SingleInsertCommandResult = {
+export type SingleInsertCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;
   versionId: string;
+  extra?: ER;
 };
 
-export type MultiInsertCommandResult = {
+export type MultiInsertCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;
   versionsById: IdMap;
+  extra?: ER;
 };
 
-export type IdUpdateCommandResult = {
+export type IdUpdateCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;
   versionId: string;
   prevVersionId: string | null;
+  extra?: ER;
 };
 
-export type MultiUpdateCommandResult = {
+export type MultiUpdateCommandResult<ER extends ExtraResult = ExtraResult> = {
   n: number;
   versionsById: IdMap;
   prevVersionsById: IdMap;
+  extra?: ER;
 };
 
-export type MultiValuesCommandResult<E extends Entity> = {
+export type MultiValuesCommandResult<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   n: number;
   entities: E[];
   versionsById: IdMap;
   prevVersionsById: IdMap;
+  extra?: ER;
 };
 
-export type GetCommandResult<E extends Entity> = {
+export type GetCommandResult<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> = {
   n: number; // TODO necessary?
   entity: E;
   versionId: string;
   prevVersionId: string | null;
+  extra?: ER;
 };
 
-export type PushCommandResult<E extends Entity> =
+export type PushCommandResult<
+  E extends Entity,
+  ER extends ExtraResult = ExtraResult
+> =
   | {
       n: number; // TODO necessary?
       hasEntity: 0;
       operations: GeneralUpdateOperation[];
       versionId: string;
       prevVersionId: string | null;
+      extra?: ER;
     }
   | {
       n: number; // TODO necessary?
@@ -58,22 +76,31 @@ export type PushCommandResult<E extends Entity> =
       entity: E;
       versionId: string;
       prevVersionId: string | null;
+      extra?: ER;
     };
 
-export type CustomCommandResult<CR extends Object> = CR;
+export type CustomCommandResult<
+  CR extends CustomCommandResultObject,
+  ER extends ExtraResult = ExtraResult
+> = CR & {
+  extra?: ER;
+};
 
 export type LoginCommandResult<
   EN extends string,
   E extends Entity,
-  S extends Object
+  S extends Object,
+  ER extends ExtraResult = ExtraResult
 > = {
   session: Session<EN, S>;
   user: E | null;
   versionId: string | null;
+  extra?: ER;
 };
 
-export type LogoutCommandResult = {
+export type LogoutCommandResult<ER extends ExtraResult = ExtraResult> = {
   ok: 1;
+  extra?: ER;
 };
 
 export type GeneralDeleteCommandResult = DeleteCommandResult;
@@ -84,7 +111,9 @@ export type GeneralMultiUpdateCommandResult = MultiUpdateCommandResult;
 export type GeneralMultiValuesCommandResult = MultiValuesCommandResult<Entity>;
 export type GeneralGetCommandResult = GetCommandResult<Entity>;
 export type GeneralPushCommandResult = PushCommandResult<Entity>;
-export type GeneralCustomCommandResult = CustomCommandResult<Object>;
+export type GeneralCustomCommandResult = CustomCommandResult<
+  CustomCommandResultObject
+>;
 export type GeneralLoginCommandResult = LoginCommandResult<
   string,
   Entity,

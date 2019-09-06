@@ -1,8 +1,8 @@
-import { GeneralEntityMap } from "./type-map";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
 import { ProEntity } from "./entity";
 import { PushCommand } from "./command";
+import { GeneralEntityMap } from "./entity-rest-info-map";
 
 export type EntityVersion = {
   id: string;
@@ -22,12 +22,15 @@ export type EntityWithMetaInfo<T extends ProEntity> = T & {
   _PhenylMeta: EntityMetaInfo;
 };
 
-export type VersionDiff = {
-  entityName: string;
+// TODO: Remove default type paramater
+export type VersionDiff<EN extends string = string> = {
+  entityName: EN;
   id: string;
   prevVersionId: string;
   versionId: string;
 };
+
+export type GeneralVersionDiff = VersionDiff<string>;
 
 export type SubscriptionRequest = {
   method: "subscribe";

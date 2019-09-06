@@ -16,7 +16,6 @@ import {
   CustomQueryDefinition,
   CustomQueryResult,
   GeneralFunctionalGroup,
-  ReqRes,
   KvsClient
 } from "@phenyl/interfaces";
 import crypt from "power-crypt";
@@ -48,8 +47,6 @@ type PatientAuthSetting = {
   credentials: { email: string; password: string };
   options: Object;
 };
-
-type AppReqResEntityMap = { patient: ReqRes<PlainPatient> };
 
 type AppEntityMap = {
   patient: PlainPatient;

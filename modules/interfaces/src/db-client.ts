@@ -20,7 +20,7 @@ import {
   GeneralIdsQuery
 } from "./query";
 
-import { GeneralEntityMap } from "./type-map";
+import { GeneralEntityMap } from "./entity-rest-info-map";
 import { Key } from "./utils";
 
 export type EntityOf<EM extends GeneralEntityMap, EN extends Key<EM>> = EM[EN];

@@ -1,15 +1,4 @@
 import {
-  AuthCredentialsOf,
-  UserEntityNameOf,
-  RequestEntityOf,
-  CustomCommandNameOf,
-  CustomCommandParamsOf,
-  CustomQueryNameOf,
-  CustomQueryParamsOf,
-  EntityNameOf,
-  GeneralTypeMap
-} from "./type-map";
-import {
   CustomCommand,
   DeleteCommand,
   IdUpdateCommand,
@@ -24,6 +13,15 @@ import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
 
 import { GeneralRequestData } from "./request-data";
 import { PreEntity } from "./entity";
+import { GeneralTypeMap } from "./type-map";
+import { EntityNameOf, RequestEntityOf } from "./entity-rest-info-map";
+import {
+  CustomQueryNameOf,
+  CustomQueryParamsOf,
+  CustomCommandNameOf,
+  CustomCommandParamsOf
+} from "./custom-map";
+import { UserEntityNameOf, AuthCredentialsOf } from "./auth-command-map";
 
 export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
   handleDefault(reqData: GeneralRequestData): Promise<T>;

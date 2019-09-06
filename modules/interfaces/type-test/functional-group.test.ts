@@ -8,8 +8,7 @@ import {
   EntityRequestData,
   GeneralTypeMap,
   LoginCommand,
-  UserDefinition,
-  ReqRes
+  UserDefinition
 } from "../src";
 import { IsExtends, TypeEq, assertType } from "./helpers";
 

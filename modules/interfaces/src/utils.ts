@@ -9,3 +9,5 @@ export type Diff<T, U> = T extends U ? never : T;
 export type NonNullable<T> = Diff<T, null | undefined>;
 
 export type Nullable<T> = T | null | undefined;
+
+export type ObjectMap = { [key: string]: any };

@@ -2,13 +2,9 @@ import { CustomCommandDefinition } from "./custom-command-definition";
 import { CustomQueryDefinition } from "./custom-query-definition";
 import { EntityDefinition } from "./entity-definition";
 import { UserDefinition } from "./user-definition";
-import {
-  GeneralTypeMap,
-  UserEntityNameOf,
-  NonUserEntityNameOf,
-  CustomQueryNameOf,
-  CustomCommandNameOf
-} from "./type-map";
+import { GeneralTypeMap } from "./type-map";
+import { UserEntityNameOf, NonUserEntityNameOf } from "./auth-command-map";
+import { CustomQueryNameOf, CustomCommandNameOf } from "./custom-map";
 
 export type EntityDefinitions = {
   [EntityName: string]: EntityDefinition;
