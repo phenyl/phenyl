@@ -21,7 +21,8 @@ import {
   UserRestApiDefinition,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
-  GeneralSessionClient
+  GeneralSessionClient,
+  GeneralDirectRestApiClient
 } from "@phenyl/interfaces";
 
 import { ErrorResponseData } from "@phenyl/interfaces";
@@ -29,9 +30,14 @@ import { createServerError } from "@phenyl/utils";
 
 export abstract class DefinitionExecutor {
   definition: RestApiDefinition;
+  directClient: GeneralDirectRestApiClient;
 
-  constructor(definition: RestApiDefinition) {
+  constructor(
+    definition: RestApiDefinition,
+    directClient: GeneralDirectRestApiClient
+  ) {
     this.definition = definition;
+    this.directClient = directClient;
   }
 
   async authorize(
@@ -39,7 +45,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<boolean> {
     return this.definition.authorize
-      ? this.definition.authorize(reqData, session)
+      ? this.definition.authorize(reqData, session, this.directClient)
       : true;
   }
 
@@ -48,7 +54,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<GeneralRequestData> {
     return this.definition.normalize
-      ? this.definition.normalize(reqData, session)
+      ? this.definition.normalize(reqData, session, this.directClient)
       : reqData;
   }
 
@@ -57,7 +63,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<void> {
     if (this.definition.validate) {
-      await this.definition.validate(reqData, session);
+      await this.definition.validate(reqData, session, this.directClient);
     }
   }
 
@@ -69,7 +75,8 @@ export abstract class DefinitionExecutor {
       ? this.definition.wrapExecution(
           reqData,
           session,
-          this.executeOwn.bind(this)
+          this.executeOwn.bind(this),
+          this.directClient
         )
       : this.executeOwn(reqData, session);
   }
@@ -87,9 +94,10 @@ export class EntityRestApiDefinitionExecutor extends DefinitionExecutor {
 
   constructor(
     definition: EntityRestApiDefinition,
+    directClient: GeneralDirectRestApiClient,
     client: GeneralEntityClient
   ) {
-    super(definition);
+    super(definition, directClient);
     this.definition = definition;
     this.client = client;
   }
@@ -203,10 +211,11 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
 
   constructor(
     definition: UserRestApiDefinition,
+    directClient: GeneralDirectRestApiClient,
     client: GeneralEntityClient,
     sessionClient: GeneralSessionClient
   ) {
-    super(definition);
+    super(definition, directClient);
     this.definition = definition;
     this.client = client;
     this.sessionClient = sessionClient;
@@ -230,7 +239,11 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
     loginCommand: LoginCommand<string, Object>,
     session?: Session
   ): Promise<LoginResponseData<string, Entity, Object>> {
-    const result = await this.definition.authenticate(loginCommand, session);
+    const result = await this.definition.authenticate(
+      loginCommand,
+      session,
+      this.directClient
+    );
     const newSession = await this.sessionClient.create(result.preSession);
     return {
       type: "login",
@@ -262,15 +275,13 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
 /* eslint-disable-next-line */
 export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
   definition: CustomQueryApiDefinition;
-  client: GeneralEntityClient;
 
   constructor(
     definition: CustomQueryApiDefinition,
-    client: GeneralEntityClient
+    directClient: GeneralDirectRestApiClient
   ) {
-    super(definition);
+    super(definition, directClient);
     this.definition = definition;
-    this.client = client;
   }
 
   async executeOwn(
@@ -279,7 +290,11 @@ export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
   ): Promise<GeneralCustomQueryResponseData | ErrorResponseData> {
     return {
       type: "runCustomQuery",
-      payload: await this.definition.execute(reqData.payload, session)
+      payload: await this.definition.execute(
+        reqData.payload,
+        session,
+        this.directClient
+      )
     };
   }
 }
@@ -287,15 +302,13 @@ export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
 /* eslint-disable-next-line */
 export class CustomCommandApiDefinitionExecutor extends DefinitionExecutor {
   definition: CustomCommandApiDefinition;
-  client: GeneralEntityClient;
 
   constructor(
     definition: CustomCommandApiDefinition,
-    client: GeneralEntityClient
+    directClient: GeneralDirectRestApiClient
   ) {
-    super(definition);
+    super(definition, directClient);
     this.definition = definition;
-    this.client = client;
   }
 
   async executeOwn(
@@ -304,7 +317,11 @@ export class CustomCommandApiDefinitionExecutor extends DefinitionExecutor {
   ): Promise<GeneralCustomCommandResponseData | ErrorResponseData> {
     return {
       type: "runCustomCommand",
-      payload: await this.definition.execute(reqData.payload, session)
+      payload: await this.definition.execute(
+        reqData.payload,
+        session,
+        this.directClient
+      )
     };
   }
 }

@@ -5,6 +5,7 @@ import { PreSession } from "./session";
 import { Session } from "./session";
 import { GeneralUserEntityRequestData } from "./request-data";
 import { GeneralUserEntityResponseData } from "./response-data";
+import { GeneralDirectRestApiClient } from "./rest-api-client";
 
 export type AuthenticationResult<
   EN extends string,
@@ -25,31 +26,36 @@ export type GeneralAuthenticationResult = AuthenticationResult<
 export interface UserRestApiDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralAuthenticationResult>;
 
   authorize?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralUserEntityRequestData>;
 
   validate?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<void>;
 
   wrapExecution?(
     reqData: GeneralUserEntityRequestData,
-    session: Session,
+    session: Session | undefined,
     executeFn: (
       reqData: GeneralUserEntityRequestData,
       session?: Session
-    ) => Promise<GeneralUserEntityResponseData>
+    ) => Promise<GeneralUserEntityResponseData>,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralUserEntityResponseData>;
 }
 

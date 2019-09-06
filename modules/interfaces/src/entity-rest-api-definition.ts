@@ -5,16 +5,26 @@ import {
 } from "./response-data";
 
 import { Session } from "./session";
+import { GeneralDirectRestApiClient } from "./rest-api-client";
 
 export interface RestApiDefinition {
-  authorize?(reqData: GeneralRequestData, session?: Session): Promise<boolean>;
+  authorize?(
+    reqData: GeneralRequestData,
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
+  ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralRequestData>;
 
-  validate?(reqData: GeneralRequestData, session?: Session): Promise<void>;
+  validate?(
+    reqData: GeneralRequestData,
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
+  ): Promise<void>;
 
   wrapExecution?(
     reqData: GeneralRequestData,
@@ -22,7 +32,8 @@ export interface RestApiDefinition {
     executeFn: (
       reqData: GeneralRequestData,
       session?: Session
-    ) => Promise<GeneralResponseData>
+    ) => Promise<GeneralResponseData>,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralResponseData>;
 }
 
@@ -34,15 +45,21 @@ export type GeneralExecuteFn = (
 export interface EntityRestApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralEntityRequestData>;
 
-  validate?(reqData: GeneralRequestData, session?: Session): Promise<void>;
+  validate?(
+    reqData: GeneralRequestData,
+    session: Session | undefined,
+    directClient: GeneralDirectRestApiClient
+  ): Promise<void>;
 
   wrapExecution?(
     reqData: GeneralEntityRequestData,
@@ -50,7 +67,8 @@ export interface EntityRestApiDefinition extends RestApiDefinition {
     executeFn: (
       reqData: GeneralEntityRequestData,
       session?: Session
-    ) => Promise<GeneralEntityResponseData>
+    ) => Promise<GeneralEntityResponseData>,
+    directClient: GeneralDirectRestApiClient
   ): Promise<GeneralEntityResponseData>;
 }
 
