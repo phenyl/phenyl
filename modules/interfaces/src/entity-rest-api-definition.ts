@@ -5,25 +5,49 @@ import {
 } from "./response-data";
 
 import { Session } from "./session";
-import { GeneralDirectRestApiClient } from "./rest-api-client";
+import {
+  GeneralDirectRestApiClient,
+  DirectRestApiClient
+} from "./rest-api-client";
+import {
+  GeneralEntityClient,
+  GeneralSessionClient,
+  EntityClient,
+  SessionClient
+} from "./entity-client";
+import { GeneralTypeMap } from "./type-map";
+import { ResponseEntityMapOf } from "./entity-rest-info-map";
+import { AuthCommandMapOf } from "./auth-command-map";
+
+export interface GeneralClientMap {
+  entityClient: GeneralEntityClient;
+  sessionClient: GeneralSessionClient;
+  directClient: GeneralDirectRestApiClient;
+}
+
+export interface ClientMap<TM extends GeneralTypeMap> extends GeneralClientMap {
+  entityClient: EntityClient<ResponseEntityMapOf<TM>>;
+  sessionClient: SessionClient<AuthCommandMapOf<TM>>;
+  directClient: DirectRestApiClient<TM>;
+}
 
 export interface RestApiDefinition {
   authorize?(
     reqData: GeneralRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralRequestData>;
 
   validate?(
     reqData: GeneralRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<void>;
 
   wrapExecution?(
@@ -33,7 +57,7 @@ export interface RestApiDefinition {
       reqData: GeneralRequestData,
       session?: Session
     ) => Promise<GeneralResponseData>,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralResponseData>;
 }
 
@@ -46,19 +70,19 @@ export interface EntityRestApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralEntityRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralEntityRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralEntityRequestData>;
 
   validate?(
     reqData: GeneralRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<void>;
 
   wrapExecution?(
@@ -68,7 +92,7 @@ export interface EntityRestApiDefinition extends RestApiDefinition {
       reqData: GeneralEntityRequestData,
       session?: Session
     ) => Promise<GeneralEntityResponseData>,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralEntityResponseData>;
 }
 

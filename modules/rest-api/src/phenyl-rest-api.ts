@@ -204,17 +204,16 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   private createDefinitionExecutors(
     fg: GeneralFunctionalGroup
   ): DefinitionExecutorMap {
-    const directClient = this.createDirectClient();
+    const clients = {
+      entityClient: this.entityClient,
+      sessionClient: this.sessionClient,
+      directClient: this.createDirectClient()
+    };
     const user = fg.users
       ? Object.entries(fg.users).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new UserRestApiDefinitionExecutor(
-              def,
-              directClient,
-              this.entityClient,
-              this.sessionClient
-            )
+            [name]: new UserRestApiDefinitionExecutor(def, clients)
           }),
           {}
         )
@@ -223,11 +222,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.nonUsers).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new EntityRestApiDefinitionExecutor(
-              def,
-              directClient,
-              this.entityClient
-            )
+            [name]: new EntityRestApiDefinitionExecutor(def, clients)
           }),
           {}
         )
@@ -236,7 +231,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customQueries).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomQueryApiDefinitionExecutor(def, directClient)
+            [name]: new CustomQueryApiDefinitionExecutor(def, clients)
           }),
           {}
         )
@@ -245,7 +240,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customCommands).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomCommandApiDefinitionExecutor(def, directClient)
+            [name]: new CustomCommandApiDefinitionExecutor(def, clients)
           }),
           {}
         )

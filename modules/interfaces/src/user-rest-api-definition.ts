@@ -1,11 +1,13 @@
 import { Entity } from "./entity";
-import { RestApiDefinition } from "./entity-rest-api-definition";
+import {
+  RestApiDefinition,
+  GeneralClientMap
+} from "./entity-rest-api-definition";
 import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
 import { GeneralUserEntityRequestData } from "./request-data";
 import { GeneralUserEntityResponseData } from "./response-data";
-import { GeneralDirectRestApiClient } from "./rest-api-client";
 
 export type AuthenticationResult<
   EN extends string,
@@ -27,25 +29,25 @@ export interface UserRestApiDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralAuthenticationResult>;
 
   authorize?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralUserEntityRequestData>;
 
   validate?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<void>;
 
   wrapExecution?(
@@ -55,7 +57,7 @@ export interface UserRestApiDefinition extends RestApiDefinition {
       reqData: GeneralUserEntityRequestData,
       session?: Session
     ) => Promise<GeneralUserEntityResponseData>,
-    directClient: GeneralDirectRestApiClient
+    clients: GeneralClientMap
   ): Promise<GeneralUserEntityResponseData>;
 }
 
