@@ -13,12 +13,12 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@phenyl/interfaces": "^1.1.1",
