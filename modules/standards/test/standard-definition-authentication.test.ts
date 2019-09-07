@@ -56,7 +56,6 @@ class PatientDefinition extends StandardUserRestApiDefinition {
     super({
       accountPropName: "email",
       passwordPropName: "password",
-      entityClient: memoryClient,
       ttl: 24 * 3600
     });
   }

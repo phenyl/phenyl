@@ -14,13 +14,14 @@ import {
   GeneralUserEntityRequestData,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
-  GeneralLoginCommand
+  GeneralLoginCommand,
+  GeneralRestApiSettings
 } from "@phenyl/interfaces";
 
 import { EncryptFunction } from "./decls";
 
 export type StandardUserRestApiDefinitionParams = {
-  entityClient: GeneralEntityClient;
+  entityClient?: GeneralEntityClient;
   encrypt?: EncryptFunction;
   accountPropName?: string;
   passwordPropName?: string;
@@ -31,7 +32,7 @@ export type StandardUserRestApiDefinitionParams = {
 export type StandardUserDefinitionParams = StandardUserRestApiDefinitionParams;
 
 export class StandardUserRestApiDefinition implements UserRestApiDefinition {
-  entityClient: GeneralEntityClient;
+  entityClient?: GeneralEntityClient;
   encrypt: EncryptFunction;
   accountPropName: string;
   passwordPropName: string;
@@ -47,7 +48,8 @@ export class StandardUserRestApiDefinition implements UserRestApiDefinition {
 
   async authenticate(
     loginCommand: GeneralLoginCommand,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<GeneralAuthenticationResult> {
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
@@ -78,7 +80,8 @@ export class StandardUserRestApiDefinition implements UserRestApiDefinition {
     }
 
     try {
-      const result = await this.entityClient.findOne({
+      const entityClient = this.entityClient || settings.entityClient;
+      const result = await entityClient.findOne({
         entityName,
         where: {
           [accountPropName]: account,
