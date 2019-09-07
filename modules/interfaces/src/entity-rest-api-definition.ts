@@ -18,17 +18,20 @@ import {
 import { GeneralTypeMap } from "./type-map";
 import { ResponseEntityMapOf } from "./entity-rest-info-map";
 import { AuthCommandMapOf } from "./auth-command-map";
+import { GeneralDbClient, DbClient } from "./db-client";
 
 export interface GeneralClientMap {
   entityClient: GeneralEntityClient;
   sessionClient: GeneralSessionClient;
   directClient: GeneralDirectRestApiClient;
+  dbClient: GeneralDbClient;
 }
 
 export interface ClientMap<TM extends GeneralTypeMap> extends GeneralClientMap {
   entityClient: EntityClient<ResponseEntityMapOf<TM>>;
   sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   directClient: DirectRestApiClient<TM>;
+  dbClient: DbClient<ResponseEntityMapOf<TM>>;
 }
 
 export interface RestApiDefinition {

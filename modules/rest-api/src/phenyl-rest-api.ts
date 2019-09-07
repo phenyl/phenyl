@@ -207,7 +207,8 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
     const clients = {
       entityClient: this.entityClient,
       sessionClient: this.sessionClient,
-      directClient: this.createDirectClient()
+      directClient: this.createDirectClient(),
+      dbClient: this.entityClient.getDbClient()
     };
     const user = fg.users
       ? Object.entries(fg.users).reduce(
