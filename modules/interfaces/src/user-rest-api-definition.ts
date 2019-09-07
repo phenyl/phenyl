@@ -1,7 +1,7 @@
 import { Entity } from "./entity";
 import {
   RestApiDefinition,
-  GeneralClientMap
+  GeneralRestApiSettings
 } from "./entity-rest-api-definition";
 import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
@@ -29,25 +29,25 @@ export interface UserRestApiDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralAuthenticationResult>;
 
   authorize?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralUserEntityRequestData>;
 
   validate?(
     reqData: GeneralUserEntityRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<void>;
 
   wrapExecution?(
@@ -57,7 +57,7 @@ export interface UserRestApiDefinition extends RestApiDefinition {
       reqData: GeneralUserEntityRequestData,
       session?: Session
     ) => Promise<GeneralUserEntityResponseData>,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralUserEntityResponseData>;
 }
 

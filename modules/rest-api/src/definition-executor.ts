@@ -21,7 +21,7 @@ import {
   UserRestApiDefinition,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
-  GeneralClientMap
+  GeneralRestApiSettings
 } from "@phenyl/interfaces";
 
 import { ErrorResponseData } from "@phenyl/interfaces";
@@ -29,11 +29,11 @@ import { createServerError } from "@phenyl/utils";
 
 export abstract class DefinitionExecutor {
   definition: RestApiDefinition;
-  clients: GeneralClientMap;
+  settings: GeneralRestApiSettings;
 
-  constructor(definition: RestApiDefinition, clients: GeneralClientMap) {
+  constructor(definition: RestApiDefinition, settings: GeneralRestApiSettings) {
     this.definition = definition;
-    this.clients = clients;
+    this.settings = settings;
   }
 
   async authorize(
@@ -41,7 +41,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<boolean> {
     return this.definition.authorize
-      ? this.definition.authorize(reqData, session, this.clients)
+      ? this.definition.authorize(reqData, session, this.settings)
       : true;
   }
 
@@ -50,7 +50,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<GeneralRequestData> {
     return this.definition.normalize
-      ? this.definition.normalize(reqData, session, this.clients)
+      ? this.definition.normalize(reqData, session, this.settings)
       : reqData;
   }
 
@@ -59,7 +59,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<void> {
     if (this.definition.validate) {
-      await this.definition.validate(reqData, session, this.clients);
+      await this.definition.validate(reqData, session, this.settings);
     }
   }
 
@@ -72,7 +72,7 @@ export abstract class DefinitionExecutor {
           reqData,
           session,
           this.executeOwn.bind(this),
-          this.clients
+          this.settings
         )
       : this.executeOwn(reqData, session);
   }
@@ -87,8 +87,11 @@ export abstract class DefinitionExecutor {
 export class EntityRestApiDefinitionExecutor extends DefinitionExecutor {
   definition: EntityRestApiDefinition;
 
-  constructor(definition: EntityRestApiDefinition, clients: GeneralClientMap) {
-    super(definition, clients);
+  constructor(
+    definition: EntityRestApiDefinition,
+    settings: GeneralRestApiSettings
+  ) {
+    super(definition, settings);
     this.definition = definition;
   }
 
@@ -97,7 +100,7 @@ export class EntityRestApiDefinitionExecutor extends DefinitionExecutor {
     session?: Session
   ): Promise<GeneralEntityResponseData | ErrorResponseData> {
     return executeEntityRequestData(
-      this.clients.entityClient,
+      this.settings.entityClient,
       reqData,
       session
     );
@@ -201,8 +204,11 @@ async function executeEntityRequestData(
 export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
   definition: UserRestApiDefinition;
 
-  constructor(definition: UserRestApiDefinition, clients: GeneralClientMap) {
-    super(definition, clients);
+  constructor(
+    definition: UserRestApiDefinition,
+    settings: GeneralRestApiSettings
+  ) {
+    super(definition, settings);
     this.definition = definition;
   }
 
@@ -218,7 +224,7 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
     }
 
     return executeEntityRequestData(
-      this.clients.entityClient,
+      this.settings.entityClient,
       reqData,
       session
     );
@@ -231,9 +237,9 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
     const result = await this.definition.authenticate(
       loginCommand,
       session,
-      this.clients
+      this.settings
     );
-    const newSession = await this.clients.sessionClient.create(
+    const newSession = await this.settings.sessionClient.create(
       result.preSession
     );
     return {
@@ -250,7 +256,7 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
     logoutCommand: LogoutCommand<string>
   ): Promise<LogoutResponseData> {
     const { sessionId } = logoutCommand;
-    const result = await this.clients.sessionClient.delete(sessionId);
+    const result = await this.settings.sessionClient.delete(sessionId);
 
     if (!result) {
       throw createServerError("sessionId not found", "BadRequest");
@@ -267,8 +273,11 @@ export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
 export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
   definition: CustomQueryApiDefinition;
 
-  constructor(definition: CustomQueryApiDefinition, clients: GeneralClientMap) {
-    super(definition, clients);
+  constructor(
+    definition: CustomQueryApiDefinition,
+    settings: GeneralRestApiSettings
+  ) {
+    super(definition, settings);
     this.definition = definition;
   }
 
@@ -281,7 +290,7 @@ export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
       payload: await this.definition.execute(
         reqData.payload,
         session,
-        this.clients
+        this.settings
       )
     };
   }
@@ -293,9 +302,9 @@ export class CustomCommandApiDefinitionExecutor extends DefinitionExecutor {
 
   constructor(
     definition: CustomCommandApiDefinition,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ) {
-    super(definition, clients);
+    super(definition, settings);
     this.definition = definition;
   }
 
@@ -308,7 +317,7 @@ export class CustomCommandApiDefinitionExecutor extends DefinitionExecutor {
       payload: await this.definition.execute(
         reqData.payload,
         session,
-        this.clients
+        this.settings
       )
     };
   }

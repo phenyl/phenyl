@@ -3,7 +3,7 @@ import { GeneralCustomQueryResult } from "./query-result";
 import { GeneralCustomQueryRequestData } from "./request-data";
 import {
   RestApiDefinition,
-  GeneralClientMap
+  GeneralRestApiSettings
 } from "./entity-rest-api-definition";
 import { Session } from "./session";
 
@@ -11,25 +11,25 @@ export interface CustomQueryApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralCustomQueryRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralCustomQueryRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralCustomQueryRequestData>;
 
   validate?(
     reqData: GeneralCustomQueryRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<void>;
 
   execute(
     query: GeneralCustomQuery,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralCustomQueryResult>;
 }
 
@@ -39,5 +39,5 @@ export type CustomQueryDefinition = CustomQueryApiDefinition;
 export type GeneralCustomQueryExecuteFn = (
   query: GeneralCustomQuery,
   session: Session | undefined,
-  clients: GeneralClientMap
+  settings: GeneralRestApiSettings
 ) => Promise<GeneralCustomQueryResult>;

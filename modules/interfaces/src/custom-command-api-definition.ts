@@ -3,7 +3,7 @@ import { GeneralCustomCommandResult } from "./command-result";
 import { GeneralCustomCommandRequestData } from "./request-data";
 import {
   RestApiDefinition,
-  GeneralClientMap
+  GeneralRestApiSettings
 } from "./entity-rest-api-definition";
 import { Session } from "./session";
 
@@ -11,25 +11,25 @@ export interface CustomCommandApiDefinition extends RestApiDefinition {
   authorize?(
     reqData: GeneralCustomCommandRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralCustomCommandRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralCustomCommandRequestData>;
 
   validate?(
     reqData: GeneralCustomCommandRequestData,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<void>;
 
   execute(
     command: GeneralCustomCommand,
     session: Session | undefined,
-    clients: GeneralClientMap
+    settings: GeneralRestApiSettings
   ): Promise<GeneralCustomCommandResult>;
 }
 
@@ -39,5 +39,5 @@ export type CustomCommandDefinition = CustomCommandApiDefinition;
 export type GeneralCustomCommandExecuteFn = (
   query: GeneralCustomCommand,
   session: Session | undefined,
-  clients: GeneralClientMap
+  settings: GeneralRestApiSettings
 ) => Promise<GeneralCustomCommandResult>;

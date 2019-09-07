@@ -204,7 +204,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   private createDefinitionExecutors(
     fg: GeneralFunctionalGroup
   ): DefinitionExecutorMap {
-    const clients = {
+    const settings = {
       entityClient: this.entityClient,
       sessionClient: this.sessionClient,
       directClient: this.createDirectClient(),
@@ -214,7 +214,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.users).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new UserRestApiDefinitionExecutor(def, clients)
+            [name]: new UserRestApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -223,7 +223,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.nonUsers).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new EntityRestApiDefinitionExecutor(def, clients)
+            [name]: new EntityRestApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -232,7 +232,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customQueries).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomQueryApiDefinitionExecutor(def, clients)
+            [name]: new CustomQueryApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -241,7 +241,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customCommands).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomCommandApiDefinitionExecutor(def, clients)
+            [name]: new CustomCommandApiDefinitionExecutor(def, settings)
           }),
           {}
         )

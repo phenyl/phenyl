@@ -12,7 +12,8 @@ import {
   Entity,
   GeneralDirectRestApiClient,
   GeneralEntityClient,
-  GeneralSessionClient
+  GeneralSessionClient,
+  GeneralDbClient
 } from "@phenyl/interfaces";
 /* eslint-env mocha */
 import {
@@ -36,10 +37,12 @@ const sessionClientMock: GeneralSessionClient = {
   // @ts-ignore mocking SessionClient
   create: async () => ({})
 };
-const clientsMock = {
+
+const settingsMock = {
   entityClient: entityClientMock,
   sessionClient: sessionClientMock,
-  directClient: directClientMock
+  directClient: directClientMock,
+  dbClient: {} as GeneralDbClient
 };
 
 const findReqData: GeneralRequestData = {
@@ -66,7 +69,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should return true when a definition without authorize() method is given", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         {} as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(findReqData);
       assert.strictEqual(result, true);
@@ -75,7 +78,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should return the result of a given definition's authorize() method when it exists", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         { authorize: async () => false } as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(findReqData);
       assert.strictEqual(result, false);
@@ -86,7 +89,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should do nothing when a definition without validate() method is given", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         {} as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(findReqData);
       assert.ok(true);
@@ -101,7 +104,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
             return;
           }
         } as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(findReqData);
       assert.strictEqual(counter, 1);
@@ -112,7 +115,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should return the same RequestData when a definition without normalize() method is given", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         {} as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(findReqData);
       assert.strictEqual(result, findReqData);
@@ -121,7 +124,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should return the result of a given definition's normalize() method when it exists", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         { normalize: async () => findReqData2 } as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(findReqData);
       assert.strictEqual(result, findReqData2);
@@ -132,7 +135,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should run the client's method when a definition without wrapExecution() method is given", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         {} as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(findReqData);
       assert.deepStrictEqual(result, { type: "find", payload: queryResult });
@@ -141,7 +144,7 @@ describe("EntityRestApiDefinitionExecutor", () => {
     it("should return the wrapped result of a given definition's wrapExecution() method when it exists", async () => {
       const executor = new EntityRestApiDefinitionExecutor(
         { wrapExecution: async () => findResData } as EntityRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(findReqData);
       assert.strictEqual(result, findResData);
@@ -154,7 +157,7 @@ describe("UserRestApiDefinitionExecutor", () => {
     it("should return true when a definition without authorize() method is given", async () => {
       const executor = new UserRestApiDefinitionExecutor(
         {} as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(findReqData);
       assert.strictEqual(result, true);
@@ -164,7 +167,7 @@ describe("UserRestApiDefinitionExecutor", () => {
       const authenticate = async () => ({} as GeneralAuthenticationResult);
       const executor = new UserRestApiDefinitionExecutor(
         { authenticate, authorize: async () => false } as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(findReqData);
       assert.strictEqual(result, false);
@@ -175,7 +178,7 @@ describe("UserRestApiDefinitionExecutor", () => {
     it("should do nothing when a definition without validate() method is given", async () => {
       const executor = new UserRestApiDefinitionExecutor(
         {} as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(findReqData);
       assert.ok(true);
@@ -192,7 +195,7 @@ describe("UserRestApiDefinitionExecutor", () => {
             return;
           }
         } as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(findReqData);
       assert.strictEqual(counter, 1);
@@ -203,7 +206,7 @@ describe("UserRestApiDefinitionExecutor", () => {
     it("should return the same RequestData when a definition without normalize() method is given", async () => {
       const executor = new UserRestApiDefinitionExecutor(
         {} as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(findReqData);
       assert.strictEqual(result, findReqData);
@@ -216,7 +219,7 @@ describe("UserRestApiDefinitionExecutor", () => {
           authenticate,
           normalize: async () => findReqData2
         } as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(findReqData);
       assert.strictEqual(result, findReqData2);
@@ -227,7 +230,7 @@ describe("UserRestApiDefinitionExecutor", () => {
     it("should run the client's method when a definition without wrapExecution() method is given", async () => {
       const executor = new UserRestApiDefinitionExecutor(
         {} as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(findReqData);
       assert.deepStrictEqual(result, { type: "find", payload: queryResult });
@@ -240,7 +243,7 @@ describe("UserRestApiDefinitionExecutor", () => {
           authenticate,
           wrapExecution: async () => findResData
         } as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(findReqData);
       assert.strictEqual(result, findResData);
@@ -253,7 +256,7 @@ describe("UserRestApiDefinitionExecutor", () => {
         {
           authenticate
         } as UserRestApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute({
         method: "login",
@@ -274,7 +277,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
     it("should return true when a definition without authorize() method is given", async () => {
       const executor = new CustomQueryApiDefinitionExecutor(
         { execute: async () => ({ result: 123 }) } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(customQueryReqData);
       assert.strictEqual(result, true);
@@ -286,7 +289,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
           execute: async () => ({ result: 123 }),
           authorize: async () => false
         } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(customQueryReqData);
       assert.strictEqual(result, false);
@@ -297,7 +300,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
     it("should do nothing when a definition without validate() method is given", async () => {
       const executor = new CustomQueryApiDefinitionExecutor(
         { execute: async () => ({ result: 123 }) } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(customQueryReqData);
       assert.ok(true);
@@ -313,7 +316,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
             return;
           }
         } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(customQueryReqData);
       assert.strictEqual(counter, 1);
@@ -324,7 +327,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
     it("should return the same RequestData when a definition without normalize() method is given", async () => {
       const executor = new CustomQueryApiDefinitionExecutor(
         { execute: async () => ({ result: 123 }) } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(customQueryReqData);
       assert.strictEqual(result, customQueryReqData);
@@ -337,7 +340,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
           normalize: async () =>
             Object.assign({}, customQueryReqData, { ex: 1 })
         } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(customQueryReqData);
       assert.deepStrictEqual(
@@ -351,7 +354,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
     it("should return the result of exexute() when a given definition has no wrapExecution() method", async () => {
       const executor = new CustomQueryApiDefinitionExecutor(
         { execute: async () => ({ result: 123 }) } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(customQueryReqData);
       assert.deepStrictEqual(result, {
@@ -369,7 +372,7 @@ describe("CustomQueryApiDefinitionExecutor", () => {
             payload: { result: 345 }
           })
         } as CustomQueryApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(customQueryReqData);
       assert.deepStrictEqual(result, {
@@ -391,7 +394,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(customCommandReqData);
       assert.strictEqual(result, true);
@@ -403,7 +406,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
           execute: async () => ({ result: 123 }),
           authorize: async () => false
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.authorize(customCommandReqData);
       assert.strictEqual(result, false);
@@ -416,7 +419,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(customCommandReqData);
       assert.ok(true);
@@ -432,7 +435,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
             return;
           }
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       await executor.validate(customCommandReqData);
       assert.strictEqual(counter, 1);
@@ -445,7 +448,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(customCommandReqData);
       assert.strictEqual(result, customCommandReqData);
@@ -458,7 +461,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
           normalize: async () =>
             Object.assign({}, customCommandReqData, { ex: 1 })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.normalize(customCommandReqData);
       assert.deepStrictEqual(
@@ -474,7 +477,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(customCommandReqData);
       assert.deepStrictEqual(result, {
@@ -492,7 +495,7 @@ describe("CustomCommandApiDefinitionExecutor", () => {
             payload: { result: 345 }
           })
         } as CustomCommandApiDefinition,
-        clientsMock
+        settingsMock
       );
       const result = await executor.execute(customCommandReqData);
       assert.deepStrictEqual(result, {
