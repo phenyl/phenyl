@@ -17,11 +17,11 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@phenyl/http-rules": "^1.1.1",

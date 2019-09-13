@@ -3,6 +3,7 @@
   "compilerOptions": {
     "typeRoots": ["src/@types", "node_modules/@types"],
     "outDir": "lib",
+    "declaration": false,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

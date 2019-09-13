@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": ["esnext", "dom", "es5"],
     "module": "commonjs",
     "moduleResolution": "Node",
     "noUnusedLocals": true,
+    "rootDir": ".",
     "strict": true,
     "target": "es5"
-  },
-  "exclude": ["node_modules"]
+  }
 }

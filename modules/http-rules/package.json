@@ -15,11 +15,11 @@
   "module": "lib/index.js",
   "scripts": {
     "clean": "rm -rf lib",
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "test": "upbin nyc mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@phenyl/interfaces": "^1.1.1",
