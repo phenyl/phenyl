@@ -1,0 +1,51 @@
+INTERFACES:
+  - modules/interfaces/*
+
+API_EXPLORER:
+  - modules/api-explorer/*
+  - modules/api-exporer-client/*
+
+CENTRAL_STATE:
+  - modules/central-state/*
+
+EXPRESS:
+  - modules/express/*
+
+HTTP_CLIENT:
+  - modules/http-client/*
+
+HTTP_RULES:
+  - modules/http-rules/*
+
+HTTP_SERVER:
+  - modules/http-server/*
+
+LAMBDA_ADAPTER:
+  - modules/lambda-adapter/*
+
+MEMORY_DB:
+  - modules/memory-db/*
+
+MONGODB:
+  - modules/mongodb/*
+
+REDUX:
+  - modules/redux/*
+
+REST_API:
+  - modules/rest-api/*
+
+STANDARDS:
+  - modules/standards/*
+
+STATE:
+  - modules/state/*
+
+UTILS:
+  - modules/utils/*
+
+WEBSOCKET_CLIENT:
+  - modules/websocket-client/*
+
+WEBSOCKET_SERVER:
+  - modules/websocket-server/*
