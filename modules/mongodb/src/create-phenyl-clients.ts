@@ -13,7 +13,7 @@ import { MongoDbConnection } from "./connection";
 
 export function createPhenylClients<TM extends GeneralTypeMap>(
   conn: MongoDbConnection,
-  options: PhenylEntityClientOptions<ResponseEntityMapOf<TM>>
+  options: PhenylEntityClientOptions<ResponseEntityMapOf<TM>> = {}
 ): PhenylClients<TM> {
   const entityClient = createEntityClient<ResponseEntityMapOf<TM>>(
     conn,
