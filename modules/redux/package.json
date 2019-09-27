@@ -1,7 +1,7 @@
 {
   "name": "@phenyl/redux",
   "version": "1.1.1",
-  "description": "",
+  "description": "phenyl wrapper for redux",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
