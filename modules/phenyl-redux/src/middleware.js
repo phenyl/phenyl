@@ -298,22 +298,24 @@ export class MiddlewareHandler<TM: TypeMap, T> {
         LocalStateUpdater.networkRequest(this.state, action.tag)
       )
 
-      // $FlowIssue(Cannot assign object literal to pushCommand because string [1] is incompatible with N [2] in property entityName)
-      const pushCommand: PushCommand<N> = { id, operations, entityName, versionId }
       try {
-        const result = await this.client.push(pushCommand, this.sessionId)
-        ops.push(LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit))
-        if (result.hasEntity) {
-          ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
-        } else {
-          ops.push(
-            LocalStateUpdater.synchronize(this.state, {
-              entityName,
-              id,
-              operations: result.operations,
-              versionId: result.versionId
-            }, operations),
-          )
+        for (let operation of operations) {
+          // $FlowIssue(Cannot assign object literal to pushCommand because string [1] is incompatible with N [2] in property entityName)
+          const pushCommand: PushCommand<N> = { id, operations: [operation], entityName, versionId }
+          const result = await this.client.push(pushCommand, this.sessionId)
+          ops.push(LocalStateUpdater.removeUnreachedCommits(this.state, unreachedCommit))
+          if (result.hasEntity) {
+            ops.push(LocalStateUpdater.follow(this.state, entityName, result.entity, result.versionId))
+          } else {
+            ops.push(
+              LocalStateUpdater.synchronize(this.state, {
+                entityName,
+                id,
+                operations: result.operations,
+                versionId: result.versionId
+              }, operations),
+            )
+          }
         }
       }
       catch (e) {
