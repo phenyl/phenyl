@@ -10,12 +10,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      - run: sudo apt-get install mongodb-clients
-      - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - name: Use Yarn@1.21.1
         # https://yarnpkg.com/ja/docs/install#linux-tab
         run: |
@@ -27,7 +26,6 @@ jobs:
             node -v
             npm -v
             yarn --version
-            mongo --version
 
       - name: Get yarn cache
         id: yarn-cache
@@ -54,6 +52,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - name: Use Yarn@1.21.1
         # https://yarnpkg.com/ja/docs/install#linux-tab
         run: |
@@ -65,7 +64,6 @@ jobs:
             node -v
             npm -v
             yarn --version
-            mongo --version
 
       - name: Get yarn cache
         id: yarn-cache
@@ -92,6 +90,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - run: sudo apt-get install mongodb-clients
+      - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
       - name: Use Yarn@1.21.1
         # https://yarnpkg.com/ja/docs/install#linux-tab
         run: |
@@ -118,3 +118,8 @@ jobs:
 
       - run: yarn
       - run: yarn test
+    services:
+      mongodb:
+        image: mongo:3.6.5
+        ports:
+          - 27017:27017
