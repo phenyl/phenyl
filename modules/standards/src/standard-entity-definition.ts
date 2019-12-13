@@ -1,7 +1,5 @@
 import {
   EntityDefinition,
-  GeneralRequestData,
-  Session
 } from "@phenyl/interfaces";
 
 /**
@@ -11,8 +9,6 @@ import {
  */
 export class StandardEntityDefinition implements EntityDefinition {
   async authorize(
-    reqData: GeneralRequestData,
-    session?: Session
   ): Promise<boolean> {
     return false;
   }

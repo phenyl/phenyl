@@ -93,16 +93,14 @@ export class EntityDefinitionExecutor extends DefinitionExecutor {
 
   async executeOwn(
     reqData: GeneralEntityRequestData,
-    session?: Session
   ): Promise<GeneralEntityResponseData | ErrorResponseData> {
-    return executeEntityRequestData(this.client, reqData, session);
+    return executeEntityRequestData(this.client, reqData);
   }
 }
 
 async function executeEntityRequestData(
   client: GeneralEntityClient,
   reqData: GeneralEntityRequestData,
-  session?: Session
 ): Promise<GeneralEntityResponseData> {
   switch (reqData.method) {
     case "find":

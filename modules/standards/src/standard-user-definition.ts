@@ -44,7 +44,6 @@ export class StandardUserDefinition implements UserDefinition {
 
   async authenticate(
     loginCommand: GeneralLoginCommand,
-    session?: Session
   ): Promise<GeneralAuthenticationResult> {
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
