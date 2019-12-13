@@ -11,6 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/phenyl-js/phenyl.git"
   },
+  "engines": {
+    "npm": ">=6.13.4",
+    "yarn": ">=1.21.1"
+  },
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "contributors": [
