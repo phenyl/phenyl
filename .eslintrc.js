@@ -8,11 +8,11 @@ module.exports = {
       jsx: true
     }
   },
-  plugins: ["prettier", "typescript"],
+  plugins: ["prettier", "@typescript-eslint"],
   extends: ["eslint:recommended"],
   rules: {
     "no-unused-vars": "off",
-    "typescript/no-unused-vars": ["error"],
+    "@typescript-eslint/no-unused-vars": ["error"],
     "prefer-arrow-callback": ["error"]
   }
 };
