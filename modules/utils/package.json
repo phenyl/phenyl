@@ -24,7 +24,7 @@
     "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.1.1",
+    "@phenyl/interfaces": "1.1.1",
     "sp2": "^1.5.1"
   },
   "devDependencies": {
