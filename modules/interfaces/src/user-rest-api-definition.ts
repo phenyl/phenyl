@@ -1,5 +1,8 @@
 import { Entity } from "./entity";
-import { GeneralDefinition } from "./entity-definition";
+import {
+  RestApiDefinition,
+  GeneralRestApiSettings
+} from "./entity-rest-api-definition";
 import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
@@ -22,41 +25,47 @@ export type GeneralAuthenticationResult = AuthenticationResult<
   Object
 >;
 
-export interface UserDefinition extends GeneralDefinition {
+export interface UserRestApiDefinition extends RestApiDefinition {
   authenticate(
     loginCommand: GeneralLoginCommand,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<GeneralAuthenticationResult>;
 
   authorize?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<boolean>;
 
   normalize?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<GeneralUserEntityRequestData>;
 
   validate?(
     reqData: GeneralUserEntityRequestData,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<void>;
 
   wrapExecution?(
     reqData: GeneralUserEntityRequestData,
-    session: Session,
+    session: Session | undefined,
     executeFn: (
       reqData: GeneralUserEntityRequestData,
       session?: Session
-    ) => Promise<GeneralUserEntityResponseData>
+    ) => Promise<GeneralUserEntityResponseData>,
+    settings: GeneralRestApiSettings
   ): Promise<GeneralUserEntityResponseData>;
 }
 
 // alias
-export type UserEntityDefinition = UserDefinition;
+export type UserEntityRestApiDefinition = UserRestApiDefinition;
+export type UserDefinition = UserRestApiDefinition;
 
-export type AuthDefinition = Pick<UserDefinition, "authenticate">;
+export type AuthDefinition = Pick<UserRestApiDefinition, "authenticate">;
 
 export type GeneralUserEntityExecuteFn = (
   reqData: GeneralUserEntityRequestData,

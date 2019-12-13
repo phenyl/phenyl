@@ -1,40 +1,42 @@
-import { CustomCommandDefinition } from "./custom-command-definition";
-import { CustomQueryDefinition } from "./custom-query-definition";
-import { EntityDefinition } from "./entity-definition";
-import { UserDefinition } from "./user-definition";
+import { CustomCommandApiDefinition } from "./custom-command-api-definition";
+import { CustomQueryApiDefinition } from "./custom-query-api-definition";
+import { EntityRestApiDefinition } from "./entity-rest-api-definition";
+import { UserRestApiDefinition } from "./user-rest-api-definition";
 import { GeneralTypeMap } from "./type-map";
 import { UserEntityNameOf, NonUserEntityNameOf } from "./auth-command-map";
 import { CustomQueryNameOf, CustomCommandNameOf } from "./custom-map";
 
-export type EntityDefinitions = {
-  [EntityName: string]: EntityDefinition;
+export type EntityRestApiDefinitions = {
+  [EntityName: string]: EntityRestApiDefinition;
 };
 
-export type CustomQueryDefinitions = {
-  [QueryName: string]: CustomQueryDefinition;
+export type CustomQueryApiDefinitions = {
+  [QueryName: string]: CustomQueryApiDefinition;
 };
 
-export type CustomCommandDefinitions = {
-  [CommandName: string]: CustomCommandDefinition;
+export type CustomCommandApiDefinitions = {
+  [CommandName: string]: CustomCommandApiDefinition;
 };
 
-export type UserDefinitions = {
-  [UserEntityName: string]: UserDefinition;
+export type UserRestApiDefinitions = {
+  [UserEntityName: string]: UserRestApiDefinition;
 };
 
 export type GeneralNormalizedFunctionalGroup = {
-  users: UserDefinitions;
-  nonUsers: EntityDefinitions;
-  customQueries: CustomQueryDefinitions;
-  customCommands: CustomCommandDefinitions;
+  users: UserRestApiDefinitions;
+  nonUsers: EntityRestApiDefinitions;
+  customQueries: CustomQueryApiDefinitions;
+  customCommands: CustomCommandApiDefinitions;
 };
 
 export interface NormalizedFunctionalGroup<TM extends GeneralTypeMap>
   extends GeneralNormalizedFunctionalGroup {
-  users: { [UN in UserEntityNameOf<TM>]: UserDefinition };
-  nonUsers: { [EN in NonUserEntityNameOf<TM>]: EntityDefinition };
-  customQueries: { [QN in CustomQueryNameOf<TM>]: CustomQueryDefinition };
-  customCommands: { [CN in CustomCommandNameOf<TM>]: CustomCommandDefinition };
+  users: { [UN in UserEntityNameOf<TM>]: UserRestApiDefinition };
+  nonUsers: { [EN in NonUserEntityNameOf<TM>]: EntityRestApiDefinition };
+  customQueries: { [QN in CustomQueryNameOf<TM>]: CustomQueryApiDefinition };
+  customCommands: {
+    [CN in CustomCommandNameOf<TM>]: CustomCommandApiDefinition
+  };
 }
 
 export type FunctionalGroup<TM extends GeneralTypeMap> = Partial<

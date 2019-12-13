@@ -5,7 +5,7 @@ import PhenylHttpServer from 'phenyl-http-server/jsnext'
 import PhenylRestApi from 'phenyl-rest-api/jsnext'
 import PhenylHttpClient from 'phenyl-http-client/jsnext'
 import { createEntityClient } from 'phenyl-memory-db/jsnext'
-import { StandardUserDefinition } from 'phenyl-standards/jsnext'
+import { StandardUserRestApiDefinition } from 'phenyl-standards/jsnext'
 
 const memoryClient = createEntityClient()
 
@@ -23,7 +23,7 @@ type ThisTypeMap = {
   },
 }
 
-class PatientDefinition extends StandardUserDefinition {
+class PatientDefinition extends StandardUserRestApiDefinition {
   constructor() {
     super({
       entityClient: memoryClient,

@@ -1,14 +1,14 @@
 import {
   AuthenticationResult,
   CustomCommand,
-  CustomCommandDefinition,
+  CustomCommandApiDefinition,
   CustomQuery,
-  CustomQueryDefinition,
-  EntityDefinition,
+  CustomQueryApiDefinition,
+  EntityRestApiDefinition,
   EntityRequestData,
   GeneralTypeMap,
   LoginCommand,
-  UserDefinition
+  UserRestApiDefinition
 } from "../src";
 import { IsExtends, TypeEq, assertType } from "./helpers";
 
@@ -21,7 +21,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
   type Credentials = { email: string; password: string };
   type MemberSessionValue = { externalId: string; ttl: number };
 
-  class MemberDefinition implements UserDefinition {
+  class MemberDefinition implements UserRestApiDefinition {
     async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
       const { entityName, credentials } = loginCommand;
 
@@ -49,7 +49,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     type Credentials = { email: string; password: string };
     type MemberSessionValue = { externalId: string; ttl: number };
 
-    class MemberDefinitionWithResultType implements UserDefinition {
+    class MemberDefinitionWithResultType implements UserRestApiDefinition {
       async authenticate(loginCommand: LoginCommand<"member", Credentials>) {
         const { entityName, credentials } = loginCommand;
 
@@ -74,13 +74,13 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
 
     type MessageResponse = { id: string; body: string; createdAt: string };
     type MessageRequest = { id: string; body: string };
-    class MessageDefinition implements EntityDefinition {}
+    class MessageDefinition implements EntityRestApiDefinition {}
 
     type MedicalRecord = { id: string; body: string; createdAt: string };
     type N = "medicalRecord";
     type E = MedicalRecord;
 
-    class MedicalRecordDefinition implements EntityDefinition {
+    class MedicalRecordDefinition implements EntityRestApiDefinition {
       async normalize(reqData: EntityRequestData<N, E>, session) {
         return reqData;
       }
@@ -88,7 +88,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
 
     type CountMessagesOfMemberParams = { memberId: string };
     type CountMessagesOfMemberResult = { count: number };
-    class CountMessagesOfMemberDefinition implements CustomQueryDefinition {
+    class CountMessagesOfMemberDefinition implements CustomQueryApiDefinition {
       async execute(
         query: CustomQuery<"countMessagesOfMember", CountMessagesOfMemberParams>
       ) {
@@ -101,7 +101,7 @@ import { IsExtends, TypeEq, assertType } from "./helpers";
     type RegisterParams = { name: string };
     type RegisterResult = { ok: 1 };
 
-    class RegisterDefinition implements CustomCommandDefinition {
+    class RegisterDefinition implements CustomCommandApiDefinition {
       async execute(query: CustomCommand<"register", RegisterParams>) {
         return {
           result: { ok: 1 } as RegisterResult

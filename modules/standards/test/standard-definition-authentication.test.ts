@@ -10,7 +10,7 @@ import {
   ResponseEntityMapOf
 } from "@phenyl/interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
-import { StandardUserDefinition } from "../src";
+import { StandardUserRestApiDefinition } from "../src";
 import assert from "assert";
 
 type PlainPatient = {
@@ -51,12 +51,11 @@ const sessionClient = memoryClient.createSessionClient<
   AuthCommandMapOf<MyTypeMap>
 >();
 
-class PatientDefinition extends StandardUserDefinition {
+class PatientDefinition extends StandardUserRestApiDefinition {
   constructor() {
     super({
       accountPropName: "email",
       passwordPropName: "password",
-      entityClient: memoryClient,
       ttl: 24 * 3600
     });
   }

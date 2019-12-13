@@ -2,18 +2,18 @@ import http from "http";
 import PhenylRestApi from "@phenyl/rest-api";
 import { createEntityClient } from "@phenyl/memory-db";
 import {
-  StandardUserDefinition,
-  StandardEntityDefinition
+  StandardUserRestApiDefinition,
+  StandardEntityRestApiDefinition
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
 import {
   Session,
   GeneralRequestData,
   CustomCommand,
-  CustomCommandDefinition,
+  CustomCommandApiDefinition,
   CustomCommandResult,
   CustomQuery,
-  CustomQueryDefinition,
+  CustomQueryApiDefinition,
   CustomQueryResult,
   GeneralFunctionalGroup,
   KvsClient
@@ -28,7 +28,7 @@ type PlainHospital = {
   name: string;
 };
 
-class HospitalDefinition extends StandardEntityDefinition {
+class HospitalDefinition extends StandardEntityRestApiDefinition {
   async authorize(
     reqData: GeneralRequestData,
     session?: Session
@@ -55,7 +55,7 @@ type AppEntityMap = {
 
 const memoryClient = createEntityClient<AppEntityMap>();
 
-class PatientDefinition extends StandardUserDefinition {
+class PatientDefinition extends StandardUserRestApiDefinition {
   constructor() {
     super({
       entityClient: memoryClient,
@@ -85,7 +85,7 @@ type CustomCommandResponse = {
   echo: string;
   session?: Session;
 };
-class TestCustomCommand implements CustomCommandDefinition {
+class TestCustomCommand implements CustomCommandApiDefinition {
   async authorization(
     command: CustomCommand<any, CustomCommandParams>,
     session?: Session
@@ -115,7 +115,7 @@ type CustomQueryResponse = {
   echo: string;
   session?: Session;
 };
-class TestCustomQuery implements CustomQueryDefinition {
+class TestCustomQuery implements CustomQueryApiDefinition {
   async authorization(
     command: CustomQuery<any, CustomQueryParams>,
     session?: Session

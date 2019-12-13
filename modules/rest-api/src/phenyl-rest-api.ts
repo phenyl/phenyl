@@ -10,7 +10,6 @@ import {
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
-  RestApiHandler,
   SessionClient,
   VersionDiffPublisher,
   ResponseEntityMapOf,
@@ -18,7 +17,9 @@ import {
   GeneralRestApiHandler,
   GeneralFunctionalGroup,
   GeneralSessionClient,
-  GeneralEntityClient
+  GeneralEntityClient,
+  DirectRestApiHandler,
+  DirectRestApiOptions
 } from "@phenyl/interfaces";
 import {
   PhenylRestApiDirectClient,
@@ -27,26 +28,26 @@ import {
 } from "@phenyl/utils";
 
 import {
-  CustomCommandDefinitionExecutor,
-  CustomQueryDefinitionExecutor,
+  CustomCommandApiDefinitionExecutor,
+  CustomQueryApiDefinitionExecutor,
   DefinitionExecutor,
-  EntityDefinitionExecutor,
-  UserDefinitionExecutor
+  EntityRestApiDefinitionExecutor,
+  UserRestApiDefinitionExecutor
 } from "./definition-executor";
 import { createVersionDiff } from "./create-version-diff";
 
 type DefinitionExecutorMap = {
-  user: { [key: string]: UserDefinitionExecutor };
-  entity: { [key: string]: EntityDefinitionExecutor };
-  customQuery: { [key: string]: CustomQueryDefinitionExecutor };
-  customCommand: { [key: string]: CustomCommandDefinitionExecutor };
+  user: { [key: string]: UserRestApiDefinitionExecutor };
+  entity: { [key: string]: EntityRestApiDefinitionExecutor };
+  customQuery: { [key: string]: CustomQueryApiDefinitionExecutor };
+  customCommand: { [key: string]: CustomCommandApiDefinitionExecutor };
 };
 
 /**
  *
  */
 export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
-  implements RestApiHandler<TM>, GeneralRestApiHandler {
+  implements DirectRestApiHandler<TM>, GeneralRestApiHandler {
   readonly entityClient: EntityClient<ResponseEntityMapOf<TM>>;
   readonly sessionClient: SessionClient<AuthCommandMapOf<TM>>;
   readonly versionDiffPublisher: Nullable<VersionDiffPublisher>;
@@ -80,14 +81,13 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   /**
    *
    */
-  // @ts-ignore
   public async handleRequestData<
     MN extends RequestMethodName,
     N extends EveryNameOf<TM, MN>
   >(
-    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>
+    reqData: RequestDataWithTypeMapForResponse<TM, MN, N>,
+    options: DirectRestApiOptions = { skipAuthorization: false }
   ): Promise<ResponseDataWithTypeMap<TM, MN, N> | ErrorResponseData> {
-    // TODO: use HandlerRequest Type instead of Promise
     try {
       assertValidRequestData(reqData);
       const session = await this.sessionClient.get(reqData.sessionId!);
@@ -95,12 +95,17 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
         reqData.method,
         this.extractName(reqData)
       );
-      const isAccessible = await executor.authorize(reqData, session);
-      if (!isAccessible) {
-        return {
-          type: "error",
-          payload: createServerError("Authorization Required.", "Unauthorized")
-        };
+      if (!options.skipAuthorization) {
+        const isAccessible = await executor.authorize(reqData, session);
+        if (!isAccessible) {
+          return {
+            type: "error",
+            payload: createServerError(
+              "Authorization Required.",
+              "Unauthorized"
+            )
+          };
+        }
       }
       const normalizedReqData = await executor.normalize(reqData, session);
 
@@ -199,15 +204,17 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
   private createDefinitionExecutors(
     fg: GeneralFunctionalGroup
   ): DefinitionExecutorMap {
+    const settings = {
+      entityClient: this.entityClient,
+      sessionClient: this.sessionClient,
+      directClient: this.createDirectClient(),
+      dbClient: this.entityClient.getDbClient()
+    };
     const user = fg.users
       ? Object.entries(fg.users).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new UserDefinitionExecutor(
-              def,
-              this.entityClient,
-              this.sessionClient
-            )
+            [name]: new UserRestApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -216,7 +223,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.nonUsers).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new EntityDefinitionExecutor(def, this.entityClient)
+            [name]: new EntityRestApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -225,7 +232,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customQueries).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomQueryDefinitionExecutor(def, this.entityClient)
+            [name]: new CustomQueryApiDefinitionExecutor(def, settings)
           }),
           {}
         )
@@ -234,7 +241,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
       ? Object.entries(fg.customCommands).reduce(
           (acc, [name, def]) => ({
             ...acc,
-            [name]: new CustomCommandDefinitionExecutor(def, this.entityClient)
+            [name]: new CustomCommandApiDefinitionExecutor(def, settings)
           }),
           {}
         )

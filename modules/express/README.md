@@ -112,7 +112,6 @@ type EncodedHttpRequest = {
 ```
 
 The second argument `restApiClient` is a client for `PhenylRestApi`.
-It implements `EntityClient`, `AuthClient` and `CustomClient`.
 
 The return value must be `Promise<EncodedHttpResponse>`.
 

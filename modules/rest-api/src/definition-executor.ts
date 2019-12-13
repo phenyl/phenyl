@@ -1,13 +1,13 @@
 import {
-  CustomCommandDefinition,
-  CustomQueryDefinition,
+  CustomCommandApiDefinition,
+  CustomQueryApiDefinition,
   Entity,
-  EntityDefinition,
+  EntityRestApiDefinition,
   GeneralCustomCommandRequestData,
   GeneralCustomCommandResponseData,
   GeneralCustomQueryRequestData,
   GeneralCustomQueryResponseData,
-  GeneralDefinition,
+  RestApiDefinition,
   GeneralEntityRequestData,
   GeneralEntityResponseData,
   GeneralRequestData,
@@ -18,20 +18,22 @@ import {
   LogoutCommand,
   LogoutResponseData,
   Session,
-  UserDefinition,
+  UserRestApiDefinition,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
-  GeneralSessionClient
+  GeneralRestApiSettings
 } from "@phenyl/interfaces";
 
 import { ErrorResponseData } from "@phenyl/interfaces";
 import { createServerError } from "@phenyl/utils";
 
 export abstract class DefinitionExecutor {
-  definition: GeneralDefinition;
+  definition: RestApiDefinition;
+  settings: GeneralRestApiSettings;
 
-  constructor(definition: GeneralDefinition) {
+  constructor(definition: RestApiDefinition, settings: GeneralRestApiSettings) {
     this.definition = definition;
+    this.settings = settings;
   }
 
   async authorize(
@@ -39,7 +41,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<boolean> {
     return this.definition.authorize
-      ? this.definition.authorize(reqData, session)
+      ? this.definition.authorize(reqData, session, this.settings)
       : true;
   }
 
@@ -48,7 +50,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<GeneralRequestData> {
     return this.definition.normalize
-      ? this.definition.normalize(reqData, session)
+      ? this.definition.normalize(reqData, session, this.settings)
       : reqData;
   }
 
@@ -57,7 +59,7 @@ export abstract class DefinitionExecutor {
     session?: Session
   ): Promise<void> {
     if (this.definition.validate) {
-      await this.definition.validate(reqData, session);
+      await this.definition.validate(reqData, session, this.settings);
     }
   }
 
@@ -69,7 +71,8 @@ export abstract class DefinitionExecutor {
       ? this.definition.wrapExecution(
           reqData,
           session,
-          this.executeOwn.bind(this)
+          this.executeOwn.bind(this),
+          this.settings
         )
       : this.executeOwn(reqData, session);
   }
@@ -81,21 +84,26 @@ export abstract class DefinitionExecutor {
 }
 
 /* eslint-disable-next-line */
-export class EntityDefinitionExecutor extends DefinitionExecutor {
-  definition: EntityDefinition;
-  client: GeneralEntityClient;
+export class EntityRestApiDefinitionExecutor extends DefinitionExecutor {
+  definition: EntityRestApiDefinition;
 
-  constructor(definition: EntityDefinition, client: GeneralEntityClient) {
-    super(definition);
+  constructor(
+    definition: EntityRestApiDefinition,
+    settings: GeneralRestApiSettings
+  ) {
+    super(definition, settings);
     this.definition = definition;
-    this.client = client;
   }
 
   async executeOwn(
     reqData: GeneralEntityRequestData,
     session?: Session
   ): Promise<GeneralEntityResponseData | ErrorResponseData> {
-    return executeEntityRequestData(this.client, reqData, session);
+    return executeEntityRequestData(
+      this.settings.entityClient,
+      reqData,
+      session
+    );
   }
 }
 
@@ -193,20 +201,15 @@ async function executeEntityRequestData(
 }
 
 /* eslint-disable-next-line */
-export class UserDefinitionExecutor extends DefinitionExecutor {
-  definition: UserDefinition;
-  client: GeneralEntityClient;
-  sessionClient: GeneralSessionClient;
+export class UserRestApiDefinitionExecutor extends DefinitionExecutor {
+  definition: UserRestApiDefinition;
 
   constructor(
-    definition: UserDefinition,
-    client: GeneralEntityClient,
-    sessionClient: GeneralSessionClient
+    definition: UserRestApiDefinition,
+    settings: GeneralRestApiSettings
   ) {
-    super(definition);
+    super(definition, settings);
     this.definition = definition;
-    this.client = client;
-    this.sessionClient = sessionClient;
   }
 
   async executeOwn(
@@ -220,15 +223,25 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
       return this.login(reqData.payload, session);
     }
 
-    return executeEntityRequestData(this.client, reqData, session);
+    return executeEntityRequestData(
+      this.settings.entityClient,
+      reqData,
+      session
+    );
   }
 
   private async login(
     loginCommand: LoginCommand<string, Object>,
     session?: Session
   ): Promise<LoginResponseData<string, Entity, Object>> {
-    const result = await this.definition.authenticate(loginCommand, session);
-    const newSession = await this.sessionClient.create(result.preSession);
+    const result = await this.definition.authenticate(
+      loginCommand,
+      session,
+      this.settings
+    );
+    const newSession = await this.settings.sessionClient.create(
+      result.preSession
+    );
     return {
       type: "login",
       payload: {
@@ -243,7 +256,7 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
     logoutCommand: LogoutCommand<string>
   ): Promise<LogoutResponseData> {
     const { sessionId } = logoutCommand;
-    const result = await this.sessionClient.delete(sessionId);
+    const result = await this.settings.sessionClient.delete(sessionId);
 
     if (!result) {
       throw createServerError("sessionId not found", "BadRequest");
@@ -257,14 +270,15 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
 }
 
 /* eslint-disable-next-line */
-export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
-  definition: CustomQueryDefinition;
-  client: GeneralEntityClient;
+export class CustomQueryApiDefinitionExecutor extends DefinitionExecutor {
+  definition: CustomQueryApiDefinition;
 
-  constructor(definition: CustomQueryDefinition, client: GeneralEntityClient) {
-    super(definition);
+  constructor(
+    definition: CustomQueryApiDefinition,
+    settings: GeneralRestApiSettings
+  ) {
+    super(definition, settings);
     this.definition = definition;
-    this.client = client;
   }
 
   async executeOwn(
@@ -273,23 +287,25 @@ export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
   ): Promise<GeneralCustomQueryResponseData | ErrorResponseData> {
     return {
       type: "runCustomQuery",
-      payload: await this.definition.execute(reqData.payload, session)
+      payload: await this.definition.execute(
+        reqData.payload,
+        session,
+        this.settings
+      )
     };
   }
 }
 
 /* eslint-disable-next-line */
-export class CustomCommandDefinitionExecutor extends DefinitionExecutor {
-  definition: CustomCommandDefinition;
-  client: GeneralEntityClient;
+export class CustomCommandApiDefinitionExecutor extends DefinitionExecutor {
+  definition: CustomCommandApiDefinition;
 
   constructor(
-    definition: CustomCommandDefinition,
-    client: GeneralEntityClient
+    definition: CustomCommandApiDefinition,
+    settings: GeneralRestApiSettings
   ) {
-    super(definition);
+    super(definition, settings);
     this.definition = definition;
-    this.client = client;
   }
 
   async executeOwn(
@@ -298,7 +314,11 @@ export class CustomCommandDefinitionExecutor extends DefinitionExecutor {
   ): Promise<GeneralCustomCommandResponseData | ErrorResponseData> {
     return {
       type: "runCustomCommand",
-      payload: await this.definition.execute(reqData.payload, session)
+      payload: await this.definition.execute(
+        reqData.payload,
+        session,
+        this.settings
+      )
     };
   }
 }

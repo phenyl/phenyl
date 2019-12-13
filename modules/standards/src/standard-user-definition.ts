@@ -8,33 +8,37 @@ import {
 } from "./remove-password-from-response-data";
 
 import {
-  UserDefinition,
+  UserRestApiDefinition,
   Session,
   GeneralAuthenticationResult,
   GeneralUserEntityRequestData,
   GeneralUserEntityResponseData,
   GeneralEntityClient,
-  GeneralLoginCommand
+  GeneralLoginCommand,
+  GeneralRestApiSettings
 } from "@phenyl/interfaces";
 
 import { EncryptFunction } from "./decls";
 
-export type StandardUserDefinitionParams = {
-  entityClient: GeneralEntityClient;
+export type StandardUserRestApiDefinitionParams = {
+  entityClient?: GeneralEntityClient;
   encrypt?: EncryptFunction;
   accountPropName?: string;
   passwordPropName?: string;
   ttl?: number;
 };
 
-export class StandardUserDefinition implements UserDefinition {
-  entityClient: GeneralEntityClient;
+// Alias for backward compatibility
+export type StandardUserDefinitionParams = StandardUserRestApiDefinitionParams;
+
+export class StandardUserRestApiDefinition implements UserRestApiDefinition {
+  entityClient?: GeneralEntityClient;
   encrypt: EncryptFunction;
   accountPropName: string;
   passwordPropName: string;
   ttl: number;
 
-  constructor(params: StandardUserDefinitionParams) {
+  constructor(params: StandardUserRestApiDefinitionParams) {
     this.entityClient = params.entityClient;
     this.encrypt = params.encrypt || powerCrypt; // TODO: pass salt string to powerCrypt
     this.accountPropName = params.accountPropName || "account";
@@ -44,7 +48,8 @@ export class StandardUserDefinition implements UserDefinition {
 
   async authenticate(
     loginCommand: GeneralLoginCommand,
-    session?: Session
+    session: Session | undefined,
+    settings: GeneralRestApiSettings
   ): Promise<GeneralAuthenticationResult> {
     const { accountPropName, passwordPropName, ttl } = this;
     const { credentials, entityName } = loginCommand;
@@ -75,7 +80,8 @@ export class StandardUserDefinition implements UserDefinition {
     }
 
     try {
-      const result = await this.entityClient.findOne({
+      const entityClient = this.entityClient || settings.entityClient;
+      const result = await entityClient.findOne({
         entityName,
         where: {
           [accountPropName]: account,
@@ -115,3 +121,6 @@ export class StandardUserDefinition implements UserDefinition {
     return newResData;
   }
 }
+
+// Alias for backward compatibility
+export const StandardUserDefinition = StandardUserRestApiDefinition;
