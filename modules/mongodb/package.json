@@ -30,7 +30,7 @@
     "@phenyl/utils": "1.1.1",
     "@types/mongodb": "^3.3.12",
     "bson": "^4.0.2",
-    "es6-promisify": "^5.0.0",
+    "es6-promisify": "^6.0.0",
     "mongodb": "^3.4.0",
     "sp2": "^1.5.1"
   },
