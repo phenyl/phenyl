@@ -1,15 +1,15 @@
 /*eslint-env node*/
 import {
-  CustomRequestHandler,
+  GeneralCustomRequestHandler,
   EncodedHttpRequest,
   EncodedHttpResponse,
   GeneralResponseData,
-  GeneralTypeMap,
   PathModifier,
-  RestApiHandler,
-  ServerParams
+  GeneralRestApiHandler,
+  GeneralServerParams,
+  GeneralRestApiClient
 } from "@phenyl/interfaces";
-import { PhenylRestApiDirectClient, createServerError } from "@phenyl/utils";
+import { createDirectClient, createServerError } from "@phenyl/utils";
 
 import decodeRequest from "./decode-request";
 import encodeResponse from "./encode-response";
@@ -18,12 +18,12 @@ import { isApiRequest } from "./encode-request";
 /**
  *
  */
-export default class ServerLogic<TM extends GeneralTypeMap> {
+export default class ServerLogic {
   /**
    * Instance containing API logic invoked via run().
    * PhenylRestApi instance is expected.
    */
-  restApiHandler: RestApiHandler<TM>;
+  restApiHandler: GeneralRestApiHandler;
 
   /**
    * (path: string) => string
@@ -44,20 +44,24 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
    *
    * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
    */
-  customRequestHandler: CustomRequestHandler<TM>;
+  customRequestHandler: GeneralCustomRequestHandler;
 
-  constructor(params: ServerParams<TM>) {
+  /**
+   * A client for the rest api of the given restApiHandler.
+   */
+  restApiClient: GeneralRestApiClient;
+
+  constructor(params: GeneralServerParams) {
     this.restApiHandler = params.restApiHandler;
-
     this.modifyPath = params.modifyPath || (path => path);
-
     this.customRequestHandler = params.customRequestHandler || notFoundHandler;
+    this.restApiClient = createDirectClient(this.restApiHandler);
   }
 
   /**
    * Handle request to get response.
-   * If modified path starts with "/api/", invoke RestApiHandler#run().
-   * Otherwise, invoke registered customRequestHandler.
+   * If modified path starts with "/api/", it will invoke GeneralRestApiHandler#handleRequestData().
+   * Otherwise, it will invoke registered customRequestHandler.
    */
   async handleRequest(
     encodedHttpRequest: EncodedHttpRequest
@@ -75,19 +79,17 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
 
   /**
    * @private
-   * Invoke RestApiHandler#run().
+   * Invoke GeneralRestApiHandler#handleRequestData().
    */
   async handleApiRequest(encodedHttpRequest: EncodedHttpRequest) {
     let responseData: GeneralResponseData;
-    // This line casts restApiHandler to supertype so that it should receive pre-sanitized data.
-    const restApiHandler: RestApiHandler<GeneralTypeMap> = this.restApiHandler;
 
     try {
       // 1. Decoding Request
       const requestData = decodeRequest(encodedHttpRequest);
 
       // 2. Invoking PhenylRestApi
-      responseData = await restApiHandler.handleRequestData(requestData);
+      responseData = await this.restApiHandler.handleRequestData(requestData);
     } catch (err) {
       responseData = {
         type: "error",
@@ -106,10 +108,9 @@ export default class ServerLogic<TM extends GeneralTypeMap> {
    */
   async handleCustomRequest(encodedHttpRequest: EncodedHttpRequest) {
     try {
-      const restApiClient = new PhenylRestApiDirectClient(this.restApiHandler);
       const customResponse = await this.customRequestHandler(
         encodedHttpRequest,
-        restApiClient
+        this.restApiClient
       );
       return customResponse;
     } catch (err) {

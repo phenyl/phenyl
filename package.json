@@ -30,7 +30,6 @@
     "prepare": "yarn bootstrap && yarn clean-tmp && yarn build",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
-    "ci-test": "lerna run ci-test",
     "clean": "lerna run clean && lerna clean --yes",
     "clean-tmp": "lerna run clean",
     "install-mongodb-on-ubuntu": "tools/scripts/install-mongodb-on-ubuntu.sh",

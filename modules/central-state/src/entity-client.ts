@@ -27,7 +27,8 @@ import {
   SingleInsertCommand,
   SingleInsertCommandResult,
   SingleQueryResult,
-  WhereQuery
+  WhereQuery,
+  GeneralAuthCommandMap
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation, mergeUpdateOperations } from "sp2";
@@ -224,6 +225,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   async updateMulti<EN extends Key<M>>(
     command: MultiUpdateCommand<EN>
   ): Promise<MultiUpdateCommandResult> {
+    // TODO #276
     const result = await this.updateAndFetch(command);
     return {
       n: result.n,
@@ -346,7 +348,9 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   /**
    *
    */
-  createSessionClient(): SessionClient {
+  createSessionClient<
+    AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
+  >(): SessionClient<AM> {
     return new PhenylSessionClient(this.dbClient);
   }
   /**

@@ -1,9 +1,9 @@
-import { FunctionalGroup } from "@phenyl/interfaces";
+import { GeneralFunctionalGroup } from "@phenyl/interfaces";
 
 declare global {
   interface Window {
     phenylApiExplorerClientGlobals: {
-      PhenylFunctionalGroupSkeleton: FunctionalGroup;
+      PhenylFunctionalGroupSkeleton: GeneralFunctionalGroup;
       phenylApiUrlBase: string;
     };
   }

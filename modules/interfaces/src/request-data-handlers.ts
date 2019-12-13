@@ -1,15 +1,4 @@
 import {
-  AuthCredentialsOf,
-  AuthEntityNameOf,
-  RequestEntityOf,
-  CustomCommandNameOf,
-  CustomCommandParamsOf,
-  CustomQueryNameOf,
-  CustomQueryParamsOf,
-  EntityNameOf,
-  GeneralTypeMap
-} from "./type-map";
-import {
   CustomCommand,
   DeleteCommand,
   IdUpdateCommand,
@@ -24,6 +13,15 @@ import { CustomQuery, IdQuery, IdsQuery, PullQuery, WhereQuery } from "./query";
 
 import { GeneralRequestData } from "./request-data";
 import { PreEntity } from "./entity";
+import { GeneralTypeMap } from "./type-map";
+import { EntityNameOf, RequestEntityOf } from "./entity-rest-info-map";
+import {
+  CustomQueryNameOf,
+  CustomQueryParamsOf,
+  CustomCommandNameOf,
+  CustomCommandParamsOf
+} from "./custom-map";
+import { UserEntityNameOf, AuthCredentialsOf } from "./auth-command-map";
 
 export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
   handleDefault(reqData: GeneralRequestData): Promise<T>;
@@ -82,13 +80,18 @@ export type RequestDataHandlers<TM extends GeneralTypeMap, T> = {
     command: CustomCommand<CN, CustomCommandParamsOf<TM, CN>>
   ): Promise<T>;
 
-  login<EN extends AuthEntityNameOf<TM>>(
+  login<EN extends UserEntityNameOf<TM>>(
     command: LoginCommand<EN, AuthCredentialsOf<TM, EN>>
   ): Promise<T>;
 
-  logout<EN extends AuthEntityNameOf<TM>>(
+  logout<EN extends UserEntityNameOf<TM>>(
     command: LogoutCommand<EN>
   ): Promise<T>;
 
   notMatch(reqData: GeneralRequestData): Promise<T>;
 }>;
+
+export type GeneralRequestDataHandlers<T> = RequestDataHandlers<
+  GeneralTypeMap,
+  T
+>;

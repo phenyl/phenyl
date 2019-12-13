@@ -13,14 +13,13 @@ import {
   CustomQuery,
   LoginCommand,
   AuthenticationResult,
-  RestApiHandler,
-  CustomRequestHandler,
+  GeneralRestApiHandler,
   EncodedHttpRequest,
   GeneralTypeMap,
-  ReqRes
+  FunctionalGroup
 } from "@phenyl/interfaces";
 
-type Diary = ReqRes<{ id: string }>;
+type Diary = { id: string };
 class DiaryDefinition implements EntityDefinition {
   async authorize() {
     return true;
@@ -41,18 +40,12 @@ class GetVersionDefinition implements CustomQueryDefinition {
   }
   async execute(query: CustomQuery<"getVersion", GetVersionParams>) {
     return {
-      result: {
-        name: query.params.name,
-        version: "1.2.3"
-      }
+      name: query.params.name,
+      version: "1.2.3"
     };
   }
 }
 
-type EntityMap = {
-  member: any;
-  diary: any;
-};
 type MemberRequest = { id: string };
 type MemberResponse = { id: string; name: string; age: number };
 type MemberSessionValue = { externalId: string; ttl: number };
@@ -83,21 +76,10 @@ class MemberDefinition implements EntityDefinition {
   }
 }
 
-const fg = {
-  users: { member: new MemberDefinition() },
-  nonUsers: {
-    diary: new DiaryDefinition()
-  },
-  customQueries: {
-    getVersion: new GetVersionDefinition()
-  },
-  customCommands: {}
-};
-
 interface MyTypeMap extends GeneralTypeMap {
   entities: {
-    member: ReqRes<MemberRequest, MemberResponse>;
-    diary: Diary;
+    member: { request: MemberRequest; response: MemberResponse };
+    diary: { type: Diary };
   };
   customQueries: {
     getVersion: {
@@ -108,10 +90,25 @@ interface MyTypeMap extends GeneralTypeMap {
       };
     };
   };
+  auths: {
+    member: {
+      credentials: Object;
+    };
+  };
 }
 
-const restApiHandler = new PhenylRestApi<MyTypeMap>(fg, {
-  entityClient: createEntityClient<EntityMap>()
+const fg: FunctionalGroup<MyTypeMap> = {
+  users: { member: new MemberDefinition() },
+  nonUsers: {
+    diary: new DiaryDefinition()
+  },
+  customQueries: {
+    getVersion: new GetVersionDefinition()
+  }
+};
+
+const restApiHandler = new PhenylRestApi(fg, {
+  entityClient: createEntityClient()
 });
 
 describe("createPhenylApiMiddleware", () => {
@@ -127,7 +124,7 @@ describe("createPhenylApiMiddleware", () => {
   });
 
   it("can handle Phenyl API request", async () => {
-    app.use(createPhenylApiMiddleware(restApiHandler as RestApiHandler));
+    app.use(createPhenylApiMiddleware(restApiHandler));
     const client = new PhenylHttpClient<MyTypeMap>({
       url: "http://localhost:3333"
     });
@@ -135,11 +132,11 @@ describe("createPhenylApiMiddleware", () => {
       name: "getVersion",
       params: { name: "foo" }
     });
-    assert(queryResult.result && queryResult.result.version === "1.2.3");
+    assert(queryResult && queryResult.version === "1.2.3");
   });
 
   it("can handle non-API request by express", async () => {
-    app.use(createPhenylApiMiddleware(restApiHandler as RestApiHandler));
+    app.use(createPhenylApiMiddleware(restApiHandler as GeneralRestApiHandler));
     app.get("/foo/bar", (req, res) => {
       res.send(`Hello, Express! I'm ${req.query.name}.`);
     });
@@ -150,10 +147,7 @@ describe("createPhenylApiMiddleware", () => {
     assert(text === "Hello, Express! I'm Shin.");
   });
   it("can handle Phenyl API request with path modifier", async () => {
-    app.use(
-      "/foo/bar",
-      createPhenylApiMiddleware(restApiHandler as RestApiHandler)
-    );
+    app.use("/foo/bar", createPhenylApiMiddleware(restApiHandler));
     const client = new PhenylHttpClient<MyTypeMap>({
       url: "http://localhost:3333/foo/bar"
     });
@@ -161,13 +155,10 @@ describe("createPhenylApiMiddleware", () => {
       name: "getVersion",
       params: { name: "foo" }
     });
-    assert.strictEqual(queryResult.result.version, "1.2.3");
+    assert.strictEqual(queryResult.version, "1.2.3");
   });
   it("can handle non-API request with path modifier", async () => {
-    app.use(
-      "/foo/bar",
-      createPhenylApiMiddleware(restApiHandler as RestApiHandler)
-    );
+    app.use("/foo/bar", createPhenylApiMiddleware(restApiHandler));
     app.get("/foo/bar/piyo", (req, res) => {
       res.send(`Hello, Express! I'm ${req.query.name}.`);
     });
@@ -209,10 +200,7 @@ describe("createPhenylMiddleware", () => {
   it("can handle Phenyl API request", async () => {
     app.use(
       createPhenylMiddleware(
-        { restApiHandler, customRequestHandler } as {
-          restApiHandler: RestApiHandler;
-          customRequestHandler: CustomRequestHandler<MyTypeMap>;
-        },
+        { restApiHandler, customRequestHandler },
         /\/api\/.*|\/foo\/bar$/
       )
     );
@@ -224,16 +212,13 @@ describe("createPhenylMiddleware", () => {
       params: { name: "bar" }
     });
 
-    assert(queryResult.result && queryResult.result.version === "1.2.3");
+    assert(queryResult && queryResult.version === "1.2.3");
   });
 
   it("can handle non-API request by Phenyl Custom Request", async () => {
     app.use(
       createPhenylMiddleware(
-        { restApiHandler, customRequestHandler } as {
-          restApiHandler: RestApiHandler;
-          customRequestHandler: CustomRequestHandler<MyTypeMap>;
-        },
+        { restApiHandler, customRequestHandler },
         /\/api\/.*|\/foo\/bar$/
       )
     );
@@ -250,10 +235,7 @@ describe("createPhenylMiddleware", () => {
   it("can handle non-API request by express", async () => {
     app.use(
       createPhenylMiddleware(
-        { restApiHandler, customRequestHandler } as {
-          restApiHandler: RestApiHandler;
-          customRequestHandler: CustomRequestHandler<MyTypeMap>;
-        },
+        { restApiHandler, customRequestHandler },
         /\/api\/.*|\/foo\/bar$/
       )
     );
@@ -270,12 +252,7 @@ describe("createPhenylMiddleware", () => {
   });
 
   it('can handle "/explorer" by default', async () => {
-    app.use(
-      createPhenylMiddleware({ restApiHandler, customRequestHandler } as {
-        restApiHandler: RestApiHandler;
-        customRequestHandler: CustomRequestHandler<MyTypeMap>;
-      })
-    );
+    app.use(createPhenylMiddleware({ restApiHandler, customRequestHandler }));
     const client = new PhenylHttpClient<MyTypeMap>({
       url: "http://localhost:3333"
     });
@@ -289,9 +266,6 @@ describe("createPhenylMiddleware", () => {
       createPhenylMiddleware({
         restApiHandler,
         customRequestHandler
-      } as {
-        restApiHandler: RestApiHandler;
-        customRequestHandler: CustomRequestHandler<MyTypeMap>;
       })
     );
     const client = new PhenylHttpClient<MyTypeMap>({
@@ -302,10 +276,7 @@ describe("createPhenylMiddleware", () => {
       params: { name: "bar" }
     });
 
-    assert.strictEqual(
-      queryResult.result && queryResult.result.version,
-      "1.2.3"
-    );
+    assert.strictEqual(queryResult && queryResult.version, "1.2.3");
   });
   it("can handle non-API request with path modifier", async () => {
     const modifyPath = "/foo/bar";
@@ -314,9 +285,6 @@ describe("createPhenylMiddleware", () => {
       createPhenylMiddleware({
         restApiHandler,
         customRequestHandler
-      } as {
-        restApiHandler: RestApiHandler;
-        customRequestHandler: CustomRequestHandler<MyTypeMap>;
       })
     );
     app.get("/foo/bar/baz", (req, res) => {

@@ -1,20 +1,4 @@
 import {
-  AuthCredentialsOf,
-  AuthEntityNameOf,
-  AuthSessionOf,
-  RequestEntityOf,
-  CustomCommandNameOf,
-  CustomCommandParamsOf,
-  CustomCommandResultValueOf,
-  CustomQueryNameOf,
-  CustomQueryParamsOf,
-  CustomQueryResultValueOf,
-  EntityNameOf,
-  GeneralTypeMap,
-  ResponseAuthUserOf,
-  ResponseEntityOf
-} from "./type-map";
-import {
   DeleteRequestData,
   FindOneRequestData,
   FindRequestData,
@@ -59,6 +43,32 @@ import {
 } from "./response-data";
 
 import { PreEntity } from "./entity";
+import { GeneralTypeMap } from "./type-map";
+import {
+  EntityNameOf,
+  RequestEntityOf,
+  ResponseEntityOf,
+  EntityExtraParamsOf,
+  EntityExtraResultOf
+} from "./entity-rest-info-map";
+import {
+  CustomQueryNameOf,
+  CustomCommandNameOf,
+  CustomQueryParamsOf,
+  CustomCommandParamsOf,
+  CustomQueryResultValueOf,
+  CustomCommandResultValueOf,
+  CustomQueryExtraParamsOf,
+  CustomCommandExtraParamsOf,
+  CustomQueryExtraResultOf,
+  CustomCommandExtraResultOf
+} from "./custom-map";
+import {
+  UserEntityNameOf,
+  AuthCredentialsOf,
+  ResponseAuthUserOf,
+  AuthSessionOf
+} from "./auth-command-map";
 
 /**
  * All possible `RequestData` from the given `TypeMap`.
@@ -84,7 +94,7 @@ export type RequestDataWithTypeMapForResponse<
     N & EntityNameOf<TM>,
     N & CustomQueryNameOf<TM>,
     N & CustomCommandNameOf<TM>,
-    N & AuthEntityNameOf<TM>
+    N & UserEntityNameOf<TM>
   >,
   { method: MN }
 >;
@@ -101,45 +111,55 @@ export type RequestDataWithTypeMap<
   EN extends EntityNameOf<TM>,
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
-  AN extends AuthEntityNameOf<TM>
+  UN extends UserEntityNameOf<TM>
 > =
-  | FindRequestData<EN>
-  | FindOneRequestData<EN>
-  | GetRequestData<EN>
-  | GetByIdsRequestData<EN>
-  | PullRequestData<EN>
+  | FindRequestData<EN, EntityExtraParamsOf<TM, EN, "find">>
+  | FindOneRequestData<EN, EntityExtraParamsOf<TM, EN, "findOne">>
+  | GetRequestData<EN, EntityExtraParamsOf<TM, EN, "get">>
+  | GetByIdsRequestData<EN, EntityExtraParamsOf<TM, EN, "getByIds">>
+  | PullRequestData<EN, EntityExtraParamsOf<TM, EN, "pull">>
   | InsertOneRequestData<
       EN,
-      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>,
+      EntityExtraParamsOf<TM, EN, "insertOne">
     >
   | InsertAndGetRequestData<
       EN,
-      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGet">
     >
   | InsertMultiRequestData<
       EN,
-      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>,
+      EntityExtraParamsOf<TM, EN, "insertMulti">
     >
   | InsertAndGetMultiRequestData<
       EN,
-      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>
+      PreEntity<RequestEntityOf<TM, EN & EntityNameOf<TM>>>,
+      EntityExtraParamsOf<TM, EN, "insertAndGetMulti">
     >
-  | UpdateOneRequestData<EN>
-  | UpdateAndGetRequestData<EN>
-  | UpdateMultiRequestData<EN>
-  | UpdateAndFetchRequestData<EN>
-  | PushRequestData<EN>
-  | DeleteRequestData<EN>
+  | UpdateOneRequestData<EN, EntityExtraParamsOf<TM, EN, "updateById">>
+  | UpdateAndGetRequestData<EN, EntityExtraParamsOf<TM, EN, "updateAndGet">>
+  | UpdateMultiRequestData<EN, EntityExtraParamsOf<TM, EN, "updateMulti">>
+  | UpdateAndFetchRequestData<EN, EntityExtraParamsOf<TM, EN, "updateAndFetch">>
+  | PushRequestData<EN, EntityExtraParamsOf<TM, EN, "push">>
+  | DeleteRequestData<EN, EntityExtraParamsOf<TM, EN, "delete">>
   | RunCustomQueryRequestData<
       QN,
-      CustomQueryParamsOf<TM, QN & CustomQueryNameOf<TM>>
+      CustomQueryParamsOf<TM, QN & CustomQueryNameOf<TM>>,
+      CustomQueryExtraParamsOf<TM, QN>
     >
   | RunCustomCommandRequestData<
       CN,
-      CustomCommandParamsOf<TM, CN & CustomCommandNameOf<TM>>
+      CustomCommandParamsOf<TM, CN & CustomCommandNameOf<TM>>,
+      CustomCommandExtraParamsOf<TM, CN>
     >
-  | LoginRequestData<AN, AuthCredentialsOf<TM, AN & AuthEntityNameOf<TM>>>
-  | LogoutRequestData<AN>;
+  | LoginRequestData<
+      UN,
+      AuthCredentialsOf<TM, UN & UserEntityNameOf<TM>>,
+      EntityExtraParamsOf<TM, EN, "login">
+    >
+  | LogoutRequestData<UN, EntityExtraParamsOf<TM, EN, "logout">>;
 
 /**
  * All possible `ResponseData` from the given `TypeMap`, `RequestMethodName` and `EveryNameOf<TM, MN>`.
@@ -153,7 +173,7 @@ export type ResponseDataWithTypeMap<
   N & EntityNameOf<TM>,
   N & CustomQueryNameOf<TM>,
   N & CustomCommandNameOf<TM>,
-  N & AuthEntityNameOf<TM>
+  N & UserEntityNameOf<TM>
 >[MN];
 
 type ResponseDataMapWithTypeMap<
@@ -161,33 +181,72 @@ type ResponseDataMapWithTypeMap<
   EN extends EntityNameOf<TM>,
   QN extends CustomQueryNameOf<TM>,
   CN extends CustomCommandNameOf<TM>,
-  AN extends AuthEntityNameOf<TM>
+  UN extends UserEntityNameOf<TM>
 > = {
-  find: FindResponseData<ResponseEntityOf<TM, EN>>;
-  findOne: FindOneResponseData<ResponseEntityOf<TM, EN>>;
-  get: GetResponseData<ResponseEntityOf<TM, EN>>;
-  getByIds: GetByIdsResponseData<ResponseEntityOf<TM, EN>>;
-  pull: PullResponseData<ResponseEntityOf<TM, EN>>;
-  insertOne: InsertOneResponseData;
-  insertMulti: InsertMultiResponseData;
-  insertAndGet: InsertAndGetResponseData<ResponseEntityOf<TM, EN>>;
-  insertAndGetMulti: InsertAndGetMultiResponseData<ResponseEntityOf<TM, EN>>;
-  updateById: UpdateOneResponseData;
-  updateMulti: UpdateMultiResponseData;
-  updateAndGet: UpdateAndGetResponseData<ResponseEntityOf<TM, EN>>;
-  updateAndFetch: UpdateAndFetchResponseData<ResponseEntityOf<TM, EN>>;
-  push: PushResponseData<ResponseEntityOf<TM, EN>>;
-  delete: DeleteResponseData;
-  runCustomQuery: RunCustomQueryResponseData<CustomQueryResultValueOf<TM, QN>>;
+  find: FindResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "find">
+  >;
+  findOne: FindOneResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "findOne">
+  >;
+  get: GetResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "get">
+  >;
+  getByIds: GetByIdsResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "getByIds">
+  >;
+  pull: PullResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "pull">
+  >;
+  insertOne: InsertOneResponseData<EntityExtraResultOf<TM, EN, "insertOne">>;
+  insertMulti: InsertMultiResponseData<
+    EntityExtraResultOf<TM, EN, "insertMulti">
+  >;
+  insertAndGet: InsertAndGetResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "insertAndGet">
+  >;
+  insertAndGetMulti: InsertAndGetMultiResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "insertAndGetMulti">
+  >;
+  updateById: UpdateOneResponseData<EntityExtraResultOf<TM, EN, "updateById">>;
+  updateMulti: UpdateMultiResponseData<
+    EntityExtraResultOf<TM, EN, "updateMulti">
+  >;
+  updateAndGet: UpdateAndGetResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "updateAndGet">
+  >;
+  updateAndFetch: UpdateAndFetchResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "updateAndFetch">
+  >;
+  push: PushResponseData<
+    ResponseEntityOf<TM, EN>,
+    EntityExtraResultOf<TM, EN, "push">
+  >;
+  delete: DeleteResponseData<EntityExtraResultOf<TM, EN, "delete">>;
+  runCustomQuery: RunCustomQueryResponseData<
+    CustomQueryResultValueOf<TM, QN>,
+    CustomQueryExtraResultOf<TM, QN>
+  >;
   runCustomCommand: RunCustomCommandResponseData<
-    CustomCommandResultValueOf<TM, CN>
+    CustomCommandResultValueOf<TM, CN>,
+    CustomCommandExtraResultOf<TM, CN>
   >;
   login: LoginResponseData<
-    AN,
-    ResponseAuthUserOf<TM, AN>,
-    AuthSessionOf<TM, AN>
+    UN,
+    ResponseAuthUserOf<TM, UN>,
+    AuthSessionOf<TM, UN>,
+    EntityExtraResultOf<TM, EN, "login">
   >;
-  logout: LogoutResponseData;
+  logout: LogoutResponseData<EntityExtraResultOf<TM, EN, "logout">>;
 };
 
 /**
@@ -195,7 +254,7 @@ type ResponseDataMapWithTypeMap<
  * - EntityName
  * - CustomQueryName
  * - CustomCommandName
- * - AuthEntityName
+ * - UserEntityName
  *
  * 2nd type parameter `MN` is `RequestMethodName`.
  * Only the names compatible with given method name are allowed.
@@ -242,5 +301,5 @@ export type EveryNameOf<
   : MN extends "runCustomCommand"
   ? CustomCommandNameOf<TM>
   : MN extends ("login" | "logout")
-  ? AuthEntityNameOf<TM>
+  ? UserEntityNameOf<TM>
   : string;

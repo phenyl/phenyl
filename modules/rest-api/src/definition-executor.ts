@@ -2,7 +2,6 @@ import {
   CustomCommandDefinition,
   CustomQueryDefinition,
   Entity,
-  EntityClient,
   EntityDefinition,
   GeneralCustomCommandRequestData,
   GeneralCustomCommandResponseData,
@@ -19,9 +18,10 @@ import {
   LogoutCommand,
   LogoutResponseData,
   Session,
-  SessionClient,
   UserDefinition,
-  UserEntityResponseData
+  GeneralUserEntityResponseData,
+  GeneralEntityClient,
+  GeneralSessionClient
 } from "@phenyl/interfaces";
 
 import { ErrorResponseData } from "@phenyl/interfaces";
@@ -83,9 +83,9 @@ export abstract class DefinitionExecutor {
 /* eslint-disable-next-line */
 export class EntityDefinitionExecutor extends DefinitionExecutor {
   definition: EntityDefinition;
-  client: EntityClient;
+  client: GeneralEntityClient;
 
-  constructor(definition: EntityDefinition, client: EntityClient) {
+  constructor(definition: EntityDefinition, client: GeneralEntityClient) {
     super(definition);
     this.definition = definition;
     this.client = client;
@@ -100,7 +100,7 @@ export class EntityDefinitionExecutor extends DefinitionExecutor {
 }
 
 async function executeEntityRequestData(
-  client: EntityClient,
+  client: GeneralEntityClient,
   reqData: GeneralEntityRequestData,
   session?: Session
 ): Promise<GeneralEntityResponseData> {
@@ -195,13 +195,13 @@ async function executeEntityRequestData(
 /* eslint-disable-next-line */
 export class UserDefinitionExecutor extends DefinitionExecutor {
   definition: UserDefinition;
-  client: EntityClient;
-  sessionClient: SessionClient;
+  client: GeneralEntityClient;
+  sessionClient: GeneralSessionClient;
 
   constructor(
     definition: UserDefinition,
-    client: EntityClient,
-    sessionClient: SessionClient
+    client: GeneralEntityClient,
+    sessionClient: GeneralSessionClient
   ) {
     super(definition);
     this.definition = definition;
@@ -212,7 +212,7 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
   async executeOwn(
     reqData: GeneralUserEntityRequestData,
     session?: Session
-  ): Promise<UserEntityResponseData> {
+  ): Promise<GeneralUserEntityResponseData> {
     if (reqData.method == "logout") {
       return this.logout(reqData.payload);
     }
@@ -259,9 +259,9 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
 /* eslint-disable-next-line */
 export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
   definition: CustomQueryDefinition;
-  client: EntityClient;
+  client: GeneralEntityClient;
 
-  constructor(definition: CustomQueryDefinition, client: EntityClient) {
+  constructor(definition: CustomQueryDefinition, client: GeneralEntityClient) {
     super(definition);
     this.definition = definition;
     this.client = client;
@@ -281,9 +281,12 @@ export class CustomQueryDefinitionExecutor extends DefinitionExecutor {
 /* eslint-disable-next-line */
 export class CustomCommandDefinitionExecutor extends DefinitionExecutor {
   definition: CustomCommandDefinition;
-  client: EntityClient;
+  client: GeneralEntityClient;
 
-  constructor(definition: CustomCommandDefinition, client: EntityClient) {
+  constructor(
+    definition: CustomCommandDefinition,
+    client: GeneralEntityClient
+  ) {
     super(definition);
     this.definition = definition;
     this.client = client;

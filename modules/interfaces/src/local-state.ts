@@ -1,14 +1,19 @@
-import {
-  AllSessions,
-  GeneralAuthCommandMap,
-  GeneralReqResEntityMap,
-  ResponseEntity
-} from "./type-map";
 import { PhenylError } from "./error";
 
 import { Entity } from "./entity";
 import { GeneralUpdateOperation } from "sp2";
 import { Key } from "./utils";
+import {
+  GeneralEntityRestInfoMap,
+  ResponseEntity,
+  EntityRestInfoMapOf
+} from "./entity-rest-info-map";
+import {
+  GeneralAuthCommandMap,
+  AllSessions,
+  AuthCommandMapOf
+} from "./auth-command-map";
+import { GeneralTypeMap } from "./type-map";
 
 export type LocalEntityInfo<E extends Entity> = {
   origin: E;
@@ -21,8 +26,8 @@ export type LocalEntityInfoById<E extends Entity> = {
   [entityId: string]: LocalEntityInfo<E>;
 };
 
-export type LocalEntityState<M extends GeneralReqResEntityMap> = {
-  [EN in Key<M>]: LocalEntityInfoById<ResponseEntity<M, EN>>
+export type LocalEntityState<RM extends GeneralEntityRestInfoMap> = {
+  [EN in Key<RM>]: LocalEntityInfoById<ResponseEntity<RM, EN>>
 };
 
 export type UnreachedCommit<EN extends string> = {
@@ -32,15 +37,22 @@ export type UnreachedCommit<EN extends string> = {
 };
 
 export type LocalState<
-  M extends GeneralReqResEntityMap,
+  RM extends GeneralEntityRestInfoMap,
   AM extends GeneralAuthCommandMap
 > = {
-  entities: LocalEntityState<M>;
+  entities: LocalEntityState<RM>;
   network: {
     requests: Array<string>;
     isOnline: boolean;
   };
-  unreachedCommits: UnreachedCommit<Key<M>>[];
+  unreachedCommits: UnreachedCommit<Key<RM>>[];
   error?: PhenylError;
   session?: AllSessions<AM> | null;
 };
+
+export type LocalStateOf<TM extends GeneralTypeMap> = LocalState<
+  EntityRestInfoMapOf<TM>,
+  AuthCommandMapOf<TM>
+>;
+
+export type GeneralLocalState = LocalStateOf<GeneralTypeMap>;

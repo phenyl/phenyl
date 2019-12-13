@@ -3,6 +3,7 @@
   "compilerOptions": {
     "typeRoots": ["src/@types", "node_modules/@types"],
     "outDir": "lib",
+    "declaration": false,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -10,6 +11,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "strictFunctionTypes": false,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",

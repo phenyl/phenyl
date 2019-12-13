@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/http-server",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -18,14 +18,14 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.0.1",
-    "@phenyl/interfaces": "^1.0.1"
+    "@phenyl/http-rules": "^1.1.1",
+    "@phenyl/interfaces": "^1.1.1"
   },
   "devDependencies": {
     "@babel/register": "^7.4.0",

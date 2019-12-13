@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/http-client",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -17,21 +17,20 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
-    "ci-test": "yarn test",
+    "build": "upbin tsc -p tsconfig.build.json",
     "test": "upbin nyc upbin mocha --require ts-node/register test/*.test.ts --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "1.0.1",
-    "@phenyl/interfaces": "1.0.1",
-    "@phenyl/utils": "1.0.1",
-    "cross-fetch": "^3.0.4"
+    "@phenyl/http-rules": "^1.1.1",
+    "@phenyl/interfaces": "^1.1.1",
+    "@phenyl/utils": "^1.1.1",
+    "cross-fetch": "^3.0.2"
   },
   "devDependencies": {
-    "@phenyl/http-server": "1.0.1",
-    "@phenyl/memory-db": "1.0.1",
-    "@phenyl/rest-api": "1.0.1",
+    "@phenyl/http-server": "^1.1.1",
+    "@phenyl/memory-db": "^1.1.1",
+    "@phenyl/rest-api": "^1.1.1",
     "power-assert": "^1.4.4",
     "upbin": "^0.9.2"
   },

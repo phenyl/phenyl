@@ -11,9 +11,10 @@ import {
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
-  RestApiHandler
+  RestApiHandler,
+  GeneralRestApiHandler
 } from "../src";
-import { TypeEq, assertNotType, assertType } from "./helpers";
+import { TypeEq, assertNotType, assertType, IsExtends } from "./helpers";
 
 import { SampleTypeMap } from "./helpers/sample-type-map";
 
@@ -26,8 +27,8 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
    * ApiHandler is a class implementing RestApiHandler.
    */
   class ApiHandler<TM extends GeneralTypeMap = GeneralTypeMap>
-    implements RestApiHandler<TM> {
-    handleRequestData<
+    implements RestApiHandler<TM>, GeneralRestApiHandler {
+    async handleRequestData<
       MN extends RequestMethodName,
       N extends EveryNameOf<TM, MN>
     >(
@@ -38,6 +39,9 @@ import { SampleTypeMap } from "./helpers/sample-type-map";
     }
   }
   const apiHandler = new ApiHandler<SampleTypeMap>();
+
+  assertType<TypeEq<typeof apiHandler, RestApiHandler<SampleTypeMap>>>();
+  assertType<IsExtends<typeof apiHandler, GeneralRestApiHandler>>();
 
   /**
    * It returns

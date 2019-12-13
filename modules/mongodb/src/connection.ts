@@ -120,10 +120,11 @@ function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
     const findChain = find(where);
     const newFindChain = Object.keys(params).reduce(
       (chain, name) =>
-        // @ts-ignore fix this latter
+        // @ts-ignore #278
         chain[name](params[name]),
       findChain
     );
+    // @ts-ignore #278
     return promisify(newFindChain.toArray, newFindChain)();
   };
 }

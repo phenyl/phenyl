@@ -7,47 +7,54 @@ import {
 import { Session } from "./session";
 
 export interface GeneralDefinition {
-  authorize?: (
+  authorize?(reqData: GeneralRequestData, session?: Session): Promise<boolean>;
+
+  normalize?(
     reqData: GeneralRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<GeneralRequestData>;
 
-  normalize?: (
-    reqData: GeneralRequestData,
-    session?: Session
-  ) => Promise<GeneralRequestData>;
+  validate?(reqData: GeneralRequestData, session?: Session): Promise<void>;
 
-  validate?: (reqData: GeneralRequestData, session?: Session) => Promise<void>;
-
-  wrapExecution?: (
+  wrapExecution?(
     reqData: GeneralRequestData,
     session: Session | undefined,
     executeFn: (
       reqData: GeneralRequestData,
       session?: Session
     ) => Promise<GeneralResponseData>
-  ) => Promise<GeneralResponseData>;
+  ): Promise<GeneralResponseData>;
 }
 
+export type GeneralExecuteFn = (
+  reqData: GeneralRequestData,
+  session?: Session
+) => Promise<GeneralResponseData>;
+
 export interface EntityDefinition extends GeneralDefinition {
-  authorize?: (
+  authorize?(
     reqData: GeneralEntityRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<boolean>;
 
-  normalize?: (
+  normalize?(
     reqData: GeneralEntityRequestData,
     session?: Session
-  ) => Promise<GeneralEntityRequestData>;
+  ): Promise<GeneralEntityRequestData>;
 
-  validate?: (reqData: GeneralRequestData, session?: Session) => Promise<void>;
+  validate?(reqData: GeneralRequestData, session?: Session): Promise<void>;
 
-  wrapExecution?: (
+  wrapExecution?(
     reqData: GeneralEntityRequestData,
     session: Session | undefined,
     executeFn: (
       reqData: GeneralEntityRequestData,
       session?: Session
     ) => Promise<GeneralEntityResponseData>
-  ) => Promise<GeneralEntityResponseData>;
+  ): Promise<GeneralEntityResponseData>;
 }
+
+export type GeneralEntityExecuteFn = (
+  reqData: GeneralEntityRequestData,
+  session?: Session
+) => Promise<GeneralEntityResponseData>;

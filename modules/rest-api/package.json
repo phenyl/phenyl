@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/rest-api",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -13,17 +13,16 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
     "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.0.1",
-    "@phenyl/interfaces": "^1.0.1",
-    "@phenyl/utils": "^1.0.1"
+    "@phenyl/interfaces": "^1.1.1",
+    "@phenyl/utils": "^1.1.1"
   },
   "devDependencies": {
     "upbin": "^0.9.0"

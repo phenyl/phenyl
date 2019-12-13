@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import assert from "assert";
 import { LocalStateUpdater } from "../src/local-state-updater";
-import { PhenylReduxModule } from "../src/phenyl-redux-module";
+import { createInitialState } from "../src/reducer";
 
 describe("LocalStateUpdater", () => {
   describe("addUnreachedCommits", () => {
@@ -11,7 +11,7 @@ describe("LocalStateUpdater", () => {
         entityName: "foo",
         commitCount: 1
       };
-      const state = PhenylReduxModule.createInitialState();
+      const state = createInitialState();
       assert.deepEqual(
         LocalStateUpdater.addUnreachedCommits(state, unreachedCommits),
         { $push: { unreachedCommits } }
@@ -23,7 +23,7 @@ describe("LocalStateUpdater", () => {
         id: "hoge",
         commitCount: 5
       };
-      const state = PhenylReduxModule.createInitialState();
+      const state = createInitialState();
       state.unreachedCommits = [
         { entityName: "foo", id: "hoge", commitCount: 2 }
       ];
@@ -47,7 +47,7 @@ describe("LocalStateUpdater", () => {
         id: "hoge",
         commitCount: 3
       };
-      const state = PhenylReduxModule.createInitialState();
+      const state = createInitialState();
       state.unreachedCommits = [
         { entityName: "foo", id: "hoge", commitCount: 1 },
         { entityName: "foo", id: "hoge", commitCount: 2 }
@@ -65,7 +65,7 @@ describe("LocalStateUpdater", () => {
         id: "hoge",
         commitCount: 2
       };
-      const state = PhenylReduxModule.createInitialState();
+      const state = createInitialState();
       state.unreachedCommits = [
         { entityName: "foo", id: "hoge", commitCount: 1 },
         { entityName: "foo", id: "hoge", commitCount: 2 }
@@ -85,7 +85,7 @@ describe("LocalStateUpdater", () => {
         entityName: "foo",
         commitCount: 1
       };
-      const initialState = PhenylReduxModule.createInitialState();
+      const initialState = createInitialState();
       const state = Object.assign(
         initialState,
         LocalStateUpdater.addUnreachedCommits(initialState, unreachedCommits)
@@ -115,7 +115,7 @@ describe("LocalStateUpdater", () => {
   });
   describe("resolveError", () => {
     it("unsets an error", () => {
-      const state = PhenylReduxModule.createInitialState();
+      const state = createInitialState();
       state.error = {
         type: "NetworkFailed",
         at: "local",

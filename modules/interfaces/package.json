@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/interfaces",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -13,11 +13,12 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' 'type-test/**/*.ts' --fix",
+    "test": "upbin tsc --noEmit type-test/**/*.ts",
     "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc --declaration --watch"
+    "watch": "upbin tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "sp2": "^1.5.1"

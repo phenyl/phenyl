@@ -3,7 +3,7 @@ import WebSocket from "ws";
 import { createServerError } from "@phenyl/utils";
 import WebSocketClientInfo from "./client-info.js";
 import {
-  RestApiHandler,
+  GeneralRestApiHandler,
   WebSocketClientSubscriptionRequestMessage,
   WebSocketClientRequestDataMessage,
   WebSocketClientMessage,
@@ -24,7 +24,7 @@ export class PhenylWebSocketServer {
    * Instance of the result: require('http').createServer()
    */
   server: http.Server | https.Server;
-  restApiHandler: RestApiHandler;
+  restApiHandler: GeneralRestApiHandler;
   clients: Array<WebSocketClientInfo>;
 
   constructor(

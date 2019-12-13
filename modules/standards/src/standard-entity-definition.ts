@@ -4,27 +4,16 @@ import {
   Session
 } from "@phenyl/interfaces";
 
-type AuthorizationSetting = {};
-
+/**
+ * [deprecated] Standard entity definition.
+ * You don't need to extend this almost-doing-nothing class.
+ * Instead, implements `EntityDefinition`.
+ */
 export class StandardEntityDefinition implements EntityDefinition {
-  authorizationSetting: AuthorizationSetting;
-
-  constructor(authorizationSetting: AuthorizationSetting) {
-    this.authorizationSetting = authorizationSetting;
-  }
-
   async authorize(
     reqData: GeneralRequestData,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<boolean> {
-    // TODO
     return false;
-  }
-
-  async validate(
-    reqData: GeneralRequestData,
-    session: Session | null | undefined
-  ): Promise<void> {
-    // eslint-disable-line no-unused-vars
   }
 }

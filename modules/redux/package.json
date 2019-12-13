@@ -1,7 +1,7 @@
 {
   "name": "@phenyl/redux",
-  "version": "1.0.1",
-  "description": "",
+  "version": "1.1.1",
+  "description": "phenyl wrapper for redux",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
   "author": "Shin Suzuki <shinout310@gmail.com>",
@@ -18,24 +18,23 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
-    "ci-test": "yarn test",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
     "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.1",
-    "@phenyl/utils": "^1.0.1",
+    "@phenyl/interfaces": "^1.1.1",
+    "@phenyl/utils": "^1.1.1",
     "fast-deep-equal": "^1.0.0",
     "sp2": "^1.5.1"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^1.0.1",
-    "@phenyl/http-server": "^1.0.1",
-    "@phenyl/memory-db": "^1.0.1",
-    "@phenyl/rest-api": "^1.0.1",
-    "@phenyl/standards": "^1.0.1",
+    "@phenyl/http-client": "^1.1.1",
+    "@phenyl/http-server": "^1.1.1",
+    "@phenyl/memory-db": "^1.1.1",
+    "@phenyl/rest-api": "^1.1.1",
+    "@phenyl/standards": "^1.1.1",
     "redux": "^4.0.1",
     "upbin": "^0.9.0"
   },

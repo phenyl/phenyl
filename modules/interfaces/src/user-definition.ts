@@ -1,50 +1,64 @@
 import { Entity } from "./entity";
 import { GeneralDefinition } from "./entity-definition";
-import { LoginCommand } from "./command";
+import { GeneralLoginCommand } from "./command";
 import { PreSession } from "./session";
 import { Session } from "./session";
-import { UserEntityRequestData } from "./request-data";
-import { UserEntityResponseData } from "./response-data";
+import { GeneralUserEntityRequestData } from "./request-data";
+import { GeneralUserEntityResponseData } from "./response-data";
 
 export type AuthenticationResult<
-  EN extends string = string,
-  E extends Entity = Entity,
-  S extends Object = Object
+  EN extends string,
+  E extends Entity,
+  S extends Object
 > = {
   preSession: PreSession<EN, S>;
   user: E | null;
   versionId: string | null;
 };
 
+export type GeneralAuthenticationResult = AuthenticationResult<
+  string,
+  Entity,
+  Object
+>;
+
 export interface UserDefinition extends GeneralDefinition {
   authenticate(
-    loginCommand: LoginCommand,
+    loginCommand: GeneralLoginCommand,
     session?: Session
-  ): Promise<AuthenticationResult>;
+  ): Promise<GeneralAuthenticationResult>;
 
-  authorize?: (
-    reqData: UserEntityRequestData,
+  authorize?(
+    reqData: GeneralUserEntityRequestData,
     session?: Session
-  ) => Promise<boolean>;
+  ): Promise<boolean>;
 
-  normalize?: (
-    reqData: UserEntityRequestData,
+  normalize?(
+    reqData: GeneralUserEntityRequestData,
     session?: Session
-  ) => Promise<UserEntityRequestData>;
+  ): Promise<GeneralUserEntityRequestData>;
 
-  validate?: (
-    reqData: UserEntityRequestData,
+  validate?(
+    reqData: GeneralUserEntityRequestData,
     session?: Session
-  ) => Promise<void>;
+  ): Promise<void>;
 
-  wrapExecution?: (
-    reqData: UserEntityRequestData,
+  wrapExecution?(
+    reqData: GeneralUserEntityRequestData,
     session: Session,
     executeFn: (
-      reqData: UserEntityRequestData,
+      reqData: GeneralUserEntityRequestData,
       session?: Session
-    ) => Promise<UserEntityResponseData>
-  ) => Promise<UserEntityResponseData>;
+    ) => Promise<GeneralUserEntityResponseData>
+  ): Promise<GeneralUserEntityResponseData>;
 }
 
+// alias
+export type UserEntityDefinition = UserDefinition;
+
 export type AuthDefinition = Pick<UserDefinition, "authenticate">;
+
+export type GeneralUserEntityExecuteFn = (
+  reqData: GeneralUserEntityRequestData,
+  session?: Session
+) => Promise<GeneralUserEntityResponseData>;

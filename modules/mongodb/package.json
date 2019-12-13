@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/mongodb",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -17,18 +17,17 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
-    "ci-test": "upbin nyc npm test --color always",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
     "pretest": "test/scripts/init-mongodb.sh",
     "test": "upbin mocha --require ts-node/register 'test/**/*.ts' --color always --timeout 20000 || (npm run posttest && exit 1)",
-    "posttest": "pkill -x mongod > /dev/null; rm -rf test/tmp/mongodb",
+    "posttest": "test/scripts/close-mongodb.sh",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.0.1",
-    "@phenyl/interfaces": "^1.0.1",
-    "@phenyl/utils": "^1.0.1",
+    "@phenyl/central-state": "^1.1.1",
+    "@phenyl/interfaces": "^1.1.1",
+    "@phenyl/utils": "^1.1.1",
     "@types/mongodb": "^3.1.26",
     "bson": "^4.0.0",
     "es6-promisify": "^5.0.0",
@@ -36,7 +35,7 @@
     "sp2": "^1.5.1"
   },
   "devDependencies": {
-    "@phenyl/rest-api": "^1.0.1",
+    "@phenyl/rest-api": "^1.1.1",
     "upbin": "^0.9.0"
   },
   "publishConfig": {

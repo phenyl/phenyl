@@ -1,14 +1,27 @@
 import { EncodedHttpRequest, EncodedHttpResponse } from "./http";
 
 import { GeneralTypeMap } from "./type-map";
-import { RestApiClient } from "./client";
-import { RestApiHandler } from "./rest-api-handler";
+import { RestApiClient, GeneralRestApiClient } from "./client";
+import { RestApiHandler, GeneralRestApiHandler } from "./rest-api-handler";
 
-export type ServerParams<TM extends GeneralTypeMap> = {
+export interface GeneralServerParams {
+  restApiHandler: GeneralRestApiHandler;
+  modifyPath?: PathModifier;
+  customRequestHandler?(
+    encodedHttpRequest: EncodedHttpRequest,
+    restApiClient: GeneralRestApiClient
+  ): Promise<EncodedHttpResponse>;
+}
+
+export interface ServerParams<TM extends GeneralTypeMap>
+  extends GeneralServerParams {
   restApiHandler: RestApiHandler<TM>;
   modifyPath?: PathModifier;
-  customRequestHandler?: CustomRequestHandler<TM>;
-};
+  customRequestHandler?(
+    encodedHttpRequest: EncodedHttpRequest,
+    restApiClient: RestApiClient<TM>
+  ): Promise<EncodedHttpResponse>;
+}
 
 /**
  * (path: string) => string
@@ -29,8 +42,17 @@ export type PathModifier = (path: string) => string;
  * Example: Rich API explorer like swagger.
  *
  * The second argument "restApiClient" is a client to access directly to PhenylRestApi (bypass HTTP).
+ *
+ * When you need to pass `TypeMap`, use `CustomRequestHandler` instead.
  */
-export type CustomRequestHandler<TM extends GeneralTypeMap> = (
-  encodedHttpRequest: EncodedHttpRequest,
-  restApiClient: RestApiClient<TM>
-) => Promise<EncodedHttpResponse>;
+export type GeneralCustomRequestHandler = Required<
+  GeneralServerParams
+>["customRequestHandler"];
+
+/**
+ * Custom Request Handler.
+ * See `GeneralCustomRequestHandler` for details.
+ */
+export type CustomRequestHandler<TM extends GeneralTypeMap> = Required<
+  ServerParams<TM>
+>["customRequestHandler"];

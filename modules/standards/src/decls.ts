@@ -1,24 +1,14 @@
 import {
   LoginCommand,
   Session,
-  UserEntityRequestData,
-  GeneralReqResEntityMap,
-  Key,
-  Nullable,
-  UserEntityResponseData
+  GeneralUserEntityRequestData,
+  GeneralUserEntityResponseData
 } from "@phenyl/interfaces";
 
-export type RestApiExecution<
-  M extends GeneralReqResEntityMap,
-  EN extends Key<M>,
-  Ereqres extends M[EN],
-  C extends Object,
-  S extends Object,
-  SS extends Session<string, Object> = Session<string, Object>
-> = (
-  reqData: UserEntityRequestData<EN, Ereqres["response"], C>,
-  session?: Nullable<SS>
-) => Promise<UserEntityResponseData<EN, Ereqres["response"], S>>;
+export type RestApiExecution = (
+  reqData: GeneralUserEntityRequestData,
+  session?: Session
+) => Promise<GeneralUserEntityResponseData>;
 
 export type AuthSetting = { credentials: Object; options: Object };
 export type LoginCommandOf<

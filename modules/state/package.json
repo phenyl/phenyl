@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/state",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -14,14 +14,13 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc --declaration",
-    "ci-test": "yarn test",
+    "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
     "test": "upbin nyc upbin mocha --require ts-node/register test/*.ts --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^1.0.1",
+    "@phenyl/interfaces": "^1.1.1",
     "sp2": "^1.5.1"
   },
   "devDependencies": {

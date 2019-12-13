@@ -113,11 +113,7 @@ function stringifyQsParams(
   return (
     "?" +
     Object.keys(qsParams)
-      .map(
-        (
-          name // $FlowIssue(object-keys-iteration)
-        ) => `${name}=${encodeURIComponent(qsParams[name])}`
-      )
+      .map(name => `${name}=${encodeURIComponent(qsParams[name])}`)
       .join("&")
   );
 }

@@ -5,7 +5,7 @@ executors:
     working_directory: ~/repo
     docker:
       - image: circleci/node:dubnium
-      - image: circleci/mongo:latest
+      - image: circleci/mongo:jessie
 
 commands:
   prepare:
@@ -81,7 +81,7 @@ jobs:
       - run: yarn build
       - run: yarn lint
       - run: yarn type-check
-      - run: yarn ci-test
+      - run: yarn test
   release_patch:
     executor:
       name: default

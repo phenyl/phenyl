@@ -6,7 +6,6 @@ import {
 } from "@phenyl/utils";
 import {
   Entity,
-  GeneralReqResEntityMap,
   ForeignWhereQuery,
   ForeignIdQuery,
   ForeignIdsQuery,
@@ -17,9 +16,8 @@ import {
   Session,
   EntitiesById,
   EntityClient,
-  UserEntityRequestData,
-  Nullable,
-  GeneralEntityMap
+  GeneralEntityMap,
+  GeneralUserEntityRequestData
 } from "@phenyl/interfaces";
 
 import { RestApiExecution } from "./decls";
@@ -43,7 +41,7 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
    */
   async validation(
     reqData: GeneralRequestData,
-    session: Session | null | undefined
+    session?: Session
   ): Promise<void> {
     // eslint-disable-line no-unused-vars
     return switchByRequestMethod(reqData, {
@@ -69,17 +67,10 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
   /**
    *
    */
-  async wrapExecution<
-    M extends GeneralReqResEntityMap,
-    EN extends Key<M>,
-    Ereqres extends M[EN],
-    C extends Object,
-    S extends Object,
-    SS extends Session<string, Object> = Session<string, Object>
-  >(
-    reqData: UserEntityRequestData<EN, Ereqres["request"], C>,
-    session: Nullable<SS>,
-    execution: RestApiExecution<M, EN, Ereqres, C, S, SS>
+  async wrapExecution(
+    reqData: GeneralUserEntityRequestData,
+    session: Session,
+    execution: RestApiExecution
   ): Promise<GeneralResponseData> {
     const resData = await execution(reqData, session);
 

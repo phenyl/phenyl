@@ -18,13 +18,6 @@ app.listen(3000)
 npm install phenyl-express
 ```
 
-## Using types with flow
-For [Flow](https://flowtype.org) annotations, just use `/jsnext` entrypoint.
-
-```js
-import { createPhenylApiMiddleware } from 'phenyl-express/jsnext'
-```
-
 # API Documentation
 - createPhenylApiMiddleware()
 - createPhenylMiddleware()
@@ -34,7 +27,7 @@ Create express middleware to handle Phenyl REST APIs.
 
 ```js
 createPhenylApiMiddleware(
-  restApiHandler: RestApiHandler,
+  restApiHandler: GeneralRestApiHandler,
   pathRegex: RegExp = /\^/api\/.*$/,
 ): Function // express middleware
 ```
@@ -56,11 +49,11 @@ import { createPhenylApiMiddleware } from 'phenyl-express'
 import PhenylRestApi from 'phenyl-rest-api'
 import { createEntityClient } from 'phenyl-memory-db' // create DB Client used in Phenyl REST API
 
-const getVersion = async (customQuery) => ({ ok: 1, result: { version: '1.2.3' } })
+const getVersion = async (customQuery) => ({ version: '1.2.3' })
 
 // Settings of Phenyl REST API
-const fg = { users: {}, nonUsers: {}, customQueries: { getVersion }, customCommands: {} }
-const phenylRestApi = PhenylRestApi.createFromFunctionalGroup(fg, { client: createEntityClient() })
+const fg = { users: {}, nonUsers: {}, customQueries: { getVersion: { execute: getVersion } }, customCommands: {} }
+const phenylRestApi = PhenylRestApi.createFromFunctionalGroup(fg, { entityClient: createEntityClient() })
 const app = express()
 app.use(createPhenylApiMiddleware(phenylRestApi))
 app.get('/foo/bar', (req, res) => res.text(`Hello, Express!`))
@@ -71,7 +64,7 @@ Client-side code will be like the following.
 ```js
 import PhenylHttpClient from 'phenyl-http-client'
 const client = new PhenylHttpClient({ url: 'http://localhost:3000' })
-const { result } = await client.runCustomQuery({ name: 'getVersion' })
+const result = await client.runCustomQuery({ name: 'getVersion' })
 console.log(result.version) // 1.2.3
 const text = await client.requestText('/foo/bar')
 console.log(text) // Hello, Express!
@@ -82,7 +75,7 @@ Create express middleware to handle Phenyl REST APIs and non-REST-API paths defi
 
 ```js
 createPhenylMiddleware(
-  params: ServerParams,
+  params: GeneralServerParams,
   pathRegex: RegExp = /^\/api\/.*$|^\/explorer($|\/.*$)/
 ): Function // express middleware
 ```
@@ -92,11 +85,11 @@ It's true that Express can be easier to set your custom pages than Phenyl's `cus
 Some non-rest entrypoints, however, are offered by Phenyl Family (like [phenyl-api-explorer](https://github.com/phenyl-js/phenyl/blob/master/modules/phenyl-api-explorer)) and this function will be suitable for using them.
 
 ### Parameters
-#### params: ServerParams
+#### params: GeneralServerParams
 Type of params is here:
 ```js
-type ServerParams = {
-  restApiHandler: RestApiHandler,
+type GeneralServerParams = {
+  restApiHandler: GeneralRestApiHandler,
   customRequestHandler?: (encodedHttpRequest: EncodedHttpRequest, restApiClient: RestApiClient) => Promise<EncodedHttpResponse>,
   modifyPath?: (path: string) => string,
 }
@@ -119,9 +112,7 @@ type EncodedHttpRequest = {
 ```
 
 The second argument `restApiClient` is a client for `PhenylRestApi`.
-See [phenyl-interfaces](https://github.com/phenyl-js/phenyl/blob/master/modules/phenyl-interfaces/decls/client.js.flow) for the detailed interface.
 It implements `EntityClient`, `AuthClient` and `CustomClient`.
-
 
 The return value must be `Promise<EncodedHttpResponse>`.
 
