@@ -41,7 +41,6 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
    */
   async validation(
     reqData: GeneralRequestData,
-    session?: Session
   ): Promise<void> {
     // eslint-disable-line no-unused-vars
     return switchByRequestMethod(reqData, {
@@ -57,7 +56,7 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
       async getByIds(query: ForeignIdsQuery<any, any>) {
         assertValidForeignQuery(query.foreign, "ForeignIdsQuery");
       },
-      async handleDefault(reqData) {
+      async handleDefault() {
         // eslint-disable-line no-unused-vars
         return;
       }
@@ -132,7 +131,7 @@ export class ForeignQueryWrapper<M extends GeneralEntityMap> {
         );
       },
 
-      handleDefault: async (reqData: GeneralRequestData) => {
+      handleDefault: async () => {
         // eslint-disable-line no-unused-vars
         return resData;
       }

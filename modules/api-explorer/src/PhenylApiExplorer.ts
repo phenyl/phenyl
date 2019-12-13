@@ -4,7 +4,6 @@ import ejs from "ejs";
 import {
   GeneralFunctionalGroup,
   EncodedHttpResponse,
-  EncodedHttpRequest
 } from "@phenyl/interfaces";
 import { shallowMap, pkgDir } from "./utils";
 
@@ -65,7 +64,7 @@ export default class PhenylApiExplorer {
     return ejs.render(template, data);
   }
 
-  async handler(req: EncodedHttpRequest): Promise<EncodedHttpResponse> {
+  async handler(): Promise<EncodedHttpResponse> {
     return {
       statusCode: 200,
       headers: {
