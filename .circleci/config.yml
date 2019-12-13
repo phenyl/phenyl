@@ -13,12 +13,14 @@ commands:
       - checkout
       - run: sudo apt-get install mongodb-clients
       - run: ls modules/*/package.json | xargs -n1 md5sum > deps.txt
+      - run: sudo npm i -g npm@6.13.4
       - run:
-          # https://yarnpkg.com/ja/docs/install#linux-tab
-          name: Install Yarn@1.16.0
+          # https://yarnpkg.com/en/docs/install#alternatives-stable
+          name: Install Yarn@1.21.1
           command: |
             sudo unlink $(which yarn)
-            sudo npm i -g yarn@1.16.0
+            curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.21.1
+            echo "export PATH=$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH" >> $BASH_ENV
       - run:
           name: Display version of Node.js, npm, Yarn and mongodb
           command: |
