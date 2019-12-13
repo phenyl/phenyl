@@ -218,7 +218,7 @@ export class UserDefinitionExecutor extends DefinitionExecutor {
       return this.login(reqData.payload, session);
     }
 
-    return executeEntityRequestData(this.client, reqData, session);
+    return executeEntityRequestData(this.client, reqData);
   }
 
   private async login(
