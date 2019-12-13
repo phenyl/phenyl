@@ -25,18 +25,18 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/central-state": "^1.1.1",
-    "@phenyl/interfaces": "^1.1.1",
-    "@phenyl/utils": "^1.1.1",
-    "@types/mongodb": "^3.1.26",
-    "bson": "^4.0.0",
-    "es6-promisify": "^5.0.0",
-    "mongodb": "^3.2.3",
+    "@phenyl/central-state": "1.1.1",
+    "@phenyl/interfaces": "1.1.1",
+    "@phenyl/utils": "1.1.1",
+    "@types/mongodb": "^3.3.12",
+    "bson": "^4.0.2",
+    "es6-promisify": "^6.0.2",
+    "mongodb": "^3.4.0",
     "sp2": "^1.5.1"
   },
   "devDependencies": {
-    "@phenyl/rest-api": "^1.1.1",
-    "upbin": "^0.9.0"
+    "@phenyl/rest-api": "1.1.1",
+    "upbin": "^0.9.2"
   },
   "publishConfig": {
     "access": "public"
