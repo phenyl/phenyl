@@ -84,13 +84,9 @@ workflows:
             branches:
               only:
                 - master
-          requires:
-            - test
       - release_minor:
           type: approval
           filters:
             branches:
               only:
                 - master
-          requires:
-            - test
