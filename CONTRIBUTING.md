@@ -26,11 +26,6 @@ cd phenyl
 yarn
 ```
 
-### Prepare monorepo settings
-```bash
-yarn bootstrap
-```
-
 After the command, all the external/interal dependencies are resolved at every module.
 
 ## Testing
