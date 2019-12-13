@@ -24,8 +24,8 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/http-rules": "^1.1.1",
-    "@phenyl/interfaces": "^1.1.1"
+    "@phenyl/http-rules": "1.1.1",
+    "@phenyl/interfaces": "1.1.1"
   },
   "devDependencies": {
     "@babel/register": "^7.7.4",
