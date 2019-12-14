@@ -61,29 +61,6 @@ commands:
           command: yarn publish << parameters.release_type >> --yes
 
 jobs:
-  test:
-    executor:
-      name: default
-    steps:
-      - prepare
-      - run: |
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-          npm whoami
-      - restore_cache:
-          keys:
-            - v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
-      - run: yarn
-      - save_cache:
-          paths:
-            - node_modules
-            # FIXME Add all node_modules in submodules
-            - modules/phenyl-interfaces/node_modules
-          key: v{{ .Environment.CIRCLECI_CACHE_VERSION }}-dependencies-{{ .Branch }}-{{ checksum "deps.txt" }}
-      - run: yarn bootstrap
-      - run: yarn build
-      - run: yarn lint
-      - run: yarn type-check
-      - run: yarn test
   release_patch:
     executor:
       name: default
@@ -103,20 +80,15 @@ workflows:
   version: 2.1
   test_deploy:
     jobs:
-      - test
       - release_patch:
           type: approval
           filters:
             branches:
               only:
                 - master
-          requires:
-            - test
       - release_minor:
           type: approval
           filters:
             branches:
               only:
                 - master
-          requires:
-            - test
