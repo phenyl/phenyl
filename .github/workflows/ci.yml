@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.17]
+        node-version: [10.x, 12.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -23,9 +23,9 @@ jobs:
           echo ::set-env name=PATH::$(echo $HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH)
       - name: Display version of Node.js, npm, Yarn and mongodb
         run: |
-            node -v
-            npm -v
-            yarn --version
+          node -v
+          npm -v
+          yarn --version
 
       - name: Get yarn cache
         id: yarn-cache
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.17]
+        node-version: [10.x, 12.x]
 
     steps:
       - uses: actions/checkout@v1
@@ -61,9 +61,9 @@ jobs:
           echo ::set-env name=PATH::$(echo $HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH)
       - name: Display version of Node.js, npm, Yarn and mongodb
         run: |
-            node -v
-            npm -v
-            yarn --version
+          node -v
+          npm -v
+          yarn --version
 
       - name: Get yarn cache
         id: yarn-cache
@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.17]
+        node-version: [10.x, 12.x]
 
     steps:
       - uses: actions/checkout@v1
