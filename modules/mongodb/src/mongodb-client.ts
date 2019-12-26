@@ -51,6 +51,7 @@ function ObjectID<T>(id: string | ObjectId): string | ObjectId {
 }
 
 function convertToObjectIdRecursively(src: any): any {
+  if (src instanceof ObjectId) return src
   if (Array.isArray(src)) return src.map(id => ObjectID(id));
   if (typeof src !== "object") return ObjectID(src);
   return Object.keys(src).reduce((dst: any, key: string) => {
@@ -65,12 +66,12 @@ function convertIdToObjectIdInWhere(
   const { $set, $docPath } = $bind<SimpleFindOperation>();
   return simpleFindOperation.id
     ? update(
-        simpleFindOperation,
-        $set(
-          $docPath("id"),
-          convertToObjectIdRecursively(simpleFindOperation.id)
-        )
+      simpleFindOperation,
+      $set(
+        $docPath("id"),
+        convertToObjectIdRecursively(simpleFindOperation.id)
       )
+    )
     : simpleFindOperation;
 }
 
