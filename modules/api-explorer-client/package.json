@@ -36,7 +36,7 @@
     "@phenyl/http-client": "1.1.1",
     "@phenyl/interfaces": "1.1.1",
     "@phenyl/utils": "1.1.1",
-    "@types/node": "12.12.18",
+    "@types/node": "12.12.22",
     "@types/react": "16.9.16",
     "@types/react-dom": "16.9.4",
     "cheerio": "1.0.0-rc.3",
