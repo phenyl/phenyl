@@ -63,7 +63,26 @@ describe("filterFindOperation", () => {
       $and: [
         { _id: { $eq: null } },
         { _id: { $eq: "bar" } },
-        { _id: { $eq: new ObjectId("222222222222222222222222") } },
+        {
+          _id: {
+            $eq: {
+              "id": {
+                "0": 34,
+                "1": 34,
+                "2": 34,
+                "3": 34,
+                "4": 34,
+                "5": 34,
+                "6": 34,
+                "7": 34,
+                "8": 34,
+                "9": 34,
+                "10": 34,
+                "11": 34
+              }
+            }
+          }
+        },
         { _id: { $eq: "000123456789abcdefABCDEF" } },
         { _id: { $eq: new ObjectId("000123456789abcdefabcdef") } },
         { _id: { $eq: new ObjectId("000000000011111111112222") } },
@@ -79,7 +98,7 @@ describe("filterFindOperation", () => {
       ]
     };
     const actual = filterFindOperation(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 });
 
