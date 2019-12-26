@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/central-state",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "description": "",
   "repository": "phenyl-js/phenyl",
   "license": "Apache License 2.0",
@@ -22,8 +22,8 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "1.1.1",
-    "@phenyl/utils": "1.1.1",
+    "@phenyl/interfaces": "^2.0.0",
+    "@phenyl/utils": "^2.0.0",
     "sp2": "^1.5.1"
   },
   "devDependencies": {
