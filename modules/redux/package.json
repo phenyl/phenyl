@@ -35,7 +35,7 @@
     "@phenyl/memory-db": "1.1.1",
     "@phenyl/rest-api": "1.1.1",
     "@phenyl/standards": "1.1.1",
-    "redux": "4.0.4",
+    "redux": "4.0.5",
     "upbin": "0.9.2"
   },
   "publishConfig": {
