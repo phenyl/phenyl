@@ -79,7 +79,7 @@ describe("filterFindOperation", () => {
       ]
     };
     const actual = filterFindOperation(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 });
 

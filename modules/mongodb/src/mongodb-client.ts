@@ -40,7 +40,7 @@ type MongoEntity<E extends Entity> = E & { _id: string };
 type MongoEntityWithObjectId<E extends Entity> = E & { _id: ObjectId };
 
 // convert 24-byte hex lower string to ObjectId
-function ObjectID<T>(id: string | ObjectId): string | ObjectId {
+function createObjectId<T>(id: string | ObjectId): string | ObjectId {
   if (id instanceof mongodb.ObjectID) return id;
   if (typeof id !== "string") return id;
   try {
@@ -51,8 +51,9 @@ function ObjectID<T>(id: string | ObjectId): string | ObjectId {
 }
 
 function convertToObjectIdRecursively(src: any): any {
-  if (Array.isArray(src)) return src.map(id => ObjectID(id));
-  if (typeof src !== "object") return ObjectID(src);
+  if (src instanceof ObjectId) return src
+  if (Array.isArray(src)) return src.map(id => createObjectId(id));
+  if (typeof src !== "object") return createObjectId(src);
   return Object.keys(src).reduce((dst: any, key: string) => {
     dst[key] = convertToObjectIdRecursively(src[key]);
     return dst;
@@ -65,12 +66,12 @@ function convertIdToObjectIdInWhere(
   const { $set, $docPath } = $bind<SimpleFindOperation>();
   return simpleFindOperation.id
     ? update(
-        simpleFindOperation,
-        $set(
-          $docPath("id"),
-          convertToObjectIdRecursively(simpleFindOperation.id)
-        )
+      simpleFindOperation,
+      $set(
+        $docPath("id"),
+        convertToObjectIdRecursively(simpleFindOperation.id)
       )
+    )
     : simpleFindOperation;
 }
 
@@ -104,7 +105,7 @@ export function filterFindOperation(operation: FindOperation): FindOperation {
 }
 
 function convertIdToObjectIdInEntity<E extends Entity>(entity: E): E {
-  return entity.id ? update(entity, { id: ObjectID(entity.id) }) : entity;
+  return entity.id ? update(entity, { id: createObjectId(entity.id) }) : entity;
 }
 
 function replaceIdInto_idInEntity<E extends Entity>(entity: E): MongoEntity<E> {
@@ -192,7 +193,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const { entityName, id } = query;
     const coll = this.conn.collection(entityName);
     // @ts-ignore TODO: prepare new type: MongoSimpleFindOperation
-    const result = await coll.find({ _id: ObjectID(id) });
+    const result = await coll.find({ _id: createObjectId(id) });
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
@@ -207,7 +208,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   ): Promise<Array<EntityOf<M, E>>> {
     const { entityName, ids } = query;
     const coll = this.conn.collection(entityName);
-    const result = await coll.find({ _id: { $in: ids.map(ObjectID) } });
+    const result = await coll.find({ _id: { $in: ids.map(createObjectId) } });
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
@@ -263,7 +264,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   ): Promise<void> {
     const { entityName, id, entity } = command;
     const coll = this.conn.collection(entityName);
-    await coll.replaceOne({ _id: ObjectID(id) }, entity);
+    await coll.replaceOne({ _id: createObjectId(id) }, entity);
   }
 
   async updateById<N extends Key<M>>(
@@ -276,7 +277,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       filter: additionalFilter = {}
     } = command;
     const filter: Object = Object.assign(additionalFilter, {
-      _id: ObjectID(id)
+      _id: createObjectId(id)
     });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
@@ -302,7 +303,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       filter: additionalFilter = {}
     } = command;
     const filter: Object = Object.assign(additionalFilter, {
-      _id: ObjectID(id)
+      _id: createObjectId(id)
     });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
@@ -340,7 +341,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     // @ts-ignore TODO: improve the type of DeleteCommand
     const { id, where } = command;
     if (id) {
-      result = await coll.deleteOne({ _id: ObjectID(id) });
+      result = await coll.deleteOne({ _id: createObjectId(id) });
     } else if (where) {
       result = await coll.deleteMany(filterFindOperation(where));
     }
