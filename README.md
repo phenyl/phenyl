@@ -1,4 +1,4 @@
-# Phenyl - State Synchronization over Environments [![CircleCI](https://circleci.com/gh/phenyl-js/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl-js/phenyl)
+# Phenyl - State Synchronization over Environments [![CircleCI](https://circleci.com/gh/phenyl/phenyl.svg?style=shield&circle-token=e5b0170cf6df4acd73f13c66cc37e0cb1a56948c)](https://circleci.com/gh/phenyl/phenyl)
 **WORK IN PROGRESS**
 
 Phenyl is a **series of JavaScript libraries** for both client-side and server-side, which focuses on **State Synchronization over Environments(SSoE)**.
@@ -101,29 +101,29 @@ This allows us to handle offline oepration easily.
 
 # Phenyl Family
 ## ServerSide Libraries
-- [@phenyl/rest-api](https://github.com/phenyl-js/phenyl/tree/master/modules/rest-api): REST API logic. Core part of Phenyl.
-- [@phenyl/http-server](https://github.com/phenyl-js/phenyl/tree/master/modules/http-server): Simple HTTP Server to host PhenylRestApi.
-- [@phenyl/express](https://github.com/phenyl-js/phenyl/tree/master/modules/express): Express middleware to run PhenylRestApi on it.
-- [@phenyl/websocket-server](https://github.com/phenyl-js/phenyl/tree/master/modules/websocket-server): WebSocket server to emit update operations of entities.
-- [@phenyl/mongodb](https://github.com/phenyl-js/phenyl/tree/master/modules/mongodb): MongoDB client.
-- [@phenyl/lambda-adapter](https://github.com/phenyl-js/phenyl/tree/master/modules/lambda-adapter): Helper to run PhenylRestApi on AWS Lambda.
-- [@phenyl/memory-db](https://github.com/phenyl-js/phenyl/tree/master/modules/memory-db): volatile memory DB for local mocking.
+- [@phenyl/rest-api](https://github.com/phenyl/phenyl/tree/master/modules/rest-api): REST API logic. Core part of Phenyl.
+- [@phenyl/http-server](https://github.com/phenyl/phenyl/tree/master/modules/http-server): Simple HTTP Server to host PhenylRestApi.
+- [@phenyl/express](https://github.com/phenyl/phenyl/tree/master/modules/express): Express middleware to run PhenylRestApi on it.
+- [@phenyl/websocket-server](https://github.com/phenyl/phenyl/tree/master/modules/websocket-server): WebSocket server to emit update operations of entities.
+- [@phenyl/mongodb](https://github.com/phenyl/phenyl/tree/master/modules/mongodb): MongoDB client.
+- [@phenyl/lambda-adapter](https://github.com/phenyl/phenyl/tree/master/modules/lambda-adapter): Helper to run PhenylRestApi on AWS Lambda.
+- [@phenyl/memory-db](https://github.com/phenyl/phenyl/tree/master/modules/memory-db): volatile memory DB for local mocking.
 
 ## ClientSide Libraries
-- [@phenyl/http-client](https://github.com/phenyl-js/phenyl/tree/master/modules/http-client): Client to PhenylRestApi.
-- [@phenyl/redux](https://github.com/phenyl-js/phenyl/tree/master/modules/redux): State synchronization among Phenyl CentralState(server) and LocalState(client) using Redux.
-- [@phenyl/websocket-client](https://github.com/phenyl-js/phenyl/tree/master/modules/websocket-client): WebSocket client to listen to entities's update.
+- [@phenyl/http-client](https://github.com/phenyl/phenyl/tree/master/modules/http-client): Client to PhenylRestApi.
+- [@phenyl/redux](https://github.com/phenyl/phenyl/tree/master/modules/redux): State synchronization among Phenyl CentralState(server) and LocalState(client) using Redux.
+- [@phenyl/websocket-client](https://github.com/phenyl/phenyl/tree/master/modules/websocket-client): WebSocket client to listen to entities's update.
 
 ## Common Libraries
-- [@phenyl/interfaces](https://github.com/phenyl-js/phenyl/tree/master/modules/interfaces): All types of Phenyl family are defined here.
-- [@phenyl/standards](https://github.com/phenyl-js/phenyl/tree/master/modules/standards): Provides advanced features.
-- [@phenyl/utils](https://github.com/phenyl-js/phenyl/tree/master/modules/utils): (Almost internal) Utility functions in Phenyl family.
-- [@phenyl/state](https://github.com/phenyl-js/phenyl/tree/master/modules/state): (Almost internal) Entity state Reader/Writer.
-- [@phenyl/http-rules](https://github.com/phenyl-js/phenyl/tree/master/modules/http-rules): (Almost internal) Set of rules that translates HTTP Request/Response into Phenyl RequestData/ResponseData.
+- [@phenyl/interfaces](https://github.com/phenyl/phenyl/tree/master/modules/interfaces): All types of Phenyl family are defined here.
+- [@phenyl/standards](https://github.com/phenyl/phenyl/tree/master/modules/standards): Provides advanced features.
+- [@phenyl/utils](https://github.com/phenyl/phenyl/tree/master/modules/utils): (Almost internal) Utility functions in Phenyl family.
+- [@phenyl/state](https://github.com/phenyl/phenyl/tree/master/modules/state): (Almost internal) Entity state Reader/Writer.
+- [@phenyl/http-rules](https://github.com/phenyl/phenyl/tree/master/modules/http-rules): (Almost internal) Set of rules that translates HTTP Request/Response into Phenyl RequestData/ResponseData.
 
 # sp2
 
-Phenyl is powered by [sp2](https://github.com/phenyl-js/sp2), a set of JavaScript modules used for state operations. 
+Phenyl is powered by [sp2](https://github.com/phenyl/sp2), a set of JavaScript modules used for state operations. 
 
 # Usage
 
