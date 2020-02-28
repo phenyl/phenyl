@@ -37,7 +37,7 @@
     "@phenyl/memory-db": "^2.0.0",
     "@phenyl/rest-api": "^2.0.0",
     "@phenyl/standards": "^2.0.0",
-    "@types/ejs": "3.0.0",
+    "@types/ejs": "3.0.1",
     "nodemon": "2.0.2",
     "power-crypt": "0.2.2"
   },
