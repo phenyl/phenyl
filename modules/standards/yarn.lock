@@ -2,26 +2,26 @@
 # yarn lockfile v1
 
 
-"@sp2/format@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.2.tgz#18654fb715aff5a5734f52fb07f9d44176633c3f"
-  integrity sha512-jIzbQVs1jfMabTHPDrF+3qcmJMvtpDJa/SFj84qLz314fR2I2/jfU72eYYB9A3w5v/2B0sSQ5s1MLeyXJRAWvA==
+"@sp2/format@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
+  integrity sha512-Q9rnIIB/YbJ8HV1mw9qA44FRK9GsTwM3cnc6Fj6eg6lRNKMQmnGh96DxcQin12PqftIeEgAKZxR13m3KSQJqlw==
 
-"@sp2/retriever@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@sp2/retriever/-/retriever-1.6.2.tgz#ed540024c1263c547695da3dfc612bb4a4a6e163"
-  integrity sha512-W04b3geL/Plp0lcBvqwDA5/VDtIqkD8WaAxZExfklXvlIb9EC7oVVkws7DpqLPSNw00Hq7kMGRnrXKA5xp2oGw==
+"@sp2/retriever@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/retriever/-/retriever-1.6.3.tgz#cdd240b3f12ddd67c410139dea7dbc172c22df2d"
+  integrity sha512-w6lAgRkgpuDSUbytwLRPdVGq6zbthD2zXWXSttv9baDdb6RcMFj1anESywwIT2IVWmWj3B6lh1x2aivwAWRaAw==
   dependencies:
-    "@sp2/format" "^1.6.2"
+    "@sp2/format" "^1.6.3"
     fast-deep-equal "^3.0.0"
 
-"@sp2/updater@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@sp2/updater/-/updater-1.6.2.tgz#84cf383758501ad29b620306a1b98a23daf9f9a8"
-  integrity sha512-bib91h3zfMPQAhS53w0UGplSncTXIXllfD74p4eUY9vU+YUpz0iwB8FT4nGn8peeiYruOZncTwVCei/dAt+27Q==
+"@sp2/updater@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/updater/-/updater-1.6.3.tgz#55563bfb5993aad4abc2659040ab9e90d2539d7d"
+  integrity sha512-bPtD9/RaZxX9LyWrsJFRMJd8UoVuBBqHORCbyPVV9eYhZuyt9ws7OWoWtK/BHWhBdijVr8j3w5zbb0bNKOroDg==
   dependencies:
-    "@sp2/format" "^1.6.2"
-    "@sp2/retriever" "^1.6.2"
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
     fast-deep-equal "^3.0.0"
 
 base64-js@^1.0.2:
@@ -112,14 +112,14 @@ sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-sp2@1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/sp2/-/sp2-1.6.2.tgz#65cca598fc7b63a3f65d86508693d8272cba7c97"
-  integrity sha512-pMblkvtMuZWxGZ8BXbp/Pjjg+Q4V9YOUMB1yYXqsU8Gn7jvb+C9v1xXg1tVM0xCRUQtpZ6MsUCmiK41z0CkuEg==
+sp2@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/sp2/-/sp2-1.6.3.tgz#e14ad592a8365ca726e0be225ba83c78416c5d14"
+  integrity sha512-fIdy0gc2pko2M+2kDmTPblA0Az3eSA4qkuKtKaC66z9iUu0VHX1WiuuQMdYrgSNgKZqvOEX/oMZB6sUTnPkOLg==
   dependencies:
-    "@sp2/format" "^1.6.2"
-    "@sp2/retriever" "^1.6.2"
-    "@sp2/updater" "^1.6.2"
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
+    "@sp2/updater" "^1.6.3"
 
 upbin@0.9.2:
   version "0.9.2"
