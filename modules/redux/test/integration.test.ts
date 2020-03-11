@@ -198,6 +198,32 @@ describe("Integration", () => {
     assert.deepStrictEqual(entities.dummy002, {});
   });
 
+  it("should be shallow equal when the previous and updated entity are same value", () => {
+    store.dispatch(
+      actions.follow("patient", inserted.entity, inserted.versionId)
+    );
+    const prevState = store.getState().phenyl;
+    const prevValue = LocalStateFinder.getHeadEntity(prevState, {
+      entityName: "patient",
+      id: inserted.entity.id
+      // TODO: needs refinement for getHeadEntity response should infer type.
+    }) as PatientResponse;
+    store.dispatch(
+      actions.commitAndPush({
+        entityName: "patient",
+        id: inserted.entity.id,
+        operation: { $set: { name: "Shin Suzuki" } }
+      })
+    );
+    const nextState = store.getState().phenyl;
+    const nextValue = LocalStateFinder.getHeadEntity(nextState, {
+      entityName: "patient",
+      id: inserted.entity.id
+      // TODO: needs refinement for getHeadEntity response should infer type.
+    }) as PatientResponse;
+    assert.strictEqual(prevValue, nextValue);
+  });
+
   it("should be success logged out and store cleared", async () => {
     const { session } = store.getState().phenyl;
     if (!session) {
