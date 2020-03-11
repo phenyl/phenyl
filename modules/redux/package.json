@@ -27,7 +27,7 @@
     "@phenyl/interfaces": "^2.0.0",
     "@phenyl/utils": "^2.0.0",
     "fast-deep-equal": "^3.1.1",
-    "sp2": "^1.5.1"
+    "sp2": "^1.6.3"
   },
   "devDependencies": {
     "@phenyl/http-client": "^2.0.0",
