@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/express",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Express middleware to use Phenyl in it.",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -31,7 +31,7 @@
     "raw-body": "^2.4.1"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^2.0.0",
+    "@phenyl/http-client": "^2.0.1",
     "@phenyl/memory-db": "^2.0.0",
     "@phenyl/rest-api": "^2.0.0",
     "upbin": "0.9.2"

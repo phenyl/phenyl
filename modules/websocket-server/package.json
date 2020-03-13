@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/websocket-server",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-server",
   "license": "Apache-2.0",
