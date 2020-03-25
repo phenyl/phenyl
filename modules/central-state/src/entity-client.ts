@@ -323,7 +323,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
         );
       }
     } catch (e) {
-      // Rollbacking Entity
+      // Rolling back Entity
       await this.dbClient.replaceOne({ entityName, id, entity });
       // Remove _PhenylMeta.locked with this command.
       await this.dbClient.updateById({
