@@ -114,7 +114,7 @@ describe("MongoDBEntityClient", () => {
       assert(result.entity.name === "Jesse");
     });
 
-    it("should rollback the entity and success push operation even after previous push cause too many diffs error", async () => {
+    it("should rollback the entity and run push operation if previous push caused too many diffs error", async () => {
       const insertedUser = await entityClient.insertAndGet({
         entityName: "user",
         value: {
