@@ -282,31 +282,36 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
       versionId
     );
 
-    this.validatePushCommand(
-      command,
-      // @ts-ignore metainfo is stripped
-      Versioning.stripMeta(entity),
-      masterOperations
-    );
-
-    if (operations.length === 1) {
-      const transactionEndOperation = Versioning.createEndTransactionOperation();
-      const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand({
-        entityName,
-        id,
-        operation: mergeUpdateOperations(operations[0], transactionEndOperation)
-      });
-      const updatedEntity = (await this.dbClient.updateAndGet(
-        metaInfoAttachedCommand
-      )) as EntityWithMetaInfo<M[EN]>;
-      return Versioning.createPushCommandResult({
-        entity,
-        updatedEntity,
-        versionId
-      });
-    }
-
     try {
+      this.validatePushCommand(
+        command,
+        // @ts-ignore metainfo is stripped
+        Versioning.stripMeta(entity),
+        masterOperations
+      );
+
+      if (operations.length === 1) {
+        const transactionEndOperation = Versioning.createEndTransactionOperation();
+        const metaInfoAttachedCommand = Versioning.attachMetaInfoToUpdateCommand(
+          {
+            entityName,
+            id,
+            operation: mergeUpdateOperations(
+              operations[0],
+              transactionEndOperation
+            )
+          }
+        );
+        const updatedEntity = (await this.dbClient.updateAndGet(
+          metaInfoAttachedCommand
+        )) as EntityWithMetaInfo<M[EN]>;
+        return Versioning.createPushCommandResult({
+          entity,
+          updatedEntity,
+          versionId
+        });
+      }
+
       for (let i = 0; i < operations.length; i++) {
         const operation = operations[i];
         await this.dbClient.updateById(
@@ -318,8 +323,14 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
         );
       }
     } catch (e) {
-      // Rollbacking. _PhenylMeta.locked is cleared by this command.
+      // Rolling back Entity
       await this.dbClient.replaceOne({ entityName, id, entity });
+      // Remove _PhenylMeta.locked with this command.
+      await this.dbClient.updateById({
+        entityName,
+        id,
+        operation: Versioning.createEndTransactionOperation()
+      });
       throw e;
     }
 
