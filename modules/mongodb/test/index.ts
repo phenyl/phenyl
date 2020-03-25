@@ -33,10 +33,7 @@ describe("MongoDBEntityClient", () => {
   let generatedId: string;
 
   before(async () => {
-    conn = await connect(
-      url,
-      "phenyl-mongodb-test"
-    );
+    conn = await connect(url, "phenyl-mongodb-test");
     entityClient = createEntityClient(conn);
   });
 
@@ -115,6 +112,45 @@ describe("MongoDBEntityClient", () => {
       });
 
       assert(result.entity.name === "Jesse");
+    });
+
+    it("should rollback the entity and success push operation even after previous push cause too many diffs error", async () => {
+      const insertedUser = await entityClient.insertAndGet({
+        entityName: "user",
+        value: {
+          name: "John"
+        }
+      });
+      const generatedUserId = insertedUser.entity.id;
+      const generatedVersionId = insertedUser.versionId;
+      const ope1 = {
+        $set: {
+          name: "Jonny"
+        }
+      };
+      const willConfclictOperation = entityClient.push({
+        entityName: "user",
+        id: generatedUserId,
+        operations: [ope1],
+        versionId: "Invalid Version Id"
+      });
+      await assert.rejects(
+        willConfclictOperation,
+        Error(
+          "Cannot apply push operations: Too many diffs from master (over 100)."
+        )
+      );
+      await entityClient.push({
+        entityName: "user",
+        id: generatedUserId,
+        operations: [ope1],
+        versionId: generatedVersionId
+      });
+      const updatedResult = await entityClient.get({
+        entityName: "user",
+        id: generatedUserId
+      });
+      assert.deepStrictEqual(updatedResult.entity.name, "Jonny");
     });
   });
 
