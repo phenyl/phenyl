@@ -8,7 +8,7 @@ import { after, before, describe, it } from "mocha";
 
 const url = "mongodb://localhost:27017";
 
-describe("MongoDBEntityClient", () => {
+describe("Merge Operations", () => {
   let conn: MongoDbConnection;
   let entityClient: PhenylMongoDbEntityClient<{
     user: { id: string; name: string; hobbies: string[] };
@@ -18,10 +18,7 @@ describe("MongoDBEntityClient", () => {
   let versionId: string;
 
   before(async () => {
-    conn = await connect(
-      url,
-      "phenyl-mongodb-test"
-    );
+    conn = await connect(url, "phenyl-mongodb-test");
     entityClient = createEntityClient(conn, {
       validatePushCommand: () => true
     });
