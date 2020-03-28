@@ -243,7 +243,7 @@ describe("Integration", () => {
     assert.deepStrictEqual(entities, {});
   });
 
-  it("should be check for diff Origin and Head", () => {
+  it("should check diff between origin and head in EntityInfo", () => {
     store.dispatch(
       actions.follow("patient", inserted.entity, inserted.versionId)
     );
