@@ -88,4 +88,13 @@ export class LocalStateFinder {
       );
     return entityInfo;
   }
+
+  static hasDiffBetweenOriginAndHead<
+    TM extends GeneralTypeMap,
+    EN extends EntityNameOf<TM>
+  >(state: LocalStateOf<TM>, query: IdQuery<EN>): boolean {
+    const head = this.getHeadEntity(state, query);
+    const origin = this.getEntityInfo(state, query).origin;
+    return head !== origin;
+  }
 }

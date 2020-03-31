@@ -242,4 +242,46 @@ describe("Integration", () => {
     const { entities } = store.getState().phenyl;
     assert.deepStrictEqual(entities, {});
   });
+
+  it("should check diff between origin and head in EntityInfo", () => {
+    store.dispatch(
+      actions.follow("patient", inserted.entity, inserted.versionId)
+    );
+
+    // Dispatch same value
+    store.dispatch(
+      actions.commitAndPush({
+        entityName: "patient",
+        id: inserted.entity.id,
+        operation: { $set: { name: "Shin Suzuki" } }
+      })
+    );
+    const updateState1 = store.getState().phenyl;
+    const hasDiff1 = LocalStateFinder.hasDiffBetweenOriginAndHead(
+      updateState1,
+      {
+        entityName: "patient",
+        id: inserted.entity.id
+      }
+    );
+    assert.ok(hasDiff1 === false);
+
+    // Dispatch difference difference value
+    store.dispatch(
+      actions.commitAndPush({
+        entityName: "patient",
+        id: inserted.entity.id,
+        operation: { $set: { name: "Changed Shin Suzuki" } }
+      })
+    );
+    const updateState2 = store.getState().phenyl;
+    const hasDiff2 = LocalStateFinder.hasDiffBetweenOriginAndHead(
+      updateState2,
+      {
+        entityName: "patient",
+        id: inserted.entity.id
+      }
+    );
+    assert.ok(hasDiff2);
+  });
 });
