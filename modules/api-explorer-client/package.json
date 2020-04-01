@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/api-explorer-client",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "description": "Client application of phenyl-api-explorer",
   "repository": "phenyl-js/phenyl",
   "license": "Apache-2.0",
@@ -33,9 +33,9 @@
     ]
   },
   "devDependencies": {
-    "@phenyl/http-client": "^2.0.2",
-    "@phenyl/interfaces": "^2.0.2",
-    "@phenyl/utils": "^2.0.2",
+    "@phenyl/http-client": "^2.1.0",
+    "@phenyl/interfaces": "^2.1.0",
+    "@phenyl/utils": "^2.1.0",
     "@types/node": "12.12.34",
     "@types/react": "16.9.16",
     "@types/react-dom": "16.9.5",
