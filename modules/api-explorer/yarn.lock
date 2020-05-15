@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@types/ejs@3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.0.2.tgz#b2eb8ac59af7057da7d93a37c54fee763e17b9bd"
-  integrity sha512-+nriFZYDz+C+6SWzJp0jHrGvyzL3Sg63u1vRlH1AfViyaT4oTod+MtfZ0YMNYXzO7ybFkdx4ZaBwBtLwdYkReQ==
+"@types/ejs@3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.0.4.tgz#8851fcdedb96e410fbb24f83b8be6763ef9afa77"
+  integrity sha512-ZxnwyBGO4KX/82AsFHTX82eMw0PsoBcIngEat+zx0y+3yxoNDJucAihg9nAcrc+g4Cwiv/4WcWsX4oiy0ySrRQ==
 
 abbrev@1:
   version "1.1.1"
