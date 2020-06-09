@@ -1,7 +1,7 @@
 import {
   ChangeStream,
   ChangeStreamOptions,
-  ChangeStreamPipeline
+  ChangeStreamPipeline,
 } from "./change-stream";
 // Sorry for poor typing
 import { Collection, MongoClient } from "mongodb";
@@ -46,7 +46,10 @@ export async function connect(
   url: string,
   dbName: string
 ): Promise<MongoDbConnection> {
-  const dbClient = await connectToMongoDb(url, { useNewUrlParser: true });
+  const dbClient = await connectToMongoDb(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   return new PhenylMongoDbConnection({ dbClient, dbName });
 }
 
@@ -98,7 +101,7 @@ function promisifyCollection(coll: Collection): MongoDbCollection {
     updateMany: promisify(coll.updateMany, coll),
     deleteOne: promisify(coll.deleteOne, coll),
     deleteMany: promisify(coll.deleteMany, coll),
-    watch: coll.watch.bind(coll)
+    watch: coll.watch.bind(coll),
   };
 }
 
@@ -113,7 +116,7 @@ type PromisifiedFind = (
 ) => Promise<any>;
 
 function promisifyFindChain(find: (where?: Object) => Object): PromisifiedFind {
-  return function(
+  return function (
     where: Object = {},
     params: FindChainParams = {}
   ): Promise<any> {
