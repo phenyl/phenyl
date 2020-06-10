@@ -3,19 +3,19 @@ import { createMiddleware, MiddlewareOptions } from "./middleware";
 import { createReducer, PhenylReducerFunction } from "./reducer";
 import { ActionCreator } from "./action-creator";
 
-export function usePhenylRedux<TM extends GeneralTypeMap>(
+export function createPhenylRedux<TM extends GeneralTypeMap>(
   options: MiddlewareOptions<TM>
 ) {
   return {
     middleware: createMiddleware(options),
     reducer: createReducer<TM>(),
-    actions: new ActionCreator<TM>()
+    actions: new ActionCreator<TM>(),
   };
 }
 
 /**
  * Deprecated.
- * Use `usePhenylRedux()`
+ * Use `createPhenylRedux()`
  */
 export class PhenylRedux<TM extends GeneralTypeMap> {
   createMiddleware() {
