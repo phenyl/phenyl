@@ -38,7 +38,7 @@
     "@phenyl/rest-api": "^2.1.0",
     "@phenyl/standards": "^2.1.0",
     "@types/ejs": "3.0.4",
-    "nodemon": "2.0.2",
+    "nodemon": "2.0.4",
     "power-crypt": "0.2.2"
   },
   "publishConfig": {
