@@ -53,7 +53,7 @@
     "upbin": "0.9.2"
   },
   "resolutions": {
-    "caniuse-lite": "1.0.30001079",
+    "caniuse-lite": "1.0.30001084",
     "@babel/parser": "7.10.2",
     "@babel/types": "7.10.2",
     "@babel/generator": "7.10.2",
