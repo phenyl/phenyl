@@ -5,12 +5,12 @@ import {
   toMongoFindOperation,
   toMongoUpdateOperation,
   update,
-  visitFindOperation
+  visitFindOperation,
 } from "sp2";
 import {
   ChangeStream,
   ChangeStreamOptions,
-  ChangeStreamPipeline
+  ChangeStreamPipeline,
 } from "./change-stream";
 import {
   DbClient,
@@ -27,7 +27,7 @@ import {
   PreEntity,
   ReplaceOneCommand,
   SingleInsertCommand,
-  WhereQuery
+  WhereQuery,
 } from "@phenyl/interfaces";
 
 import { MongoDbConnection } from "./connection";
@@ -51,8 +51,8 @@ function createObjectId<T>(id: string | ObjectId): string | ObjectId {
 }
 
 function convertToObjectIdRecursively(src: any): any {
-  if (src instanceof ObjectId) return src
-  if (Array.isArray(src)) return src.map(id => createObjectId(id));
+  if (src instanceof ObjectId) return src;
+  if (Array.isArray(src)) return src.map((id) => createObjectId(id));
   if (typeof src !== "object") return createObjectId(src);
   return Object.keys(src).reduce((dst: any, key: string) => {
     dst[key] = convertToObjectIdRecursively(src[key]);
@@ -66,12 +66,12 @@ function convertIdToObjectIdInWhere(
   const { $set, $docPath } = $bind<SimpleFindOperation>();
   return simpleFindOperation.id
     ? update(
-      simpleFindOperation,
-      $set(
-        $docPath("id"),
-        convertToObjectIdRecursively(simpleFindOperation.id)
+        simpleFindOperation,
+        $set(
+          $docPath("id"),
+          convertToObjectIdRecursively(simpleFindOperation.id)
+        )
       )
-    )
     : simpleFindOperation;
 }
 
@@ -91,7 +91,7 @@ function composedFindOperationFilters(
   return [
     convertIdToObjectIdInWhere,
     replaceIdInto_idInWhere,
-    toMongoFindOperation
+    toMongoFindOperation,
   ].reduce(
     (operation, filterFunc) => filterFunc(operation),
     simpleFindOperation
@@ -100,7 +100,7 @@ function composedFindOperationFilters(
 
 export function filterFindOperation(operation: FindOperation): FindOperation {
   return visitFindOperation(operation, {
-    simpleFindOperation: composedFindOperationFilters
+    simpleFindOperation: composedFindOperationFilters,
   });
 }
 
@@ -118,7 +118,7 @@ export function filterInputEntity<E extends PreEntity<Entity>>(
 ): E {
   return [
     convertIdToObjectIdInEntity,
-    replaceIdInto_idInEntity
+    replaceIdInto_idInEntity,
     // @ts-ignore @TODO
   ].reduce((entity: Entity, filterFunc) => filterFunc(entity), srcEntity);
 }
@@ -208,7 +208,9 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   ): Promise<Array<EntityOf<M, E>>> {
     const { entityName, ids } = query;
     const coll = this.conn.collection(entityName);
-    const result = await coll.find({ _id: { $in: ids.map(createObjectId) } });
+    const result = await coll.find({
+      _id: { $in: ids.map(createObjectId) },
+    });
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
@@ -274,10 +276,10 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       entityName,
       id,
       operation,
-      filter: additionalFilter = {}
+      filter: additionalFilter = {},
     } = command;
     const filter: Object = Object.assign(additionalFilter, {
-      _id: createObjectId(id)
+      _id: createObjectId(id),
     });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
@@ -300,10 +302,10 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       entityName,
       id,
       operation,
-      filter: additionalFilter = {}
+      filter: additionalFilter = {},
     } = command;
     const filter: Object = Object.assign(additionalFilter, {
-      _id: createObjectId(id)
+      _id: createObjectId(id),
     });
     const coll = this.conn.collection(entityName);
     const result = await coll.updateOne(
@@ -321,17 +323,30 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     return this.get({ entityName, id });
   }
 
+  // TODO: transactional operation needed
   async updateAndFetch<N extends Key<M>>(
     command: MultiUpdateCommand<N>
   ): Promise<EntityOf<M, N>[]> {
     const { entityName, where, operation } = command;
     const coll = this.conn.collection(entityName);
+
+    const findResult = await this.find({
+      entityName,
+      where,
+    });
+
     await coll.updateMany(
       filterFindOperation(where),
       toMongoUpdateOperation(operation)
     );
-    // FIXME: the result may be different from updated entities.
-    return this.find({ entityName, where });
+
+    const result = await this.getByIds({
+      entityName,
+      ids: findResult.map((entity) => entity.id),
+    });
+
+    // @ts-ignore
+    return result;
   }
 
   async delete<N extends Key<M>>(command: DeleteCommand<N>): Promise<number> {

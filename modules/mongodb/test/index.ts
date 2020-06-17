@@ -2,7 +2,7 @@
 import { after, before, describe, it } from "mocha";
 import {
   createEntityClient,
-  PhenylMongoDbEntityClient
+  PhenylMongoDbEntityClient,
 } from "../src/create-entity-client";
 import assert from "assert";
 import { ObjectId } from "bson";
@@ -46,7 +46,7 @@ describe("MongoDBEntityClient", () => {
     it("without id and generates { _id: ObjectId(xxx) } ", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
-        value: { name: "Jone" }
+        value: { name: "Jone" },
       });
 
       assert(result.entity.id);
@@ -63,7 +63,7 @@ describe("MongoDBEntityClient", () => {
       it("to _id", async () => {
         await entityClient.insertOne({
           entityName: "user",
-          value: { id: "jane", name: "Jane" }
+          value: { id: "jane", name: "Jane" },
         });
 
         const users: any = await conn.collection("user").find({ _id: "jane" });
@@ -73,7 +73,7 @@ describe("MongoDBEntityClient", () => {
       it("to { _id: ObjectId(xxx) } if id is 24-byte hex lower string", async () => {
         const result = await entityClient.insertAndGet({
           entityName: "user",
-          value: { id: HEX_24_ID, name: "Jesse" }
+          value: { id: HEX_24_ID, name: "Jesse" },
         });
 
         assert(result.entity.id === HEX_24_ID);
@@ -90,7 +90,7 @@ describe("MongoDBEntityClient", () => {
     it("by auto generated id", async () => {
       const result = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert(result.entity.name === "Jone");
@@ -99,7 +99,7 @@ describe("MongoDBEntityClient", () => {
     it("by set id", async () => {
       const result = await entityClient.get({
         entityName: "user",
-        id: "jane"
+        id: "jane",
       });
 
       assert(result.entity.name === "Jane");
@@ -108,7 +108,7 @@ describe("MongoDBEntityClient", () => {
     it("by set 24-byte hex string id", async () => {
       const result = await entityClient.get({
         entityName: "user",
-        id: HEX_24_ID
+        id: HEX_24_ID,
       });
 
       assert(result.entity.name === "Jesse");
@@ -118,21 +118,21 @@ describe("MongoDBEntityClient", () => {
       const insertedUser = await entityClient.insertAndGet({
         entityName: "user",
         value: {
-          name: "John"
-        }
+          name: "John",
+        },
       });
       const generatedUserId = insertedUser.entity.id;
       const generatedVersionId = insertedUser.versionId;
       const ope1 = {
         $set: {
-          name: "Jonny"
-        }
+          name: "Jonny",
+        },
       };
       const willConfclictOperation = entityClient.push({
         entityName: "user",
         id: generatedUserId,
         operations: [ope1],
-        versionId: "Invalid Version Id"
+        versionId: "Invalid Version Id",
       });
       await assert.rejects(
         willConfclictOperation,
@@ -144,13 +144,43 @@ describe("MongoDBEntityClient", () => {
         entityName: "user",
         id: generatedUserId,
         operations: [ope1],
-        versionId: generatedVersionId
+        versionId: generatedVersionId,
       });
       const updatedResult = await entityClient.get({
         entityName: "user",
-        id: generatedUserId
+        id: generatedUserId,
       });
       assert.deepStrictEqual(updatedResult.entity.name, "Jonny");
+    });
+
+    it("updates and gets entity", async () => {
+      const result = await entityClient.updateAndGet({
+        entityName: "user",
+        id: HEX_24_ID,
+        operation: {
+          $set: {
+            name: "Cindy",
+          },
+        },
+      });
+
+      assert.deepStrictEqual(result.entity.name, "Cindy");
+    });
+
+    it("updates and fetches entities", async () => {
+      const result = await entityClient.updateAndFetch({
+        entityName: "user",
+        where: {
+          name: "Cindy",
+        },
+        operation: {
+          $set: {
+            name: "Bob",
+          },
+        },
+      });
+      assert.deepStrictEqual(result.entities[0].name, "Bob");
+      assert.deepStrictEqual(result.n, 1);
     });
   });
 
