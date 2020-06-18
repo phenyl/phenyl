@@ -9,8 +9,8 @@ export const operations = [
     // availableOnWebsocket: false,
     defaultPayload: {
       where: {},
-      limit: 5
-    }
+      limit: 5,
+    },
   },
   {
     name: "findOne",
@@ -20,8 +20,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      where: {}
-    }
+      where: {},
+    },
   },
   {
     name: "get",
@@ -31,8 +31,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: ""
-    }
+      id: "",
+    },
   },
   {
     name: "getByIds",
@@ -42,8 +42,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      ids: [""]
-    }
+      ids: [""],
+    },
   },
   {
     name: "pull",
@@ -54,8 +54,8 @@ export const operations = [
     // availableOnWebsocket: false,
     defaultPayload: {
       id: "",
-      versionId: ""
-    }
+      versionId: "",
+    },
   },
   {
     name: "insertOne",
@@ -65,8 +65,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      value: {}
-    }
+      value: {},
+    },
   },
   {
     name: "insertMulti",
@@ -76,8 +76,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      values: [{}]
-    }
+      values: [{}],
+    },
   },
   {
     name: "insertAndGet",
@@ -87,8 +87,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      value: {}
-    }
+      value: {},
+    },
   },
   {
     name: "insertAndGetMulti",
@@ -98,8 +98,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      values: [{}]
-    }
+      values: [{}],
+    },
   },
   {
     name: "updateById",
@@ -111,9 +111,9 @@ export const operations = [
     defaultPayload: {
       id: "",
       operation: {
-        xxx: 0
-      }
-    }
+        xxx: 0,
+      },
+    },
   },
   {
     name: "updateMulti",
@@ -125,13 +125,13 @@ export const operations = [
     defaultPayload: {
       where: {},
       operation: {
-        xxx: 0
-      }
-    }
+        xxx: 0,
+      },
+    },
   },
   {
     name: "updateAndGet",
-    description: "TBD",
+    description: "Updates a node of given id, and returns the updated node.",
     tags: ["command"],
     payload: true,
     availableOnHttp: true,
@@ -139,13 +139,14 @@ export const operations = [
     defaultPayload: {
       id: "",
       operation: {
-        xxx: 0
-      }
-    }
+        xxx: 0,
+      },
+    },
   },
   {
     name: "updateAndFetch",
-    description: "TBD",
+    description:
+      "Update multiple node that matches the where query, and returns the updated nodes.",
     tags: ["command"],
     payload: true,
     availableOnHttp: true,
@@ -153,9 +154,9 @@ export const operations = [
     defaultPayload: {
       where: {},
       operation: {
-        xxx: 0
-      }
-    }
+        xxx: 0,
+      },
+    },
   },
   {
     name: "push",
@@ -168,11 +169,11 @@ export const operations = [
       id: "",
       operations: [
         {
-          xxx: 0
-        }
+          xxx: 0,
+        },
       ],
-      versionId: ""
-    }
+      versionId: "",
+    },
   },
   {
     name: "delete",
@@ -182,8 +183,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      id: ""
-    }
+      id: "",
+    },
   },
   {
     name: "login",
@@ -193,8 +194,8 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      credentials: {}
-    }
+      credentials: {},
+    },
   },
   {
     name: "logout",
@@ -204,7 +205,7 @@ export const operations = [
     availableOnHttp: true,
     // availableOnWebsocket: false,
     defaultPayload: {
-      userId: ""
-    }
-  }
+      userId: "",
+    },
+  },
 ];
