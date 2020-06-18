@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/websocket-server",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-websocket-server",
   "license": "Apache-2.0",
@@ -22,11 +22,11 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/utils": "^2.1.0",
+    "@phenyl/utils": "^3.0.0",
     "ws": "^7.2.0"
   },
   "devDependencies": {
-    "@phenyl/interfaces": "^2.1.0",
+    "@phenyl/interfaces": "^3.0.0",
     "@types/ws": "7.2.5",
     "babel-register": "6.26.0",
     "mocha": "8.0.1",
