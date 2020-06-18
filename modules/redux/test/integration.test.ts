@@ -10,13 +10,13 @@ import {
   LocalState,
   GetCommandResult,
   AuthCommandMapOf,
-  ResponseEntityMapOf
+  ResponseEntityMapOf,
 } from "../..//interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
 import { StandardUserDefinition } from "@phenyl/standards";
 import assert from "assert";
 
-import { useRedux, LocalStateFinder } from "../src";
+import { createRedux, LocalStateFinder } from "../src";
 
 type PlainPatient = {
   id: string;
@@ -62,7 +62,7 @@ class PatientDefinition extends StandardUserDefinition {
       accountPropName: "email",
       passwordPropName: "password",
       entityClient: memoryClient,
-      ttl: 24 * 3600
+      ttl: 24 * 3600,
     });
   }
 
@@ -75,18 +75,18 @@ const functionalGroup = {
   customQueries: {},
   customCommands: {},
   users: {
-    patient: new PatientDefinition()
+    patient: new PatientDefinition(),
   },
-  nonUsers: {}
+  nonUsers: {},
 };
 
 const httpClient: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
-  url: "http://localhost:8080"
+  url: "http://localhost:8080",
 });
 
-const { reducer, middleware, actions } = useRedux({
+const { reducer, middleware, actions } = createRedux({
   client: httpClient,
-  storeKey: "phenyl"
+  storeKey: "phenyl",
 });
 
 type Store = {
@@ -103,12 +103,12 @@ before(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,
     {
-      entityClient: memoryClient
+      entityClient: memoryClient,
     }
   );
 
   server = new PhenylHttpServer(http.createServer(), {
-    restApiHandler
+    restApiHandler,
   });
   server.listen(8080);
 });
@@ -126,7 +126,7 @@ describe("Integration", () => {
       expiredAt: "",
       userId: "shinout@example.com",
       externalId: "",
-      ttl: 12345
+      ttl: 12345,
     });
 
     inserted = await httpClient.insertAndGet(
@@ -135,8 +135,8 @@ describe("Integration", () => {
         value: {
           name: "Shin Suzuki",
           email: "shinout@example.com",
-          password: "shin123"
-        }
+          password: "shin123",
+        },
       },
       preSession.id
     );
@@ -152,13 +152,13 @@ describe("Integration", () => {
     const state = store.getState().phenyl;
     const value = LocalStateFinder.getHeadEntity(state, {
       entityName: "patient",
-      id: inserted.entity.id
+      id: inserted.entity.id,
       // TODO: needs refinement for getHeadEntity response should infer type.
     }) as PatientResponse;
     assert.deepStrictEqual(value, {
       name: "Shin Suzuki",
       email: "shinout@example.com",
-      id: inserted.entity.id
+      id: inserted.entity.id,
     });
   });
 
@@ -169,8 +169,8 @@ describe("Integration", () => {
         entityName: "patient",
         credentials: {
           email: "shinout@example.com",
-          password: "shin123"
-        }
+          password: "shin123",
+        },
       })
     );
     const { entities } = store.getState().phenyl;
@@ -178,7 +178,7 @@ describe("Integration", () => {
     assert.deepStrictEqual(loggedInUser, {
       name: "Shin Suzuki",
       email: "shinout@example.com",
-      id: inserted.entity.id
+      id: inserted.entity.id,
     });
   });
 
@@ -205,20 +205,20 @@ describe("Integration", () => {
     const prevState = store.getState().phenyl;
     const prevValue = LocalStateFinder.getHeadEntity(prevState, {
       entityName: "patient",
-      id: inserted.entity.id
+      id: inserted.entity.id,
       // TODO: needs refinement for getHeadEntity response should infer type.
     }) as PatientResponse;
     store.dispatch(
       actions.commitAndPush({
         entityName: "patient",
         id: inserted.entity.id,
-        operation: { $set: { name: "Shin Suzuki" } }
+        operation: { $set: { name: "Shin Suzuki" } },
       })
     );
     const nextState = store.getState().phenyl;
     const nextValue = LocalStateFinder.getHeadEntity(nextState, {
       entityName: "patient",
-      id: inserted.entity.id
+      id: inserted.entity.id,
       // TODO: needs refinement for getHeadEntity response should infer type.
     }) as PatientResponse;
     assert.strictEqual(prevValue, nextValue);
@@ -236,7 +236,7 @@ describe("Integration", () => {
       actions.logout({
         entityName: "patient",
         sessionId: session.id,
-        userId: inserted.entity.id
+        userId: inserted.entity.id,
       })
     );
     const { entities } = store.getState().phenyl;
@@ -253,7 +253,7 @@ describe("Integration", () => {
       actions.commitAndPush({
         entityName: "patient",
         id: inserted.entity.id,
-        operation: { $set: { name: "Shin Suzuki" } }
+        operation: { $set: { name: "Shin Suzuki" } },
       })
     );
     const updateState1 = store.getState().phenyl;
@@ -261,7 +261,7 @@ describe("Integration", () => {
       updateState1,
       {
         entityName: "patient",
-        id: inserted.entity.id
+        id: inserted.entity.id,
       }
     );
     assert.ok(hasDiff1 === false);
@@ -271,7 +271,7 @@ describe("Integration", () => {
       actions.commitAndPush({
         entityName: "patient",
         id: inserted.entity.id,
-        operation: { $set: { name: "Changed Shin Suzuki" } }
+        operation: { $set: { name: "Changed Shin Suzuki" } },
       })
     );
     const updateState2 = store.getState().phenyl;
@@ -279,7 +279,7 @@ describe("Integration", () => {
       updateState2,
       {
         entityName: "patient",
-        id: inserted.entity.id
+        id: inserted.entity.id,
       }
     );
     assert.ok(hasDiff2);
