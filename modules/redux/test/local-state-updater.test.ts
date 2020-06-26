@@ -12,7 +12,7 @@ describe("LocalStateUpdater", () => {
         commitCount: 1
       };
       const state = createInitialState();
-      assert.deepEqual(
+      assert.deepStrictEqual(
         LocalStateUpdater.addUnreachedCommits(state, unreachedCommits),
         { $push: { unreachedCommits } }
       );
@@ -28,7 +28,7 @@ describe("LocalStateUpdater", () => {
         { entityName: "foo", id: "hoge", commitCount: 2 }
       ];
 
-      assert.deepEqual(
+      assert.deepStrictEqual(
         LocalStateUpdater.addUnreachedCommits(state, unreachedCommits),
         {
           $push: {
@@ -91,11 +91,11 @@ describe("LocalStateUpdater", () => {
         LocalStateUpdater.addUnreachedCommits(initialState, unreachedCommits)
       );
 
-      assert.deepEqual(
+      assert.deepStrictEqual(
         LocalStateUpdater.addUnreachedCommits(initialState, unreachedCommits),
         { $push: { unreachedCommits } }
       );
-      assert.deepEqual(
+      assert.deepStrictEqual(
         LocalStateUpdater.removeUnreachedCommits(state, unreachedCommits),
         {
           $pull: {
@@ -122,7 +122,7 @@ describe("LocalStateUpdater", () => {
         message: "An error occured",
         ok: 0
       };
-      assert.deepEqual(LocalStateUpdater.resolveError(), {
+      assert.deepStrictEqual(LocalStateUpdater.resolveError(), {
         $unset: { error: "" }
       });
     });

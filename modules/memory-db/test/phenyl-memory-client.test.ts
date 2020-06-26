@@ -151,7 +151,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       assert(operations.length === 1 && versionId === currentVersionId);
       const currentUser = update(user, operations[0]);
       const { entity } = await client.get({ entityName, id });
-      assert.deepEqual(currentUser, entity);
+      assert.deepStrictEqual(currentUser, entity);
     });
   });
 
@@ -208,13 +208,13 @@ describe("PhenylMemoryClient (test about versioning)", () => {
           $inc: { age: 1 },
           $push: { hobbies: `hobby${i}` }
         };
-        assert.deepEqual(operation, expectedOp);
+        assert.deepStrictEqual(operation, expectedOp);
         i++;
         // @ts-ignore
         currentUser = update(currentUser, operation);
       }
       const resultOfGet = await client.get({ entityName, id });
-      assert.deepEqual(currentUser, resultOfGet.entity);
+      assert.deepStrictEqual(currentUser, resultOfGet.entity);
     });
 
     it("returns no operation diffs when the given versionId is older than 100 versions", async () => {
@@ -240,7 +240,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       // @ts-ignore
       if (!result.pulled)
         throw new Error('Result should not have "pulled" property');
-      assert.deepEqual(result, {
+      assert.deepStrictEqual(result, {
         pulled: 1,
         operations: [],
         versionId: lastVersionId
@@ -295,7 +295,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       assert(versions[0].id === result.prevVersionId);
       const { entity } = await client.get({ entityName, id });
       assert(entity.name === "John");
-      assert.deepEqual(entity.hobbies, ["guitar", "jogging"]);
+      assert.deepStrictEqual(entity.hobbies, ["guitar", "jogging"]);
     });
 
     it("pushs version info to meta info of all the updated entities", async () => {

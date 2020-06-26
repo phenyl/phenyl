@@ -13,7 +13,7 @@ describe("filterFindOperation", () => {
       $and: [{ _id: { $eq: "abc" } }, { type: { $eq: "bar" } }]
     };
     const actual = filterFindOperation(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 
   it("converts document path to dot notation", () => {
@@ -38,7 +38,7 @@ describe("filterFindOperation", () => {
       ]
     };
     const actual = filterFindOperation(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 
   it("converts matched string to ObjectId", () => {
@@ -94,7 +94,7 @@ describe("filterInputEntity", () => {
       attr: "bar"
     };
     const actual = filterInputEntity(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 
   it("converts id to ObjectId", () => {
@@ -107,6 +107,6 @@ describe("filterInputEntity", () => {
       attr: "bar"
     };
     const actual = filterInputEntity(input);
-    assert.deepEqual(actual, expected);
+    assert.deepStrictEqual(actual, expected);
   });
 });
