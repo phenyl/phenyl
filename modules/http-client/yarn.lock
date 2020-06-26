@@ -2,15 +2,104 @@
 # yarn lockfile v1
 
 
+"@phenyl/central-state@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-3.0.0.tgz#2682e5a0a698005f063b22b81b75bc5fbf066530"
+  integrity sha512-9sth2kBH4Q0qbljEiaOialJ//QcElDOuZ9F+j6qX+LvZ7+8VpMex/5ncYkEQhgiXP8E9nn22C/lbcXzKX0TKBg==
+  dependencies:
+    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/utils" "^3.0.0"
+    sp2 "^1.6.3"
+
+"@phenyl/http-rules@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-3.0.0.tgz#a3318c496cd7a830f9917fbe651b666d0d061a53"
+  integrity sha512-lWepaqK2AgGHjiC++5RQUHpuU0W1X+RtqYNzLFloCcO9JgOS63Zi4kNpdgAH/T9rFPkw3p/0cOPhYhpuexpcjQ==
+  dependencies:
+    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/utils" "^3.0.0"
+
+"@phenyl/http-server@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-server/-/http-server-3.0.0.tgz#09ed51f85e47c5af94473c44d21a1f476cca6d19"
+  integrity sha512-p5vdpucFeJc6IKlrWZFeV3XjfFUx2iYbhfeWmOKIOiSJ9diu8T1xQrlPnSL/lQz9nvJf215BTau22NuXJMrJZA==
+  dependencies:
+    "@phenyl/http-rules" "^3.0.0"
+    "@phenyl/interfaces" "^3.0.0"
+
+"@phenyl/interfaces@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-3.0.0.tgz#0a4356aac1fe9f04e3d7fcb345984b4d7c61b55d"
+  integrity sha512-89829GuPFV0C9VQA9g7M25UFGjlvBIpESNdmMv7b8fhrascWo/CmDgwoNfLkudg3sdo4vANcK9w8+2A6pG72SA==
+  dependencies:
+    sp2 "^1.6.3"
+
+"@phenyl/memory-db@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-3.0.0.tgz#2871e5431cb5ad704a39acd38da17a9a57917d05"
+  integrity sha512-S0izdNFZoLaXc88UF+SVX4NUgGKHhrnds8qRB67HCbmjVcO+fU+qYhzH6s5UP8OEfd3AtkQg3DFXdeKJXJDR+g==
+  dependencies:
+    "@phenyl/central-state" "^3.0.0"
+    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/state" "^3.0.0"
+    "@phenyl/utils" "^3.0.0"
+    sp2 "^1.6.3"
+
+"@phenyl/rest-api@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-3.0.0.tgz#90b943adc448c6bff64162fbe0e8febb590ad696"
+  integrity sha512-rDxU9rDn7FBqewgDmua9DC2N6whAJkLxqbUsmUYTb9gTFDFjsmR8vlfy7hhI23WZZBS3YuyJU3PPvgZKldCdhw==
+  dependencies:
+    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/utils" "^3.0.0"
+
+"@phenyl/state@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-3.0.0.tgz#82e67def5f19485e4a50653c2f248c23004f14f2"
+  integrity sha512-hU9LiWMO/KbGJDoiOZa3d+oGNI0Pg93IIFXyehh4NW+JMZEfAMcdLfxbk+rjkFCJ50D7aAoeJ8iVgf0dLw89lA==
+  dependencies:
+    "@phenyl/interfaces" "^3.0.0"
+    sp2 "^1.6.3"
+
+"@phenyl/utils@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-3.0.0.tgz#f747cc69c37cdc5a3878345aab355b0b2d2f7ff0"
+  integrity sha512-2VfsuHRNguUMEHFWo9yBn98fSDCWicA3I2QEy44dg65MY5b3Df8HN/keanm8zIRov89eq8UpfYEmeTr+3wq5JA==
+  dependencies:
+    "@phenyl/interfaces" "^3.0.0"
+    sp2 "^1.6.3"
+
+"@sp2/format@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
+  integrity sha512-Q9rnIIB/YbJ8HV1mw9qA44FRK9GsTwM3cnc6Fj6eg6lRNKMQmnGh96DxcQin12PqftIeEgAKZxR13m3KSQJqlw==
+
+"@sp2/retriever@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/retriever/-/retriever-1.6.3.tgz#cdd240b3f12ddd67c410139dea7dbc172c22df2d"
+  integrity sha512-w6lAgRkgpuDSUbytwLRPdVGq6zbthD2zXWXSttv9baDdb6RcMFj1anESywwIT2IVWmWj3B6lh1x2aivwAWRaAw==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    fast-deep-equal "^3.0.0"
+
+"@sp2/updater@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/updater/-/updater-1.6.3.tgz#55563bfb5993aad4abc2659040ab9e90d2539d7d"
+  integrity sha512-bPtD9/RaZxX9LyWrsJFRMJd8UoVuBBqHORCbyPVV9eYhZuyt9ws7OWoWtK/BHWhBdijVr8j3w5zbb0bNKOroDg==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
+    fast-deep-equal "^3.0.0"
+
 acorn-es7-plugin@^1.0.12:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/acorn-es7-plugin/-/acorn-es7-plugin-1.1.7.tgz#f2ee1f3228a90eead1245f9ab1922eb2e71d336b"
   integrity sha1-8u4fMiipDurRJF+asZIusucdM2s=
 
 acorn@^5.0.0:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.3.tgz#67aa231bf8812974b85235a96771eb6bd07ea279"
-  integrity sha512-T/zvzYRfbVojPWahDsE5evJdHb3oJoQfFbsrKM7w5Zcs++Tr257tia3BmMP8XYVjp1S9RZXQMh7gao96BlqZOw==
+  version "5.7.4"
+  resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.7.4.tgz#3e8d8a9947d0599a1796d10225d7432f4a4acf5e"
+  integrity sha512-1D++VG7BhrtvQpNbBzovKNc1FLGGEE/oGe7b9xJm/RFHMBeUaUGpluV9RLjZa47YFdPcDAenEYuq9pQPcMdLJg==
 
 array-filter@^1.0.0:
   version "1.0.0"
@@ -79,6 +168,11 @@ estraverse@^4.1.0, estraverse@^4.2.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
   integrity sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
+
+fast-deep-equal@^3.0.0:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
+  integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
 find-up@^4.0.0:
   version "4.1.0"
@@ -232,6 +326,15 @@ power-assert@1.6.1:
     power-assert-formatter "^1.4.1"
     universal-deep-strict-equal "^1.2.1"
     xtend "^4.0.0"
+
+sp2@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/sp2/-/sp2-1.6.3.tgz#e14ad592a8365ca726e0be225ba83c78416c5d14"
+  integrity sha512-fIdy0gc2pko2M+2kDmTPblA0Az3eSA4qkuKtKaC66z9iUu0VHX1WiuuQMdYrgSNgKZqvOEX/oMZB6sUTnPkOLg==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
+    "@sp2/updater" "^1.6.3"
 
 stringifier@^1.3.0:
   version "1.4.0"
