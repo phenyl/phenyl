@@ -18,7 +18,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("findOne", () => {
@@ -34,7 +34,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("get", () => {
@@ -48,7 +48,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("getByIds", () => {
@@ -62,7 +62,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("pull", () => {
@@ -77,7 +77,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("insertOne", () => {
@@ -94,7 +94,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("insertMulti", () => {
@@ -113,7 +113,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("insertAndGet", () => {
@@ -130,7 +130,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("insertAndGetMulti", () => {
@@ -153,7 +153,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("updateById", () => {
@@ -172,7 +172,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("updateMulti", () => {
@@ -193,7 +193,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("updateAndGet", () => {
@@ -212,7 +212,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("updateAndFetch", () => {
@@ -233,7 +233,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("push", () => {
@@ -255,7 +255,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("delete", () => {
@@ -271,7 +271,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("runCustomQuery", () => {
@@ -287,7 +287,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("runCustomQuery without params", () => {
@@ -300,7 +300,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(reqData, decodedReqData);
+    assert.deepStrictEqual(reqData, decodedReqData);
   });
   it("runCustomCommand", () => {
     const reqData: GeneralRequestData = {
@@ -315,7 +315,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("login", () => {
@@ -332,7 +332,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
   it("logout", () => {
@@ -347,7 +347,7 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepEqual(decodedReqData, reqData);
+    assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
 });

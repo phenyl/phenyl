@@ -18,7 +18,7 @@ describe("createError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns PhenylError from string, with error type.", () => {
     const e = createError("Invalid value.", "CodeProblem");
@@ -30,7 +30,7 @@ describe("createError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns PhenylError from string, with location.", () => {
     const e = createError("Invalid value.", null, "server");
@@ -42,7 +42,7 @@ describe("createError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns PhenylError from Error instance. Default location is Local.", () => {
     const e = createError(new Error("Invalid value."));
@@ -54,7 +54,7 @@ describe("createError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it('returns PhenylError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', () => {
     const e = createError(new ReferenceError("Invalid value."));
@@ -71,7 +71,7 @@ describe("createError", () => {
     assert(json.message === "Invalid value.");
     assert(json.stack === e.stack); // No restorability
 
-    assert.notDeepEqual(e, createError(json));
+    assert.notDeepStrictEqual(e, createError(json));
   });
   it("returns PhenylError from ErrorDetail Object. Default location is Local.", () => {
     const e = createError({
@@ -91,7 +91,7 @@ describe("createError", () => {
     assert(e.detail.status === "duplicate");
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
 });
 describe("createServerError", () => {
@@ -105,7 +105,7 @@ describe("createServerError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns ServerError from string, with error type.", () => {
     const e = createServerError("Invalid value.", "NotFound");
@@ -117,7 +117,7 @@ describe("createServerError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns ServerError from Error instance.", () => {
     const e = createServerError(new Error("Invalid value."));
@@ -129,7 +129,7 @@ describe("createServerError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it('returns ServerError from ReferenceError instance. Default type is "InternalServer", and it has no restorability.', () => {
     const e = createServerError(new ReferenceError("Invalid value."));
@@ -146,7 +146,7 @@ describe("createServerError", () => {
     assert(json.message === "Invalid value.");
     assert(json.stack === e.stack); // No restorability
 
-    assert.notDeepEqual(e, createError(json));
+    assert.notDeepStrictEqual(e, createError(json));
   });
 });
 describe("createLocalError", () => {
@@ -160,7 +160,7 @@ describe("createLocalError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns LocalError from string, with error type.", () => {
     const e = createLocalError("Invalid value.", "NetworkFailed");
@@ -172,7 +172,7 @@ describe("createLocalError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it("returns LocalError from Error instance.", () => {
     const e = createLocalError(new Error("Invalid value."));
@@ -184,7 +184,7 @@ describe("createLocalError", () => {
     assert(e.stack);
     const json = e.toJSON!(); // Checking restorability
 
-    assert.deepEqual(e, createError(json));
+    assert.deepStrictEqual(e, createError(json));
   });
   it('returns LocalError from ReferenceError instance. Default type is "CodeProblem", and it has no restorability.', () => {
     const e = createLocalError(new ReferenceError("Invalid value."));
@@ -201,6 +201,6 @@ describe("createLocalError", () => {
     assert(json.message === "Invalid value.");
     assert(json.stack === e.stack); // No restorability
 
-    assert.notDeepEqual(e, createError(json));
+    assert.notDeepStrictEqual(e, createError(json));
   });
 });

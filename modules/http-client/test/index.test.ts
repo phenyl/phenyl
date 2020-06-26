@@ -28,7 +28,7 @@ describe("constructor", () => {
   it("holds url when created", () => {
     const expected = "http://127.0.0.1:8080";
 
-    assert.deepEqual(client.url, expected);
+    assert.deepStrictEqual(client.url, expected);
   });
 });
 

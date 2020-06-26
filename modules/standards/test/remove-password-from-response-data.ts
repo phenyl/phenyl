@@ -19,7 +19,7 @@ describe("removePasswordFromResponseData", () => {
     };
 
     const modifiedResData = removePasswordFromResponseData(resData, "password");
-    assert.deepEqual(modifiedResData, {
+    assert.deepStrictEqual(modifiedResData, {
       type: "get",
       payload: {
         entity: {
@@ -53,7 +53,7 @@ describe("removePasswordFromResponseData", () => {
       resData,
       "account.password"
     );
-    assert.deepEqual(modifiedResData, {
+    assert.deepStrictEqual(modifiedResData, {
       type: "get",
       payload: {
         entity: {

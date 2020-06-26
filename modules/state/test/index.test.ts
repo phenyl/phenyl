@@ -50,7 +50,7 @@ describe("find", () => {
       where: { name: "kery" }
     });
     const expected = [user1];
-    assert.deepEqual(usersFoundByQuery, expected);
+    assert.deepStrictEqual(usersFoundByQuery, expected);
   });
 });
 
@@ -66,7 +66,7 @@ describe("findOne", () => {
       where: { name: "kery" }
     });
     const expected = user;
-    assert.deepEqual(userFromState, expected);
+    assert.deepStrictEqual(userFromState, expected);
   });
 });
 
@@ -82,7 +82,7 @@ describe("get", () => {
       id: "1"
     });
     const expected = user;
-    assert.deepEqual(userFromState, expected);
+    assert.deepStrictEqual(userFromState, expected);
   });
 });
 
@@ -98,7 +98,7 @@ describe("getByIds", () => {
       ids: ["1", "2"]
     });
     const expected = [user1, user2];
-    assert.deepEqual(userFromState, expected);
+    assert.deepStrictEqual(userFromState, expected);
   });
 });
 
@@ -112,7 +112,7 @@ describe("getAll", () => {
     });
     const userFromState = state.getAll("user");
     const expected = [user1, user2, user3];
-    assert.deepEqual(userFromState, expected);
+    assert.deepStrictEqual(userFromState, expected);
   });
 });
 
@@ -227,8 +227,8 @@ describe("delete", () => {
         }
       }
     });
-    assert.deepEqual(operation, expected);
-    assert.deepEqual(newState, expectedNewState);
+    assert.deepStrictEqual(operation, expected);
+    assert.deepStrictEqual(newState, expectedNewState);
   });
 });
 
@@ -258,8 +258,8 @@ describe("register", () => {
       }
     });
 
-    assert.deepEqual(operation, expected);
-    assert.deepEqual(newState, expectedNewState);
+    assert.deepStrictEqual(operation, expected);
+    assert.deepStrictEqual(newState, expectedNewState);
   });
 });
 

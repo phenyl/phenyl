@@ -20,7 +20,7 @@ describe("encryptPasswordInRequestData", () => {
       "password",
       powerCrypt
     );
-    assert.deepEqual(encryptedRequestData, requestData);
+    assert.deepStrictEqual(encryptedRequestData, requestData);
   });
 
   it("encrypts password if password is in request data with insertOne method", () => {
@@ -46,7 +46,7 @@ describe("encryptPasswordInRequestData", () => {
       }
     };
 
-    assert.deepEqual(encryptedRequestData, expectedRequestData);
+    assert.deepStrictEqual(encryptedRequestData, expectedRequestData);
   });
 
   it("encrypts password if password is in request data with insertMulti method", () => {
@@ -75,7 +75,7 @@ describe("encryptPasswordInRequestData", () => {
       }
     };
 
-    assert.deepEqual(encryptedRequestData, expectedRequestData);
+    assert.deepStrictEqual(encryptedRequestData, expectedRequestData);
   });
 
   it("encrypts password if password is in request data with update method", () => {
@@ -109,6 +109,6 @@ describe("encryptPasswordInRequestData", () => {
       }
     };
 
-    assert.deepEqual(encryptedRequestData, expectedRequestData);
+    assert.deepStrictEqual(encryptedRequestData, expectedRequestData);
   });
 });

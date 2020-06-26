@@ -13,7 +13,7 @@ describe("Parsing path", () => {
       path: "/api/api/api",
       method: "GET"
     });
-    assert.deepEqual(reqData, {
+    assert.deepStrictEqual(reqData, {
       method: "get",
       payload: {
         id: "api",
