@@ -25,7 +25,7 @@ import {
   FollowActionOf,
   FollowAllActionOf,
   PullActionOf,
-  ResponseEntityOf
+  ResponseEntityOf,
 } from "@phenyl/interfaces";
 import { GeneralUpdateOperation } from "sp2";
 import { ActionCreator } from "./action-creator";
@@ -175,9 +175,11 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const entityNames = action.payload;
     const ops = entityNames
       .filter(
-        entityName => !LocalStateFinder.hasEntityField(this.state, entityName)
+        (entityName) => !LocalStateFinder.hasEntityField(this.state, entityName)
       )
-      .map(entityName => LocalStateUpdater.initialize(this.state, entityName));
+      .map((entityName) =>
+        LocalStateUpdater.initialize(this.state, entityName)
+      );
     return this.assignToState(...ops);
   }
 
@@ -198,13 +200,13 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     );
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
       entityName,
-      id
+      id,
     });
     const pushCommand = {
       id,
       operations: commits,
       entityName,
-      versionId
+      versionId,
     };
     const ops = [];
 
@@ -228,7 +230,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
               entityName,
               id,
               operations: result.operations,
-              versionId: result.versionId
+              versionId: result.versionId,
             },
             commits
           )
@@ -243,7 +245,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
             LocalStateUpdater.addUnreachedCommits(this.state, {
               id,
               entityName,
-              commitCount: commits.length
+              commitCount: commits.length,
             })
           );
           ops.push(LocalStateUpdater.offline());
@@ -280,7 +282,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const { id, entityName, until } = action.payload;
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
       entityName,
-      id
+      id,
     });
     const commitsToPush = until >= 0 ? commits.slice(0, until) : commits;
 
@@ -295,7 +297,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
       id,
       operations: commitsToPush,
       entityName,
-      versionId
+      versionId,
     };
     const ops = [];
 
@@ -319,7 +321,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
               entityName,
               id,
               operations: result.operations,
-              versionId: result.versionId
+              versionId: result.versionId,
             },
             commits
           )
@@ -334,7 +336,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
             LocalStateUpdater.addUnreachedCommits(this.state, {
               id,
               entityName,
-              commitCount: commitsToPush.length
+              commitCount: commitsToPush.length,
             })
           );
           ops.push(LocalStateUpdater.offline());
@@ -365,7 +367,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
         this.state,
         {
           entityName,
-          id
+          id,
         }
       );
       const operations = commits.slice(0, commitCount);
@@ -377,7 +379,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
         id,
         operations,
         entityName,
-        versionId
+        versionId,
       };
 
       try {
@@ -403,7 +405,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
                 entityName,
                 id,
                 operations: result.operations,
-                versionId: result.versionId
+                versionId: result.versionId,
               },
               operations
             )
@@ -433,7 +435,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const ops = [];
 
     try {
-      await this.client.delete(action.payload);
+      await this.client.delete(action.payload, this.sessionId);
       ops.push(LocalStateUpdater.unfollow(this.state, entityName, id));
     } catch (e) {
       ops.push(LocalStateUpdater.error(e, action.tag));
@@ -534,7 +536,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const { operation, id, entityName } = action.payload;
     const { versionId, commits } = LocalStateFinder.getEntityInfo(this.state, {
       entityName,
-      id
+      id,
     });
     const operations = commits.slice();
     operations.push(operation);
@@ -542,7 +544,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
       id,
       operations,
       entityName,
-      versionId
+      versionId,
     };
     const ops = [];
 
@@ -566,7 +568,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
               entityName,
               id,
               operations: result.operations,
-              versionId: result.versionId
+              versionId: result.versionId,
             },
             operations
           )
@@ -600,7 +602,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     const pullQuery = {
       id,
       entityName,
-      versionId
+      versionId,
     };
     const result = await this.client.pull(pullQuery, this.sessionId);
     const ops = [];
@@ -611,7 +613,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
           entityName,
           id,
           operations: result.operations,
-          versionId: result.versionId
+          versionId: result.versionId,
         })
       );
     } else {
