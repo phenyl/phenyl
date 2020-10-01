@@ -228,5 +228,78 @@ describe("Merge Operations", () => {
         "TypeScript"
       ]);
     });
+    describe("mongodb document validation", () => {
+      let client: MongoClient;
+      let db: Db;
+      const collectionName = "user";
+      before(async () => {
+        client = new MongoClient(url, { useUnifiedTopology: true });
+        await client.connect();
+        db = client.db(dbName);
+        const collections = await db.collections();
+        const collectionNames = collections.map((col) => col.collectionName);
+
+        if (!collectionNames.includes(collectionName)) {
+          await db.createCollection(collectionName);
+        }
+        await db.command({
+          collMod: collectionName,
+          validator: {
+            $jsonSchema: {
+              type: "object",
+              properties: {
+                _id: { type: "string" },
+                name: { type: "string" },
+                hobbies: { type: "array", items: { type: "string" } },
+                _PhenylMeta: { type: "object", additionalProperties: true },
+              },
+              required: ["name"],
+              additionalProperties: false,
+            },
+          },
+        });
+      });
+      after(async () => {
+        await db.dropCollection(collectionName);
+        await db.createCollection(collectionName);
+        await client.close();
+      });
+      it("should rollback successfully when push failed with document validation", async () => {
+        const result = await entityClient.insertAndGet({
+          entityName: "user",
+          value: {
+            id: "foo",
+            name: "John",
+            hobbies: ["play baseball"],
+          },
+        });
+        generatedId = result.entity.id;
+        versionId = result.versionId;
+
+        const ops = [
+          // Valid operation
+          { $set: { name: "Foo" } },
+          // Invalid operation
+          { $set: { hobbies: [1] } },
+        ];
+        const error = await entityClient
+          .push({
+            entityName: "user",
+            id: generatedId,
+            operations: ops,
+            versionId,
+          })
+          .catch((e) => e);
+        assert.deepStrictEqual(error.name, "MongoError");
+        assert.deepStrictEqual(error.errmsg, "Document failed validation");
+
+        const rollbackedResult = await client
+          .db(dbName)
+          .collection("user")
+          .findOne({ _id: generatedId });
+        assert.deepStrictEqual(rollbackedResult.name, "John");
+        assert.deepStrictEqual(rollbackedResult._PhenylMeta.locked, undefined);
+      });
+    });
   });
 });

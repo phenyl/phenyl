@@ -110,3 +110,56 @@ describe("filterInputEntity", () => {
     assert.deepStrictEqual(actual, expected);
   });
 });
+
+describe("MongodbClient", () => {
+  const url = "mongodb://localhost:27017";
+  const dbName = "phenyl-mongodb-test";
+  const entityName = "user";
+  let phenylMongodbClient: PhenylMongoDbClient<{
+    user: { id: string; name: string; hobbies: string[] };
+  }>;
+  let mongoClient: MongoClient;
+  let conn: MongoDbConnection;
+  before(async () => {
+    conn = await connect(url, dbName);
+    phenylMongodbClient = new PhenylMongoDbClient(conn);
+    mongoClient = new MongoClient(url, { useUnifiedTopology: true });
+    await mongoClient.connect();
+  });
+
+  after(async () => {
+    await phenylMongodbClient.delete({ entityName: "user", where: {} });
+    conn.close();
+    mongoClient.close();
+  });
+
+  describe("replceOne", () => {
+    it("sould replace id to _id if entity has id property", async () => {
+      await phenylMongodbClient.insertAndGet({
+        entityName,
+        value: {
+          id: "foo",
+          name: "Jone",
+          hobbies: ["play baseball"],
+        },
+      });
+      await phenylMongodbClient.replaceOne({
+        id: "foo",
+        entityName,
+        entity: {
+          id: "foo",
+          name: "Abraham",
+          hobbies: ["play soccer"],
+        },
+      });
+      const result = await mongoClient
+        .db(dbName)
+        .collection(entityName)
+        .findOne({ _id: "foo" });
+      assert.deepStrictEqual(result._id, "foo");
+      assert.deepStrictEqual(result.id, undefined);
+      assert.deepStrictEqual(result.name, "Abraham");
+      assert.deepStrictEqual(result.hobbies, ["play soccer"]);
+    });
+  });
+});
