@@ -266,7 +266,10 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   ): Promise<void> {
     const { entityName, id, entity } = command;
     const coll = this.conn.collection(entityName);
-    await coll.replaceOne({ _id: createObjectId(id) }, entity);
+    await coll.replaceOne(
+      { _id: createObjectId(id) },
+      filterInputEntity(entity)
+    );
   }
 
   async updateById<N extends Key<M>>(
