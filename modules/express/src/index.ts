@@ -6,9 +6,14 @@ import {
   GeneralServerParams,
   GeneralRestApiHandler,
   EncodedHttpRequest,
-  GeneralResponseData
+  GeneralResponseData,
 } from "@phenyl/interfaces";
 import { Request, Response, NextFunction } from "express";
+
+type Option = {
+  pathRegex?: RegExp;
+  limit?: string | number;
+};
 
 export class PhenylExpressMiddlewareCreator {
   /**
@@ -17,8 +22,10 @@ export class PhenylExpressMiddlewareCreator {
    */
   static createPhenylApiMiddleware(
     restApiHandler: GeneralRestApiHandler,
-    pathRegex: RegExp = /^\/api\/.*$/
+    option?: Option
   ) {
+    const { pathRegex = /^\/api\/.*$/, limit = "6mb" } = option || {};
+
     return async (req: Request, res: Response, next: NextFunction) => {
       const { path, method, query, headers, body } = req;
       if (!pathRegex.test(path)) {
@@ -36,10 +43,13 @@ export class PhenylExpressMiddlewareCreator {
         method,
         headers: headers as EncodedHttpRequest["headers"],
         path,
-        qsParams: query
+        qsParams: query,
       };
       if (!body) {
-        encodedHttpRequest.body = await getRawBody(req, true);
+        encodedHttpRequest.body = await getRawBody(req, {
+          encoding: true,
+          limit,
+        });
       } else if (typeof body === "object") {
         encodedHttpRequest.parsedBody = body;
       } else {
@@ -83,7 +93,7 @@ export class PhenylExpressMiddlewareCreator {
         method,
         headers: headers as EncodedHttpRequest["headers"],
         path,
-        qsParams: query
+        qsParams: query,
       };
       if (!body) {
         encodedHttpRequest.body = await getRawBody(req, true);
@@ -104,5 +114,5 @@ export class PhenylExpressMiddlewareCreator {
 
 export const {
   createPhenylApiMiddleware,
-  createPhenylMiddleware
+  createPhenylMiddleware,
 } = PhenylExpressMiddlewareCreator;
