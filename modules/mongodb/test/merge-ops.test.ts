@@ -1,12 +1,14 @@
 import { MongoDbConnection, connect } from "../src/connection";
+import { Db, MongoClient } from "mongodb";
 import assert from "assert";
 import {
   PhenylMongoDbEntityClient,
-  createEntityClient
+  createEntityClient,
 } from "../src/create-entity-client";
 import { after, before, describe, it } from "mocha";
 
 const url = "mongodb://localhost:27017";
+const dbName = "phenyl-mongodb-test";
 
 describe("Merge Operations", () => {
   let conn: MongoDbConnection;
@@ -18,9 +20,9 @@ describe("Merge Operations", () => {
   let versionId: string;
 
   before(async () => {
-    conn = await connect(url, "phenyl-mongodb-test");
+    conn = await connect(url, dbName);
     entityClient = createEntityClient(conn, {
-      validatePushCommand: () => true
+      validatePushCommand: () => true,
     });
   });
 
@@ -35,38 +37,38 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
       const ope = {
         $push: {
-          hobbies: "JavaScript"
-        }
+          hobbies: "JavaScript",
+        },
       };
       await entityClient.push({
         entityName: "user",
         id: generatedId,
         operations: [ope],
-        versionId
+        versionId,
       });
 
       const updatedResult = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert.deepStrictEqual(updatedResult.entity.hobbies, [
         "play baseball",
-        "JavaScript"
+        "JavaScript",
       ]);
     });
 
     it("should succeed when conflicted operations with set and push", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
-        value: { name: "Jone", hobbies: ["play baseball"] }
+        value: { name: "Jone", hobbies: ["play baseball"] },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -76,23 +78,23 @@ describe("Merge Operations", () => {
         id: generatedId,
         operations: [
           { $set: { name: "Alpha", hobbies: ["TypeScript"] } },
-          { $push: { hobbies: "JavaScript" } }
+          { $push: { hobbies: "JavaScript" } },
         ],
-        versionId
+        versionId,
       });
 
       const updatedEntity = await entityClient.findOne({
         entityName: "user",
         where: {
-          id: generatedId
-        }
+          id: generatedId,
+        },
       });
 
       assert.strictEqual(updatedEntity.entity.id, generatedId);
       assert.strictEqual(updatedEntity.entity.name, "Alpha");
       assert.deepStrictEqual(updatedEntity.entity.hobbies, [
         "TypeScript",
-        "JavaScript"
+        "JavaScript",
       ]);
     });
 
@@ -101,8 +103,8 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -110,15 +112,15 @@ describe("Merge Operations", () => {
       const manyOpesA = new Array(10000).fill(0).map((_, index) => {
         return {
           $push: {
-            hobbies: "A" + index
-          }
+            hobbies: "A" + index,
+          },
         };
       });
       const manyOpesB = new Array(10000).fill(0).map((_, index) => {
         return {
           $push: {
-            hobbies: "B" + index
-          }
+            hobbies: "B" + index,
+          },
         };
       });
 
@@ -127,14 +129,14 @@ describe("Merge Operations", () => {
         entityName: "user",
         id: generatedId,
         operations: manyOpesA,
-        versionId
+        versionId,
       });
 
       const pushB = entityClient.push({
         entityName: "user",
         id: generatedId,
         operations: manyOpesB,
-        versionId
+        versionId,
       });
 
       await assert.rejects(
@@ -149,8 +151,8 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -158,8 +160,8 @@ describe("Merge Operations", () => {
         { $push: { hobbies: "JavaScript" } }, // -> should clear because of rollback
         {
           $set: { name: "Alpha", hobbies: ["TypeScript"] },
-          $push: { hobbies: [] }
-        } // -> same key operation at once is invalid
+          $push: { hobbies: [] },
+        }, // -> same key operation at once is invalid
       ];
 
       const error = await entityClient
@@ -167,9 +169,9 @@ describe("Merge Operations", () => {
           entityName: "user",
           id: generatedId,
           operations: ops,
-          versionId
+          versionId,
         })
-        .catch(e => e);
+        .catch((e) => e);
 
       // throw error
       assert.strictEqual(error.name, "MongoError");
@@ -180,12 +182,12 @@ describe("Merge Operations", () => {
 
       const rollbackedResult = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       // Rollback to initial inserted entity
       assert.deepStrictEqual(rollbackedResult.entity.hobbies, [
-        "play baseball"
+        "play baseball",
       ]);
     });
     it("should succeed when the clientHeadVersionId behind from DB client versionId", async () => {
@@ -193,8 +195,8 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -205,7 +207,7 @@ describe("Merge Operations", () => {
         entityName: "user",
         id: generatedId,
         operations: ops,
-        versionId
+        versionId,
       });
 
       // update by 1 commit behind from DB HEAD
@@ -214,19 +216,92 @@ describe("Merge Operations", () => {
         entityName: "user",
         id: generatedId,
         operations: ops2,
-        versionId
+        versionId,
       });
 
       const update2Result = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert.deepStrictEqual(update2Result.entity.hobbies, [
         "play baseball",
         "JavaScript",
-        "TypeScript"
+        "TypeScript",
       ]);
+    });
+    describe("mongodb document validation", () => {
+      let client: MongoClient;
+      let db: Db;
+      const collectionName = "user";
+      before(async () => {
+        client = new MongoClient(url, { useUnifiedTopology: true });
+        await client.connect();
+        db = client.db(dbName);
+        const collections = await db.collections();
+        const collectionNames = collections.map((col) => col.collectionName);
+
+        if (!collectionNames.includes(collectionName)) {
+          await db.createCollection(collectionName);
+        }
+        await db.command({
+          collMod: collectionName,
+          validator: {
+            $jsonSchema: {
+              type: "object",
+              properties: {
+                _id: { type: "string" },
+                name: { type: "string" },
+                hobbies: { type: "array", items: { type: "string" } },
+                _PhenylMeta: { type: "object", additionalProperties: true },
+              },
+              required: ["name"],
+              additionalProperties: false,
+            },
+          },
+        });
+      });
+      after(async () => {
+        await db.dropCollection(collectionName);
+        await db.createCollection(collectionName);
+        await client.close();
+      });
+      it("should rollback successfully when push failed with document validation", async () => {
+        const result = await entityClient.insertAndGet({
+          entityName: "user",
+          value: {
+            id: "foo",
+            name: "John",
+            hobbies: ["play baseball"],
+          },
+        });
+        generatedId = result.entity.id;
+        versionId = result.versionId;
+
+        const ops = [
+          // Valid operation
+          { $set: { name: "Foo" } },
+          // Invalid operation
+          { $set: { hobbies: [1] } },
+        ];
+        const error = await entityClient
+          .push({
+            entityName: "user",
+            id: generatedId,
+            operations: ops,
+            versionId,
+          })
+          .catch((e) => e);
+        assert.deepStrictEqual(error.name, "MongoError");
+        assert.deepStrictEqual(error.errmsg, "Document failed validation");
+
+        const rollbackedResult = await client
+          .db(dbName)
+          .collection("user")
+          .findOne({ _id: generatedId });
+        assert.deepStrictEqual(rollbackedResult.name, "John");
+        assert.deepStrictEqual(rollbackedResult._PhenylMeta.locked, undefined);
+      });
     });
   });
 });
