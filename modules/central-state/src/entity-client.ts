@@ -28,7 +28,7 @@ import {
   SingleInsertCommandResult,
   SingleQueryResult,
   WhereQuery,
-  GeneralAuthCommandMap
+  GeneralAuthCommandMap,
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation, mergeUpdateOperations } from "sp2";
@@ -40,7 +40,7 @@ export type PhenylEntityClientOptions<M extends GeneralEntityMap> = {
 };
 
 async function wait(msec: number): Promise<void> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(resolve, msec);
   });
 }
@@ -145,7 +145,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     const { versionId, entityName, id } = query;
     const entity = (await this.dbClient.get({
       entityName,
-      id
+      id,
     })) as EntityWithMetaInfo<M[EN]>;
 
     return Versioning.createPullQueryResult(entity, versionId);
@@ -182,7 +182,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     const entity = (await this.dbClient.insertAndGet({
       entityName,
       // @ts-ignore value has MetaInfo
-      value: valueWithMeta
+      value: valueWithMeta,
     })) as EntityWithMetaInfo<M[EN]>;
     return Versioning.createGetCommandResult(entity);
   }
@@ -194,13 +194,13 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     command: MultiInsertCommand<EN, PreEntity<M[EN]>>
   ): Promise<MultiValuesCommandResult<M[EN]>> {
     const { entityName, values } = command;
-    const valuesWithMeta = values.map(value =>
+    const valuesWithMeta = values.map((value) =>
       Versioning.attachMetaInfoToNewEntity(value)
     );
     const entities = (await this.dbClient.insertAndGetMulti({
       entityName,
       // @ts-ignore valuesWithMeta is compatible with ProEntity[]
-      values: valuesWithMeta
+      values: valuesWithMeta,
     })) as EntityWithMetaInfo<M[EN]>[];
     return Versioning.createMultiValuesCommandResult(entities);
   }
@@ -215,7 +215,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     return {
       n: 1,
       prevVersionId: result.prevVersionId,
-      versionId: result.versionId
+      versionId: result.versionId,
     };
   }
 
@@ -230,7 +230,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     return {
       n: result.n,
       prevVersionsById: result.prevVersionsById,
-      versionsById: result.versionsById
+      versionsById: result.versionsById,
     };
   }
 
@@ -299,7 +299,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
             operation: mergeUpdateOperations(
               operations[0],
               transactionEndOperation
-            )
+            ),
           }
         );
         const updatedEntity = (await this.dbClient.updateAndGet(
@@ -308,7 +308,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
         return Versioning.createPushCommandResult({
           entity,
           updatedEntity,
-          versionId
+          versionId,
         });
       }
 
@@ -318,7 +318,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
           Versioning.attachMetaInfoToUpdateCommand({
             entityName,
             id,
-            operation
+            operation,
           })
         );
       }
@@ -329,7 +329,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
       await this.dbClient.updateById({
         entityName,
         id,
-        operation: Versioning.createEndTransactionOperation()
+        operation: Versioning.createEndTransactionOperation(),
       });
       throw e;
     }
@@ -338,12 +338,12 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     const updatedEntity = (await this.dbClient.updateAndGet({
       entityName,
       id,
-      operation: transactionEndOperation
+      operation: transactionEndOperation,
     })) as EntityWithMetaInfo<M[EN]>;
     return Versioning.createPushCommandResult({
       entity,
       updatedEntity,
-      versionId
+      versionId,
     });
   }
 
@@ -393,7 +393,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
             entityName,
             id,
             operation: transactionStartOperation,
-            filter: { "_PhenylMeta.locked": { $exists: false } }
+            filter: { "_PhenylMeta.locked": { $exists: false } },
           })) as EntityWithMetaInfo<M[EN]>;
           return { isSucceeded: true, result: lockedEntity };
         } catch {

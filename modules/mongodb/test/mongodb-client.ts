@@ -1,16 +1,22 @@
-import { it, describe } from "mocha";
+import { after, before, describe, it } from "mocha";
 import { ObjectId } from "bson";
 import assert from "assert";
 import { FindOperation } from "sp2";
-import { filterFindOperation, filterInputEntity } from "../src/mongodb-client";
+import { MongoClient } from "mongodb";
+import {
+  filterFindOperation,
+  filterInputEntity,
+  PhenylMongoDbClient,
+} from "../src/mongodb-client";
+import { connect, MongoDbConnection } from "../src/connection";
 
 describe("filterFindOperation", () => {
   it("renames id to _id", () => {
     const input: FindOperation = {
-      $and: [{ id: "abc" }, { type: "bar" }]
+      $and: [{ id: "abc" }, { type: "bar" }],
     };
     const expected = {
-      $and: [{ _id: { $eq: "abc" } }, { type: { $eq: "bar" } }]
+      $and: [{ _id: { $eq: "abc" } }, { type: { $eq: "bar" } }],
     };
     const actual = filterFindOperation(input);
     assert.deepStrictEqual(actual, expected);
@@ -24,8 +30,8 @@ describe("filterFindOperation", () => {
         { "values[12].test": { $eq: "fizzBuzz" } },
         { "values[123].test": { $regex: /zz/ } },
         { "values[1234].test": { $in: ["fizz", "buzz"] } },
-        { type: "bar" }
-      ]
+        { type: "bar" },
+      ],
     };
     const expected = {
       $and: [
@@ -34,8 +40,8 @@ describe("filterFindOperation", () => {
         { "values.12.test": { $eq: "fizzBuzz" } },
         { "values.123.test": { $regex: /zz/ } },
         { "values.1234.test": { $in: ["fizz", "buzz"] } },
-        { type: { $eq: "bar" } }
-      ]
+        { type: { $eq: "bar" } },
+      ],
     };
     const actual = filterFindOperation(input);
     assert.deepStrictEqual(actual, expected);
@@ -55,9 +61,9 @@ describe("filterFindOperation", () => {
         { id: { $eq: "000000000011111111112222" } },
         { id: { $not: { $eq: "000000000011111111112222" } } },
         {
-          id: { $in: ["000000000011111111112222", "000000000011111111113333"] }
-        }
-      ]
+          id: { $in: ["000000000011111111112222", "000000000011111111113333"] },
+        },
+      ],
     };
     const expected = {
       $and: [
@@ -72,11 +78,11 @@ describe("filterFindOperation", () => {
           _id: {
             $in: [
               new ObjectId("000000000011111111112222"),
-              new ObjectId("000000000011111111113333")
-            ]
-          }
-        }
-      ]
+              new ObjectId("000000000011111111113333"),
+            ],
+          },
+        },
+      ],
     };
     const actual = filterFindOperation(input);
     assert.deepStrictEqual(actual, expected);
@@ -87,11 +93,11 @@ describe("filterInputEntity", () => {
   it("renames id to _id", () => {
     const input = {
       id: "123",
-      attr: "bar"
+      attr: "bar",
     };
     const expected = {
       _id: "123",
-      attr: "bar"
+      attr: "bar",
     };
     const actual = filterInputEntity(input);
     assert.deepStrictEqual(actual, expected);
@@ -100,13 +106,66 @@ describe("filterInputEntity", () => {
   it("converts id to ObjectId", () => {
     const input = {
       id: "000123456789abcdefabcdef",
-      attr: "bar"
+      attr: "bar",
     };
     const expected = {
       _id: new ObjectId("000123456789abcdefabcdef"),
-      attr: "bar"
+      attr: "bar",
     };
     const actual = filterInputEntity(input);
     assert.deepStrictEqual(actual, expected);
+  });
+});
+
+describe("MongodbClient", () => {
+  const url = "mongodb://localhost:27017";
+  const dbName = "phenyl-mongodb-test";
+  const entityName = "user";
+  let phenylMongodbClient: PhenylMongoDbClient<{
+    user: { id: string; name: string; hobbies: string[] };
+  }>;
+  let mongoClient: MongoClient;
+  let conn: MongoDbConnection;
+  before(async () => {
+    conn = await connect(url, dbName);
+    phenylMongodbClient = new PhenylMongoDbClient(conn);
+    mongoClient = new MongoClient(url, { useUnifiedTopology: true });
+    await mongoClient.connect();
+  });
+
+  after(async () => {
+    await phenylMongodbClient.delete({ entityName: "user", where: {} });
+    conn.close();
+    mongoClient.close();
+  });
+
+  describe("replceOne", () => {
+    it("sould replace id to _id if entity has id property", async () => {
+      await phenylMongodbClient.insertAndGet({
+        entityName,
+        value: {
+          id: "foo",
+          name: "Jone",
+          hobbies: ["play baseball"],
+        },
+      });
+      await phenylMongodbClient.replaceOne({
+        id: "foo",
+        entityName,
+        entity: {
+          id: "foo",
+          name: "Abraham",
+          hobbies: ["play soccer"],
+        },
+      });
+      const result = await mongoClient
+        .db(dbName)
+        .collection(entityName)
+        .findOne({ _id: "foo" });
+      assert.deepStrictEqual(result._id, "foo");
+      assert.deepStrictEqual(result.id, undefined);
+      assert.deepStrictEqual(result.name, "Abraham");
+      assert.deepStrictEqual(result.hobbies, ["play soccer"]);
+    });
   });
 });
