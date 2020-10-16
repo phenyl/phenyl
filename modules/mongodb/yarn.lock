@@ -2,36 +2,36 @@
 # yarn lockfile v1
 
 
-"@phenyl/central-state@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-3.0.0.tgz#2682e5a0a698005f063b22b81b75bc5fbf066530"
-  integrity sha512-9sth2kBH4Q0qbljEiaOialJ//QcElDOuZ9F+j6qX+LvZ7+8VpMex/5ncYkEQhgiXP8E9nn22C/lbcXzKX0TKBg==
+"@phenyl/central-state@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.0.tgz#e5d8921ca6f8f3a7ce421268cce4cf0387fd42b7"
+  integrity sha512-QqfCF6Atco4SzrJvt9pzaMF/X8dKyRZduk/lmuBPKrRrCmyx+BvNDp9/JnyVIcp/r5HQkikyvrnPy3AzRT1l/A==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
     sp2 "^1.6.3"
 
-"@phenyl/interfaces@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-3.0.0.tgz#0a4356aac1fe9f04e3d7fcb345984b4d7c61b55d"
-  integrity sha512-89829GuPFV0C9VQA9g7M25UFGjlvBIpESNdmMv7b8fhrascWo/CmDgwoNfLkudg3sdo4vANcK9w8+2A6pG72SA==
+"@phenyl/interfaces@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.0.tgz#c18e53249c338b02335e19c5d16dbb2a396ccb7d"
+  integrity sha512-i2+56zk/LBSTGu+WaB0+C8gEiUmmQYnq7YG7ySVHXRjLSso3gsHj4BKdCjSXiCUCOAJJRo6B4ml078Dc3HGPVg==
   dependencies:
     sp2 "^1.6.3"
 
-"@phenyl/rest-api@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-3.0.0.tgz#90b943adc448c6bff64162fbe0e8febb590ad696"
-  integrity sha512-rDxU9rDn7FBqewgDmua9DC2N6whAJkLxqbUsmUYTb9gTFDFjsmR8vlfy7hhI23WZZBS3YuyJU3PPvgZKldCdhw==
+"@phenyl/rest-api@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.0.tgz#ab94cfb9ca6b515a24746619f5e8df3302b571c0"
+  integrity sha512-UkBYt3VCKuBy116QzxIdYPHJpdt7/hdLb++mgVW6+/rZhwSOAkmGRLjOgDeG8XYLd419WaDJ+fjId+M/5mpxvg==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
 
-"@phenyl/utils@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-3.0.0.tgz#f747cc69c37cdc5a3878345aab355b0b2d2f7ff0"
-  integrity sha512-2VfsuHRNguUMEHFWo9yBn98fSDCWicA3I2QEy44dg65MY5b3Df8HN/keanm8zIRov89eq8UpfYEmeTr+3wq5JA==
+"@phenyl/utils@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.0.tgz#fad06f04e9d4f475114ca9bd6b5568c78c5b5fa0"
+  integrity sha512-oj1Lu3+HPBNmipWAjfwep5OFkZ+LeA6949p4adBPPVl4+7y1RjjjnEMcLhfR6UY19Len3XBwQfYvsWT0aQesLA==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
     sp2 "^1.6.3"
 
 "@sp2/format@^1.6.3":
@@ -102,17 +102,10 @@ buffer@^5.1.0:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
 
-es6-promise@^4.0.3:
-  version "4.2.8"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
-  integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
-
-es6-promisify@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/es6-promisify/-/es6-promisify-5.0.0.tgz#5109d62f3e56ea967c4b63505aef08291c8a5203"
-  integrity sha1-UQnWLz5W6pZ8S2NQWu8IKRyKUgM=
-  dependencies:
-    es6-promise "^4.0.3"
+es6-promisify@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/es6-promisify/-/es6-promisify-6.1.1.tgz#46837651b7b06bf6fff893d03f29393668d01621"
+  integrity sha512-HBL8I3mIki5C1Cc9QjKUenHtnG0A5/xA8Q/AllRcfiwl2CZFXGK7ddBiCoRwAix4i2KxcQfjtIVcrVbB3vbmwg==
 
 fast-deep-equal@^3.0.0:
   version "3.1.1"
