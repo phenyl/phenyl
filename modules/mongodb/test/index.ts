@@ -51,9 +51,8 @@ describe("MongoDBEntityClient", () => {
 
       assert(result.entity.id);
 
-      const users = await conn.collection("user").find();
+      const users = await conn.collection("user").find().toArray();
       const objectID = new ObjectId(result.entity.id);
-      // @ts-ignore
       assert(objectID.equals(users[0]._id));
 
       generatedId = result.entity.id;
@@ -66,7 +65,10 @@ describe("MongoDBEntityClient", () => {
           value: { id: "jane", name: "Jane" },
         });
 
-        const users: any = await conn.collection("user").find({ _id: "jane" });
+        const users = await conn
+          .collection("user")
+          .find({ _id: "jane" })
+          .toArray();
         assert(users[0]._id === "jane");
       });
 
@@ -78,9 +80,11 @@ describe("MongoDBEntityClient", () => {
 
         assert(result.entity.id === HEX_24_ID);
 
-        const users = await conn.collection("user").find({ name: "Jesse" });
+        const users = await conn
+          .collection("user")
+          .find({ name: "Jesse" })
+          .toArray();
         const objectID = new ObjectId(HEX_24_ID);
-        // @ts-ignore
         assert(objectID.equals(users[0]._id));
       });
     });

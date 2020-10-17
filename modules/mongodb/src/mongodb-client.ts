@@ -8,11 +8,6 @@ import {
   visitFindOperation,
 } from "sp2";
 import {
-  ChangeStream,
-  ChangeStreamOptions,
-  ChangeStreamPipeline,
-} from "./change-stream";
-import {
   DbClient,
   DeleteCommand,
   Entity,
@@ -33,7 +28,7 @@ import {
 import { MongoDbConnection } from "./connection";
 import { ObjectId } from "bson";
 import { createServerError } from "@phenyl/utils";
-import mongodb from "mongodb";
+import mongodb, { ChangeStreamOptions, ChangeStream } from "mongodb";
 
 // TODO: Remove `id` prop
 type MongoEntity<E extends Entity> = E & { _id: string };
@@ -116,11 +111,12 @@ function replaceIdInto_idInEntity<E extends Entity>(entity: E): MongoEntity<E> {
 export function filterInputEntity<E extends PreEntity<Entity>>(
   srcEntity: E
 ): E {
-  return [
-    convertIdToObjectIdInEntity,
-    replaceIdInto_idInEntity,
-    // @ts-ignore @TODO
-  ].reduce((entity: Entity, filterFunc) => filterFunc(entity), srcEntity);
+  // @ts-ignore
+  return [convertIdToObjectIdInEntity, replaceIdInto_idInEntity].reduce(
+    (entity: Entity, filterFunc) => filterFunc(entity),
+    // @ts-ignore
+    srcEntity
+  );
 }
 
 function isObjectId(id: any): id is ObjectId {
@@ -168,8 +164,9 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     if (limit) options.limit = limit;
     if (sort) options.sort = sort;
 
-    const result = await coll.find(filterFindOperation(where), options);
-    // @ts-ignore #278
+    const result = await coll
+      .find(filterFindOperation(where), options)
+      .toArray();
     return result.map(restoreIdInEntity);
   }
 
@@ -181,7 +178,9 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const options: FindOperation = { limit: 1 };
     if (skip) options.skip = skip;
     if (sort) options.sort = sort;
-    const result = await coll.find(filterFindOperation(where), options);
+    const result = await coll
+      .find(filterFindOperation(where), options)
+      .toArray();
     if (result.length === 0) {
       throw createServerError("findOne()", "NotFound");
     }
@@ -193,7 +192,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const { entityName, id } = query;
     const coll = this.conn.collection(entityName);
     // @ts-ignore TODO: prepare new type: MongoSimpleFindOperation
-    const result = await coll.find({ _id: createObjectId(id) });
+    const result = await coll.find({ _id: createObjectId(id) }).toArray();
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#get()" failed. Could not find any entity with the given query.',
@@ -208,9 +207,11 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
   ): Promise<Array<EntityOf<M, E>>> {
     const { entityName, ids } = query;
     const coll = this.conn.collection(entityName);
-    const result = await coll.find({
-      _id: { $in: ids.map(createObjectId) },
-    });
+    const result = await coll
+      .find({
+        _id: { $in: ids.map(createObjectId) },
+      })
+      .toArray();
     if (result.length === 0) {
       throw createServerError(
         '"PhenylMongodbClient#getByIds()" failed. Could not find any entity with the given query.',
@@ -246,6 +247,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const coll = this.conn.collection(entityName);
     const result = await coll.insertOne(filterInputEntity(command.value));
     // TODO transactional operation needed
+    // @ts-ignore
     return this.get({ entityName, id: result.insertedId });
   }
 
@@ -256,6 +258,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const coll = this.conn.collection(entityName);
 
     const result = await coll.insertMany(command.values.map(filterInputEntity));
+    // @ts-ignore
     const ids: string[] = Object.values(result.insertedIds);
     // TODO: transactional operation needed
     return this.getByIds({ entityName, ids });
@@ -370,7 +373,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
 
   watch<N extends Key<M>>(
     entityName: N,
-    pipeline?: ChangeStreamPipeline,
+    pipeline?: object[],
     options?: ChangeStreamOptions
   ): ChangeStream {
     return this.conn.collection(entityName).watch(pipeline, options);
