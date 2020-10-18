@@ -2,104 +2,104 @@
 # yarn lockfile v1
 
 
-"@phenyl/api-explorer-client@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/api-explorer-client/-/api-explorer-client-3.0.0.tgz#be2f13c205d8a1dc0fbd677e19483b18171519b7"
-  integrity sha512-7FFZknWYixQz+8Ou/lx3scxweo5Def3gc0V43Riu1KRqCB0VBV4c7a9Drezqw3P0VtlxuM0JJyrS9n2HaXBLMA==
+"@phenyl/api-explorer-client@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/api-explorer-client/-/api-explorer-client-4.0.0.tgz#950539680a511186e51c88d8a8010171f2ce9b2a"
+  integrity sha512-QGvfEQcCu0iSVlD4v2UEV7q4Wjt7/AgqiLvYHKBz1PCS2g71kyNqdgTXNI6ljh1rcDyfrGEOA7aUMHL8wcckVw==
 
-"@phenyl/central-state@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-3.0.0.tgz#2682e5a0a698005f063b22b81b75bc5fbf066530"
-  integrity sha512-9sth2kBH4Q0qbljEiaOialJ//QcElDOuZ9F+j6qX+LvZ7+8VpMex/5ncYkEQhgiXP8E9nn22C/lbcXzKX0TKBg==
+"@phenyl/central-state@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.0.tgz#e5d8921ca6f8f3a7ce421268cce4cf0387fd42b7"
+  integrity sha512-QqfCF6Atco4SzrJvt9pzaMF/X8dKyRZduk/lmuBPKrRrCmyx+BvNDp9/JnyVIcp/r5HQkikyvrnPy3AzRT1l/A==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
     sp2 "^1.6.3"
 
-"@phenyl/http-client@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-3.0.0.tgz#a060b390afa8831ff2e2655757e5b2a127f1ee4c"
-  integrity sha512-Pv8lMYjWiRLUVTXDB8mRMflSQ9oJ/JqK+yp8uNaSb6hKCsZikx0NuiEeE86JP8Se3Ni5XXN0hEe/6C4quzA4yA==
+"@phenyl/http-client@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.0.0.tgz#bf30b9142088358b68ecff6b8afb4b7eac6e9a30"
+  integrity sha512-wSJ2bbcQ+UuM1yLzsAdq2ytMIRp7YD1Ep+qqf1L3OcBCFlPzajjL5QKh32p4MRstSG9lfhRR5g4o7UXtSzPJ/g==
   dependencies:
-    "@phenyl/http-rules" "^3.0.0"
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/http-rules" "^4.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
     cross-fetch "^3.0.2"
 
-"@phenyl/http-rules@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-3.0.0.tgz#a3318c496cd7a830f9917fbe651b666d0d061a53"
-  integrity sha512-lWepaqK2AgGHjiC++5RQUHpuU0W1X+RtqYNzLFloCcO9JgOS63Zi4kNpdgAH/T9rFPkw3p/0cOPhYhpuexpcjQ==
+"@phenyl/http-rules@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.0.0.tgz#601a41a80b88ee860cb46b8b4d96ff85e482702a"
+  integrity sha512-mobib/3A/LGiUM5AaZICflAnKGYuRUjG6fAcS+n0vZm9hHzLyCeu0vH+8UXrQ0iNRFBg8omYTQu8eKLbo45vWw==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
 
-"@phenyl/http-server@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-server/-/http-server-3.0.0.tgz#09ed51f85e47c5af94473c44d21a1f476cca6d19"
-  integrity sha512-p5vdpucFeJc6IKlrWZFeV3XjfFUx2iYbhfeWmOKIOiSJ9diu8T1xQrlPnSL/lQz9nvJf215BTau22NuXJMrJZA==
+"@phenyl/http-server@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-server/-/http-server-4.0.0.tgz#41bf19b717080c00a212fb7b1556f83b928d6c89"
+  integrity sha512-UiDXwOxHcAdshh+Bq/hJp4L1oei2Bkl2uisoPjK9Kcrq6XIXrM5EJWAedlqAx1+nqSiYPYwKb74PXz/B8wuGJw==
   dependencies:
-    "@phenyl/http-rules" "^3.0.0"
-    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/http-rules" "^4.0.0"
+    "@phenyl/interfaces" "^4.0.0"
 
-"@phenyl/interfaces@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-3.0.0.tgz#0a4356aac1fe9f04e3d7fcb345984b4d7c61b55d"
-  integrity sha512-89829GuPFV0C9VQA9g7M25UFGjlvBIpESNdmMv7b8fhrascWo/CmDgwoNfLkudg3sdo4vANcK9w8+2A6pG72SA==
+"@phenyl/interfaces@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.0.tgz#c18e53249c338b02335e19c5d16dbb2a396ccb7d"
+  integrity sha512-i2+56zk/LBSTGu+WaB0+C8gEiUmmQYnq7YG7ySVHXRjLSso3gsHj4BKdCjSXiCUCOAJJRo6B4ml078Dc3HGPVg==
   dependencies:
     sp2 "^1.6.3"
 
-"@phenyl/lambda-adapter@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/lambda-adapter/-/lambda-adapter-3.0.0.tgz#38b14527e137ac7a88a58b6e9b748ae8501c6f58"
-  integrity sha512-wAXpe0irP/jOE0kBQubVegZTcPREA3DNZ1VcrvdNR5fxd2q7+WJ/uqBUSmytch5FZoUu16bf1LiPun+fJIjziQ==
+"@phenyl/lambda-adapter@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/lambda-adapter/-/lambda-adapter-4.0.0.tgz#e095320deb10554fb045d32f4d2d39a86b16717e"
+  integrity sha512-CvQOSYSTMfomNmyIZxxiMlnYdlR8IvqTqpsfWdnnJCBj/Yx4uACdbR+n7aJ6CY+bAVnZE7HadM7hKatDe+NRYA==
   dependencies:
-    "@phenyl/http-rules" "^3.0.0"
-    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/http-rules" "^4.0.0"
+    "@phenyl/interfaces" "^4.0.0"
 
-"@phenyl/memory-db@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-3.0.0.tgz#2871e5431cb5ad704a39acd38da17a9a57917d05"
-  integrity sha512-S0izdNFZoLaXc88UF+SVX4NUgGKHhrnds8qRB67HCbmjVcO+fU+qYhzH6s5UP8OEfd3AtkQg3DFXdeKJXJDR+g==
+"@phenyl/memory-db@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-4.0.0.tgz#584ca8f1d7809d86a24014d76c9ecc8cce8a84f8"
+  integrity sha512-eutb/ZjxPTrCq4e2HcVQEWYXSF9JQ66IAzzvXSAkseNZ0BIxKfs0Hvhb6rwK+69JaYdCWMrj0+d0RGfRr3genA==
   dependencies:
-    "@phenyl/central-state" "^3.0.0"
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/state" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/central-state" "^4.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/state" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
     sp2 "^1.6.3"
 
-"@phenyl/rest-api@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-3.0.0.tgz#90b943adc448c6bff64162fbe0e8febb590ad696"
-  integrity sha512-rDxU9rDn7FBqewgDmua9DC2N6whAJkLxqbUsmUYTb9gTFDFjsmR8vlfy7hhI23WZZBS3YuyJU3PPvgZKldCdhw==
+"@phenyl/rest-api@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.0.tgz#ab94cfb9ca6b515a24746619f5e8df3302b571c0"
+  integrity sha512-UkBYt3VCKuBy116QzxIdYPHJpdt7/hdLb++mgVW6+/rZhwSOAkmGRLjOgDeG8XYLd419WaDJ+fjId+M/5mpxvg==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
 
-"@phenyl/standards@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/standards/-/standards-3.0.0.tgz#27a66f103cf34356b5deaf3865f51e42291cc927"
-  integrity sha512-SXXyaDFenP/rXpBzLgqETal7Zxw24PM071CWDVNgyhg5hHlKhCdY9N/+YIl3TRHzqX7YtnNtJ2LCp03fqvgSbw==
+"@phenyl/standards@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/standards/-/standards-4.0.0.tgz#9d64da64e827dcedbae32fc392a6afa3994d735b"
+  integrity sha512-91Zwn2AYGUsUZkuK1HW80y4cKchtzK4vLd+qrQd8mX1BnZ/Q3Q/x3vGYrL9k9S8aco6hd7D668xKL61kY9jDOA==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
-    "@phenyl/utils" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
+    "@phenyl/utils" "^4.0.0"
     power-crypt "0.2.2"
     sp2 "1.6.3"
 
-"@phenyl/state@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-3.0.0.tgz#82e67def5f19485e4a50653c2f248c23004f14f2"
-  integrity sha512-hU9LiWMO/KbGJDoiOZa3d+oGNI0Pg93IIFXyehh4NW+JMZEfAMcdLfxbk+rjkFCJ50D7aAoeJ8iVgf0dLw89lA==
+"@phenyl/state@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-4.0.0.tgz#594725ff84822e8e43f9f8689eb359caaede3a22"
+  integrity sha512-1ov9wl9C6R9rUIYVvXAeGLvbwDi9hJwYiP9xNbFYUm9auZaS/YJx8azKDlixUfGq/QLSCLe8yKaV5+j05CTbQA==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
     sp2 "^1.6.3"
 
-"@phenyl/utils@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-3.0.0.tgz#f747cc69c37cdc5a3878345aab355b0b2d2f7ff0"
-  integrity sha512-2VfsuHRNguUMEHFWo9yBn98fSDCWicA3I2QEy44dg65MY5b3Df8HN/keanm8zIRov89eq8UpfYEmeTr+3wq5JA==
+"@phenyl/utils@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.0.tgz#fad06f04e9d4f475114ca9bd6b5568c78c5b5fa0"
+  integrity sha512-oj1Lu3+HPBNmipWAjfwep5OFkZ+LeA6949p4adBPPVl4+7y1RjjjnEMcLhfR6UY19Len3XBwQfYvsWT0aQesLA==
   dependencies:
-    "@phenyl/interfaces" "^3.0.0"
+    "@phenyl/interfaces" "^4.0.0"
     sp2 "^1.6.3"
 
 "@sindresorhus/is@^0.14.0":
@@ -736,10 +736,10 @@ node-fetch@2.6.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
-nodemon@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.4.tgz#55b09319eb488d6394aa9818148c0c2d1c04c416"
-  integrity sha512-Ltced+hIfTmaS28Zjv1BM552oQ3dbwPqI4+zI0SLgq+wpJhSyqgYude/aZa/3i31VCQWMfXJVxvu86abcam3uQ==
+nodemon@2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.5.tgz#df67fe1fd1312ddb0c1e393ae2cf55aacdcec2f3"
+  integrity sha512-6/jqtZvJdk092pVnD2AIH19KQ9GQZAKOZVy/yT1ueL6aoV+Ix7a1lVZStXzvEh0fP4zE41DDWlkVoHjR6WlozA==
   dependencies:
     chokidar "^3.2.2"
     debug "^3.2.6"
@@ -749,8 +749,8 @@ nodemon@2.0.4:
     semver "^5.7.1"
     supports-color "^5.5.0"
     touch "^3.1.0"
-    undefsafe "^2.0.2"
-    update-notifier "^4.0.0"
+    undefsafe "^2.0.3"
+    update-notifier "^4.1.0"
 
 nopt@~1.0.10:
   version "1.0.10"
@@ -1022,10 +1022,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-undefsafe@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/undefsafe/-/undefsafe-2.0.2.tgz#225f6b9e0337663e0d8e7cfd686fc2836ccace76"
-  integrity sha1-Il9rngM3Zj4Njnz9aG/Cg2zKznY=
+undefsafe@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/undefsafe/-/undefsafe-2.0.3.tgz#6b166e7094ad46313b2202da7ecc2cd7cc6e7aae"
+  integrity sha512-nrXZwwXrD/T/JXeygJqdCO6NZZ1L66HrxM/Z7mIq2oPanoN0F1nLx3lwJMu6AwJY69hdixaFQOuoYsMjE5/C2A==
   dependencies:
     debug "^2.2.0"
 
@@ -1043,10 +1043,10 @@ upbin@^0.9.2:
   dependencies:
     find-up "^4.0.0"
 
-update-notifier@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-4.1.0.tgz#4866b98c3bc5b5473c020b1250583628f9a328f3"
-  integrity sha512-w3doE1qtI0/ZmgeoDoARmI5fjDoT93IfKgEGqm26dGUOh8oNpaSTsGNdYRN/SjOuo10jcJGwkEL3mroKzktkew==
+update-notifier@^4.1.0:
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/update-notifier/-/update-notifier-4.1.3.tgz#be86ee13e8ce48fb50043ff72057b5bd598e1ea3"
+  integrity sha512-Yld6Z0RyCYGB6ckIjffGOSOmHXj1gMeE7aROz4MG+XMkmixBX4jUngrGXNYz7wPKBmtoD4MnBa2Anu7RSKht/A==
   dependencies:
     boxen "^4.2.0"
     chalk "^3.0.0"
