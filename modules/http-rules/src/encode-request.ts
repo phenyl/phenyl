@@ -1,7 +1,7 @@
 import {
   EncodedHttpRequest,
   GeneralRequestData,
-  QueryStringParams
+  QueryStringParams,
 } from "@phenyl/interfaces";
 
 import { assertValidRequestData } from "@phenyl/utils";
@@ -17,7 +17,7 @@ export default function encodeRequest(
   const headers: { [name: string]: string } =
     sessionId != null
       ? {
-          authorization: sessionId
+          authorization: sessionId,
         }
       : {};
   let data;
@@ -29,7 +29,7 @@ export default function encodeRequest(
         method: "GET",
         headers,
         path: addPrefix(`/${data.entityName}/find`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "findOne":
@@ -38,7 +38,7 @@ export default function encodeRequest(
         method: "GET",
         headers,
         path: addPrefix(`/${data.entityName}/findOne`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "get":
@@ -46,7 +46,7 @@ export default function encodeRequest(
       return {
         method: "GET",
         headers,
-        path: addPrefix(`/${data.entityName}/${data.id}`)
+        path: addPrefix(`/${data.entityName}/${data.id}`),
       };
 
     case "getByIds":
@@ -55,7 +55,7 @@ export default function encodeRequest(
         method: "GET",
         headers,
         path: addPrefix(`/${data.entityName}/getByIds`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "pull":
@@ -64,7 +64,7 @@ export default function encodeRequest(
         method: "GET",
         headers,
         path: addPrefix(`/${data.entityName}/pull`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "insertOne":
@@ -75,7 +75,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.entityName}/${reqData.method}`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "insertAndGet":
@@ -85,7 +85,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.entityName}/insertAndGet`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "insertAndGetMulti":
@@ -95,7 +95,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.entityName}/insertAndGetMulti`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "updateById":
@@ -105,7 +105,7 @@ export default function encodeRequest(
         method: "PUT",
         headers,
         path: addPrefix(`/${data.entityName}/updateById`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "updateMulti":
@@ -115,7 +115,7 @@ export default function encodeRequest(
         method: "PUT",
         headers,
         path: addPrefix(`/${data.entityName}/updateMulti`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "updateAndGet":
@@ -125,7 +125,7 @@ export default function encodeRequest(
         method: "PUT",
         headers,
         path: addPrefix(`/${data.entityName}/updateAndGet`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "updateAndFetch":
@@ -135,16 +135,17 @@ export default function encodeRequest(
         method: "PUT",
         headers,
         path: addPrefix(`/${data.entityName}/updateAndFetch`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "push":
       data = reqData.payload;
+      headers["Content-Type"] = "application/json";
       return {
         method: "PUT",
         headers,
         path: addPrefix(`/${data.entityName}/push`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "delete":
@@ -155,7 +156,7 @@ export default function encodeRequest(
         return {
           method: "DELETE",
           headers,
-          path: addPrefix(`/${data.entityName}/${(<{ id: string }>data).id}`)
+          path: addPrefix(`/${data.entityName}/${(<{ id: string }>data).id}`),
         };
       } // multi deletion
 
@@ -163,7 +164,7 @@ export default function encodeRequest(
         method: "DELETE",
         headers,
         path: addPrefix(`/${data.entityName}/delete`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "runCustomQuery":
@@ -172,7 +173,7 @@ export default function encodeRequest(
         method: "GET",
         headers,
         path: addPrefix(`/${data.name}`),
-        qsParams: createQsParams(data)
+        qsParams: createQsParams(data),
       };
 
     case "runCustomCommand":
@@ -182,7 +183,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.name}`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "login":
@@ -192,7 +193,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.entityName}/login`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     case "logout":
@@ -202,7 +203,7 @@ export default function encodeRequest(
         method: "POST",
         headers,
         path: addPrefix(`/${data.entityName}/logout`),
-        body: createBody(data)
+        body: createBody(data),
       };
 
     default:
@@ -224,7 +225,7 @@ function undefinedToNull(key: string, value: any): any {
 
 function createQsParams(data: Object): QueryStringParams {
   return {
-    d: JSON.stringify(data, undefinedToNull)
+    d: JSON.stringify(data, undefinedToNull),
   };
 }
 
