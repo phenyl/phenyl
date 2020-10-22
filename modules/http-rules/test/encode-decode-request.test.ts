@@ -80,7 +80,7 @@ describe("Check encode/decode deep equality: ", () => {
     assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
-  it("insertOne", () => {
+  describe("insertOne", () => {
     const reqData: GeneralRequestData = {
       method: "insertOne",
       payload: {
@@ -94,10 +94,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertMulti", () => {
+  describe("insertMulti", () => {
     const reqData: GeneralRequestData = {
       method: "insertMulti",
       payload: {
@@ -113,10 +119,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertAndGet", () => {
+  describe("insertAndGet", () => {
     const reqData: GeneralRequestData = {
       method: "insertAndGet",
       payload: {
@@ -130,10 +142,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertAndGetMulti", () => {
+  describe("insertAndGetMulti", () => {
     const reqData: GeneralRequestData = {
       method: "insertAndGetMulti",
       payload: {
@@ -153,10 +171,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateById", () => {
+  describe("updateById", () => {
     const reqData: GeneralRequestData = {
       method: "updateById",
       payload: {
@@ -172,10 +196,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateMulti", () => {
+  describe("updateMulti", () => {
     const reqData: GeneralRequestData = {
       method: "updateMulti",
       payload: {
@@ -193,10 +223,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateAndGet", () => {
+  describe("updateAndGet", () => {
     const reqData: GeneralRequestData = {
       method: "updateAndGet",
       payload: {
@@ -212,10 +248,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateAndFetch", () => {
+  describe("updateAndFetch", () => {
     const reqData: GeneralRequestData = {
       method: "updateAndFetch",
       payload: {
@@ -233,10 +275,16 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("push", () => {
+  describe("push", () => {
     const reqData: GeneralRequestData = {
       method: "push",
       payload: {
@@ -254,12 +302,16 @@ describe("Check encode/decode deep equality: ", () => {
       sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
-
-    assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
-
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
   it("delete", () => {
     const reqData: GeneralRequestData = {
@@ -305,7 +357,7 @@ describe("Check encode/decode deep equality: ", () => {
     const decodedReqData = decodeRequest(encodedHttpRequest);
     assert.deepStrictEqual(reqData, decodedReqData);
   });
-  it("runCustomCommand", () => {
+  describe("runCustomCommand", () => {
     const reqData: GeneralRequestData = {
       method: "runCustomCommand",
       payload: {
@@ -318,8 +370,14 @@ describe("Check encode/decode deep equality: ", () => {
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
   it("login", () => {
     const reqData: GeneralRequestData = {
