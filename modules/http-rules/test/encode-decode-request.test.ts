@@ -11,10 +11,10 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         entityName: "hospital",
         where: {
-          name: "Tokyo Hospital"
-        }
+          name: "Tokyo Hospital",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -27,10 +27,10 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         entityName: "hospital",
         where: {
-          name: "Tokyo Hospital"
-        }
+          name: "Tokyo Hospital",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -42,9 +42,9 @@ describe("Check encode/decode deep equality: ", () => {
       method: "get",
       payload: {
         entityName: "hospital",
-        id: "tokyo"
+        id: "tokyo",
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -56,9 +56,9 @@ describe("Check encode/decode deep equality: ", () => {
       method: "getByIds",
       payload: {
         entityName: "hospital",
-        ids: ["tokyo", "nagoya", "osaka"]
+        ids: ["tokyo", "nagoya", "osaka"],
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -71,33 +71,39 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         entityName: "hospital",
         id: "foo",
-        versionId: "abc123"
+        versionId: "abc123",
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
     assert.deepStrictEqual(decodedReqData, reqData);
     assert(decodedReqData.sessionId === "foobar");
   });
-  it("insertOne", () => {
+  describe("insertOne", () => {
     const reqData: GeneralRequestData = {
       method: "insertOne",
       payload: {
         entityName: "hospital",
         value: {
           name: "Tokyo Hospital",
-          address: "dummy-dummy"
-        }
+          address: "dummy-dummy",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertMulti", () => {
+  describe("insertMulti", () => {
     const reqData: GeneralRequestData = {
       method: "insertMulti",
       payload: {
@@ -105,35 +111,47 @@ describe("Check encode/decode deep equality: ", () => {
         values: [
           {
             name: "Tokyo Hospital",
-            address: "dummy-dummy"
-          }
-        ]
+            address: "dummy-dummy",
+          },
+        ],
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertAndGet", () => {
+  describe("insertAndGet", () => {
     const reqData: GeneralRequestData = {
       method: "insertAndGet",
       payload: {
         entityName: "hospital",
         value: {
           name: "Tokyo Hospital",
-          address: "dummy-dummy"
-        }
+          address: "dummy-dummy",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("insertAndGetMulti", () => {
+  describe("insertAndGetMulti", () => {
     const reqData: GeneralRequestData = {
       method: "insertAndGetMulti",
       payload: {
@@ -141,22 +159,28 @@ describe("Check encode/decode deep equality: ", () => {
         values: [
           {
             name: "Tokyo Hospital",
-            address: "dummy-dummy"
+            address: "dummy-dummy",
           },
           {
             name: "Nagoya Hospital",
-            address: "dummy-dummy-dummy"
-          }
-        ]
+            address: "dummy-dummy-dummy",
+          },
+        ],
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateById", () => {
+  describe("updateById", () => {
     const reqData: GeneralRequestData = {
       method: "updateById",
       payload: {
@@ -164,39 +188,51 @@ describe("Check encode/decode deep equality: ", () => {
         entityName: "hospital",
         operation: {
           $set: {
-            tel: "dummy"
-          }
-        }
+            tel: "dummy",
+          },
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateMulti", () => {
+  describe("updateMulti", () => {
     const reqData: GeneralRequestData = {
       method: "updateMulti",
       payload: {
         where: {
-          id: "tokyo"
+          id: "tokyo",
         },
         entityName: "hospital",
         operation: {
           $set: {
-            tel: "dummy"
-          }
-        }
+            tel: "dummy",
+          },
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateAndGet", () => {
+  describe("updateAndGet", () => {
     const reqData: GeneralRequestData = {
       method: "updateAndGet",
       payload: {
@@ -204,39 +240,51 @@ describe("Check encode/decode deep equality: ", () => {
         entityName: "hospital",
         operation: {
           $set: {
-            tel: "dummy"
-          }
-        }
+            tel: "dummy",
+          },
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("updateAndFetch", () => {
+  describe("updateAndFetch", () => {
     const reqData: GeneralRequestData = {
       method: "updateAndFetch",
       payload: {
         entityName: "hospital",
         where: {
-          name: "tokyo"
+          name: "tokyo",
         },
         operation: {
           $set: {
-            tel: "dummy"
-          }
-        }
+            tel: "dummy",
+          },
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
-  it("push", () => {
+  describe("push", () => {
     const reqData: GeneralRequestData = {
       method: "push",
       payload: {
@@ -246,17 +294,24 @@ describe("Check encode/decode deep equality: ", () => {
         operations: [
           {
             $set: {
-              tel: "dummy"
-            }
-          }
-        ]
+              tel: "dummy",
+            },
+          },
+        ],
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
   it("delete", () => {
     const reqData: GeneralRequestData = {
@@ -264,10 +319,10 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         entityName: "hospital",
         where: {
-          name: "tokyo"
-        }
+          name: "tokyo",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -280,10 +335,10 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         name: "is-occupied",
         params: {
-          email: "abc@example.com"
-        }
+          email: "abc@example.com",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -295,28 +350,34 @@ describe("Check encode/decode deep equality: ", () => {
       method: "runCustomQuery",
       payload: {
         name: "is-occupied",
-        params: {}
-      }
+        params: {},
+      },
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
     assert.deepStrictEqual(reqData, decodedReqData);
   });
-  it("runCustomCommand", () => {
+  describe("runCustomCommand", () => {
     const reqData: GeneralRequestData = {
       method: "runCustomCommand",
       payload: {
         name: "reset-password",
         params: {
-          email: "abc@example.com"
-        }
+          email: "abc@example.com",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
-    assert.deepStrictEqual(decodedReqData, reqData);
-    assert(decodedReqData.sessionId === "foobar");
+    it("has content-type in header", () => {
+      assert(encodedHttpRequest.headers["Content-Type"] === "application/json");
+    });
+
+    it("returns same request", () => {
+      assert.deepStrictEqual(decodedReqData, reqData);
+      assert(decodedReqData.sessionId === "foobar");
+    });
   });
   it("login", () => {
     const reqData: GeneralRequestData = {
@@ -325,10 +386,10 @@ describe("Check encode/decode deep equality: ", () => {
         entityName: "doctor",
         credentials: {
           email: "abc@example.com",
-          password: "dummy"
-        }
+          password: "dummy",
+        },
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
@@ -341,9 +402,9 @@ describe("Check encode/decode deep equality: ", () => {
       payload: {
         entityName: "doctor",
         sessionId: "foobar",
-        userId: "shinout"
+        userId: "shinout",
       },
-      sessionId: "foobar"
+      sessionId: "foobar",
     };
     const encodedHttpRequest = encodeRequest(reqData);
     const decodedReqData = decodeRequest(encodedHttpRequest);
