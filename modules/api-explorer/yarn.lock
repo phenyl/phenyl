@@ -2,132 +2,10 @@
 # yarn lockfile v1
 
 
-"@phenyl/api-explorer-client@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/api-explorer-client/-/api-explorer-client-4.0.0.tgz#950539680a511186e51c88d8a8010171f2ce9b2a"
-  integrity sha512-QGvfEQcCu0iSVlD4v2UEV7q4Wjt7/AgqiLvYHKBz1PCS2g71kyNqdgTXNI6ljh1rcDyfrGEOA7aUMHL8wcckVw==
-
-"@phenyl/central-state@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.0.tgz#e5d8921ca6f8f3a7ce421268cce4cf0387fd42b7"
-  integrity sha512-QqfCF6Atco4SzrJvt9pzaMF/X8dKyRZduk/lmuBPKrRrCmyx+BvNDp9/JnyVIcp/r5HQkikyvrnPy3AzRT1l/A==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-    sp2 "^1.6.3"
-
-"@phenyl/http-client@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.0.0.tgz#bf30b9142088358b68ecff6b8afb4b7eac6e9a30"
-  integrity sha512-wSJ2bbcQ+UuM1yLzsAdq2ytMIRp7YD1Ep+qqf1L3OcBCFlPzajjL5QKh32p4MRstSG9lfhRR5g4o7UXtSzPJ/g==
-  dependencies:
-    "@phenyl/http-rules" "^4.0.0"
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-    cross-fetch "^3.0.2"
-
-"@phenyl/http-rules@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.0.0.tgz#601a41a80b88ee860cb46b8b4d96ff85e482702a"
-  integrity sha512-mobib/3A/LGiUM5AaZICflAnKGYuRUjG6fAcS+n0vZm9hHzLyCeu0vH+8UXrQ0iNRFBg8omYTQu8eKLbo45vWw==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-
-"@phenyl/http-server@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-server/-/http-server-4.0.0.tgz#41bf19b717080c00a212fb7b1556f83b928d6c89"
-  integrity sha512-UiDXwOxHcAdshh+Bq/hJp4L1oei2Bkl2uisoPjK9Kcrq6XIXrM5EJWAedlqAx1+nqSiYPYwKb74PXz/B8wuGJw==
-  dependencies:
-    "@phenyl/http-rules" "^4.0.0"
-    "@phenyl/interfaces" "^4.0.0"
-
-"@phenyl/interfaces@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.0.tgz#c18e53249c338b02335e19c5d16dbb2a396ccb7d"
-  integrity sha512-i2+56zk/LBSTGu+WaB0+C8gEiUmmQYnq7YG7ySVHXRjLSso3gsHj4BKdCjSXiCUCOAJJRo6B4ml078Dc3HGPVg==
-  dependencies:
-    sp2 "^1.6.3"
-
-"@phenyl/lambda-adapter@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/lambda-adapter/-/lambda-adapter-4.0.0.tgz#e095320deb10554fb045d32f4d2d39a86b16717e"
-  integrity sha512-CvQOSYSTMfomNmyIZxxiMlnYdlR8IvqTqpsfWdnnJCBj/Yx4uACdbR+n7aJ6CY+bAVnZE7HadM7hKatDe+NRYA==
-  dependencies:
-    "@phenyl/http-rules" "^4.0.0"
-    "@phenyl/interfaces" "^4.0.0"
-
-"@phenyl/memory-db@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-4.0.0.tgz#584ca8f1d7809d86a24014d76c9ecc8cce8a84f8"
-  integrity sha512-eutb/ZjxPTrCq4e2HcVQEWYXSF9JQ66IAzzvXSAkseNZ0BIxKfs0Hvhb6rwK+69JaYdCWMrj0+d0RGfRr3genA==
-  dependencies:
-    "@phenyl/central-state" "^4.0.0"
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/state" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-    sp2 "^1.6.3"
-
-"@phenyl/rest-api@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.0.tgz#ab94cfb9ca6b515a24746619f5e8df3302b571c0"
-  integrity sha512-UkBYt3VCKuBy116QzxIdYPHJpdt7/hdLb++mgVW6+/rZhwSOAkmGRLjOgDeG8XYLd419WaDJ+fjId+M/5mpxvg==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-
-"@phenyl/standards@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/standards/-/standards-4.0.0.tgz#9d64da64e827dcedbae32fc392a6afa3994d735b"
-  integrity sha512-91Zwn2AYGUsUZkuK1HW80y4cKchtzK4vLd+qrQd8mX1BnZ/Q3Q/x3vGYrL9k9S8aco6hd7D668xKL61kY9jDOA==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    "@phenyl/utils" "^4.0.0"
-    power-crypt "0.2.2"
-    sp2 "1.6.3"
-
-"@phenyl/state@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-4.0.0.tgz#594725ff84822e8e43f9f8689eb359caaede3a22"
-  integrity sha512-1ov9wl9C6R9rUIYVvXAeGLvbwDi9hJwYiP9xNbFYUm9auZaS/YJx8azKDlixUfGq/QLSCLe8yKaV5+j05CTbQA==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    sp2 "^1.6.3"
-
-"@phenyl/utils@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.0.tgz#fad06f04e9d4f475114ca9bd6b5568c78c5b5fa0"
-  integrity sha512-oj1Lu3+HPBNmipWAjfwep5OFkZ+LeA6949p4adBPPVl4+7y1RjjjnEMcLhfR6UY19Len3XBwQfYvsWT0aQesLA==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.0"
-    sp2 "^1.6.3"
-
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
-
-"@sp2/format@^1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
-  integrity sha512-Q9rnIIB/YbJ8HV1mw9qA44FRK9GsTwM3cnc6Fj6eg6lRNKMQmnGh96DxcQin12PqftIeEgAKZxR13m3KSQJqlw==
-
-"@sp2/retriever@^1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@sp2/retriever/-/retriever-1.6.3.tgz#cdd240b3f12ddd67c410139dea7dbc172c22df2d"
-  integrity sha512-w6lAgRkgpuDSUbytwLRPdVGq6zbthD2zXWXSttv9baDdb6RcMFj1anESywwIT2IVWmWj3B6lh1x2aivwAWRaAw==
-  dependencies:
-    "@sp2/format" "^1.6.3"
-    fast-deep-equal "^3.0.0"
-
-"@sp2/updater@^1.6.3":
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/@sp2/updater/-/updater-1.6.3.tgz#55563bfb5993aad4abc2659040ab9e90d2539d7d"
-  integrity sha512-bPtD9/RaZxX9LyWrsJFRMJd8UoVuBBqHORCbyPVV9eYhZuyt9ws7OWoWtK/BHWhBdijVr8j3w5zbb0bNKOroDg==
-  dependencies:
-    "@sp2/format" "^1.6.3"
-    "@sp2/retriever" "^1.6.3"
-    fast-deep-equal "^3.0.0"
 
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
@@ -356,13 +234,6 @@ configstore@^5.0.1:
     write-file-atomic "^3.0.0"
     xdg-basedir "^4.0.0"
 
-cross-fetch@^3.0.2:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.5.tgz#2739d2981892e7ab488a7ad03b92df2816e03f4c"
-  integrity sha512-FFLcLtraisj5eteosnX1gf01qYDCOc4fDy0+euOt8Kn9YBY2NtXL/pCoYPavw24NIQkQqm5ZOLsGD5Zzj0gyew==
-  dependencies:
-    node-fetch "2.6.0"
-
 crypto-random-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
@@ -444,11 +315,6 @@ escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
-
-fast-deep-equal@^3.0.0:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
-  integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
 filelist@^1.0.1:
   version "1.0.1"
@@ -731,11 +597,6 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-node-fetch@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
-
 nodemon@2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.5.tgz#df67fe1fd1312ddb0c1e393ae2cf55aacdcec2f3"
@@ -925,15 +786,6 @@ signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
-
-sp2@1.6.3, sp2@^1.6.3:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/sp2/-/sp2-1.6.3.tgz#e14ad592a8365ca726e0be225ba83c78416c5d14"
-  integrity sha512-fIdy0gc2pko2M+2kDmTPblA0Az3eSA4qkuKtKaC66z9iUu0VHX1WiuuQMdYrgSNgKZqvOEX/oMZB6sUTnPkOLg==
-  dependencies:
-    "@sp2/format" "^1.6.3"
-    "@sp2/retriever" "^1.6.3"
-    "@sp2/updater" "^1.6.3"
 
 string-width@^3.0.0:
   version "3.1.0"
