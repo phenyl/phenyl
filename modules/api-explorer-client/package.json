@@ -46,7 +46,7 @@
     "react-json-tree": "0.13.0",
     "react-redux": "7.2.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "4.0.1",
     "redux-localstorage": "0.4.1",
     "redux-thunk": "2.3.0",
     "semantic-ui-react": "0.88.2",
