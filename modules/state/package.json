@@ -14,18 +14,16 @@
   "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
-    "test": "upbin nyc upbin mocha --require ts-node/register test/*.ts --color always",
-    "type-check": "upbin tsc --noEmit"
+    "test": "nyc mocha --require ts-node/register test/*.ts --color always",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@phenyl/interfaces": "^4.0.1",
     "sp2": "^1.6.3"
   },
-  "devDependencies": {
-    "upbin": "0.9.2"
-  },
+  "devDependencies": {},
   "publishConfig": {
     "access": "public"
   },

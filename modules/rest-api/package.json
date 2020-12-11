@@ -13,20 +13,18 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc -p tsconfig.build.json",
-    "clean": "upbin rimraf $(cat ../../.temporary-files)",
-    "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
-    "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc -p tsconfig.build.json --watch"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf $(cat ../../.temporary-files)",
+    "lint": "eslint 'src/**/*.ts' --fix",
+    "test": "nyc mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "type-check": "tsc --noEmit",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@phenyl/interfaces": "^4.0.1",
     "@phenyl/utils": "^4.0.1"
   },
-  "devDependencies": {
-    "upbin": "0.9.2"
-  },
+  "devDependencies": {},
   "publishConfig": {
     "access": "public"
   },

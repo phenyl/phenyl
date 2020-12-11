@@ -13,19 +13,17 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "build": "upbin tsc -p tsconfig.build.json",
-    "clean": "upbin rimraf $(cat ../../.temporary-files)",
-    "lint": "upbin eslint 'src/**/*.ts' 'type-test/**/*.ts' --fix",
-    "test": "upbin tsc --noEmit type-test/**/*.ts",
-    "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc -p tsconfig.build.json --watch"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf $(cat ../../.temporary-files)",
+    "lint": "eslint 'src/**/*.ts' 'type-test/**/*.ts' --fix",
+    "test": "tsc --noEmit type-test/**/*.ts",
+    "type-check": "tsc --noEmit",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "sp2": "^1.6.3"
   },
-  "devDependencies": {
-    "upbin": "0.9.2"
-  },
+  "devDependencies": {},
   "publishConfig": {
     "access": "public"
   },

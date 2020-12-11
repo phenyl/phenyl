@@ -17,11 +17,11 @@
   },
   "types": "lib/esm/index.d.ts",
   "scripts": {
-    "build": "upbin tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
-    "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "type-check": "upbin tsc --noEmit",
-    "watch": "upbin tsc -p tsconfig.build.json --watch"
+    "lint": "eslint 'src/**/*.ts' --fix",
+    "type-check": "tsc --noEmit",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@phenyl/utils": "^4.0.1",
@@ -30,8 +30,7 @@
   "devDependencies": {
     "@phenyl/interfaces": "^4.0.1",
     "@types/ws": "7.2.5",
-    "babel-register": "6.26.0",
-    "upbin": "0.9.2"
+    "babel-register": "6.26.0"
   },
   "publishConfig": {
     "access": "public"

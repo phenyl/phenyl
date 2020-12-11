@@ -1,13 +1,12 @@
 {
   "lerna": "3.8.0",
-  "packages": [
-    "modules/*"
-  ],
+  "packages": ["modules/*"],
   "command": {
     "version": {
       "message": "[skip ci] chore(release): publish %s"
     }
   },
+  "useWorkspaces": true,
   "npmClient": "yarn",
   "version": "4.0.1"
 }
