@@ -2,6 +2,43 @@
 # yarn lockfile v1
 
 
+"@phenyl/interfaces@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.1.tgz#ea8b5e4e6f4c793b8cec0a54245eae521f2cd61b"
+  integrity sha512-Ecdpn4tvY4MoILTwXQQUhAQCypPWC6A1iqVJvC5R4K0cYE+GjbJUjdQ7eZKiZapjbzEqJvybrTZutdeDrgVubQ==
+  dependencies:
+    sp2 "^1.6.3"
+
+"@phenyl/utils@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.1.tgz#b33b6fd259de04be2e6d4706cbbd5a85d8c5e3b5"
+  integrity sha512-l9qi7oixgINLC2ta7JVu0wVsV0P7cxkKPezrOH+b3NEkIFPhYQfapN9vPth1p6yWlHyq/hZzp0NsUyzfUf6n8w==
+  dependencies:
+    "@phenyl/interfaces" "^4.0.1"
+    sp2 "^1.6.3"
+
+"@sp2/format@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
+  integrity sha512-Q9rnIIB/YbJ8HV1mw9qA44FRK9GsTwM3cnc6Fj6eg6lRNKMQmnGh96DxcQin12PqftIeEgAKZxR13m3KSQJqlw==
+
+"@sp2/retriever@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/retriever/-/retriever-1.6.3.tgz#cdd240b3f12ddd67c410139dea7dbc172c22df2d"
+  integrity sha512-w6lAgRkgpuDSUbytwLRPdVGq6zbthD2zXWXSttv9baDdb6RcMFj1anESywwIT2IVWmWj3B6lh1x2aivwAWRaAw==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    fast-deep-equal "^3.0.0"
+
+"@sp2/updater@^1.6.3":
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/@sp2/updater/-/updater-1.6.3.tgz#55563bfb5993aad4abc2659040ab9e90d2539d7d"
+  integrity sha512-bPtD9/RaZxX9LyWrsJFRMJd8UoVuBBqHORCbyPVV9eYhZuyt9ws7OWoWtK/BHWhBdijVr8j3w5zbb0bNKOroDg==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
+    fast-deep-equal "^3.0.0"
+
 "@types/node@*":
   version "12.12.17"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.17.tgz#191b71e7f4c325ee0fb23bc4a996477d92b8c39b"
@@ -70,11 +107,6 @@ array.prototype.map@^1.0.1:
     es-abstract "^1.17.0-next.1"
     es-array-method-boxes-properly "^1.0.0"
     is-string "^1.0.4"
-
-async-limiter@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.1.tgz#dd379e94f0db8310b08291f9d64c3209766617fd"
-  integrity sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==
 
 babel-code-frame@^6.26.0:
   version "6.26.0"
@@ -427,6 +459,11 @@ esutils@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
+
+fast-deep-equal@^3.0.0:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
+  integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
 fill-range@^7.0.1:
   version "7.0.1"
@@ -985,6 +1022,15 @@ source-map@^0.5.6, source-map@^0.5.7:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
 
+sp2@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/sp2/-/sp2-1.6.3.tgz#e14ad592a8365ca726e0be225ba83c78416c5d14"
+  integrity sha512-fIdy0gc2pko2M+2kDmTPblA0Az3eSA4qkuKtKaC66z9iUu0VHX1WiuuQMdYrgSNgKZqvOEX/oMZB6sUTnPkOLg==
+  dependencies:
+    "@sp2/format" "^1.6.3"
+    "@sp2/retriever" "^1.6.3"
+    "@sp2/updater" "^1.6.3"
+
 sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
@@ -1165,11 +1211,9 @@ wrappy@1:
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
 ws@^7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.2.0.tgz#422eda8c02a4b5dba7744ba66eebbd84bcef0ec7"
-  integrity sha512-+SqNqFbwTm/0DC18KYzIsMTnEWpLwJsiasW/O17la4iDRRIO9uaHbvKiAS3AHgTiuuWerK/brj4O6MYZkei9xg==
-  dependencies:
-    async-limiter "^1.0.0"
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.2.tgz#782100048e54eb36fe9843363ab1c68672b261dd"
+  integrity sha512-T4tewALS3+qsrpGI/8dqNMLIVdq/g/85U98HPMa6F0m6xTbvhXU6RCQLqPH3+SlomNV/LdY6RXEbBpMH6EOJnA==
 
 y18n@^4.0.0:
   version "4.0.0"
