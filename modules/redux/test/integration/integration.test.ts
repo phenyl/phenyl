@@ -1,123 +1,34 @@
-import http from "http";
 import { it, describe, before, after } from "mocha";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import PhenylHttpServer from "@phenyl/http-server";
-import PhenylRestApi from "@phenyl/rest-api";
-import PhenylHttpClient from "@phenyl/http-client";
-import {
-  GeneralTypeMap,
-  GeneralAction,
-  LocalState,
-  GetCommandResult,
-  AuthCommandMapOf,
-  ResponseEntityMapOf,
-} from "../..//interfaces";
-import { createEntityClient } from "@phenyl/memory-db";
-import { StandardUserDefinition } from "@phenyl/standards";
+import { GetCommandResult } from "@phenyl/interfaces";
 import assert from "assert";
+import {
+  createHttpClient,
+  createPhenylRedux,
+  createSessionClient,
+  createServer,
+  createDbClient,
+  PatientResponse,
+  PORT,
+} from "../helper";
 
-import { createRedux, LocalStateFinder } from "../src";
+import { LocalStateFinder } from "../../src";
 
-type PlainPatient = {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-};
+const dbClient = createDbClient();
+const httpClient = createHttpClient(PORT);
 
-type PatientRequest = PlainPatient;
-
-type PatientResponse = PlainPatient;
-
-type MyEntityRestInfoMap = {
-  patient: {
-    request: PatientRequest;
-    response: PatientResponse;
-  };
-};
-
-interface MyTypeMap extends GeneralTypeMap {
-  entities: MyEntityRestInfoMap;
-  customQueries: {};
-  customCommands: {};
-  auths: {
-    patient: {
-      credentials: {
-        email: string;
-        password: string;
-      };
-      session: { externalId: string; ttl: number };
-    };
-  };
-}
-
-const memoryClient = createEntityClient<ResponseEntityMapOf<MyTypeMap>>();
-const sessionClient = memoryClient.createSessionClient<
-  AuthCommandMapOf<MyTypeMap>
->();
-
-class PatientDefinition extends StandardUserDefinition {
-  constructor() {
-    super({
-      accountPropName: "email",
-      passwordPropName: "password",
-      entityClient: memoryClient,
-      ttl: 24 * 3600,
-    });
-  }
-
-  authorize() {
-    return Promise.resolve(true);
-  }
-}
-
-const functionalGroup = {
-  customQueries: {},
-  customCommands: {},
-  users: {
-    patient: new PatientDefinition(),
-  },
-  nonUsers: {},
-};
-
-const httpClient: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
-  url: "http://localhost:8080",
-});
-
-const { reducer, middleware, actions } = createRedux({
-  client: httpClient,
-  storeKey: "phenyl",
-});
-
-type Store = {
-  phenyl: LocalState<MyEntityRestInfoMap, AuthCommandMapOf<MyTypeMap>>;
-};
-
-const store = createStore<Store, GeneralAction, {}, {}>(
-  combineReducers({ phenyl: reducer }),
-  applyMiddleware(middleware)
-);
-
-let server: PhenylHttpServer;
-before(() => {
-  const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
-    functionalGroup,
-    {
-      entityClient: memoryClient,
-    }
-  );
-
-  server = new PhenylHttpServer(http.createServer(), {
-    restApiHandler,
-  });
-  server.listen(8080);
-});
-
-after(() => {
-  server.close();
-});
+const { store, actions } = createPhenylRedux(httpClient);
+const sessionClient = createSessionClient(dbClient);
+const server = createServer(dbClient);
 
 describe("Integration", () => {
+  before(() => {
+    server.listen(PORT);
+  });
+
+  after(() => {
+    server.close();
+  });
+
   let inserted: GetCommandResult<PatientResponse>;
   it("should be inserted", async () => {
     // TODO: need refinement. Should preSession be created by others?
