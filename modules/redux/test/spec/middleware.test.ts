@@ -77,6 +77,16 @@ describe("middlewareHandler", async () => {
                   commitCount: 2,
                 },
                 {
+                  entityName: "patient" as const,
+                  id: insertedPatient.entity.id,
+                  commitCount: 1,
+                },
+                {
+                  entityName: "patient" as const,
+                  id: insertedPatient.entity.id,
+                  commitCount: 1,
+                },
+                {
                   entityName: "staff" as const,
                   id: "",
                   commitCount: 2,
@@ -131,7 +141,7 @@ describe("middlewareHandler", async () => {
         assert.strictEqual(
           unreachedCommits.filter(({ id }) => id === insertedPatient.entity.id)
             .length,
-          1
+          3
         );
         stub.restore();
       });
@@ -178,7 +188,7 @@ describe("middlewareHandler", async () => {
         assert.strictEqual(
           unreachedCommits.filter(({ id }) => id === insertedPatient.entity.id)
             .length,
-          1
+          3
         );
         stub.restore();
       });
