@@ -14,7 +14,7 @@ import {
   GeneralLocalState,
   PushCommandOf,
   ResponseEntityOf,
-  UserEntityNameOf
+  UserEntityNameOf,
 } from "@phenyl/interfaces";
 import { LocalStateFinder } from "./local-state-finder";
 
@@ -37,8 +37,8 @@ export class LocalStateUpdater {
   ): GeneralUpdateOperation {
     return {
       $set: {
-        [createDocumentPath("entities", entityName)]: {}
-      }
+        [createDocumentPath("entities", entityName)]: {},
+      },
     };
   }
   /**
@@ -55,7 +55,7 @@ export class LocalStateUpdater {
     if (
       !LocalStateFinder.hasEntity(state, {
         entityName,
-        id
+        id,
       })
     ) {
       throw new Error(
@@ -65,16 +65,16 @@ export class LocalStateUpdater {
 
     const entity = LocalStateFinder.getHeadEntity(state, {
       id,
-      entityName
+      entityName,
     });
     const newEntity = update(entity, operation);
     return {
       $push: {
-        [createDocumentPath("entities", entityName, id, "commits")]: operation
+        [createDocumentPath("entities", entityName, id, "commits")]: operation,
       },
       $set: {
-        [createDocumentPath("entities", entityName, id, "head")]: newEntity
-      }
+        [createDocumentPath("entities", entityName, id, "head")]: newEntity,
+      },
     };
   }
 
@@ -91,7 +91,7 @@ export class LocalStateUpdater {
     if (
       !LocalStateFinder.hasEntity(state, {
         entityName,
-        id
+        id,
       })
     ) {
       throw new Error(
@@ -101,7 +101,7 @@ export class LocalStateUpdater {
 
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
+      entityName,
     });
     const commits = operations.reduce(
       (restCommits, op) => removeOne(restCommits, op),
@@ -111,8 +111,8 @@ export class LocalStateUpdater {
     return {
       $set: {
         [createDocumentPath("entities", entityName, id, "commits")]: commits,
-        [createDocumentPath("entities", entityName, id, "head")]: restoredHead
-      }
+        [createDocumentPath("entities", entityName, id, "head")]: restoredHead,
+      },
     };
   }
 
@@ -132,9 +132,9 @@ export class LocalStateUpdater {
           origin: entity,
           versionId,
           commits: [],
-          head: null
-        }
-      }
+          head: null,
+        },
+      },
     };
   }
 
@@ -148,8 +148,8 @@ export class LocalStateUpdater {
   ): GeneralUpdateOperation {
     return {
       $unset: {
-        [createDocumentPath("entities", entityName, id)]: ""
-      }
+        [createDocumentPath("entities", entityName, id)]: "",
+      },
     };
   }
 
@@ -165,7 +165,7 @@ export class LocalStateUpdater {
   ): GeneralUpdateOperation {
     const { entityName, id, commitCount } = commit;
     const enqueuedCount = state.unreachedCommits
-      .filter(c => c.entityName === entityName && c.id === id)
+      .filter((c) => c.entityName === entityName && c.id === id)
       .reduce((acc, c) => acc + c.commitCount, 0);
 
     if (commitCount <= enqueuedCount) {
@@ -177,9 +177,9 @@ export class LocalStateUpdater {
         [createDocumentPath("unreachedCommits")]: {
           entityName,
           id,
-          commitCount: commitCount - enqueuedCount
-        }
-      }
+          commitCount: commitCount - enqueuedCount,
+        },
+      },
     };
   }
 
@@ -196,9 +196,30 @@ export class LocalStateUpdater {
     return {
       $pull: {
         [createDocumentPath("unreachedCommits")]: {
-          $in: [commit]
-        }
-      }
+          $in: [commit],
+        },
+      },
+    };
+  }
+
+  /**
+   * clear unreached commits by entityName and entityId
+   */
+  static clearUnreachedCommitsByEntityInfo<
+    TM extends GeneralTypeMap,
+    EN extends EntityNameOf<TM>
+  >(
+    state: LocalStateOf<TM>,
+    entityName: string,
+    id: string
+  ): GeneralUpdateOperation {
+    return {
+      $pull: {
+        [createDocumentPath("unreachedCommits")]: {
+          entityName,
+          id,
+        },
+      },
     };
   }
 
@@ -211,8 +232,8 @@ export class LocalStateUpdater {
   ): GeneralUpdateOperation {
     return {
       $push: {
-        [createDocumentPath("network", "requests")]: tag
-      }
+        [createDocumentPath("network", "requests")]: tag,
+      },
     };
   }
 
@@ -228,8 +249,8 @@ export class LocalStateUpdater {
         [createDocumentPath("network", "requests")]: removeOne(
           state.network.requests,
           tag
-        )
-      }
+        ),
+      },
     };
   }
 
@@ -245,7 +266,7 @@ export class LocalStateUpdater {
     const { entityName, id, versionId, prevVersionId } = versionDiff;
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
+      entityName,
     }); // Not applicable diff.
 
     if (entityInfo.versionId !== prevVersionId) {
@@ -263,8 +284,8 @@ export class LocalStateUpdater {
           id,
           "versionId"
         )]: versionId,
-        [createDocumentPath("entities", entityName, id, "head")]: newHead
-      }
+        [createDocumentPath("entities", entityName, id, "head")]: newHead,
+      },
     };
   }
 
@@ -279,7 +300,7 @@ export class LocalStateUpdater {
     const { entityName, id, versionId, operations } = pushCommand;
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
+      entityName,
     });
     const newOrigin = update(entityInfo.origin, ...operations);
     const newHead =
@@ -295,8 +316,8 @@ export class LocalStateUpdater {
           id,
           "versionId"
         )]: versionId,
-        [createDocumentPath("entities", entityName, id, "head")]: newHead
-      }
+        [createDocumentPath("entities", entityName, id, "head")]: newHead,
+      },
     };
   }
 
@@ -311,7 +332,7 @@ export class LocalStateUpdater {
     const { entityName, id, operations, versionId } = pushCommand;
     const entityInfo = LocalStateFinder.getEntityInfo(state, {
       id,
-      entityName
+      entityName,
     });
     const newOrigin = update(entityInfo.origin, ...operations, ...localCommits); // assert(localCommits.length === 0 || entityInfo.commits[0] === localCommits[0])
 
@@ -324,9 +345,9 @@ export class LocalStateUpdater {
           origin: newOrigin,
           versionId,
           commits: newCommits,
-          head: newHead
-        }
-      }
+          head: newHead,
+        },
+      },
     };
   }
 
@@ -351,7 +372,7 @@ export class LocalStateUpdater {
     }
 
     return {
-      $set: $setOp
+      $set: $setOp,
     };
   }
 
@@ -367,8 +388,8 @@ export class LocalStateUpdater {
     const { entityName } = session;
     const operation = {
       $set: {
-        session
-      }
+        session,
+      },
     };
 
     if (user != null && versionId != null) {
@@ -385,8 +406,8 @@ export class LocalStateUpdater {
   static unsetSession(): GeneralUpdateOperation {
     return {
       $unset: {
-        session: ""
-      }
+        session: "",
+      },
     };
   }
 
@@ -404,9 +425,9 @@ export class LocalStateUpdater {
           type: err.type,
           at: err.at,
           message: err.message,
-          actionTag
-        }
-      }
+          actionTag,
+        },
+      },
     };
   }
 
@@ -416,8 +437,8 @@ export class LocalStateUpdater {
   static online(): GeneralUpdateOperation {
     return {
       $set: {
-        [createDocumentPath("network", "isOnline")]: true
-      }
+        [createDocumentPath("network", "isOnline")]: true,
+      },
     };
   }
 
@@ -427,8 +448,8 @@ export class LocalStateUpdater {
   static offline(): GeneralUpdateOperation {
     return {
       $set: {
-        [createDocumentPath("network", "isOnline")]: false
-      }
+        [createDocumentPath("network", "isOnline")]: false,
+      },
     };
   }
 
@@ -438,8 +459,8 @@ export class LocalStateUpdater {
   static resolveError(): GeneralUpdateOperation {
     return {
       $unset: {
-        [createDocumentPath("error")]: ""
-      }
+        [createDocumentPath("error")]: "",
+      },
     };
   }
 }
