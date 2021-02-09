@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import assert from "assert";
-import { LocalStateUpdater } from "../src/local-state-updater";
-import { createInitialState } from "../src/reducer";
+import { LocalStateUpdater } from "../../src/local-state-updater";
+import { createInitialState } from "../../src/reducer";
 
 describe("LocalStateUpdater", () => {
   describe("addUnreachedCommits", () => {
@@ -9,7 +9,7 @@ describe("LocalStateUpdater", () => {
       const unreachedCommits = {
         id: "hoge",
         entityName: "foo",
-        commitCount: 1
+        commitCount: 1,
       };
       const state = createInitialState();
       assert.deepStrictEqual(
@@ -21,11 +21,11 @@ describe("LocalStateUpdater", () => {
       const unreachedCommits = {
         entityName: "foo",
         id: "hoge",
-        commitCount: 5
+        commitCount: 5,
       };
       const state = createInitialState();
       state.unreachedCommits = [
-        { entityName: "foo", id: "hoge", commitCount: 2 }
+        { entityName: "foo", id: "hoge", commitCount: 2 },
       ];
 
       assert.deepStrictEqual(
@@ -35,9 +35,9 @@ describe("LocalStateUpdater", () => {
             unreachedCommits: {
               entityName: "foo",
               id: "hoge",
-              commitCount: 3
-            }
-          }
+              commitCount: 3,
+            },
+          },
         }
       );
     });
@@ -45,12 +45,12 @@ describe("LocalStateUpdater", () => {
       const unreachedCommit = {
         entityName: "foo",
         id: "hoge",
-        commitCount: 3
+        commitCount: 3,
       };
       const state = createInitialState();
       state.unreachedCommits = [
         { entityName: "foo", id: "hoge", commitCount: 1 },
-        { entityName: "foo", id: "hoge", commitCount: 2 }
+        { entityName: "foo", id: "hoge", commitCount: 2 },
       ];
       const newState = Object.assign(
         state,
@@ -63,12 +63,12 @@ describe("LocalStateUpdater", () => {
       const unreachedCommit = {
         entityName: "foo",
         id: "hoge",
-        commitCount: 2
+        commitCount: 2,
       };
       const state = createInitialState();
       state.unreachedCommits = [
         { entityName: "foo", id: "hoge", commitCount: 1 },
-        { entityName: "foo", id: "hoge", commitCount: 2 }
+        { entityName: "foo", id: "hoge", commitCount: 2 },
       ];
       const newState = Object.assign(
         state,
@@ -83,7 +83,7 @@ describe("LocalStateUpdater", () => {
       const unreachedCommits = {
         id: "hoge",
         entityName: "foo",
-        commitCount: 1
+        commitCount: 1,
       };
       const initialState = createInitialState();
       const state = Object.assign(
@@ -104,11 +104,11 @@ describe("LocalStateUpdater", () => {
                 {
                   commitCount: 1,
                   entityName: "foo",
-                  id: "hoge"
-                }
-              ]
-            }
-          }
+                  id: "hoge",
+                },
+              ],
+            },
+          },
         }
       );
     });
@@ -120,10 +120,10 @@ describe("LocalStateUpdater", () => {
         type: "NetworkFailed",
         at: "local",
         message: "An error occured",
-        ok: 0
+        ok: 0,
       };
       assert.deepStrictEqual(LocalStateUpdater.resolveError(), {
-        $unset: { error: "" }
+        $unset: { error: "" },
       });
     });
   });

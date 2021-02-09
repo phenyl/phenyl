@@ -20,7 +20,9 @@
   "scripts": {
     "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
-    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "test": "npm run test:spec && npm run test:integration",
+    "test:spec": "upbin nyc upbin mocha --require ts-node/register 'test/spec/**/*.test.ts' --color always",
+    "test:integration": "upbin nyc upbin mocha --require ts-node/register 'test/integration/**/*.test.ts' --color always",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
@@ -35,7 +37,9 @@
     "@phenyl/memory-db": "^4.0.1",
     "@phenyl/rest-api": "^4.0.1",
     "@phenyl/standards": "^4.0.1",
+    "@types/sinon": "^9.0.10",
     "redux": "4.0.5",
+    "sinon": "^9.2.4",
     "upbin": "0.9.2"
   },
   "publishConfig": {
