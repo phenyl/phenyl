@@ -1,6 +1,6 @@
 {
   "name": "@phenyl/redux",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "phenyl wrapper for redux",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/modules/phenyl-redux",
   "license": "Apache-2.0",
@@ -26,17 +26,17 @@
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {
-    "@phenyl/interfaces": "^4.0.1",
-    "@phenyl/utils": "^4.0.1",
+    "@phenyl/interfaces": "^4.0.2",
+    "@phenyl/utils": "^4.0.2",
     "fast-deep-equal": "^3.1.1",
     "sp2": "^1.6.3"
   },
   "devDependencies": {
-    "@phenyl/http-client": "^4.0.1",
-    "@phenyl/http-server": "^4.0.1",
-    "@phenyl/memory-db": "^4.0.1",
-    "@phenyl/rest-api": "^4.0.1",
-    "@phenyl/standards": "^4.0.1",
+    "@phenyl/http-client": "^4.0.2",
+    "@phenyl/http-server": "^4.0.2",
+    "@phenyl/memory-db": "^4.0.2",
+    "@phenyl/rest-api": "^4.0.2",
+    "@phenyl/standards": "^4.0.2",
     "@types/sinon": "^9.0.10",
     "redux": "4.0.5",
     "sinon": "^9.2.4",
