@@ -1544,37 +1544,37 @@
   dependencies:
     mkdirp "^1.0.4"
 
-"@phenyl/http-client@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.0.1.tgz#a866b3f68d132ca010c6a04e58e6a256c9dcc85e"
-  integrity sha512-R3YIn/PaV6gVZu3nWKhGKBcFCvaiWFPnBtccRzTmZ2zDjZkIUz1x5b4W14zMg3eOW11GadMgRsVEBMNwKBsOZw==
+"@phenyl/http-client@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.0.2.tgz#596ec4497b4beef940ad159196c99daa949a63cf"
+  integrity sha512-S/ILcHSFbxmOX/3wFJqWuSOvGE0CAVphs55xZrALmdUwH4EH6T9fuOAV0u6VEN6E83x+1uI0xoRFCQ6t9LG9AQ==
   dependencies:
-    "@phenyl/http-rules" "^4.0.1"
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
+    "@phenyl/http-rules" "^4.0.2"
+    "@phenyl/interfaces" "^4.0.2"
+    "@phenyl/utils" "^4.0.2"
     cross-fetch "^3.0.2"
 
-"@phenyl/http-rules@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.0.1.tgz#07a4af602bb39eb98ba1a0b37b2cbf7750e4b765"
-  integrity sha512-lYG2JFuLj/pRtgHY1QVt3F8CDjRDmOc9ZJV2ZTdA+DnpUGpHY+us89giA+vUUgAA/VU2IYjOPVL2yp2JyRjYOg==
+"@phenyl/http-rules@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.0.2.tgz#40f35639f888f211d62ddccfd5be9ad36b2b79fd"
+  integrity sha512-Ny5c45c+DHhWi9lBM4zP8TnHSWLWEwf3XGWiTi8wZbr8+HOfQI7Mw0dWVscasuLRMmFdEmpNocyG9bgZ+FMr8A==
   dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
+    "@phenyl/interfaces" "^4.0.2"
+    "@phenyl/utils" "^4.0.2"
 
-"@phenyl/interfaces@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.1.tgz#ea8b5e4e6f4c793b8cec0a54245eae521f2cd61b"
-  integrity sha512-Ecdpn4tvY4MoILTwXQQUhAQCypPWC6A1iqVJvC5R4K0cYE+GjbJUjdQ7eZKiZapjbzEqJvybrTZutdeDrgVubQ==
+"@phenyl/interfaces@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.2.tgz#5fae71d9208322ae94b51be3e95bec455ec0a69b"
+  integrity sha512-e3Sq2/HqhX5yH2+wQcjjrXSO6Dt+R2LebMzZxbb/thldGlP2Xs5BUQLONjycKaZgCwV4lAdOAE1RKjU/ou9FRQ==
   dependencies:
     sp2 "^1.6.3"
 
-"@phenyl/utils@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.1.tgz#b33b6fd259de04be2e6d4706cbbd5a85d8c5e3b5"
-  integrity sha512-l9qi7oixgINLC2ta7JVu0wVsV0P7cxkKPezrOH+b3NEkIFPhYQfapN9vPth1p6yWlHyq/hZzp0NsUyzfUf6n8w==
+"@phenyl/utils@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.2.tgz#f2b851632f595ea627a76e5cd526cda609469590"
+  integrity sha512-U3ttrNfTqqhSHllmjNFNh6b9xPhHGwMZffmpxNJ1u5jWRztLyL/6o6spTYjooSJyLxmKJQlKVc7qmBIqic3Hug==
   dependencies:
-    "@phenyl/interfaces" "^4.0.1"
+    "@phenyl/interfaces" "^4.0.2"
     sp2 "^1.6.3"
 
 "@pmmmwh/react-refresh-webpack-plugin@0.4.2":
@@ -1984,10 +1984,10 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/react-dom@16.9.8":
-  version "16.9.8"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.8.tgz#fe4c1e11dfc67155733dfa6aa65108b4971cb423"
-  integrity sha512-ykkPQ+5nFknnlU6lDd947WbQ6TE3NNzbQAkInC2EKY1qeYdTKp7onFusmYZb+ityzx2YviqT6BXSu+LyWWJwcA==
+"@types/react-dom@17.0.0":
+  version "17.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.0.tgz#b3b691eb956c4b3401777ee67b900cb28415d95a"
+  integrity sha512-lUqY7OlkF/RbNtD5nIq7ot8NquXrdFrjSOR6+w9a9RFQevGi1oZO1dcJbXMeONAPKtZ2UrZOEJ5UOCVsxbLk/g==
   dependencies:
     "@types/react" "*"
 
