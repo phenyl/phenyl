@@ -193,5 +193,102 @@ describe("middlewareHandler", async () => {
         stub.restore();
       });
     });
+
+    describe("commitAndPush", () => {
+      it("clear unreached commits if commits are pushed successfully", async () => {
+        const operations = await middlewareHandler.commitAndPush({
+          type: "phenyl/commitAndPush",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            operation: {},
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { unreachedCommits } = store.getState().phenyl;
+
+        assert.strictEqual(unreachedCommits.length, 1);
+        assert.strictEqual(
+          unreachedCommits.every(({ id }) => id !== insertedPatient.entity.id),
+          true
+        );
+      });
+      it("doesn't clear unreached commits if commits are not pushed", async () => {
+        const stub = sinon.stub(httpClient, "push");
+        stub.throws(() => ({
+          type: "NetworkFailed",
+        }));
+
+        const operations = await middlewareHandler.commitAndPush({
+          type: "phenyl/commitAndPush",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            operation: {},
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { unreachedCommits } = store.getState().phenyl;
+
+        assert.strictEqual(
+          unreachedCommits.filter(({ id }) => id === insertedPatient.entity.id)
+            .length,
+          3
+        );
+        stub.restore();
+      });
+    });
+
+    describe("push", () => {
+      it("clear unreached commits if commits are pushed successfully", async () => {
+        const operations = await middlewareHandler.push({
+          type: "phenyl/push",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            until: -1,
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { unreachedCommits } = store.getState().phenyl;
+
+        assert.strictEqual(unreachedCommits.length, 1);
+        assert(
+          unreachedCommits.every(({ id }) => id !== insertedPatient.entity.id)
+        );
+      });
+      it("doesn't clear unreached commits if commits are not pushed", async () => {
+        const stub = sinon.stub(httpClient, "push");
+        stub.throws(() => ({
+          type: "NetworkFailed",
+        }));
+
+        const operations = await middlewareHandler.push({
+          type: "phenyl/push",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            until: -1,
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { unreachedCommits } = store.getState().phenyl;
+
+        assert.strictEqual(
+          unreachedCommits.filter(({ id }) => id === insertedPatient.entity.id)
+            .length,
+          3
+        );
+        stub.restore();
+      });
+    });
   });
 });
