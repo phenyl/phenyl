@@ -314,6 +314,15 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     try {
       const result = await this.client.push(pushCommand, this.sessionId);
 
+      // Check if entityId exists in unreached commits, and filter those commits as they are pushed successfully
+      ops.push(
+        LocalStateUpdater.clearUnreachedCommitsByEntityInfo(
+          this.state,
+          entityName,
+          id
+        )
+      );
+
       if (result.hasEntity) {
         ops.push(
           LocalStateUpdater.follow(
