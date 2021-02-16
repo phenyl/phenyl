@@ -55,7 +55,7 @@
     "@types/mongodb": "3.6.6",
     "@types/node": "10.17.26",
     "@types/react": "16.14.2",
-    "@types/react-dom": "16.9.8",
+    "@types/react-dom": "17.0.1",
     "@types/react-json-tree": "0.6.11",
     "@types/react-redux": "7.1.15",
     "@types/react-router-dom": "5.1.6",
