@@ -284,6 +284,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
 
   /**
    * Push to the CentralState.
+   * If all local commits are pushed, unreached commits for entity are cleared
    * If failed, the commit is still applied.
    * In such cases, pull the entity first.
    * Only when Authorization Error occurred, it will be rollbacked.
@@ -294,6 +295,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
       entityName,
       id,
     });
+
     const commitsToPush = until >= 0 ? commits.slice(0, until) : commits;
 
     if (commitsToPush.length === 0) {
@@ -314,14 +316,16 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
     try {
       const result = await this.client.push(pushCommand, this.sessionId);
 
-      // Check if entityId exists in unreached commits, and filter those commits as they are pushed successfully
-      ops.push(
-        LocalStateUpdater.clearUnreachedCommitsByEntityInfo(
-          this.state,
-          entityName,
-          id
-        )
-      );
+      // When pushing all local commits, check if entityId exists in unreached commits, and filter those commits as they are pushed successfully
+      if (commitsToPush.length === commits.length) {
+        ops.push(
+          LocalStateUpdater.clearUnreachedCommitsByEntityInfo(
+            this.state,
+            entityName,
+            id
+          )
+        );
+      }
 
       if (result.hasEntity) {
         ops.push(
