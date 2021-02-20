@@ -244,7 +244,7 @@ describe("middlewareHandler", async () => {
     });
 
     describe("push", () => {
-      it("clear unreached commits if commits are pushed successfully", async () => {
+      it("clear unreached commits if all local commits are pushed successfully", async () => {
         const operations = await middlewareHandler.push({
           type: "phenyl/push",
           payload: {
@@ -261,6 +261,27 @@ describe("middlewareHandler", async () => {
         assert.strictEqual(unreachedCommits.length, 1);
         assert(
           unreachedCommits.every(({ id }) => id !== insertedPatient.entity.id)
+        );
+      });
+      it("doesn't clear unreached commits if all local commits are not pushed", async () => {
+        const operations = await middlewareHandler.push({
+          type: "phenyl/push",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            until: 2,
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { unreachedCommits } = store.getState().phenyl;
+
+        assert.strictEqual(unreachedCommits.length, 4);
+        assert.strictEqual(
+          unreachedCommits.filter(({ id }) => id === insertedPatient.entity.id)
+            .length,
+          3
         );
       });
       it("doesn't clear unreached commits if commits are not pushed", async () => {
