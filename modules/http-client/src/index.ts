@@ -7,7 +7,7 @@ import {
   RequestDataWithTypeMapForResponse,
   RequestMethodName,
   ResponseDataWithTypeMap,
-  ErrorResponseData
+  ErrorResponseData,
 } from "@phenyl/interfaces";
 import { PhenylRestApiClient, createLocalError } from "@phenyl/utils";
 import { decodeResponse, encodeRequest } from "@phenyl/http-rules";
@@ -56,7 +56,7 @@ export default class PhenylHttpClient<
     super();
     this.url = params.url;
 
-    this.modifyPath = params.modifyPath || (path => path);
+    this.modifyPath = params.modifyPath || ((path) => path);
   }
 
   /**
@@ -83,7 +83,7 @@ export default class PhenylHttpClient<
     const encodedResponse = {
       body: await response.json(),
       statusCode: response.status,
-      headers: response.headers
+      headers: response.headers,
     }; // FIXME: headers from polyfilled fetch don't implement Headers API.
     // @ts-ignore http-client will not receive any types beyond this point
     return decodeResponse(encodedResponse);
@@ -113,7 +113,7 @@ function stringifyQsParams(
   return (
     "?" +
     Object.keys(qsParams)
-      .map(name => `${name}=${encodeURIComponent(qsParams[name])}`)
+      .map((name) => `${name}=${encodeURIComponent(qsParams[name])}`)
       .join("&")
   );
 }
