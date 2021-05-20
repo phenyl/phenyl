@@ -8,21 +8,35 @@ import PhenylHttpClient from "../src/index";
 
 const entityClient = createEntityClient();
 
-const restApiHandler = new PhenylRestApi(
-  {},
-  {
-    entityClient,
-    sessionClient: entityClient.createSessionClient()
-  }
-);
+class NonUserDefinition {
+  constructor() {}
+}
+
+const functionalGroup = {
+  customQueries: undefined,
+  customCommands: undefined,
+  users: undefined,
+  nonUsers: { nonUser: new NonUserDefinition() },
+};
+
+const restApiHandler = new PhenylRestApi(functionalGroup, {
+  entityClient,
+  sessionClient: entityClient.createSessionClient(),
+});
 
 const server = new PhenylHttpServer(createServer(), {
-  restApiHandler
+  restApiHandler,
+  customRequestHandler: () =>
+    Promise.resolve({
+      headers: { "Content-Type": "text/plain" },
+      body: "body text",
+      statusCode: 200,
+    }),
 });
 
-const client = new PhenylHttpClient({
-  url: "http://127.0.0.1:8080"
-});
+const url = "http://127.0.0.1:8080";
+
+const client = new PhenylHttpClient({ url });
 
 describe("constructor", () => {
   it("holds url when created", () => {
@@ -32,10 +46,50 @@ describe("constructor", () => {
   });
 });
 
-// TODO: implement me!
 describe("PhenylHttpClient as http client", () => {
   before(() => {
     server.listen(8080);
+  });
+
+  it("can handle request data", async () => {
+    const { entity } = await client.insertAndGet({
+      entityName: "nonUser",
+      value: { id: "nonUser1" },
+    });
+
+    assert.strictEqual(entity.id, "nonUser1");
+  });
+
+  it("can handle request data with qsParams", async () => {
+    const { entities } = await client.find({
+      entityName: "nonUser",
+      where: { id: "nonUser1" },
+    });
+
+    assert.strictEqual(entities.length, 1);
+    assert.strictEqual(entities[0].id, "nonUser1");
+  });
+
+  it("throws error when fetch fails", async () => {
+    client.url = "http://127.0.0.1:7000";
+    let error;
+    try {
+      await client.find({
+        entityName: "nonUser",
+        where: { id: "nonUser1" },
+      });
+    } catch (e) {
+      error = e;
+    }
+    assert.strictEqual(error.ok, 0);
+    client.url = url;
+  });
+
+  describe("requestText", () => {
+    it("returns text for the specified path", async () => {
+      const text = await client.requestText("");
+      assert.strictEqual(text, "body text");
+    });
   });
 
   after(() => {
