@@ -2,36 +2,36 @@
 # yarn lockfile v1
 
 
-"@phenyl/central-state@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.1.tgz#95a3764f1f4d280160cd915f1ade0499394b25c5"
-  integrity sha512-IPMfHvhmpzpv3x+nfzOzWapG3gtTAK4sCTJiP6QyZku3rP8olg2ctcmqaC02luhSNXnTNsjEScFQNBlWAXclOw==
+"@phenyl/central-state@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.3.tgz#ebf90de0cb2f4cb90d1973855f8c2f6bd47d0f41"
+  integrity sha512-l8MYnQChgpistYvu/TXqs1QUCv3XGO3Iyc7VdtDCo+J8jT4z0PHlfdC1Meg97qGFvKuHrwvZyUOsZaKBbPL73w==
   dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
+    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/utils" "^4.0.3"
     sp2 "^1.6.3"
 
-"@phenyl/interfaces@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.1.tgz#ea8b5e4e6f4c793b8cec0a54245eae521f2cd61b"
-  integrity sha512-Ecdpn4tvY4MoILTwXQQUhAQCypPWC6A1iqVJvC5R4K0cYE+GjbJUjdQ7eZKiZapjbzEqJvybrTZutdeDrgVubQ==
+"@phenyl/interfaces@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.3.tgz#de1bbc6203764a906f461c6b880e81d48612a58b"
+  integrity sha512-u/p5jfBbMqhBjPkbA8XgELd2EGWjEZ9tcw15W41i9c90wigyPoqCSYMthxmzHl5Fu0PPYQV7I40pecj1kdiYJg==
   dependencies:
     sp2 "^1.6.3"
 
-"@phenyl/rest-api@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.1.tgz#acee8632cb251f00637494d804fb2ec92ab46ec2"
-  integrity sha512-SkmVyFCz8aTU1hNhTXjkCTgMnP66fGru3oAw9+QzcvlBsv12dVONAdBVp03tcrA+k6kzPpmIhP+n8uIs1g/XfQ==
+"@phenyl/rest-api@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.3.tgz#8766785f0d6409c1495595527152e6ecd9b7a07f"
+  integrity sha512-apWuIFI6RNr7AnB96I0TKpq1ojF/jhURnpKgme+939+Op5fxVFRImoAWqJ8+xZkMp3KXPmZqOmVS1/wp2QiaBQ==
   dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
+    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/utils" "^4.0.3"
 
-"@phenyl/utils@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.1.tgz#b33b6fd259de04be2e6d4706cbbd5a85d8c5e3b5"
-  integrity sha512-l9qi7oixgINLC2ta7JVu0wVsV0P7cxkKPezrOH+b3NEkIFPhYQfapN9vPth1p6yWlHyq/hZzp0NsUyzfUf6n8w==
+"@phenyl/utils@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.3.tgz#1bf8c8df3f5f00c27b674038c30a5ffa5e822b28"
+  integrity sha512-vrKXS2YrebnSrctFRPwNl5lWucsnK1NWSyNF8WOkMTcy4JNdba7ZVgIN1BJV/DTce1aJGqdOTdTn0MCl0A8nRg==
   dependencies:
-    "@phenyl/interfaces" "^4.0.1"
+    "@phenyl/interfaces" "^4.0.3"
     sp2 "^1.6.3"
 
 "@sp2/format@^1.6.3":
@@ -166,17 +166,22 @@ memory-pager@^1.0.2:
   integrity sha512-ZS4Bp4r/Zoeq6+NLJpP+0Zzm0pR8whtGPf1XExKLJBAczGMnSi3It14OiNCStjQjM6NU1okjQGSxgEZN8eBYKg==
 
 mongodb@^3.4.0:
-  version "3.6.2"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.6.2.tgz#1154a4ac107bf1375112d83a29c5cf97704e96b6"
-  integrity sha512-sSZOb04w3HcnrrXC82NEh/YGCmBuRgR+C1hZgmmv4L6dBz4BkRse6Y8/q/neXer9i95fKUBbFi4KgeceXmbsOA==
+  version "3.6.8"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.6.8.tgz#3e2632af81915b3ff99b7681121ca0895e8ed407"
+  integrity sha512-sDjJvI73WjON1vapcbyBD3Ao9/VN3TKYY8/QX9EPbs22KaCSrQ5rXo5ZZd44tWJ3wl3FlnrFZ+KyUtNH6+1ZPQ==
   dependencies:
     bl "^2.2.1"
     bson "^1.1.4"
     denque "^1.4.1"
-    require_optional "^1.0.1"
+    optional-require "^1.0.3"
     safe-buffer "^5.1.2"
   optionalDependencies:
     saslprep "^1.0.0"
+
+optional-require@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/optional-require/-/optional-require-1.0.3.tgz#275b8e9df1dc6a17ad155369c2422a440f89cb07"
+  integrity sha512-RV2Zp2MY2aeYK5G+B/Sps8lW5NHAzE5QClbFP15j+PWmP+T9PxlJXBOOLoSAdgwFvS4t0aMR4vpedMkbHfh0nA==
 
 p-limit@^2.2.0:
   version "2.2.1"
@@ -220,19 +225,6 @@ readable-stream@^2.3.5:
     string_decoder "~1.1.1"
     util-deprecate "~1.0.1"
 
-require_optional@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/require_optional/-/require_optional-1.0.1.tgz#4cf35a4247f64ca3df8c2ef208cc494b1ca8fc2e"
-  integrity sha512-qhM/y57enGWHAe3v/NcwML6a3/vfESLe/sGM2dII+gEO0BpKRUkWZow/tyloNqJyN6kXSl3RyyM8Ll5D/sJP8g==
-  dependencies:
-    resolve-from "^2.0.0"
-    semver "^5.1.0"
-
-resolve-from@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-2.0.0.tgz#9480ab20e94ffa1d9e80a804c7ea147611966b57"
-  integrity sha1-lICrIOlP+h2egKgEx+oUdhGWa1c=
-
 safe-buffer@^5.1.1, safe-buffer@^5.1.2:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
@@ -249,11 +241,6 @@ saslprep@^1.0.0:
   integrity sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==
   dependencies:
     sparse-bitfield "^3.0.3"
-
-semver@^5.1.0:
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
-  integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
 sp2@^1.6.3:
   version "1.6.3"
