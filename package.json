@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@types/bson": "4.0.3",
-    "@types/express": "4.17.3",
+    "@types/express": "4.17.12",
     "@types/mocha": "7.0.2",
     "@types/mongodb": "3.6.6",
     "@types/node": "10.17.26",
