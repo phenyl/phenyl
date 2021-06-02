@@ -10,14 +10,14 @@ import {
   GeneralResponseData,
   GeneralQueryResult,
   UserDefinition,
-  Entity
+  Entity,
 } from "@phenyl/interfaces";
 /* eslint-env mocha */
 import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,
   EntityDefinitionExecutor,
-  UserDefinitionExecutor
+  UserDefinitionExecutor,
 } from "../src/definition-executor";
 
 import assert from "assert";
@@ -27,17 +27,18 @@ const clientMock: EntityClient = { find: () => queryResult };
 // @ts-ignore mocking EntityClient
 const sessionClientMock: SessionClient = {
   get: () => null,
-  create: () => ({})
+  create: () => ({}),
+  delete: () => ({}),
 };
 
 const findReqData: GeneralRequestData = {
   method: "find",
-  payload: { entityName: "foo", where: {} }
+  payload: { entityName: "foo", where: {} },
 };
 
 const findReqData2: GeneralRequestData = {
   method: "find",
-  payload: { entityName: "bar", where: {} }
+  payload: { entityName: "bar", where: {} },
 };
 
 const queryResult: GeneralQueryResult = { entities: [], versionsById: {} };
@@ -45,8 +46,8 @@ const findResData: GeneralResponseData = {
   type: "find",
   payload: {
     entities: [{ id: "foo", name: "bar" } as Entity],
-    versionsById: {}
-  }
+    versionsById: {},
+  },
 };
 
 describe("EntityDefinitionExecutor", () => {
@@ -87,7 +88,7 @@ describe("EntityDefinitionExecutor", () => {
           validate: async () => {
             counter++;
             return;
-          }
+          },
         } as EntityDefinition,
         clientMock
       );
@@ -181,7 +182,7 @@ describe("UserDefinitionExecutor", () => {
           validate: async () => {
             counter++;
             return;
-          }
+          },
         } as UserDefinition,
         clientMock,
         sessionClientMock
@@ -221,8 +222,28 @@ describe("UserDefinitionExecutor", () => {
         clientMock,
         sessionClientMock
       );
-      const result = await executor.execute(findReqData);
-      assert.deepStrictEqual(result, { type: "find", payload: queryResult });
+      const findResult = await executor.execute(findReqData);
+      assert.deepStrictEqual(findResult, {
+        type: "find",
+        payload: queryResult,
+      });
+
+      const logoutReqData = {
+        method: "logout" as const,
+        payload: {
+          sessionId: "",
+          userId: "",
+          entityName: "",
+        },
+      };
+
+      const logoutResult = await executor.execute(logoutReqData);
+      assert.deepStrictEqual(logoutResult, {
+        type: "logout",
+        payload: {
+          ok: 1,
+        },
+      });
     });
 
     it("should return the wrapped result of a given definition's wrapExecution() method when it exists", async () => {
@@ -230,7 +251,7 @@ describe("UserDefinitionExecutor", () => {
       const executor = new UserDefinitionExecutor(
         {
           authenticate,
-          wrapExecution: async () => findResData
+          wrapExecution: async () => findResData,
         } as UserDefinition,
         clientMock,
         sessionClientMock
@@ -244,14 +265,14 @@ describe("UserDefinitionExecutor", () => {
         ({ versionId: "abcd" } as GeneralAuthenticationResult);
       const executor = new UserDefinitionExecutor(
         {
-          authenticate
+          authenticate,
         } as UserDefinition,
         clientMock,
         sessionClientMock
       );
       const result = await executor.execute({
         method: "login",
-        payload: { entityName: "xxx", credentials: {} }
+        payload: { entityName: "xxx", credentials: {} },
       });
       // @ts-ignore
       assert.strictEqual(result.payload.versionId, "abcd");
@@ -262,7 +283,7 @@ describe("UserDefinitionExecutor", () => {
 describe("CustomQueryDefinitionExecutor", () => {
   const customQueryReqData: GeneralCustomQueryRequestData = {
     method: "runCustomQuery",
-    payload: { name: "hogefuga", params: { foo: 345 } }
+    payload: { name: "hogefuga", params: { foo: 345 } },
   };
   describe("authorize()", () => {
     it("should return true when a definition without authorize() method is given", async () => {
@@ -278,7 +299,7 @@ describe("CustomQueryDefinitionExecutor", () => {
       const executor = new CustomQueryDefinitionExecutor(
         {
           execute: async () => ({ result: 123 }),
-          authorize: async () => false
+          authorize: async () => false,
         } as CustomQueryDefinition,
         clientMock
       );
@@ -305,7 +326,7 @@ describe("CustomQueryDefinitionExecutor", () => {
           validate: async () => {
             counter++;
             return;
-          }
+          },
         } as CustomQueryDefinition,
         clientMock
       );
@@ -329,7 +350,7 @@ describe("CustomQueryDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 }),
           normalize: async () =>
-            Object.assign({}, customQueryReqData, { ex: 1 })
+            Object.assign({}, customQueryReqData, { ex: 1 }),
         } as CustomQueryDefinition,
         clientMock
       );
@@ -350,7 +371,7 @@ describe("CustomQueryDefinitionExecutor", () => {
       const result = await executor.execute(customQueryReqData);
       assert.deepStrictEqual(result, {
         type: "runCustomQuery",
-        payload: { result: 123 }
+        payload: { result: 123 },
       });
     });
 
@@ -360,15 +381,15 @@ describe("CustomQueryDefinitionExecutor", () => {
           execute: async () => ({ result: 123 }),
           wrapExecution: async () => ({
             type: "runCustomQuery",
-            payload: { result: 345 }
-          })
+            payload: { result: 345 },
+          }),
         } as CustomQueryDefinition,
         clientMock
       );
       const result = await executor.execute(customQueryReqData);
       assert.deepStrictEqual(result, {
         type: "runCustomQuery",
-        payload: { result: 345 }
+        payload: { result: 345 },
       });
     });
   });
@@ -377,7 +398,7 @@ describe("CustomQueryDefinitionExecutor", () => {
 describe("CustomCommandDefinitionExecutor", () => {
   const customCommandReqData: GeneralCustomCommandRequestData = {
     method: "runCustomCommand",
-    payload: { name: "hogefuga", params: { foo: 345 } }
+    payload: { name: "hogefuga", params: { foo: 345 } },
   };
   describe("authorize()", () => {
     it("should return true when a definition without authorize() method is given", async () => {
@@ -393,7 +414,7 @@ describe("CustomCommandDefinitionExecutor", () => {
       const executor = new CustomCommandDefinitionExecutor(
         {
           execute: async () => ({ result: 123 }),
-          authorize: async () => false
+          authorize: async () => false,
         } as CustomCommandDefinition,
         clientMock
       );
@@ -420,7 +441,7 @@ describe("CustomCommandDefinitionExecutor", () => {
           validate: async () => {
             counter++;
             return;
-          }
+          },
         } as CustomCommandDefinition,
         clientMock
       );
@@ -444,7 +465,7 @@ describe("CustomCommandDefinitionExecutor", () => {
         {
           execute: async () => ({ result: 123 }),
           normalize: async () =>
-            Object.assign({}, customCommandReqData, { ex: 1 })
+            Object.assign({}, customCommandReqData, { ex: 1 }),
         } as CustomCommandDefinition,
         clientMock
       );
@@ -465,7 +486,7 @@ describe("CustomCommandDefinitionExecutor", () => {
       const result = await executor.execute(customCommandReqData);
       assert.deepStrictEqual(result, {
         type: "runCustomCommand",
-        payload: { result: 123 }
+        payload: { result: 123 },
       });
     });
 
@@ -475,15 +496,15 @@ describe("CustomCommandDefinitionExecutor", () => {
           execute: async () => ({ result: 123 }),
           wrapExecution: async () => ({
             type: "runCustomCommand",
-            payload: { result: 345 }
-          })
+            payload: { result: 345 },
+          }),
         } as CustomCommandDefinition,
         clientMock
       );
       const result = await executor.execute(customCommandReqData);
       assert.deepStrictEqual(result, {
         type: "runCustomCommand",
-        payload: { result: 345 }
+        payload: { result: 345 },
       });
     });
   });
