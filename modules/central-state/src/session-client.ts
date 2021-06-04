@@ -5,7 +5,7 @@ import {
   Session,
   SessionClient,
   GeneralAuthCommandMap,
-  AllSessions
+  AllSessions,
 } from "@phenyl/interfaces";
 
 import { timeStampWithRandomString } from "@phenyl/utils";
@@ -39,7 +39,7 @@ export class PhenylSessionClient<
     try {
       const session = await this.dbClient.get({
         entityName: "_PhenylSession",
-        id
+        id,
       });
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
         this.delete(id); // Run asynchronously
