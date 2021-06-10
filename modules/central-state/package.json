@@ -28,7 +28,6 @@
     "sp2": "^1.6.3"
   },
   "devDependencies": {
-    "@phenyl/memory-db": "^4.0.3",
     "@types/sinon": "^10.0.2",
     "jest": "^27.0.1",
     "sinon": "^11.1.1",
