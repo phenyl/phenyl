@@ -2,38 +2,6 @@
 # yarn lockfile v1
 
 
-"@phenyl/central-state@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.1.tgz#95a3764f1f4d280160cd915f1ade0499394b25c5"
-  integrity sha512-IPMfHvhmpzpv3x+nfzOzWapG3gtTAK4sCTJiP6QyZku3rP8olg2ctcmqaC02luhSNXnTNsjEScFQNBlWAXclOw==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
-    sp2 "^1.6.3"
-
-"@phenyl/interfaces@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.1.tgz#ea8b5e4e6f4c793b8cec0a54245eae521f2cd61b"
-  integrity sha512-Ecdpn4tvY4MoILTwXQQUhAQCypPWC6A1iqVJvC5R4K0cYE+GjbJUjdQ7eZKiZapjbzEqJvybrTZutdeDrgVubQ==
-  dependencies:
-    sp2 "^1.6.3"
-
-"@phenyl/rest-api@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.1.tgz#acee8632cb251f00637494d804fb2ec92ab46ec2"
-  integrity sha512-SkmVyFCz8aTU1hNhTXjkCTgMnP66fGru3oAw9+QzcvlBsv12dVONAdBVp03tcrA+k6kzPpmIhP+n8uIs1g/XfQ==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    "@phenyl/utils" "^4.0.1"
-
-"@phenyl/utils@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.1.tgz#b33b6fd259de04be2e6d4706cbbd5a85d8c5e3b5"
-  integrity sha512-l9qi7oixgINLC2ta7JVu0wVsV0P7cxkKPezrOH+b3NEkIFPhYQfapN9vPth1p6yWlHyq/hZzp0NsUyzfUf6n8w==
-  dependencies:
-    "@phenyl/interfaces" "^4.0.1"
-    sp2 "^1.6.3"
-
 "@sp2/format@^1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
