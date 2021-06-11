@@ -14,7 +14,7 @@ import PhenylHttpClient from "@phenyl/http-client";
 const httpClient = new PhenylHttpClient({ url: "localhost:8080" });
 const middleware = createMiddleware({ client: httpClient });
 const enhancer = applyMiddleware(middleware);
-const store = createStore(phenylReducer, enhancer);
+const store = createStore(reducer, enhancer);
 ```
 
 ## Installation
