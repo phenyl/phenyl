@@ -5,7 +5,7 @@ import {
   Session,
   SessionClient,
   GeneralAuthCommandMap,
-  AllSessions
+  AllSessions,
 } from "@phenyl/interfaces";
 
 import { timeStampWithRandomString } from "@phenyl/utils";
@@ -13,7 +13,7 @@ import { timeStampWithRandomString } from "@phenyl/utils";
 type Id = string;
 
 // @TODO: make this type better
-type PhenylSessionEntityMap<S extends Session = Session> = {
+export type PhenylSessionEntityMap<S extends Session = Session> = {
   _PhenylSession: S;
 };
 
@@ -26,6 +26,7 @@ export class PhenylSessionClient<
   dbClient: DbClient<PhenylSessionEntityMap<AllSessions<AM>>>;
 
   constructor(dbClient: DbClient<PhenylSessionEntityMap>) {
+    // @ts-ignore  Type 'string' is not assignable to type 'Extract<keyof AM, string>'.
     this.dbClient = dbClient;
   }
 
@@ -39,7 +40,7 @@ export class PhenylSessionClient<
     try {
       const session = await this.dbClient.get({
         entityName: "_PhenylSession",
-        id
+        id,
       });
       if (new Date(session.expiredAt).getTime() <= Date.now()) {
         this.delete(id); // Run asynchronously
