@@ -89,7 +89,7 @@ export type CustomCommandResult<
 export type LoginCommandResult<
   EN extends string,
   E extends Entity,
-  S extends Object,
+  S extends Object | undefined = Object,
   ER extends ExtraResult = ExtraResult
 > = {
   session: Session<EN, S>;

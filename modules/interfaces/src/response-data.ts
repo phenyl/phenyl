@@ -9,13 +9,13 @@ import {
   MultiUpdateCommandResult,
   MultiValuesCommandResult,
   PushCommandResult,
-  SingleInsertCommandResult
+  SingleInsertCommandResult,
 } from "./command-result";
 import {
   CustomQueryResult,
   PullQueryResult,
   QueryResult,
-  SingleQueryResult
+  SingleQueryResult,
 } from "./query-result";
 
 import { Entity } from "./entity";
@@ -23,11 +23,11 @@ import { ServerError } from "./error";
 import {
   CustomQueryResultObject,
   CustomCommandResultObject,
-  ExtraResult
+  ExtraResult,
 } from "./extra";
 import {
   ExtraResultMethodMap,
-  EntityExtraResultByMethodMap
+  EntityExtraResultByMethodMap,
 } from "./entity-rest-info-map";
 
 /**
@@ -117,7 +117,7 @@ export type GeneralEntityResponseData =
 export type AuthResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object,
+  S extends Object | undefined = Object,
   ERMM extends ExtraResultMethodMap = ExtraResultMethodMap
 > =
   | LoginResponseData<EN, E, S, EntityExtraResultByMethodMap<ERMM, "login">>
@@ -136,7 +136,7 @@ export type GeneralAuthResponseData =
 export type UserEntityResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object,
+  S extends Object | undefined = Object,
   ERMM extends ExtraResultMethodMap = ExtraResultMethodMap
 > = EntityResponseData<E, ERMM> | AuthResponseData<EN, E, S, ERMM>;
 
@@ -286,7 +286,7 @@ export type RunCustomCommandResponseData<
 export type LoginResponseData<
   EN extends string,
   E extends Entity,
-  S extends Object,
+  S extends Object | undefined = Object,
   ER extends ExtraResult = ExtraResult
 > = {
   type: "login";
@@ -333,6 +333,6 @@ export type GeneralRunCustomCommandResponseData = RunCustomCommandResponseData<
 export type GeneralLoginResponseData = LoginResponseData<
   string,
   Entity,
-  Object
+  Object | undefined
 >;
 export type GeneralLogoutResponseData = LogoutResponseData;

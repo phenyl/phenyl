@@ -13,8 +13,7 @@ export interface GeneralServerParams {
   ): Promise<EncodedHttpResponse>;
 }
 
-export interface ServerParams<TM extends GeneralTypeMap>
-  extends GeneralServerParams {
+export interface ServerParams<TM extends GeneralTypeMap> {
   restApiHandler: RestApiHandler<TM>;
   modifyPath?: PathModifier;
   customRequestHandler?(

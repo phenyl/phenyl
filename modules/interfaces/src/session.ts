@@ -1,6 +1,9 @@
 import { PreEntity } from "./entity";
 
-export type Session<EN extends string = string, S extends Object = Object> = {
+export type Session<
+  EN extends string = string,
+  S extends Object | undefined = Object
+> = {
   id: string;
   expiredAt: string;
   entityName: EN;
@@ -9,5 +12,5 @@ export type Session<EN extends string = string, S extends Object = Object> = {
 
 export type PreSession<
   EN extends string = string,
-  S extends Object = Object
+  S extends Object | undefined = Object
 > = PreEntity<Session<EN, S>>;
