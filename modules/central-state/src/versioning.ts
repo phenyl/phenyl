@@ -8,12 +8,12 @@ import {
   PullQueryResult,
   PushCommandResult,
   QueryResult,
-  SingleQueryResult
+  SingleQueryResult,
 } from "@phenyl/interfaces";
 import {
   GeneralUpdateOperation,
   mergeUpdateOperations,
-  normalizeUpdateOperation
+  normalizeUpdateOperation,
 } from "sp2";
 
 import { timeStampWithRandomString } from "@phenyl/utils";
@@ -30,7 +30,7 @@ export class Versioning {
   ): QueryResult<E> {
     return {
       entities: entities.map(this.stripMeta),
-      versionsById: this.getVersionIds(entities)
+      versionsById: this.getVersionIds(entities),
     };
   }
 
@@ -42,7 +42,7 @@ export class Versioning {
   ): SingleQueryResult<E> {
     return {
       entity: this.stripMeta(entity),
-      versionId: this.getVersionId(entity)
+      versionId: this.getVersionId(entity),
     };
   }
 
@@ -57,7 +57,7 @@ export class Versioning {
     if (operations == null) {
       return {
         entity: this.stripMeta(entity),
-        versionId: this.getVersionId(entity)
+        versionId: this.getVersionId(entity),
       };
     }
     return { pulled: 1, operations, versionId: this.getVersionId(entity) };
@@ -77,7 +77,7 @@ export class Versioning {
       n: 1,
       entity: this.stripMeta(entity),
       prevVersionId: this.getPrevVersionId(entity),
-      versionId
+      versionId,
     };
   }
 
@@ -91,7 +91,7 @@ export class Versioning {
       n: entities.length,
       entities: entities.map(this.stripMeta),
       prevVersionsById: this.getPrevVersionIds(entities),
-      versionsById: this.getVersionIds(entities)
+      versionsById: this.getVersionIds(entities),
     };
   }
 
@@ -101,7 +101,7 @@ export class Versioning {
   public static createPushCommandResult<E extends Entity>({
     entity,
     updatedEntity,
-    versionId
+    versionId,
   }: {
     entity: EntityWithMetaInfo<E>;
     updatedEntity: EntityWithMetaInfo<E>;
@@ -122,7 +122,7 @@ export class Versioning {
         hasEntity: 0,
         operations: localUncommittedOperations,
         prevVersionId,
-        versionId: latestVersionId
+        versionId: latestVersionId,
       };
     }
     return {
@@ -130,7 +130,7 @@ export class Versioning {
       hasEntity: 1,
       entity: updatedEntity,
       prevVersionId,
-      versionId: latestVersionId
+      versionId: latestVersionId,
     };
   }
 
@@ -143,7 +143,7 @@ export class Versioning {
   ): GeneralUpdateOperation {
     const mergedOperation = mergeUpdateOperations(...operations);
     const { operation } = this.attachMetaInfoToUpdateCommand({
-      operation: mergedOperation
+      operation: mergedOperation,
     });
     return operation;
   }
@@ -156,7 +156,7 @@ export class Versioning {
   ): EntityWithMetaInfo<E> {
     const versionId = timeStampWithRandomString();
     const _PhenylMeta = {
-      versions: [{ id: versionId, op: "" }]
+      versions: [{ id: versionId, op: "" }],
     };
     return Object.assign({}, entity, { _PhenylMeta });
   }
@@ -170,10 +170,10 @@ export class Versioning {
     const normalizedOperation = normalizeUpdateOperation(command.operation);
     const version = {
       id: timeStampWithRandomString(),
-      op: JSON.stringify(command.operation)
+      op: JSON.stringify(command.operation),
     };
     const $push = Object.assign({}, normalizedOperation.$push, {
-      "_PhenylMeta.versions": { $each: [version], $slice: -100 }
+      "_PhenylMeta.versions": { $each: [version], $slice: -100 },
     });
     const newOperation = Object.assign({}, normalizedOperation, { $push });
     return Object.assign({}, command, { operation: newOperation });
@@ -191,9 +191,9 @@ export class Versioning {
         "_PhenylMeta.locked": {
           timestamp: new Date().toISOString(),
           clientHeadVersionId,
-          ops: operations.map(op => JSON.stringify(op))
-        }
-      }
+          ops: operations.map((op) => JSON.stringify(op)),
+        },
+      },
     };
   }
 
@@ -203,8 +203,8 @@ export class Versioning {
   public static createEndTransactionOperation(): GeneralUpdateOperation {
     return {
       $unset: {
-        "_PhenylMeta.locked": ""
-      }
+        "_PhenylMeta.locked": "",
+      },
     };
   }
 
@@ -244,6 +244,7 @@ export class Versioning {
   public static stripMeta<E extends Entity>(entity: EntityWithMetaInfo<E>): E {
     if (entity.hasOwnProperty("_PhenylMeta")) {
       const copied = Object.assign({}, entity);
+      // @ts-ignore The operand of a 'delete' operator must be optional.
       delete copied._PhenylMeta;
       return copied;
     }
@@ -297,7 +298,7 @@ export class Versioning {
     entities: Array<EntityWithMetaInfo<E>>
   ): { [entityId: string]: string | null } {
     const versionsById: { [entityId: string]: string | null } = {};
-    entities.forEach(entity => {
+    entities.forEach((entity) => {
       versionsById[entity.id] = this.getPrevVersionId(entity);
     });
     return versionsById;
