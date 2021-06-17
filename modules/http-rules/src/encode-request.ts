@@ -207,8 +207,9 @@ export default function encodeRequest(
       };
 
     default:
+      // @ts-ignore Property 'hasOwnProperty' does not exist on type 'never'
       if (reqData!.hasOwnProperty("method")) {
-        // @ts-ignore
+        // @ts-ignore Property 'method' does not exist on type 'never'.
         throw new Error(`Invalid request method: "${reqData.method}"`);
       }
 
