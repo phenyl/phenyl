@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React from "react";
 import { Menu } from "semantic-ui-react";
 import { Link } from "react-router-dom";
@@ -11,7 +12,7 @@ const FunctionalGroup = ({ groupName, functionalNames }: Props) => (
   <Menu.Item key={groupName} name={groupName}>
     <div className="header">{groupName}</div>
     <div className="menu">
-      {functionalNames.map(functionalName => (
+      {functionalNames.map((functionalName) => (
         <Menu.Item
           key={functionalName}
           as={Link}

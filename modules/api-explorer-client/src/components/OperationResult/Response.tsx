@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React from "react";
 import { Segment, Tab, Message } from "semantic-ui-react";
 import JSONTree from "react-json-tree";
@@ -37,7 +38,7 @@ const Response = ({ loading, expanded, response, error }: Props) => {
                   data={response}
                 />
               </Tab.Pane>
-            )
+            ),
           },
           {
             menuItem: "Raw JSON",
@@ -46,8 +47,8 @@ const Response = ({ loading, expanded, response, error }: Props) => {
               <Tab.Pane>
                 <pre>{JSON.stringify(response, null, 2)}</pre>
               </Tab.Pane>
-            )
-          }
+            ),
+          },
         ]}
       />
     );
