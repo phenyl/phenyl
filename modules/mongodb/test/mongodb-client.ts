@@ -48,12 +48,13 @@ describe("filterFindOperation", () => {
   });
 
   it("converts matched string to ObjectId", () => {
-    // @ts-ignore
     const input: FindOperation = {
       $and: [
         // not match
+        // @ts-ignore passing null for id for testing
         { id: null },
         { id: "bar" },
+        // @ts-ignore passing ObjectId for id for testing
         { id: new ObjectId("222222222222222222222222") },
         { id: "000123456789abcdefABCDEF" },
         // match
