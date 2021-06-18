@@ -1,4 +1,3 @@
-import { it, describe, before, after } from "mocha";
 import { GetCommandResult } from "@phenyl/interfaces";
 import assert from "assert";
 import {
@@ -21,11 +20,11 @@ const sessionClient = createSessionClient(dbClient);
 const server = createServer(dbClient);
 
 describe("Integration", () => {
-  before(() => {
+  beforeAll(() => {
     server.listen(PORT);
   });
 
-  after(() => {
+  afterAll(() => {
     server.close();
   });
 

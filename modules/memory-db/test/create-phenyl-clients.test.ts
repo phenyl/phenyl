@@ -1,4 +1,3 @@
-import { describe, it } from "mocha";
 import { createPhenylClients } from "../src/create-phenyl-clients";
 import assert from "assert";
 

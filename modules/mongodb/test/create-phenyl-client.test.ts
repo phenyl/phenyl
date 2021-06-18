@@ -1,4 +1,3 @@
-import { before, after, describe, it } from "mocha";
 import { createPhenylClients } from "../src/create-phenyl-clients";
 import assert from "assert";
 import { PhenylMongoDbConnection } from "../src/connection";
@@ -8,11 +7,10 @@ import { PhenylSessionClient } from "@phenyl/central-state";
 import PhenylRestApi from "@phenyl/rest-api";
 
 let dbClient: MongoClient;
-before(async () => {
-  dbClient = await MongoClient.connect(
-    "mongodb://localhost:27017",
-    { useNewUrlParser: true }
-  );
+beforeAll(async () => {
+  dbClient = await MongoClient.connect("mongodb://localhost:27017", {
+    useNewUrlParser: true,
+  });
 });
 describe("createPhenylClients", () => {
   const conn = new PhenylMongoDbConnection({ dbClient, dbName: "hoge" });
@@ -29,6 +27,6 @@ describe("createPhenylClients", () => {
   });
 });
 
-after(async () => {
+afterAll(async () => {
   dbClient.close();
 });

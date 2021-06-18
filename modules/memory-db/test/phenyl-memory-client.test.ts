@@ -1,8 +1,7 @@
-import { describe, it, before, beforeEach } from "mocha";
 import assert from "assert";
 import {
   createEntityClient,
-  PhenylMemoryDbEntityClient
+  PhenylMemoryDbEntityClient,
 } from "../src/create-entity-client";
 import { update } from "sp2";
 
@@ -17,10 +16,10 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     };
     let client: PhenylMemoryDbEntityClient<TestEntityMap>;
     const entityName = "user";
-    const users = [1, 2, 3].map(n => ({
+    const users = [1, 2, 3].map((n) => ({
       id: `user${n}`,
       name: `U${n}`,
-      num: n
+      num: n,
     }));
 
     beforeEach(async () => {
@@ -31,7 +30,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     it("returns versionsById", async () => {
       const result = await client.find({
         entityName,
-        where: { num: { $gte: 2 } }
+        where: { num: { $gte: 2 } },
       });
       if (result.versionsById === null)
         throw new Error("result.versionsById should exist.");
@@ -46,10 +45,10 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     };
     let client: PhenylMemoryDbEntityClient<TestEntityMap>;
     const entityName = "user";
-    const users = [1, 2, 3].map(n => ({
+    const users = [1, 2, 3].map((n) => ({
       id: `user${n}`,
       name: `U${n}`,
-      num: n
+      num: n,
     }));
 
     beforeEach(async () => {
@@ -60,7 +59,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     it("returns versionId", async () => {
       const result = await client.findOne({
         entityName,
-        where: { num: { $gte: 2 } }
+        where: { num: { $gte: 2 } },
       });
       assert.notStrictEqual(result.versionId, null);
     });
@@ -72,10 +71,10 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     };
     let client: PhenylMemoryDbEntityClient<TestEntityMap>;
     const entityName = "user";
-    const users = [1, 2, 3].map(n => ({
+    const users = [1, 2, 3].map((n) => ({
       id: `user${n}`,
       name: `U${n}`,
-      num: n
+      num: n,
     }));
 
     beforeEach(async () => {
@@ -95,10 +94,10 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     };
     let client: PhenylMemoryDbEntityClient<TestEntityMap>;
     const entityName = "user";
-    const users = [1, 2, 3].map(n => ({
+    const users = [1, 2, 3].map((n) => ({
       id: `user${n}`,
       name: `U${n}`,
-      num: n
+      num: n,
     }));
 
     beforeEach(async () => {
@@ -109,7 +108,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     it("returns versionsById", async () => {
       const result = await client.getByIds({
         entityName,
-        ids: ["user1", "user3"]
+        ids: ["user1", "user3"],
       });
       if (result.versionsById == null)
         throw new Error("result.versionsById should exist.");
@@ -130,23 +129,27 @@ describe("PhenylMemoryClient (test about versioning)", () => {
 
     beforeEach(async () => {
       client = createEntityClient<TestEntityMap>();
-      firstVersionId = (await client.insertOne({
-        entityName: "user",
-        value: user
-      })).versionId;
+      firstVersionId = (
+        await client.insertOne({
+          entityName: "user",
+          value: user,
+        })
+      ).versionId;
     });
     it("returns operation diffs", async () => {
       const operation = { $inc: { age: 1 }, $push: { hobbies: "tennis" } };
-      const currentVersionId = (await client.updateById({
-        id,
-        operation,
-        entityName
-      })).versionId;
+      const currentVersionId = (
+        await client.updateById({
+          id,
+          operation,
+          entityName,
+        })
+      ).versionId;
       // @ts-ignore always has operations
       const { operations, versionId } = await client.pull({
         id,
         entityName,
-        versionId: firstVersionId
+        versionId: firstVersionId,
       });
       assert(operations.length === 1 && versionId === currentVersionId);
       const currentUser = update(user, operations[0]);
@@ -168,7 +171,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     let localVersionId: string;
     let localUser: TestEntityMap["user"];
 
-    before(async () => {
+    beforeAll(async () => {
       client = createEntityClient<TestEntityMap>();
       firstVersionId = (await client.insertOne({ entityName, value: user }))
         .versionId;
@@ -194,7 +197,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       const result = await client.pull({
         entityName,
         id,
-        versionId: localVersionId
+        versionId: localVersionId,
       });
       // @ts-ignore
       if (!result.pulled)
@@ -206,7 +209,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       for (const operation of result.operations) {
         const expectedOp = {
           $inc: { age: 1 },
-          $push: { hobbies: `hobby${i}` }
+          $push: { hobbies: `hobby${i}` },
         };
         assert.deepStrictEqual(operation, expectedOp);
         i++;
@@ -221,7 +224,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       const result = await client.pull({
         entityName,
         id,
-        versionId: firstVersionId
+        versionId: firstVersionId,
       });
       // @ts-ignore
       if (result.pulled)
@@ -235,7 +238,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       const result = await client.pull({
         entityName,
         id,
-        versionId: lastVersionId
+        versionId: lastVersionId,
       });
       // @ts-ignore
       if (!result.pulled)
@@ -243,7 +246,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       assert.deepStrictEqual(result, {
         pulled: 1,
         operations: [],
-        versionId: lastVersionId
+        versionId: lastVersionId,
       });
     });
   });
@@ -256,14 +259,14 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       const client = createEntityClient<TestEntityMap>();
       const result = await client.insertOne({
         entityName: "user",
-        value: { id: "foo", name: "bar" }
+        value: { id: "foo", name: "bar" },
       });
       if (result.versionId == null)
         throw new Error("result.versionId should exist.");
       // @ts-ignore always has _PhenylMeta
       assert(client.entityState.pool.user.foo._PhenylMeta.versions, [
         // @ts-ignore
-        { id: result.versionId, op: "" }
+        { id: result.versionId, op: "" },
       ]);
     });
   });
@@ -285,7 +288,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     it("pushs version info to meta info of the updated entity", async () => {
       const operation = {
         $set: { name: "John" },
-        $push: { hobbies: "jogging" }
+        $push: { hobbies: "jogging" },
       };
       const result = await client.updateById({ id, operation, entityName });
       // @ts-ignore always has _PhenylMeta
@@ -307,7 +310,7 @@ describe("PhenylMemoryClient (test about versioning)", () => {
       const result = await client.updateMulti({
         operation,
         entityName,
-        where: { id: { $regex: /^user/ } }
+        where: { id: { $regex: /^user/ } },
       });
       assert(result.n === 2);
       assert(
@@ -341,13 +344,13 @@ describe("PhenylMemoryClient (test about versioning)", () => {
     it("pushs operations to current entity", async () => {
       const operations = [
         { $set: { name: "John" }, $push: { hobbies: "jogging" } },
-        { $push: { hobbies: "tennis" } }
+        { $push: { hobbies: "tennis" } },
       ];
       const result = await client.push({
         id,
         operations,
         entityName,
-        versionId
+        versionId,
       });
       // @ts-ignore always has operations
       if (!result.operations) throw new Error("result.operation should exist.");

@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { after, before, describe, it } from "mocha";
 import {
   createEntityClient,
   PhenylMongoDbEntityClient,
@@ -18,7 +17,7 @@ const url = "mongodb://localhost:27017";
 
 //   assertEntityClient(client, mocha, assert)
 
-//   after(() => {
+//   afterAll(() => {
 //     conn.close()
 //   })
 // })
@@ -32,12 +31,12 @@ describe("MongoDBEntityClient", () => {
   const HEX_24_ID = "000000000123456789abcdef";
   let generatedId: string;
 
-  before(async () => {
+  beforeAll(async () => {
     conn = await connect(url, "phenyl-mongodb-test");
     entityClient = createEntityClient(conn);
   });
 
-  after(async () => {
+  afterAll(async () => {
     await entityClient.delete({ entityName: "user", where: {} });
     conn.close();
   });

@@ -2,6 +2,12 @@
 # yarn lockfile v1
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6e09ac8d... [all packages] Migrate to jest
 "@phenyl/central-state@^4.0.3":
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.3.tgz#ebf90de0cb2f4cb90d1973855f8c2f6bd47d0f41"
@@ -34,6 +40,12 @@
     "@phenyl/interfaces" "^4.0.3"
     sp2 "^1.6.3"
 
+<<<<<<< HEAD
+=======
+>>>>>>> c8022290... [all packages] update dependencies
+=======
+>>>>>>> 4def53ac... [all packages] Migrate to jest
+>>>>>>> 6e09ac8d... [all packages] Migrate to jest
 "@sp2/format@^1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"

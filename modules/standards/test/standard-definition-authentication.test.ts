@@ -1,5 +1,4 @@
 import http from "http";
-import { it, describe, before, after } from "mocha";
 import PhenylHttpServer from "@phenyl/http-server";
 import PhenylRestApi from "@phenyl/rest-api";
 import PhenylHttpClient from "@phenyl/http-client";
@@ -7,7 +6,7 @@ import {
   GeneralTypeMap,
   Session,
   AuthCommandMapOf,
-  ResponseEntityMapOf
+  ResponseEntityMapOf,
 } from "@phenyl/interfaces";
 import { createEntityClient } from "@phenyl/memory-db";
 import { StandardUserDefinition } from "../src";
@@ -57,7 +56,7 @@ class PatientDefinition extends StandardUserDefinition {
       accountPropName: "email",
       passwordPropName: "password",
       entityClient: memoryClient,
-      ttl: 24 * 3600
+      ttl: 24 * 3600,
     });
   }
 
@@ -70,34 +69,34 @@ const functionalGroup = {
   customQueries: {},
   customCommands: {},
   users: {
-    patient: new PatientDefinition()
+    patient: new PatientDefinition(),
   },
-  nonUsers: {}
+  nonUsers: {},
 };
 
 let server: PhenylHttpServer;
-before(() => {
+beforeAll(() => {
   const restApiHandler: PhenylRestApi<MyTypeMap> = new PhenylRestApi(
     functionalGroup,
     {
       entityClient: memoryClient,
-      sessionClient
+      sessionClient,
     }
   );
 
   server = new PhenylHttpServer(http.createServer(), {
-    restApiHandler
+    restApiHandler,
   });
   server.listen(8080);
 });
 
-after(() => {
+afterAll(() => {
   server.close();
 });
 
 describe("Phenyl Standards with Authentication", () => {
   const client: PhenylHttpClient<MyTypeMap> = new PhenylHttpClient({
-    url: "http://localhost:8080"
+    url: "http://localhost:8080",
   });
 
   let insertedEntity: PatientResponse;
@@ -108,7 +107,7 @@ describe("Phenyl Standards with Authentication", () => {
       expiredAt: "",
       userId: "shinout@example.com",
       externalId: "",
-      ttl: 12345
+      ttl: 12345,
     });
 
     const inserted = await client.insertAndGet(
@@ -117,8 +116,8 @@ describe("Phenyl Standards with Authentication", () => {
         value: {
           name: "Shin Suzuki",
           email: "shinout@example.com",
-          password: "shin123"
-        }
+          password: "shin123",
+        },
       },
       preSession.id
     );
@@ -136,8 +135,8 @@ describe("Phenyl Standards with Authentication", () => {
       entityName: "patient",
       credentials: {
         email: "shinout@example.com",
-        password: "shin123"
-      }
+        password: "shin123",
+      },
     });
 
     if (
@@ -152,7 +151,7 @@ describe("Phenyl Standards with Authentication", () => {
     assert.deepStrictEqual(loggedInUser, {
       name: "Shin Suzuki",
       email: "shinout@example.com",
-      id: insertedEntity.id
+      id: insertedEntity.id,
     });
   });
 
@@ -161,7 +160,7 @@ describe("Phenyl Standards with Authentication", () => {
       {
         entityName: "patient",
         id: insertedEntity.id,
-        operation: { $set: { email: "example@example.com" } }
+        operation: { $set: { email: "example@example.com" } },
       },
       loggedInSession.id
     );

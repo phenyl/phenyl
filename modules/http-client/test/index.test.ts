@@ -1,6 +1,5 @@
 import { createServer } from "http";
 import assert from "assert";
-import { after, before, describe, it } from "mocha";
 import PhenylHttpServer from "@phenyl/http-server";
 import PhenylRestApi from "@phenyl/rest-api";
 import { createEntityClient } from "@phenyl/memory-db";
@@ -47,7 +46,7 @@ describe("constructor", () => {
 });
 
 describe("PhenylHttpClient as http client", () => {
-  before(() => {
+  beforeAll(() => {
     server.listen(8080);
   });
 
@@ -92,7 +91,7 @@ describe("PhenylHttpClient as http client", () => {
     });
   });
 
-  after(() => {
+  afterAll(() => {
     server.close();
   });
 });

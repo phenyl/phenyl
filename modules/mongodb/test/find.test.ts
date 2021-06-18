@@ -1,9 +1,8 @@
 import { MongoDbConnection, connect } from "../src/connection";
 import {
   PhenylMongoDbEntityClient,
-  createEntityClient
+  createEntityClient,
 } from "../src/create-entity-client";
-import { after, before, describe, it } from "mocha";
 
 import assert from "assert";
 
@@ -15,13 +14,10 @@ describe("MongoDBEntityClient", () => {
     user: { id: string; name: string; hobbies: string[] };
   }>;
 
-  before(async () => {
-    conn = await connect(
-      url,
-      "phenyl-mongodb-test"
-    );
+  beforeAll(async () => {
+    conn = await connect(url, "phenyl-mongodb-test");
     entityClient = createEntityClient(conn, {
-      validatePushCommand: () => true
+      validatePushCommand: () => true,
     });
     await entityClient.insertMulti({
       entityName: "user",
@@ -29,12 +25,12 @@ describe("MongoDBEntityClient", () => {
         { name: "Smith", hobbies: [] },
         { name: "Shin", hobbies: [] },
         { name: "John", hobbies: [] },
-        { name: "Mary", hobbies: [] }
-      ]
+        { name: "Mary", hobbies: [] },
+      ],
     });
   });
 
-  after(async () => {
+  afterAll(async () => {
     await entityClient.delete({ entityName: "user", where: {} });
     conn.close();
   });
@@ -44,32 +40,28 @@ describe("MongoDBEntityClient", () => {
       const result = await entityClient.find({
         entityName: "user",
         where: {
-          name: { $exists: true }
+          name: { $exists: true },
         },
-        sort: { name: 1 }
+        sort: { name: 1 },
       });
-      assert.deepStrictEqual(result.entities.map(v => v.name), [
-        "John",
-        "Mary",
-        "Shin",
-        "Smith"
-      ]);
+      assert.deepStrictEqual(
+        result.entities.map((v) => v.name),
+        ["John", "Mary", "Shin", "Smith"]
+      );
     });
 
     it("should find entities order by DESC when SortNotation is given", async () => {
       const result = await entityClient.find({
         entityName: "user",
         where: {
-          name: { $exists: true }
+          name: { $exists: true },
         },
-        sort: { name: -1 }
+        sort: { name: -1 },
       });
-      assert.deepStrictEqual(result.entities.map(v => v.name), [
-        "Smith",
-        "Shin",
-        "Mary",
-        "John"
-      ]);
+      assert.deepStrictEqual(
+        result.entities.map((v) => v.name),
+        ["Smith", "Shin", "Mary", "John"]
+      );
     });
   });
 });

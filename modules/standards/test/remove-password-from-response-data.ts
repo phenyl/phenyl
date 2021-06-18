@@ -1,4 +1,3 @@
-import { it, describe } from "mocha";
 import assert from "assert";
 import { EntityResponseData } from "@phenyl/interfaces";
 import { removePasswordFromResponseData } from "../src/remove-password-from-response-data";
@@ -12,10 +11,10 @@ describe("removePasswordFromResponseData", () => {
           id: "foo",
           email: "foo@example.com",
           password: "foobar",
-          name: "John"
+          name: "John",
         },
-        versionId: "xyz"
-      }
+        versionId: "xyz",
+      },
     };
 
     const modifiedResData = removePasswordFromResponseData(resData, "password");
@@ -25,10 +24,10 @@ describe("removePasswordFromResponseData", () => {
         entity: {
           id: "foo",
           email: "foo@example.com",
-          name: "John"
+          name: "John",
         },
-        versionId: "xyz"
-      }
+        versionId: "xyz",
+      },
     });
   });
 
@@ -41,12 +40,12 @@ describe("removePasswordFromResponseData", () => {
           id: "foo",
           account: {
             email: "foo@example.com",
-            password: "foobar"
+            password: "foobar",
           },
-          name: "John"
+          name: "John",
         },
-        versionId: "xyz"
-      }
+        versionId: "xyz",
+      },
     };
 
     const modifiedResData = removePasswordFromResponseData(
@@ -59,12 +58,12 @@ describe("removePasswordFromResponseData", () => {
         entity: {
           id: "foo",
           account: {
-            email: "foo@example.com"
+            email: "foo@example.com",
           },
-          name: "John"
+          name: "John",
         },
-        versionId: "xyz"
-      }
+        versionId: "xyz",
+      },
     });
   });
 });
