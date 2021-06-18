@@ -1,5 +1,3 @@
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React from "react";
 import { Breadcrumb as SemanticBreadcrumb } from "semantic-ui-react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";

@@ -1,5 +1,3 @@
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React from "react";
 import { Segment, Tab, Message } from "semantic-ui-react";
 import JSONTree from "react-json-tree";
 

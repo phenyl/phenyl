@@ -1,6 +1,5 @@
 import { Action } from "redux";
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { Message, Form, Button, Header, Icon, Modal } from "semantic-ui-react";
 import { ThunkDispatch } from "redux-thunk";
