@@ -19,10 +19,10 @@
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
 
-"@types/ejs@3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.0.5.tgz#95a3a1c3d9603eba80fe67ff56da1ba275ef2eda"
-  integrity sha512-k4ef69sS4sIqAPW9GoBnN+URAON2LeL1H0duQvL4RgdEBna19/WattYSA1qYqvbVEDRTSWzOw56tCLhC/m/IOw==
+"@types/ejs@^3.0.5":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@types/ejs/-/ejs-3.0.6.tgz#aca442289df623bfa8e47c23961f0357847b83fe"
+  integrity sha512-fj1hi+ZSW0xPLrJJD+YNwIh9GZbyaIepG26E/gXvp8nCa2pYokxUYO1sK9qjGxp2g8ryZYuon7wmjpwE2cyASQ==
 
 abbrev@1:
   version "1.1.1"
@@ -282,10 +282,10 @@ duplexer3@^0.1.4:
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
   integrity sha1-7gHdHKwO08vH/b6jfcCo8c4ALOI=
 
-ejs@^3.0.1:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.5.tgz#aed723844dc20acb4b170cd9ab1017e476a0d93b"
-  integrity sha512-dldq3ZfFtgVTJMLjOe+/3sROTzALlL9E34V4/sDtUd/KlBSS0s6U1/+WPE1B4sj9CXHJpL1M6rhNJnc9Wbal9w==
+ejs@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.6.tgz#5bfd0a0689743bb5268b3550cceeebbc1702822a"
+  integrity sha512-9lt9Zse4hPucPkoP7FHDF0LQAlGyF9JVpnClFLFH3aSSbxmyoqINRpp/9wePWJTUl4KOQwRL72Iw3InHPDkoGw==
   dependencies:
     jake "^10.6.1"
 
@@ -597,7 +597,11 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
+<<<<<<< HEAD
 nodemon@2.0.7:
+=======
+nodemon@^2.0.7:
+>>>>>>> c8022290... [all packages] update dependencies
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-2.0.7.tgz#6f030a0a0ebe3ea1ba2a38f71bf9bab4841ced32"
   integrity sha512-XHzK69Awgnec9UzHr1kc8EomQh4sjTQ8oRf8TsGrSmHDx9/UmiGG9E/mM3BuTfNeFwdNBvrqQq/RHL0xIeyFOA==
@@ -681,7 +685,7 @@ picomatch@^2.0.4:
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.1.1.tgz#ecdfbea7704adb5fe6fb47f9866c4c0e15e905c5"
   integrity sha512-OYMyqkKzK7blWO/+XZYP6w8hH0LDvkBvdvKukti+7kqYFCiEAk+gI3DWnryapc0Dau05ugGTy0foQ6mqn4AHYA==
 
-power-crypt@0.2.2:
+power-crypt@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/power-crypt/-/power-crypt-0.2.2.tgz#f748c2d7007bb1fb7d6345962819c1ef1db6ee33"
   integrity sha512-w7M5xV7MnHg+3ySgk9Jxegzv6jIKXFVkfRmkR3i/lL0+jxos6oeOgdejl6oRHDaAtSWCJF7rPjju+gU+q/4fZw==

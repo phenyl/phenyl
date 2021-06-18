@@ -2,13 +2,25 @@
 # yarn lockfile v1
 
 
+<<<<<<< HEAD
 "@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.1":
+=======
+"@babel/runtime@^7.9.2":
+  version "7.14.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
+  integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@sinonjs/commons@^1.6.0", "@sinonjs/commons@^1.7.0", "@sinonjs/commons@^1.8.3":
+>>>>>>> c8022290... [all packages] update dependencies
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.3.tgz#3802ddd21a50a949b6721ddd72da36e67e7f1b2d"
   integrity sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==
   dependencies:
     type-detect "4.0.8"
 
+<<<<<<< HEAD
 "@sinonjs/fake-timers@^6.0.0", "@sinonjs/fake-timers@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/fake-timers/-/fake-timers-6.0.1.tgz#293674fccb3262ac782c7aadfdeca86b10c75c40"
@@ -20,6 +32,19 @@
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-5.3.1.tgz#375a45fe6ed4e92fca2fb920e007c48232a6507f"
   integrity sha512-1Hc0b1TtyfBu8ixF/tpfSHTVWKwCBLY4QJbkgnE7HcwyvT2xArDxb4K7dMgqRm3szI+LJbzmW/s4xxEhv6hwDg==
+=======
+"@sinonjs/fake-timers@^7.0.4", "@sinonjs/fake-timers@^7.1.0":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@sinonjs/fake-timers/-/fake-timers-7.1.2.tgz#2524eae70c4910edccf99b2f4e6efc5894aff7b5"
+  integrity sha512-iQADsW4LBMISqZ6Ci1dupJL9pprqwcVFTcOsEmQOEhW+KLCVn/Y4Jrvg2k19fIHCp+iFprriYPTdRcQR8NbUPg==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+
+"@sinonjs/samsam@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@sinonjs/samsam/-/samsam-6.0.2.tgz#a0117d823260f282c04bff5f8704bdc2ac6910bb"
+  integrity sha512-jxPRPp9n93ci7b8hMfJOFDPRLFYadN6FSpeROFTR4UNF4i5b+EK6m4QXPO46BDhFgRy1JuS87zAnFOzCUwMJcQ==
+>>>>>>> c8022290... [all packages] update dependencies
   dependencies:
     "@sinonjs/commons" "^1.6.0"
     lodash.get "^4.4.2"
@@ -52,6 +77,7 @@
     "@sp2/retriever" "^1.6.3"
     fast-deep-equal "^3.0.0"
 
+<<<<<<< HEAD
 "@types/sinon@^9.0.10":
   version "9.0.11"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-9.0.11.tgz#7af202dda5253a847b511c929d8b6dda170562eb"
@@ -68,6 +94,19 @@ diff@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
   integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
+=======
+"@types/sinon@^10.0.2":
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-10.0.2.tgz#f360d2f189c0fd433d14aeb97b9d705d7e4cc0e4"
+  integrity sha512-BHn8Bpkapj8Wdfxvh2jWIUoaYB/9/XhsL0oOvBfRagJtKlSl9NWPcFOz2lRukI9szwGxFtYZCTejJSqsGDbdmw==
+  dependencies:
+    "@sinonjs/fake-timers" "^7.1.0"
+
+diff@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-5.0.0.tgz#7ed6ad76d859d030787ec35855f5b1daf31d852b"
+  integrity sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==
+>>>>>>> c8022290... [all packages] update dependencies
 
 fast-deep-equal@^3.0.0, fast-deep-equal@^3.1.1:
   version "3.1.3"
@@ -92,10 +131,10 @@ isarray@0.0.1:
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
   integrity sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8=
 
-"js-tokens@^3.0.0 || ^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
-  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
+just-extend@^4.0.2:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/just-extend/-/just-extend-4.2.1.tgz#ef5e589afb61e5d66b24eca749409a8939a8c744"
+  integrity sha512-g3UB796vUFIY90VIv/WX3L2c8CS2MdWUww3CNrYmqza1Fg0DURc2K/O4YrnklBdQarSJ/y8JnJYDGc+1iumQjg==
 
 just-extend@^4.0.2:
   version "4.2.1"
@@ -113,6 +152,7 @@ lodash.get@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
+<<<<<<< HEAD
 
 loose-envify@^1.4.0:
   version "1.4.0"
@@ -128,6 +168,16 @@ nise@^4.0.4:
   dependencies:
     "@sinonjs/commons" "^1.7.0"
     "@sinonjs/fake-timers" "^6.0.0"
+=======
+
+nise@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/nise/-/nise-5.1.0.tgz#713ef3ed138252daef20ec035ab62b7a28be645c"
+  integrity sha512-W5WlHu+wvo3PaKLsJJkgPup2LrsXCcm7AWwyNZkUnn5rwPkuPBi3Iwk5SQtN0mv+K65k7nKKjwNQ30wg3wLAQQ==
+  dependencies:
+    "@sinonjs/commons" "^1.7.0"
+    "@sinonjs/fake-timers" "^7.0.4"
+>>>>>>> c8022290... [all packages] update dependencies
     "@sinonjs/text-encoding" "^0.7.1"
     just-extend "^4.0.2"
     path-to-regexp "^1.7.0"
@@ -163,14 +213,14 @@ path-to-regexp@^1.7.0:
   dependencies:
     isarray "0.0.1"
 
-redux@4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
-  integrity sha512-VSz1uMAH24DM6MF72vcojpYPtrTUu3ByVWfPL1nPfVRb5mZVTve5GnNCUV53QM/BZ66xfWrm0CTWoM+Xlz8V1w==
+redux@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.0.tgz#eb049679f2f523c379f1aff345c8612f294c88d4"
+  integrity sha512-uI2dQN43zqLWCt6B/BMGRMY6db7TTY4qeHHfGeKb3EOhmOKjU3KdWvNLJyqaHRksv/ErdNH7cFZWg9jXtewy4g==
   dependencies:
-    loose-envify "^1.4.0"
-    symbol-observable "^1.2.0"
+    "@babel/runtime" "^7.9.2"
 
+<<<<<<< HEAD
 sinon@^9.2.4:
   version "9.2.4"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-9.2.4.tgz#e55af4d3b174a4443a8762fa8421c2976683752b"
@@ -182,6 +232,24 @@ sinon@^9.2.4:
     diff "^4.0.2"
     nise "^4.0.4"
     supports-color "^7.1.0"
+=======
+regenerator-runtime@^0.13.4:
+  version "0.13.7"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
+  integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
+
+sinon@^11.1.1:
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-11.1.1.tgz#99a295a8b6f0fadbbb7e004076f3ae54fc6eab91"
+  integrity sha512-ZSSmlkSyhUWbkF01Z9tEbxZLF/5tRC9eojCdFh33gtQaP7ITQVaMWQHGuFM7Cuf/KEfihuh1tTl3/ABju3AQMg==
+  dependencies:
+    "@sinonjs/commons" "^1.8.3"
+    "@sinonjs/fake-timers" "^7.1.0"
+    "@sinonjs/samsam" "^6.0.2"
+    diff "^5.0.0"
+    nise "^5.1.0"
+    supports-color "^7.2.0"
+>>>>>>> c8022290... [all packages] update dependencies
 
 sp2@^1.6.3:
   version "1.6.3"
@@ -192,13 +260,18 @@ sp2@^1.6.3:
     "@sp2/retriever" "^1.6.3"
     "@sp2/updater" "^1.6.3"
 
+<<<<<<< HEAD
 supports-color@^7.1.0:
+=======
+supports-color@^7.2.0:
+>>>>>>> c8022290... [all packages] update dependencies
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-7.2.0.tgz#1b7dcdcb32b8138801b3e478ba6a51caa89648da"
   integrity sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
   dependencies:
     has-flag "^4.0.0"
 
+<<<<<<< HEAD
 symbol-observable@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
@@ -210,6 +283,14 @@ type-detect@4.0.8, type-detect@^4.0.8:
   integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
 
 upbin@0.9.2:
+=======
+type-detect@4.0.8, type-detect@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
+  integrity sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g==
+
+upbin@^0.9.2:
+>>>>>>> c8022290... [all packages] update dependencies
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/upbin/-/upbin-0.9.2.tgz#d7e548c23b599079cf4f334754e6f9b6b5490774"
   integrity sha512-s7b/IMho/tn2IqeY1D6izU2L5f1W16KzQj3Ri5/9D/4jc48Mkot7KVvBFXpvm6Q5rL5tyEb6iylGU+fyMLwX6g==

@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.17.tgz#191b71e7f4c325ee0fb23bc4a996477d92b8c39b"
   integrity sha512-Is+l3mcHvs47sKy+afn2O1rV4ldZFU7W8101cNlOd+MRbjM4Onida8jSZnJdTe/0Pcf25g9BNIUsuugmE6puHA==
 
-"@types/ws@7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.0.tgz#499690ea08736e05a8186113dac37769ab251a0e"
-  integrity sha512-Y29uQ3Uy+58bZrFLhX36hcI3Np37nqWE7ky5tjiDoy1GDZnIwVxS0CgF+s+1bXMzjKBFy+fqaRfb708iNzdinw==
+"@types/ws@^7.4.5":
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.5.tgz#8ff0f7efcd8fea19f51f9dd66cb8b498d172a752"
+  integrity sha512-8mbDgtc8xpxDDem5Gwj76stBDJX35KQ3YBoayxlqUQcL5BZUthiqP/VQ4PQnLHqM4PmlbyO74t98eJpURO+gPA==
   dependencies:
     "@types/node" "*"
 
@@ -87,7 +87,7 @@ babel-messages@^6.23.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-register@6.26.0, babel-register@^6.26.0:
+babel-register@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.26.0.tgz#6ed021173e2fcb486d7acb45c6009a856f647071"
   integrity sha1-btAhFz4vy0htestFxgCahW9kcHE=
@@ -424,14 +424,14 @@ trim-right@^1.0.1:
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
   integrity sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=
 
-upbin@0.9.2:
+upbin@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/upbin/-/upbin-0.9.2.tgz#d7e548c23b599079cf4f334754e6f9b6b5490774"
   integrity sha512-s7b/IMho/tn2IqeY1D6izU2L5f1W16KzQj3Ri5/9D/4jc48Mkot7KVvBFXpvm6Q5rL5tyEb6iylGU+fyMLwX6g==
   dependencies:
     find-up "^4.0.0"
 
-ws@^7.2.0:
-  version "7.4.3"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.3.tgz#1f9643de34a543b8edb124bdcbc457ae55a6e5cd"
-  integrity sha512-hr6vCR76GsossIRsr8OLR9acVVm1jyfEWvhbNjtgPOrfvAlKzvyeg/P6r8RuDjRyrcQoPQT7K0DGEPc7Ae6jzA==
+ws@^7.5.0:
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.0.tgz#0033bafea031fb9df041b2026fc72a571ca44691"
+  integrity sha512-6ezXvzOZupqKj4jUqbQ9tXuJNo+BR2gU8fFRk3XCP3e0G6WT414u5ELe6Y0vtp7kmSJ3F7YWObSNr1ESsgi4vw==

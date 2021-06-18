@@ -27,13 +27,12 @@ core-js@^2.0.0:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-cross-fetch@^3.0.2:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.4.tgz#7bef7020207e684a7638ef5f2f698e24d9eb283c"
-  integrity sha512-MSHgpjQqgbT/94D4CyADeNoYh52zMkCX4pcJvPP5WqPsLFMKjr2TCMg381ox5qI0ii2dPwaLx/00477knXqXVw==
+cross-fetch@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
-    node-fetch "2.6.0"
-    whatwg-fetch "3.0.0"
+    node-fetch "2.6.1"
 
 define-properties@^1.1.2:
   version "1.1.3"
@@ -100,10 +99,10 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-node-fetch@2.6.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
-  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+node-fetch@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 object-keys@^1.0.0, object-keys@^1.0.12:
   version "1.1.1"
@@ -222,7 +221,7 @@ power-assert-util-string-width@^1.2.0:
   dependencies:
     eastasianwidth "^0.2.0"
 
-power-assert@1.6.1:
+power-assert@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/power-assert/-/power-assert-1.6.1.tgz#b28cbc02ae808afd1431d0cd5093a39ac5a5b1fe"
   integrity sha512-VWkkZV6Y+W8qLX/PtJu2Ur2jDPIs0a5vbP0TpKeybNcIXmT4vcKoVkyTp5lnQvTpY/DxacAZ4RZisHRHLJcAZQ==
@@ -261,17 +260,12 @@ universal-deep-strict-equal@^1.2.1:
     indexof "0.0.1"
     object-keys "^1.0.0"
 
-upbin@0.9.2:
+upbin@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/upbin/-/upbin-0.9.2.tgz#d7e548c23b599079cf4f334754e6f9b6b5490774"
   integrity sha512-s7b/IMho/tn2IqeY1D6izU2L5f1W16KzQj3Ri5/9D/4jc48Mkot7KVvBFXpvm6Q5rL5tyEb6iylGU+fyMLwX6g==
   dependencies:
     find-up "^4.0.0"
-
-whatwg-fetch@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
-  integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
 
 xtend@^4.0.0:
   version "4.0.2"
