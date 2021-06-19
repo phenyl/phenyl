@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React from "react";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
@@ -64,17 +65,14 @@ const mapStateToProps = (
 
   return {
     version: pkg.version,
-    userName: displayName
+    userName: displayName,
   };
 };
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
   logout() {
     dispatch(logout());
-  }
+  },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Sidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);

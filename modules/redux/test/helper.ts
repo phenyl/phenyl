@@ -5,7 +5,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 import PhenylHttpClient from "@phenyl/http-client";
 import {
   GeneralTypeMap,
-  GeneralAction,
+  ActionWithTypeMap,
   LocalState,
   AuthCommandMapOf,
   ResponseEntityMapOf,
@@ -79,10 +79,12 @@ export const createPhenylRedux = (client: PhenylHttpClient<MyTypeMap>) => {
     client,
     storeKey: "phenyl",
   });
-  const store = createStore<Store, GeneralAction, {}, {}>(
-    combineReducers({ phenyl: reducer }),
-    applyMiddleware(middleware)
-  );
+  const store = createStore<
+    Store,
+    ActionWithTypeMap<MyTypeMap, "patient", "patient">,
+    {},
+    {}
+  >(combineReducers({ phenyl: reducer }), applyMiddleware(middleware));
   return { store, actions };
 };
 

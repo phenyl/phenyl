@@ -3,7 +3,7 @@ import {
   IdDeleteCommand,
   IdUpdateCommand,
   LoginCommand,
-  LogoutCommand
+  LogoutCommand,
 } from "./command";
 
 import { GeneralUpdateOperation } from "sp2";
@@ -16,13 +16,13 @@ import {
   EntityNameOf,
   EntityExtraParamsOf,
   ResponseEntityOf,
-  EntityRestInfoMapOf
+  EntityRestInfoMapOf,
 } from "./entity-rest-info-map";
 import {
   UserEntityNameOf,
   AuthCredentialsOf,
   AuthSessionOf,
-  AuthCommandMapOf
+  AuthCommandMapOf,
 } from "./auth-command-map";
 import { LocalState } from "./local-state";
 
@@ -186,7 +186,7 @@ export type ResolveErrorAction = {
 export type SetSessionAction<
   UN extends string,
   E extends Entity,
-  S extends Object = Object
+  S extends Object | undefined = Object
 > = {
   type: "phenyl/setSession";
   payload: {

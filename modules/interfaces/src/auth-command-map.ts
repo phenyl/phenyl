@@ -7,7 +7,7 @@ import {
   Response,
   EntityRestInfoMapOf,
   GeneralEntityRestInfo,
-  EntityRestInfo
+  EntityRestInfo,
 } from "./entity-rest-info-map";
 import { Session } from "./session";
 
@@ -97,9 +97,9 @@ export type AuthSessions<
   AM extends GeneralAuthCommandMap,
   EN extends Key<AM>
 > = "session" extends keyof AM[EN]
-  ? AM[EN]["session"] extends Object
-    ? AM[EN]["session"]
-    : Object
+  ? AM[EN]["session"] extends undefined
+    ? Object
+    : AM[EN]["session"]
   : Object;
 
 type ValueOf<T> = T[keyof T];
@@ -111,11 +111,11 @@ export type AllSessions<AM extends GeneralAuthCommandMap> = ValueOf<
     [EN in Key<AM>]: Session<
       EN,
       "session" extends keyof AM[EN]
-        ? AM[EN]["session"] extends Object
-          ? AM[EN]["session"]
-          : Object
+        ? AM[EN]["session"] extends undefined
+          ? Object
+          : AM[EN]["session"]
         : Object
-    >
+    >;
   }
 >;
 

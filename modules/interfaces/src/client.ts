@@ -16,7 +16,7 @@ import {
   GeneralDeleteCommand,
   GeneralCustomCommand,
   GeneralLoginCommand,
-  GeneralLogoutCommand
+  GeneralLogoutCommand,
 } from "./command";
 import {
   CustomCommandResult,
@@ -39,7 +39,7 @@ import {
   GeneralDeleteCommandResult,
   GeneralCustomCommandResult,
   GeneralLogoutCommandResult,
-  GeneralLoginCommandResult
+  GeneralLoginCommandResult,
 } from "./command-result";
 import {
   CustomQuery,
@@ -51,7 +51,7 @@ import {
   GeneralIdsQuery,
   GeneralIdQuery,
   GeneralPullQuery,
-  GeneralCustomQuery
+  GeneralCustomQuery,
 } from "./query";
 import {
   CustomQueryResult,
@@ -61,7 +61,7 @@ import {
   GeneralQueryResult,
   GeneralSingleQueryResult,
   GeneralPullQueryResult,
-  GeneralCustomQueryResult
+  GeneralCustomQueryResult,
 } from "./query-result";
 
 import { Key } from "./utils";
@@ -77,7 +77,7 @@ import {
   EntityRestInfoMapOf,
   ResponseEntityMapOf,
   EntityExtraParams,
-  EntityExtraResult
+  EntityExtraResult,
 } from "./entity-rest-info-map";
 import {
   GeneralAuthCommandMap,
@@ -85,7 +85,7 @@ import {
   ResponseAuthUser,
   AuthSessions,
   AuthCommandMapOf,
-  AllSessions
+  AllSessions,
 } from "./auth-command-map";
 import {
   GeneralCustomMap,
@@ -98,7 +98,7 @@ import {
   CustomQueryExtraParams,
   CustomQueryExtraResult,
   CustomCommandExtraParams,
-  CustomCommandExtraResult
+  CustomCommandExtraResult,
 } from "./custom-map";
 import { GeneralTypeMap } from "./type-map";
 
@@ -469,7 +469,7 @@ export interface GeneralAuthClient {
 export interface AuthClient<
   RM extends GeneralEntityRestInfoMap,
   AM extends GeneralAuthCommandMap
-> extends GeneralAuthClient {
+> {
   login<UN extends Key<RM> & Key<AM>>(
     command: LoginCommand<
       UN,

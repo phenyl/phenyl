@@ -1,4 +1,5 @@
 import { Action } from "redux";
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Message, Form, Button, Header, Icon, Modal } from "semantic-ui-react";
@@ -26,7 +27,7 @@ class LoginModal extends Component<Props> {
     accountPropName: "",
     accountPropValue: "",
     passwordPropName: "",
-    passwordPropValue: ""
+    passwordPropValue: "",
   };
 
   handleChangeEntity = (event: any, { value }: { value: string }) => {
@@ -38,14 +39,14 @@ class LoginModal extends Component<Props> {
       // @ts-ignore global PhenylFunctionalGroupSkeleton
       accountPropName,
       // @ts-ignore global PhenylFunctionalGroupSkeleton
-      passwordPropName
+      passwordPropName,
       // @ts-ignore global PhenylFunctionalGroupSkeleton
     } = PhenylFunctionalGroupSkeleton.users[value];
 
     this.setState({
       entityName: value,
       accountPropName,
-      passwordPropName
+      passwordPropName,
     });
   };
 
@@ -59,7 +60,7 @@ class LoginModal extends Component<Props> {
   handleLogin = () => {
     const credential = {
       [this.state.accountPropName]: this.state.accountPropValue,
-      [this.state.passwordPropName]: this.state.passwordPropValue
+      [this.state.passwordPropName]: this.state.passwordPropValue,
     };
     this.props.login(this.state.entityName, credential);
   };
@@ -83,10 +84,10 @@ class LoginModal extends Component<Props> {
             <Form.Field>
               <Form.Select
                 label="User entity"
-                options={entityNames.map(entityName => ({
+                options={entityNames.map((entityName) => ({
                   key: entityName,
                   text: entityName,
-                  value: entityName
+                  value: entityName,
                 }))}
                 defaultValue={entityNames[0]}
                 onChange={this.handleChangeEntity}
@@ -144,7 +145,7 @@ const mapStateToProps = (state: State) => ({
   // @ts-ignore global PhenylFunctionalGroupSkeleton
   entityNames: Object.keys(PhenylFunctionalGroupSkeleton.users),
   error: state.user.error,
-  busy: state.user.busy
+  busy: state.user.busy,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
@@ -153,10 +154,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>) => ({
   },
   loginAsAnonymous() {
     dispatch(loginAsAnonymous());
-  }
+  },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginModal);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);

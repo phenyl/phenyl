@@ -9,7 +9,7 @@ import { GeneralUserEntityResponseData } from "./response-data";
 export type AuthenticationResult<
   EN extends string,
   E extends Entity,
-  S extends Object
+  S extends Object | undefined = Object
 > = {
   preSession: PreSession<EN, S>;
   user: E | null;

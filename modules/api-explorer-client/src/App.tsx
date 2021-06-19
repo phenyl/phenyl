@@ -1,10 +1,11 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter, Route, Switch } from "react-router-dom";
 import {
   Sidebar as SemanticSidebar,
   Segment,
-  Divider
+  Divider,
 } from "semantic-ui-react";
 import LoginModal from "./containers/LoginModal";
 import Sidebar from "./containers/Sidebar";
@@ -83,7 +84,7 @@ const App = ({ mustLogin }: Props) => (
 );
 
 const mapStateToProps = (state: State) => ({
-  mustLogin: !state.user.anonymous && !state.user.session
+  mustLogin: !state.user.anonymous && !state.user.session,
 });
 
 // @ts-ignore something wrong with withRouter

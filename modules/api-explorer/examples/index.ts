@@ -3,12 +3,11 @@ import PhenylRestApi from "@phenyl/rest-api";
 import { createEntityClient } from "@phenyl/memory-db";
 import {
   StandardUserDefinition,
-  StandardEntityDefinition
+  StandardEntityDefinition,
 } from "@phenyl/standards";
 import PhenylHttpServer from "@phenyl/http-server";
 import {
   Session,
-  GeneralRequestData,
   CustomCommand,
   CustomCommandDefinition,
   CustomCommandResult,
@@ -16,7 +15,7 @@ import {
   CustomQueryDefinition,
   CustomQueryResult,
   GeneralFunctionalGroup,
-  KvsClient
+  KvsClient,
 } from "@phenyl/interfaces";
 import crypt from "power-crypt";
 import PhenylApiExplorer from "../src/PhenylApiExplorer";
@@ -29,10 +28,7 @@ type PlainHospital = {
 };
 
 class HospitalDefinition extends StandardEntityDefinition {
-  async authorize(
-    reqData: GeneralRequestData,
-    session?: Session
-  ): Promise<boolean> {
+  async authorize(): Promise<boolean> {
     return true;
   }
 }
@@ -42,10 +38,6 @@ type PlainPatient = {
   name: string;
   email: string;
   password?: string;
-};
-type PatientAuthSetting = {
-  credentials: { email: string; password: string };
-  options: Object;
 };
 
 type AppEntityMap = {
@@ -61,7 +53,7 @@ class PatientDefinition extends StandardUserDefinition {
       entityClient: memoryClient,
       accountPropName: "email",
       passwordPropName: "password",
-      ttl: 24 * 3600
+      ttl: 24 * 3600,
     });
   }
 
@@ -103,7 +95,7 @@ class TestCustomCommand implements CustomCommandDefinition {
   ): Promise<CustomCommandResult<CustomCommandResponse>> {
     return {
       echo: command.params.echo,
-      session
+      session,
     };
   }
 }
@@ -133,24 +125,24 @@ class TestCustomQuery implements CustomQueryDefinition {
   ): Promise<CustomQueryResult<CustomQueryResponse>> {
     return {
       echo: command.params.echo,
-      session
+      session,
     };
   }
 }
 
 const functionalGroup: GeneralFunctionalGroup = {
   customQueries: {
-    test: new TestCustomCommand()
+    test: new TestCustomCommand(),
   },
   customCommands: {
-    test: new TestCustomQuery()
+    test: new TestCustomQuery(),
   },
   users: {
-    patient: new PatientDefinition()
+    patient: new PatientDefinition(),
   },
   nonUsers: {
-    hospital: new HospitalDefinition()
-  }
+    hospital: new HospitalDefinition(),
+  },
 };
 
 type MemberSessionValue = { externalId: string; ttl: number };
@@ -161,26 +153,25 @@ memoryClient.insertOne({
   value: {
     name: "hoge",
     email: "hoge@cureapp.jp",
-    password: crypt("hoge")
-  }
+    password: crypt("hoge"),
+  },
 });
 
 memoryClient.insertOne({
   entityName: "hospital",
-  value: { name: "hoge hospital" }
+  value: { name: "hoge hospital" },
 });
 
 const server = new PhenylHttpServer(http.createServer(), {
   restApiHandler: new PhenylRestApi(functionalGroup, {
-    // @ts-ignore TODO
-    client: memoryClient,
+    entityClient: memoryClient,
     sessionClient: memoryClient.createSessionClient() as KvsClient<
       Session<"patient", MemberSessionValue>
-    >
+    >,
   }),
   customRequestHandler: new PhenylApiExplorer(functionalGroup, {
-    path: "/explorer"
-  }).handler
+    path: "/explorer",
+  }).handler,
 });
 
 server.listen(PORT);

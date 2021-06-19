@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 
@@ -16,7 +17,7 @@ type State = {
 
 class OperationEditor extends Component<Props, State> {
   state: State = {
-    params: ""
+    params: "",
   };
 
   handleChangePayload = (event: any, { value }: { value: string }) => {
@@ -29,7 +30,7 @@ class OperationEditor extends Component<Props, State> {
     execute({
       sessionId: this.props.sessionId,
       name: match.params.name,
-      params: this.state.params
+      params: this.state.params,
     });
   };
 

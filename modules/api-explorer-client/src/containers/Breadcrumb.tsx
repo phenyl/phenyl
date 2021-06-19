@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React from "react";
 import { Breadcrumb as SemanticBreadcrumb } from "semantic-ui-react";
 import { connect } from "react-redux";
@@ -14,7 +15,7 @@ export const Breadcrumb = ({ match }: Props) => (
         return acc.concat([
           <SemanticBreadcrumb.Section key={`${path}-section`} link>
             Home
-          </SemanticBreadcrumb.Section>
+          </SemanticBreadcrumb.Section>,
         ]);
       }
 
@@ -25,7 +26,7 @@ export const Breadcrumb = ({ match }: Props) => (
         />,
         <SemanticBreadcrumb.Section key={`${path}-section`}>
           {path}
-        </SemanticBreadcrumb.Section>
+        </SemanticBreadcrumb.Section>,
       ]);
     }, [])}
   </SemanticBreadcrumb>

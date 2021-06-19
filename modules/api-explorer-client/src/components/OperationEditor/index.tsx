@@ -1,3 +1,4 @@
+// @ts-ignore TODO Upgrade react to v17 and remove imports of react
 import React, { Component } from "react";
 import { Form } from "semantic-ui-react";
 
@@ -7,14 +8,12 @@ type Props = {
   sessionId: string;
   operations: Array<string>;
   defaultPayloads: { [key: string]: Object };
-  execute: (
-    params: {
-      sessionId: string;
-      entityName: string;
-      method: string;
-      payload: string;
-    }
-  ) => any;
+  execute: (params: {
+    sessionId: string;
+    entityName: string;
+    method: string;
+    payload: string;
+  }) => any;
 };
 
 type State = {
@@ -25,7 +24,7 @@ type State = {
 class OperationEditor extends Component<Props, State> {
   state: State = {
     method: "",
-    payload: ""
+    payload: "",
   };
 
   handleChangeOperation = (event: any, { value }: { value: string }) => {
@@ -37,7 +36,7 @@ class OperationEditor extends Component<Props, State> {
 
     this.setState({
       method: value,
-      payload: JSON.stringify(payload, null, 2)
+      payload: JSON.stringify(payload, null, 2),
     });
   };
 
@@ -52,7 +51,7 @@ class OperationEditor extends Component<Props, State> {
       sessionId: this.props.sessionId,
       entityName: match.params.entityName,
       method: this.state.method,
-      payload: this.state.payload
+      payload: this.state.payload,
     });
   };
 
@@ -71,10 +70,10 @@ class OperationEditor extends Component<Props, State> {
             <Form.Select
               disabled={isFetching}
               label="Operation"
-              options={operations.map(op => ({
+              options={operations.map((op) => ({
                 key: op,
                 text: op,
-                value: op
+                value: op,
               }))}
               defaultValue={operations[0]}
               onChange={this.handleChangeOperation}

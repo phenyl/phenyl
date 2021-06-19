@@ -32,7 +32,7 @@ import {
 } from "@phenyl/interfaces";
 
 import { GeneralUpdateOperation, mergeUpdateOperations } from "sp2";
-import { PhenylSessionClient } from "./session-client";
+import { PhenylSessionClient, PhenylSessionEntityMap } from "./session-client";
 import { Versioning } from "./versioning";
 
 export type PhenylEntityClientOptions<M extends GeneralEntityMap> = {
@@ -362,7 +362,9 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
   createSessionClient<
     AM extends GeneralAuthCommandMap = GeneralAuthCommandMap
   >(): SessionClient<AM> {
-    return new PhenylSessionClient(this.dbClient);
+    return new PhenylSessionClient(
+      (this.dbClient as unknown) as DbClient<PhenylSessionEntityMap>
+    );
   }
   /**
    * Validate PushCommand only when masterOperations are found.
