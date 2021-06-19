@@ -9,12 +9,12 @@
   },
   "dependencies": {
     "express": "^4.16.2",
-    "phenyl-express": "~0.2.14",
-    "phenyl-http-client": "~0.2.14",
-    "phenyl-interfaces": "~0.4.3",
-    "phenyl-memory-db": "~0.2.10",
-    "phenyl-rest-api": "~0.3.10",
-    "phenyl-standards": "~0.2.10"
+    "@phenyl/express": "^4.0.3",
+    "@phenyl/http-client": "^4.0.3",
+    "@phenyl/interfaces": "^4.0.3",
+    "@phenyl/memory-db": "^4.0.3",
+    "@phenyl/rest-api": "^4.0.3",
+    "@phenyl/standards": "^4.0.3"
   },
   "author": "Shin Suzuki <shinout310@gmail.com>",
   "repository": "https://github.com/phenyl-js/phenyl/tree/master/examples/express",

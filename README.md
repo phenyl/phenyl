@@ -29,7 +29,7 @@ JSON is very useful format for JavaScript. It has some basic types like string o
 We represent the entire app state as one big JSON.
 
 ## OAD: Operations As Data
-Phenyl handles all CRUD operations on data, such as creating an entity, reading the data in an entity, updating a property in an entity, and deleting an entity as data. 
+Phenyl handles all CRUD operations on data, such as creating an entity, reading the data in an entity, updating a property in an entity, and deleting an entity as data.
 The history of all operations is also saved as in the state.
 This concept allows us to easily reproduce and debug any situations we want.
 
@@ -46,13 +46,13 @@ In a mongoDB shell, CRUD operations are performed as following:
 { "_id" : "test1", "name" : "Test1" }
 
 > db.testUser.updateOne({name: "Test1"}, {$set: {favoriteFood: "banana"}})
-{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 } 
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
 
 > db.testUser.findOne({_id: "test1"})
 { "_id" : "test1", "name" : "Test1" , "favoriteFood": "banana" }
 
 > db.testUser.deleteOne({"_id": "test1"})
-{ "acknowledged" : true, "deletedCount" : 1 } 
+{ "acknowledged" : true, "deletedCount" : 1 }
 
 > db.testUser.findOne({_id: "test1"})
 null
@@ -72,21 +72,21 @@ const inserted = await phenylClient.insertAndGet(
     preSession.id
 );
 
-console.log(inserted.entity) 
+console.log(inserted.entity)
 // -> { id: "test1", name: "Test1" }
 
 const updated = await phenylClient.updateAndGet(
     {
         entityName: "testUser",
         id: "test1",
-        operation: { 
-            $set: { favoriteFood: "banana" } 
+        operation: {
+            $set: { favoriteFood: "banana" }
         }
     },
     preSession.id
 );
 
-console.log(updated.entity) 
+console.log(updated.entity)
 // -> { id: "test1", name: "Test1" , faboriteFood: "banana" }
 
 await phenylClient.delete({ entityName: "testUser", id: "test1" })
@@ -123,14 +123,14 @@ This allows us to handle offline oepration easily.
 
 # sp2
 
-Phenyl is powered by [sp2](https://github.com/phenyl/sp2), a set of JavaScript modules used for state operations. 
+Phenyl is powered by [sp2](https://github.com/phenyl/sp2), a set of JavaScript modules used for state operations.
 
 # Usage
 
 Phenyl needs you to implement 2 features, one is **GeneralTypeMap** and the other is **functionalGroup**.
 **GeneralTypeMap** is type definition that describes shape of request and response of each entity and auth information.
-**functionalGroup** is implementation to notify Phenyl about the domain that we want to use. 
-If you want to know more details, see [example](./modules/standards/test/standard-definition-authentication.test).
+**functionalGroup** is implementation to notify Phenyl about the domain that we want to use.
+If you want to know more details, see [example](./examples/README.md).
 
 # License
 Apache License 2.0

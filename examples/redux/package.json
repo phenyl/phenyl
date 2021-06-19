@@ -8,13 +8,13 @@
     "start": "../../node_modules/.bin/babel-node src/index.js"
   },
   "dependencies": {
-    "phenyl-http-client": "~0.2.14",
-    "phenyl-http-server": "~0.2.10",
-    "phenyl-interfaces": "~0.4.3",
-    "phenyl-memory-db": "~0.2.10",
-    "phenyl-redux": "~0.6.1",
-    "phenyl-rest-api": "~0.3.10",
-    "phenyl-standards": "~0.2.10",
+    "@phenyl/http-client": "^4.0.3",
+    "@phenyl/http-server": "^4.0.3",
+    "@phenyl/interfaces": "^4.0.3",
+    "@phenyl/memory-db": "^4.0.3",
+    "@phenyl/redux": "^4.0.3",
+    "@phenyl/rest-api": "^4.0.3",
+    "@phenyl/standards": "^4.0.3",
     "redux": "^3.7.2"
   },
   "author": "",
