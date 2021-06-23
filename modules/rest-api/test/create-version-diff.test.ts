@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import assert from "assert";
 import { createVersionDiff } from "../src/create-version-diff";
 

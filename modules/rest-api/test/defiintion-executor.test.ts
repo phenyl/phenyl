@@ -12,7 +12,6 @@ import {
   UserDefinition,
   Entity,
 } from "@phenyl/interfaces";
-/* eslint-env mocha */
 import {
   CustomCommandDefinitionExecutor,
   CustomQueryDefinitionExecutor,

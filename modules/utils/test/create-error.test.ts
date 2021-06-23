@@ -1,8 +1,7 @@
-/* eslint-env mocha */
 import {
   createError,
   createLocalError,
-  createServerError
+  createServerError,
 } from "../src/create-error";
 
 import assert from "assert";
@@ -78,8 +77,8 @@ describe("createError", () => {
       message: "Invalid value.",
       detail: {
         type: "loginId",
-        status: "duplicate"
-      }
+        status: "duplicate",
+      },
     });
     assert(e instanceof Error);
     assert(e.ok === 0);

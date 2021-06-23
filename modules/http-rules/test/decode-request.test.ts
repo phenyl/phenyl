@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import assert from "assert";
 import decodeRequest from "../src/decode-request";
 
@@ -11,14 +10,14 @@ describe("Parsing path", () => {
     const reqData = decodeRequest({
       headers: {},
       path: "/api/api/api",
-      method: "GET"
+      method: "GET",
     });
     assert.deepStrictEqual(reqData, {
       method: "get",
       payload: {
         id: "api",
-        entityName: "api"
-      }
+        entityName: "api",
+      },
     });
   });
   it("path whose depth is greater than three are not allowed", () => {
@@ -27,7 +26,7 @@ describe("Parsing path", () => {
         decodeRequest({
           headers: {},
           path: "/api/api/api/api",
-          method: "GET"
+          method: "GET",
         }),
       /greater than 3/
     );
@@ -37,13 +36,13 @@ describe("sessionId", () => {
   it("uses value in querystring prior to headers", () => {
     const reqData = decodeRequest({
       headers: {
-        authorization: "sessionId-in-headers"
+        authorization: "sessionId-in-headers",
       },
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user/xxxx",
-      method: "GET"
+      method: "GET",
     });
     assert(reqData.sessionId === "sessionId-in-querystring");
   });
@@ -52,7 +51,7 @@ describe("sessionId", () => {
     const reqData = decodeRequest({
       headers: {},
       path: "/api/user/xxxx",
-      method: "GET"
+      method: "GET",
     });
     assert(reqData.sessionId == null);
   });
@@ -64,13 +63,13 @@ describe("GET request", () => {
       qsParams: {
         d: JSON.stringify({
           where: {
-            firstName: "John"
-          }
+            firstName: "John",
+          },
         }),
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user",
-      method: "GET"
+      method: "GET",
     });
     assert(reqData.method === "find");
     // @ts-ignore entityName exists.
@@ -80,7 +79,7 @@ describe("GET request", () => {
     const reqData = decodeRequest({
       headers: {},
       path: "/api/user",
-      method: "GET"
+      method: "GET",
     });
     assert(reqData.method === "runCustomQuery");
     // @ts-ignore name exists.
@@ -93,15 +92,15 @@ describe("POST request", () => {
     const reqData = decodeRequest({
       headers: {},
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       body: JSON.stringify({
         value: {
-          firstName: "John"
-        }
+          firstName: "John",
+        },
       }),
       path: "/api/user",
-      method: "POST"
+      method: "POST",
     });
     assert(reqData.method === "insertOne");
     // @ts-ignore entityName exists.
@@ -111,17 +110,17 @@ describe("POST request", () => {
     const reqData = decodeRequest({
       headers: {},
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       body: JSON.stringify({
         values: [
           {
-            firstName: "John"
-          }
-        ]
+            firstName: "John",
+          },
+        ],
       }),
       path: "/api/user",
-      method: "POST"
+      method: "POST",
     });
     assert(reqData.method === "insertMulti");
     // @ts-ignore entityName exists.
@@ -132,11 +131,11 @@ describe("POST request", () => {
       headers: {},
       body: JSON.stringify({
         params: {
-          firstName: "John"
-        }
+          firstName: "John",
+        },
       }),
       path: "/api/user",
-      method: "POST"
+      method: "POST",
     });
     assert(reqData.method === "runCustomCommand");
     // @ts-ignore name exists.
@@ -147,11 +146,11 @@ describe("POST request", () => {
       headers: {},
       body: JSON.stringify({
         params: {
-          firstName: "John"
-        }
+          firstName: "John",
+        },
       }),
       path: "/api/user",
-      method: "POST"
+      method: "POST",
     });
     // @ts-ignore params exists.
     assert(reqData.payload.params.firstName === "John");
@@ -161,11 +160,11 @@ describe("POST request", () => {
       headers: {},
       parsedBody: {
         params: {
-          firstName: "John"
-        }
+          firstName: "John",
+        },
       },
       path: "/api/user",
-      method: "POST"
+      method: "POST",
     });
     // @ts-ignore params exists.
     assert(reqData.payload.params.firstName === "John");
@@ -180,15 +179,15 @@ describe("PUT request", () => {
         id: "john",
         operation: {
           $set: {
-            firstName: "John"
-          }
-        }
+            firstName: "John",
+          },
+        },
       }),
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user",
-      method: "PUT"
+      method: "PUT",
     });
     assert(reqData.method === "updateById");
     // @ts-ignore entityName exists.
@@ -201,15 +200,15 @@ describe("PUT request", () => {
         id: "john",
         operation: {
           $set: {
-            firstName: "John"
-          }
-        }
+            firstName: "John",
+          },
+        },
       }),
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user",
-      method: "PUT"
+      method: "PUT",
     });
 
     // @ts-ignore id exists.
@@ -223,15 +222,15 @@ describe("PUT request", () => {
         id: "john",
         operation: {
           $set: {
-            firstName: "John"
-          }
-        }
+            firstName: "John",
+          },
+        },
       },
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user",
-      method: "PUT"
+      method: "PUT",
     });
     // @ts-ignore id exists.
     assert(reqData.payload.id === "john");
@@ -243,15 +242,15 @@ describe("PUT request", () => {
       body: JSON.stringify({
         operation: {
           $set: {
-            firstName: "John"
-          }
-        }
+            firstName: "John",
+          },
+        },
       }),
       qsParams: {
-        sessionId: "sessionId-in-querystring"
+        sessionId: "sessionId-in-querystring",
       },
       path: "/api/user/john",
-      method: "PUT"
+      method: "PUT",
     });
     assert(reqData.method === "updateById");
     // @ts-ignore id exists.
@@ -265,14 +264,14 @@ describe("PUT request", () => {
           headers: {},
           body: JSON.stringify({
             params: {
-              firstName: "John"
-            }
+              firstName: "John",
+            },
           }),
           qsParams: {
-            sessionId: "sessionId-in-querystring"
+            sessionId: "sessionId-in-querystring",
           },
           path: "/api/user/john",
-          method: "PUT"
+          method: "PUT",
         }),
       /Could not decode the given PUT request/
     );
