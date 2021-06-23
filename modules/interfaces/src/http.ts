@@ -1,3 +1,4 @@
+/* global Headers */
 import { GeneralResponseData } from "./response-data";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";

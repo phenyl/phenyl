@@ -1,7 +1,7 @@
 import {
   EncodedHttpRequest,
   GeneralRequestData,
-  QueryStringParams
+  QueryStringParams,
 } from "@phenyl/interfaces";
 
 /**
@@ -32,15 +32,13 @@ export default function decodeRequest(
 
     default:
       throw new Error(
-        `Could not handle HTTP method: ${
-          request.method
-        }. Only GET|POST|PUT|DELETE are allowed.`
+        `Could not handle HTTP method: ${request.method}. Only GET|POST|PUT|DELETE are allowed.`
       );
   }
 
   return sessionId
     ? Object.assign(reqData, {
-        sessionId
+        sessionId,
       })
     : reqData;
 }
@@ -55,14 +53,14 @@ function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
 
   if (!methodName) {
     // WhereQuery => method is "find"
-    if (payload.hasOwnProperty("where")) {
+    if (Object.prototype.hasOwnProperty.call(payload, "where")) {
       methodName = "find";
     } // CustomQuery
     else {
       const name = entityName;
 
       if (
-        payload.hasOwnProperty("name") &&
+        Object.prototype.hasOwnProperty.call(payload, "name") &&
         (<{ name: string }>payload).name !== name
       ) {
         throw new Error(
@@ -75,8 +73,8 @@ function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
       return {
         method: "runCustomQuery",
         payload: Object.assign(<{ params: Object }>payload, {
-          name
-        })
+          name,
+        }),
       };
     }
   } // if no payload, it's "get-by-id" method
@@ -86,8 +84,8 @@ function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
       method: "get",
       payload: {
         entityName,
-        id: methodName
-      }
+        id: methodName,
+      },
     };
   }
 
@@ -97,7 +95,7 @@ function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
     case "getByIds":
     case "pull": {
       if (
-        payload.hasOwnProperty("entityName") &&
+        Object.prototype.hasOwnProperty.call(payload, "entityName") &&
         (<{ entityName: string }>payload).entityName !== entityName
       ) {
         throw new Error(
@@ -111,8 +109,8 @@ function decodeGETRequest(request: EncodedHttpRequest): GeneralRequestData {
         method: methodName,
         // @ts-ignore
         payload: Object.assign(payload, {
-          entityName
-        })
+          entityName,
+        }),
       };
     }
 
@@ -158,17 +156,15 @@ function decodePOSTRequest(request: EncodedHttpRequest): GeneralRequestData {
 
       if (payload.name && payload.name !== name) {
         throw new Error(
-          `CustomQuery command in payload is different from that in URL. in payload: "${
-            payload.name
-          }", in URL: "${name}".`
+          `CustomQuery command in payload is different from that in URL. in payload: "${payload.name}", in URL: "${name}".`
         );
       }
 
       return {
         method: "runCustomCommand",
         payload: Object.assign(payload, {
-          name
-        })
+          name,
+        }),
       };
     }
   }
@@ -182,9 +178,7 @@ function decodePOSTRequest(request: EncodedHttpRequest): GeneralRequestData {
     case "insertAndGetMulti": {
       if (payload.entityName && payload.entityName !== entityName) {
         throw new Error(
-          `Invalid POST request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${
-            payload.entityName
-          }", in URL: "${entityName}".`
+          `Invalid POST request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`
         );
       }
 
@@ -192,8 +186,8 @@ function decodePOSTRequest(request: EncodedHttpRequest): GeneralRequestData {
       return {
         method: methodName,
         payload: Object.assign(payload, {
-          entityName
-        })
+          entityName,
+        }),
       };
     }
 
@@ -237,16 +231,14 @@ function decodePUTRequest(request: EncodedHttpRequest): GeneralRequestData {
       "updateMulti",
       "updateAndGet",
       "updateAndFetch",
-      "push"
+      "push",
     ].includes(methodName)
   ) {
     const id = methodName;
 
     if (payload.id && payload.id !== id) {
       throw new Error(
-        `Invalid PUT request (method="updateById"). id in payload is different from that in URL. in payload: "${
-          payload.id
-        }", in URL: "${id}".`
+        `Invalid PUT request (method="updateById"). id in payload is different from that in URL. in payload: "${payload.id}", in URL: "${id}".`
       );
     }
 
@@ -266,9 +258,7 @@ function decodePUTRequest(request: EncodedHttpRequest): GeneralRequestData {
 
   if (payload.entityName && payload.entityName !== entityName) {
     throw new Error(
-      `Invalid PUT request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${
-        payload.entityName
-      }", in URL: "${entityName}".`
+      `Invalid PUT request (method="${methodName}"). entityName in payload is different from that in URL. in payload: "${payload.entityName}", in URL: "${entityName}".`
     );
   }
 
@@ -276,8 +266,8 @@ function decodePUTRequest(request: EncodedHttpRequest): GeneralRequestData {
     // @ts-ignore
     method: methodName,
     payload: Object.assign(payload, {
-      entityName
-    })
+      entityName,
+    }),
   };
 }
 
@@ -294,8 +284,8 @@ function decodeDELETERequest(request: EncodedHttpRequest): GeneralRequestData {
       method: "delete",
       // @ts-ignore
       payload: Object.assign(payload, {
-        entityName
-      })
+        entityName,
+      }),
     };
   }
 
@@ -305,8 +295,8 @@ function decodeDELETERequest(request: EncodedHttpRequest): GeneralRequestData {
       method: "delete",
       payload: {
         entityName,
-        id: methodName
-      }
+        id: methodName,
+      },
     };
   }
 
@@ -385,6 +375,6 @@ function parsePath(
 
   return {
     entityName: strippedPaths[0],
-    methodName: strippedPaths[1]
+    methodName: strippedPaths[1],
   };
 }

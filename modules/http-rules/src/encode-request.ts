@@ -152,7 +152,7 @@ export default function encodeRequest(
       data = reqData.payload;
       headers["Content-Type"] = "application/json"; // single deletion
 
-      if (data.hasOwnProperty("id")) {
+      if (Object.prototype.hasOwnProperty.call(data, "id")) {
         return {
           method: "DELETE",
           headers,
@@ -208,7 +208,7 @@ export default function encodeRequest(
 
     default:
       // @ts-ignore Property 'hasOwnProperty' does not exist on type 'never'
-      if (reqData!.hasOwnProperty("method")) {
+      if (Object.prototype.hasOwnProperty.call(reqData, "method")) {
         // @ts-ignore Property 'method' does not exist on type 'never'.
         throw new Error(`Invalid request method: "${reqData.method}"`);
       }

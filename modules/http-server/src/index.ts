@@ -2,7 +2,7 @@ import {
   EncodedHttpResponse,
   HttpMethod,
   QueryStringParams,
-  GeneralServerParams
+  GeneralServerParams,
 } from "@phenyl/interfaces";
 import http, { IncomingMessage, ServerResponse } from "http";
 
@@ -39,7 +39,7 @@ export default class PhenylHttpServer {
     port: number,
     hostname?: string,
     backlog?: number,
-    callback?: Function
+    callback?: () => void
   ) {
     this.server.on("request", this.handleIncomingMessage.bind(this));
     this.server.listen(port, hostname, backlog, callback);
@@ -78,7 +78,7 @@ export default class PhenylHttpServer {
         }
       };
 
-      request.once("error", err => {
+      request.once("error", (err) => {
         request.removeListener("readable", read);
         reject(err);
       });
@@ -112,7 +112,7 @@ export default class PhenylHttpServer {
       path,
       body: await this.getRequestBody(request),
       headers: request.headers as { [name: string]: string },
-      qsParams
+      qsParams,
     };
     const encodedResponse = await this.logic.handleRequest(encodedHttpRequest);
     respond(response, encodedResponse);
