@@ -2,6 +2,46 @@
 # yarn lockfile v1
 
 
+"@phenyl/central-state@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.3.tgz#ebf90de0cb2f4cb90d1973855f8c2f6bd47d0f41"
+  integrity sha512-l8MYnQChgpistYvu/TXqs1QUCv3XGO3Iyc7VdtDCo+J8jT4z0PHlfdC1Meg97qGFvKuHrwvZyUOsZaKBbPL73w==
+  dependencies:
+    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/utils" "^4.0.3"
+    sp2 "^1.6.3"
+
+"@phenyl/interfaces@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.3.tgz#de1bbc6203764a906f461c6b880e81d48612a58b"
+  integrity sha512-u/p5jfBbMqhBjPkbA8XgELd2EGWjEZ9tcw15W41i9c90wigyPoqCSYMthxmzHl5Fu0PPYQV7I40pecj1kdiYJg==
+  dependencies:
+    sp2 "^1.6.3"
+
+"@phenyl/rest-api@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.3.tgz#8766785f0d6409c1495595527152e6ecd9b7a07f"
+  integrity sha512-apWuIFI6RNr7AnB96I0TKpq1ojF/jhURnpKgme+939+Op5fxVFRImoAWqJ8+xZkMp3KXPmZqOmVS1/wp2QiaBQ==
+  dependencies:
+    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/utils" "^4.0.3"
+
+"@phenyl/state@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-4.0.3.tgz#fd17af88e3f07e3165fdae6399de5f2675b95ced"
+  integrity sha512-cebWeTX+UrnR0O6/YZIy6IRyUkckMsLEaYTuWKhFJmL9i8zv6Z1GLLiyO4yKTazzjH0RmRSZVaVH806I7Yv3DQ==
+  dependencies:
+    "@phenyl/interfaces" "^4.0.3"
+    sp2 "^1.6.3"
+
+"@phenyl/utils@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.3.tgz#1bf8c8df3f5f00c27b674038c30a5ffa5e822b28"
+  integrity sha512-vrKXS2YrebnSrctFRPwNl5lWucsnK1NWSyNF8WOkMTcy4JNdba7ZVgIN1BJV/DTce1aJGqdOTdTn0MCl0A8nRg==
+  dependencies:
+    "@phenyl/interfaces" "^4.0.3"
+    sp2 "^1.6.3"
+
 "@sp2/format@^1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@sp2/format/-/format-1.6.3.tgz#45d194c7bb17ac9f4eb943902dc58780aa9ff6d3"
@@ -77,7 +117,7 @@ sp2@^1.6.3:
     "@sp2/retriever" "^1.6.3"
     "@sp2/updater" "^1.6.3"
 
-upbin@0.9.2:
+upbin@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/upbin/-/upbin-0.9.2.tgz#d7e548c23b599079cf4f334754e6f9b6b5490774"
   integrity sha512-s7b/IMho/tn2IqeY1D6izU2L5f1W16KzQj3Ri5/9D/4jc48Mkot7KVvBFXpvm6Q5rL5tyEb6iylGU+fyMLwX6g==
