@@ -1,9 +1,8 @@
 import assert from "assert";
 import {
   PhenylMemoryDbEntityClient,
-  createEntityClient
+  createEntityClient,
 } from "../src/create-entity-client";
-import { after, before, describe, it } from "mocha";
 
 describe("MongoDBEntityClient", () => {
   let entityClient: PhenylMemoryDbEntityClient<{
@@ -13,13 +12,13 @@ describe("MongoDBEntityClient", () => {
   let generatedId: string;
   let versionId: string;
 
-  before(async () => {
+  beforeAll(async () => {
     entityClient = createEntityClient({
-      validatePushCommand: () => true
+      validatePushCommand: () => true,
     });
   });
 
-  after(async () => {
+  afterAll(async () => {
     await entityClient.delete({ entityName: "user", where: {} });
   });
 
@@ -29,38 +28,38 @@ describe("MongoDBEntityClient", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
       const ope = {
         $push: {
-          hobbies: "JavaScript"
-        }
+          hobbies: "JavaScript",
+        },
       };
       await entityClient.push({
         entityName: "user",
         id: generatedId,
         operations: [ope],
-        versionId
+        versionId,
       });
 
       const updatedResult = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert.deepStrictEqual(updatedResult.entity.hobbies, [
         "play baseball",
-        "JavaScript"
+        "JavaScript",
       ]);
     });
 
     it("should succeed when conflicted operations with set and push", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
-        value: { name: "Jone", hobbies: ["play baseball"] }
+        value: { name: "Jone", hobbies: ["play baseball"] },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -70,23 +69,23 @@ describe("MongoDBEntityClient", () => {
         id: generatedId,
         operations: [
           { $set: { name: "Alpha", hobbies: ["TypeScript"] } },
-          { $push: { hobbies: "JavaScript" } }
+          { $push: { hobbies: "JavaScript" } },
         ],
-        versionId
+        versionId,
       });
 
       const updatedEntity = await entityClient.findOne({
         entityName: "user",
         where: {
-          id: generatedId
-        }
+          id: generatedId,
+        },
       });
 
       assert.strictEqual(updatedEntity.entity.id, generatedId);
       assert.strictEqual(updatedEntity.entity.name, "Alpha");
       assert.deepStrictEqual(updatedEntity.entity.hobbies, [
         "TypeScript",
-        "JavaScript"
+        "JavaScript",
       ]);
     });
 
@@ -95,8 +94,8 @@ describe("MongoDBEntityClient", () => {
         entityName: "user",
         value: {
           name: "Jone",
-          hobbies: ["play baseball"]
-        }
+          hobbies: ["play baseball"],
+        },
       });
       generatedId = result.entity.id;
       versionId = result.versionId;
@@ -107,7 +106,7 @@ describe("MongoDBEntityClient", () => {
         entityName: "user",
         id: generatedId,
         operations: ops,
-        versionId
+        versionId,
       });
 
       // update by 1 commit behind from DB HEAD
@@ -116,18 +115,18 @@ describe("MongoDBEntityClient", () => {
         entityName: "user",
         id: generatedId,
         operations: ops2,
-        versionId
+        versionId,
       });
 
       const update2Result = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert.deepStrictEqual(update2Result.entity.hobbies, [
         "play baseball",
         "JavaScript",
-        "TypeScript"
+        "TypeScript",
       ]);
     });
   });

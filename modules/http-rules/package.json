@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rm -rf lib",
     "build": "upbin tsc -p tsconfig.build.json",
-    "test": "upbin nyc mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "test": "upbin jest",
     "lint": "upbin eslint 'src/**/*.ts' 'test/**/*.ts' --fix",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc -p tsconfig.build.json --watch"

@@ -18,7 +18,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "upbin tsc -p tsconfig.build.json",
-    "test": "upbin nyc upbin mocha --require ts-node/register test/*.test.ts --color always",
+    "test": "upbin jest",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {

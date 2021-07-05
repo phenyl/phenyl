@@ -1,4 +1,3 @@
-import { it, describe } from "mocha";
 import assert from "assert";
 import { removePasswordFromResponseEntity } from "../src/remove-password-from-response-data";
 
@@ -7,7 +6,7 @@ describe("removePasswordFromResponseEntity", () => {
     const entity = {
       password: "hogehoge",
       name: "Foo Bar",
-      id: "foobar"
+      id: "foobar",
     };
 
     const result = removePasswordFromResponseEntity(entity, "password");
@@ -17,7 +16,7 @@ describe("removePasswordFromResponseEntity", () => {
   it("should be no change when entity doesn't have passwordPropName", () => {
     const entity = {
       name: "Foo Bar",
-      id: "foobar"
+      id: "foobar",
     };
 
     const result = removePasswordFromResponseEntity(entity, "password");

@@ -16,7 +16,7 @@
     "build": "upbin tsc -p tsconfig.build.json",
     "clean": "upbin rimraf $(cat ../../.temporary-files)",
     "lint": "upbin eslint 'src/**/*.ts' --fix",
-    "test": "upbin nyc upbin mocha --require ts-node/register 'test/**/*.test.ts' --color always",
+    "test": "upbin jest",
     "type-check": "upbin tsc --noEmit",
     "watch": "upbin tsc -p tsconfig.build.json --watch"
   },

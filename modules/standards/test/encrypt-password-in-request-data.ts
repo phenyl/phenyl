@@ -1,4 +1,3 @@
-import { it, describe } from "mocha";
 // @ts-ignore
 import powerCrypt from "power-crypt";
 import assert from "assert";
@@ -11,8 +10,8 @@ describe("encryptPasswordInRequestData", () => {
       method: "get",
       payload: {
         entityName: "user",
-        id: "user1"
-      }
+        id: "user1",
+      },
     };
 
     const encryptedRequestData = encryptPasswordInRequestData(
@@ -28,8 +27,8 @@ describe("encryptPasswordInRequestData", () => {
       method: "insertOne",
       payload: {
         entityName: "user",
-        value: { password: "test1234" }
-      }
+        value: { password: "test1234" },
+      },
     };
 
     const encryptedRequestData = encryptPasswordInRequestData(
@@ -42,8 +41,8 @@ describe("encryptPasswordInRequestData", () => {
       method: "insertOne",
       payload: {
         entityName: "user",
-        value: { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" }
-      }
+        value: { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" },
+      },
     };
 
     assert.deepStrictEqual(encryptedRequestData, expectedRequestData);
@@ -54,8 +53,8 @@ describe("encryptPasswordInRequestData", () => {
       method: "insertMulti",
       payload: {
         entityName: "user",
-        values: [{ password: "test1234" }, { name: "user1" }]
-      }
+        values: [{ password: "test1234" }, { name: "user1" }],
+      },
     };
 
     const encryptedRequestData = encryptPasswordInRequestData(
@@ -70,9 +69,9 @@ describe("encryptPasswordInRequestData", () => {
         entityName: "user",
         values: [
           { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" },
-          { name: "user1" }
-        ]
-      }
+          { name: "user1" },
+        ],
+      },
     };
 
     assert.deepStrictEqual(encryptedRequestData, expectedRequestData);
@@ -86,9 +85,9 @@ describe("encryptPasswordInRequestData", () => {
         entityName: "user",
         operation: {
           $set: { password: "test1234" },
-          $inc: { friends: 3 }
-        }
-      }
+          $inc: { friends: 3 },
+        },
+      },
     };
 
     const encryptedRequestData = encryptPasswordInRequestData(
@@ -104,9 +103,9 @@ describe("encryptPasswordInRequestData", () => {
         entityName: "user",
         operation: {
           $set: { password: "OWoroorUQ5aGLRL62r7LazdwCuPPcf08eGdU+XKQZy0=" },
-          $inc: { friends: 3 }
-        }
-      }
+          $inc: { friends: 3 },
+        },
+      },
     };
 
     assert.deepStrictEqual(encryptedRequestData, expectedRequestData);

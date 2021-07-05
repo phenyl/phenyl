@@ -1,4 +1,3 @@
-import { it, describe, before, after, beforeEach, afterEach } from "mocha";
 import assert from "assert";
 import * as sinon from "sinon";
 
@@ -19,7 +18,7 @@ const { store, actions } = createPhenylRedux(httpClient);
 const sessionClient = createSessionClient(dbClient);
 const server = createServer(dbClient);
 
-describe("middlewareHandler", async () => {
+describe("middlewareHandler", () => {
   const plainSession = {
     entityName: "patient" as const,
     expiredAt: "",
@@ -34,16 +33,18 @@ describe("middlewareHandler", async () => {
     password: "shin123",
   };
 
-  const preSession = await sessionClient.create(plainSession);
-
-  const middlewareHandler = new MiddlewareHandler(
-    () => store.getState().phenyl,
-    httpClient,
-    store.dispatch
-  );
+  let preSession: any;
+  let middlewareHandler: any;
   let insertedPatient: any;
 
-  before(async () => {
+  beforeAll(async () => {
+    preSession = await sessionClient.create(plainSession);
+
+    middlewareHandler = new MiddlewareHandler(
+      () => store.getState().phenyl,
+      httpClient,
+      store.dispatch
+    );
     server.listen(PORT);
     insertedPatient = await httpClient.insertAndGet(
       {
@@ -60,7 +61,7 @@ describe("middlewareHandler", async () => {
       )
     );
   });
-  after(() => {
+  afterAll(() => {
     server.close();
   });
 

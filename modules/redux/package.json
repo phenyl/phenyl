@@ -20,9 +20,7 @@
   "scripts": {
     "build": "upbin tsc -p tsconfig.build.json",
     "clean": "rm -rf lib",
-    "test": "npm run test:spec && npm run test:integration",
-    "test:spec": "upbin nyc upbin mocha --require ts-node/register 'test/spec/**/*.test.ts' --color always",
-    "test:integration": "upbin nyc upbin mocha --require ts-node/register 'test/integration/**/*.test.ts' --color always",
+    "test": "upbin jest --runInBand",
     "type-check": "upbin tsc --noEmit"
   },
   "dependencies": {

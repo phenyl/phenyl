@@ -1,4 +1,3 @@
-import { describe, it } from "mocha";
 import assert from "assert";
 import { createEntityClient } from "../src/index";
 
@@ -14,7 +13,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
     it("insert an entity with insertAndGet", async () => {
       const result = await entityClient.insertAndGet({
         entityName: "user",
-        value: { name: "Jone" }
+        value: { name: "Jone" },
       });
 
       generatedId = result.entity.id;
@@ -24,7 +23,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
     it("insert an entity with insertOne", async () => {
       await entityClient.insertOne({
         entityName: "user",
-        value: { id: "jane", name: "Jane" }
+        value: { id: "jane", name: "Jane" },
       });
 
       const user = await entityClient.get({ entityName: "user", id: "jane" });
@@ -37,7 +36,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
     it("by auto generated id", async () => {
       const result = await entityClient.get({
         entityName: "user",
-        id: generatedId
+        id: generatedId,
       });
 
       assert.strictEqual(result.entity.name, "Jone");
@@ -46,7 +45,7 @@ describe("PhenylMemoryDb as EntityClient", () => {
     it("by set id", async () => {
       const result = await entityClient.get({
         entityName: "user",
-        id: "jane"
+        id: "jane",
       });
 
       assert.strictEqual(result.entity.name, "Jane");

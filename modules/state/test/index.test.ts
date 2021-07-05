@@ -1,4 +1,3 @@
-import { describe, it } from "mocha";
 import assert from "assert";
 import { PhenylState } from "../src";
 import { updateAndRestore } from "sp2";
@@ -41,13 +40,13 @@ describe("find", () => {
         user: {
           "1": user1,
           "2": user2,
-          "3": user3
-        }
-      }
+          "3": user3,
+        },
+      },
     });
     const usersFoundByQuery = state.find({
       entityName: "user",
-      where: { name: "kery" }
+      where: { name: "kery" },
     });
     const expected = [user1];
     assert.deepStrictEqual(usersFoundByQuery, expected);
@@ -59,11 +58,11 @@ describe("findOne", () => {
     const user = { id: "1", name: "kery" };
 
     const state = new PhenylState<EntityMap>({
-      pool: { user: { "1": user } }
+      pool: { user: { "1": user } },
     });
     const userFromState = state.findOne({
       entityName: "user",
-      where: { name: "kery" }
+      where: { name: "kery" },
     });
     const expected = user;
     assert.deepStrictEqual(userFromState, expected);
@@ -75,11 +74,11 @@ describe("get", () => {
     const user = { id: "1", name: "kery" };
 
     const state = new PhenylState<EntityMap>({
-      pool: { user: { "1": user } }
+      pool: { user: { "1": user } },
     });
     const userFromState = state.get({
       entityName: "user",
-      id: "1"
+      id: "1",
     });
     const expected = user;
     assert.deepStrictEqual(userFromState, expected);
@@ -91,11 +90,11 @@ describe("getByIds", () => {
     const user1 = { id: "1", name: "kery" };
     const user2 = { id: "2", name: "kory" };
     const state = new PhenylState<EntityMap>({
-      pool: { user: { "1": user1, "2": user2 } }
+      pool: { user: { "1": user1, "2": user2 } },
     });
     const userFromState = state.getByIds({
       entityName: "user",
-      ids: ["1", "2"]
+      ids: ["1", "2"],
     });
     const expected = [user1, user2];
     assert.deepStrictEqual(userFromState, expected);
@@ -108,7 +107,7 @@ describe("getAll", () => {
     const user2 = { id: "2", name: "kory" };
     const user3 = { id: "3", name: "kiry" };
     const state = new PhenylState<EntityMap>({
-      pool: { user: { "1": user1, "2": user2, "3": user3 } }
+      pool: { user: { "1": user1, "2": user2, "3": user3 } },
     });
     const userFromState = state.getAll("user");
     const expected = [user1, user2, user3];
@@ -127,23 +126,23 @@ describe("$update", () => {
       }
     }
     const state = new PhenylState<EntityMap>({
-      pool: { user: { "1": new User({ id: "1", name: "Shin" }) } }
+      pool: { user: { "1": new User({ id: "1", name: "Shin" }) } },
     });
 
     const operation = state.updateById({
       entityName: "user",
       id: "1",
-      operation: { $set: { name: "Shinji" } }
+      operation: { $set: { name: "Shinji" } },
     });
 
     const expected = {
       $set: {
-        "pool.user.1.name": "Shinji"
-      }
+        "pool.user.1.name": "Shinji",
+      },
     };
     const newState = updateAndRestore(state, operation);
     const expectedNewState = new PhenylState<EntityMap>({
-      pool: { user: { "1": new User({ id: "1", name: "Shinji" }) } }
+      pool: { user: { "1": new User({ id: "1", name: "Shinji" }) } },
     });
     assert.deepEqual(operation, expected);
     assert.deepEqual(newState, expectedNewState);
@@ -165,22 +164,22 @@ describe("$updateMulti", () => {
         user: {
           "1": new User({ id: "1", name: "Shin" }),
           "2": new User({ id: "2", name: "Tom" }),
-          "3": new User({ id: "3", name: "Jenkins" })
-        }
-      }
+          "3": new User({ id: "3", name: "Jenkins" }),
+        },
+      },
     });
 
     const operation = state.updateMulti({
       entityName: "user",
       where: { name: { $regex: /in/ } },
-      operation: { $set: { name: "Shinji" } }
+      operation: { $set: { name: "Shinji" } },
     });
 
     const expected = {
       $set: {
         "pool.user.1.name": "Shinji",
-        "pool.user.3.name": "Shinji"
-      }
+        "pool.user.3.name": "Shinji",
+      },
     };
     const newState = updateAndRestore(state, operation);
     const expectedNewState = new PhenylState<EntityMap>({
@@ -188,9 +187,9 @@ describe("$updateMulti", () => {
         user: {
           "1": new User({ id: "1", name: "Shinji" }),
           "2": new User({ id: "2", name: "Tom" }),
-          "3": new User({ id: "3", name: "Shinji" })
-        }
-      }
+          "3": new User({ id: "3", name: "Shinji" }),
+        },
+      },
     });
     assert.deepEqual(operation, expected);
     assert.deepEqual(newState, expectedNewState);
@@ -204,28 +203,28 @@ describe("delete", () => {
         user: {
           "1": { id: "1", name: "Shin" },
           "2": { id: "2", name: "Tom" },
-          "3": { id: "3", name: "Jenkins" }
-        }
-      }
+          "3": { id: "3", name: "Jenkins" },
+        },
+      },
     });
     const operation = state.delete({
       entityName: "user",
-      where: { name: { $regex: /in/ } }
+      where: { name: { $regex: /in/ } },
     });
     const expected = {
       $unset: {
         "pool.user.1": "",
-        "pool.user.3": ""
-      }
+        "pool.user.3": "",
+      },
     };
 
     const newState = updateAndRestore(state, operation);
     const expectedNewState = new PhenylState<EntityMap>({
       pool: {
         user: {
-          "2": { id: "2", name: "Tom" }
-        }
-      }
+          "2": { id: "2", name: "Tom" },
+        },
+      },
     });
     assert.deepStrictEqual(operation, expected);
     assert.deepStrictEqual(newState, expectedNewState);
@@ -236,8 +235,8 @@ describe("register", () => {
   it("returns GeneralUpdateOperation to register pool", () => {
     const state = new PhenylState<EntityMap>({
       pool: {
-        user: { "1": { id: "1", name: "Shin" } }
-      }
+        user: { "1": { id: "1", name: "Shin" } },
+      },
     });
     // @ts-ignore how do I add new Entity to existing EntityMap?
     const operation = state.register("book", { id: "book01", title: "ABC-Z" });
@@ -245,17 +244,17 @@ describe("register", () => {
       $set: {
         "pool.book.book01": {
           id: "book01",
-          title: "ABC-Z"
-        }
-      }
+          title: "ABC-Z",
+        },
+      },
     };
     const newState = updateAndRestore(state, operation);
 
     const expectedNewState = new PhenylState<UpdatedEntityMap>({
       pool: {
         user: { "1": { id: "1", name: "Shin" } },
-        book: { book01: { id: "book01", title: "ABC-Z" } }
-      }
+        book: { book01: { id: "book01", title: "ABC-Z" } },
+      },
     });
 
     assert.deepStrictEqual(operation, expected);
@@ -267,8 +266,8 @@ describe("has", () => {
   it("returns true when state contains the searched item", () => {
     const state = new PhenylState<EntityMap>({
       pool: {
-        user: { "1": { id: "1", name: "Shin" } }
-      }
+        user: { "1": { id: "1", name: "Shin" } },
+      },
     });
     const queryResult = state.has({ entityName: "user", id: "1" });
     const expected = true;
@@ -277,8 +276,8 @@ describe("has", () => {
   it("returns false when state does not contain the searched item", () => {
     const state = new PhenylState<EntityMap>({
       pool: {
-        user: { "1": { id: "1", name: "Shin" } }
-      }
+        user: { "1": { id: "1", name: "Shin" } },
+      },
     });
     const queryResult = state.has({ entityName: "user", id: "2" });
     const expected = false;

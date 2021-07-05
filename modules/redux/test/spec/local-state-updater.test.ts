@@ -1,4 +1,3 @@
-/* eslint-env mocha */
 import assert from "assert";
 import { LocalStateUpdater } from "../../src/local-state-updater";
 import { createInitialState } from "../../src/reducer";

@@ -5,7 +5,6 @@ import {
   PhenylMongoDbEntityClient,
   createEntityClient,
 } from "../src/create-entity-client";
-import { after, before, describe, it } from "mocha";
 
 const url = "mongodb://localhost:27017";
 const dbName = "phenyl-mongodb-test";
@@ -19,14 +18,14 @@ describe("Merge Operations", () => {
   let generatedId: string;
   let versionId: string;
 
-  before(async () => {
+  beforeAll(async () => {
     conn = await connect(url, dbName);
     entityClient = createEntityClient(conn, {
       validatePushCommand: () => true,
     });
   });
 
-  after(async () => {
+  afterAll(async () => {
     await entityClient.delete({ entityName: "user", where: {} });
     conn.close();
   });
@@ -139,12 +138,14 @@ describe("Merge Operations", () => {
         versionId,
       });
 
-      await assert.rejects(
-        Promise.all([pushA, pushB]),
-        Error(
+      try {
+        await Promise.all([pushA, pushB]);
+      } catch (e) {
+        assert.strictEqual(
+          e.message,
           `Operation timed out. Can not acquire lock.\nentityName: user\nid: ${generatedId}`
-        )
-      );
+        );
+      }
     });
     it("should rollback", async () => {
       const result = await entityClient.insertAndGet({
@@ -234,7 +235,7 @@ describe("Merge Operations", () => {
       let client: MongoClient;
       let db: Db;
       const collectionName = "user";
-      before(async () => {
+      beforeAll(async () => {
         client = new MongoClient(url, { useUnifiedTopology: true });
         await client.connect();
         db = client.db(dbName);
@@ -261,7 +262,7 @@ describe("Merge Operations", () => {
           },
         });
       });
-      after(async () => {
+      afterAll(async () => {
         await db.dropCollection(collectionName);
         await db.createCollection(collectionName);
         await client.close();

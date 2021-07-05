@@ -1,4 +1,3 @@
-import { after, before, describe, it } from "mocha";
 import { ObjectId } from "bson";
 import assert from "assert";
 import { FindOperation } from "sp2";
@@ -127,14 +126,14 @@ describe("MongodbClient", () => {
   }>;
   let mongoClient: MongoClient;
   let conn: MongoDbConnection;
-  before(async () => {
+  beforeAll(async () => {
     conn = await connect(url, dbName);
     phenylMongodbClient = new PhenylMongoDbClient(conn);
     mongoClient = new MongoClient(url, { useUnifiedTopology: true });
     await mongoClient.connect();
   });
 
-  after(async () => {
+  afterAll(async () => {
     await phenylMongodbClient.delete({ entityName: "user", where: {} });
     conn.close();
     mongoClient.close();
