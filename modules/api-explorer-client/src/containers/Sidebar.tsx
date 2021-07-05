@@ -1,5 +1,3 @@
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React from "react";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Sidebar as SemanticSidebar, Menu } from "semantic-ui-react";

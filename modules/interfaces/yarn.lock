@@ -77,7 +77,7 @@ sp2@^1.6.3:
     "@sp2/retriever" "^1.6.3"
     "@sp2/updater" "^1.6.3"
 
-upbin@0.9.2:
+upbin@^0.9.2:
   version "0.9.2"
   resolved "https://registry.yarnpkg.com/upbin/-/upbin-0.9.2.tgz#d7e548c23b599079cf4f334754e6f9b6b5490774"
   integrity sha512-s7b/IMho/tn2IqeY1D6izU2L5f1W16KzQj3Ri5/9D/4jc48Mkot7KVvBFXpvm6Q5rL5tyEb6iylGU+fyMLwX6g==

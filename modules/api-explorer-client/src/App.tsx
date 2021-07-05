@@ -1,5 +1,4 @@
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React from "react";
+
 import { connect } from "react-redux";
 import { withRouter, Route, Switch } from "react-router-dom";
 import {

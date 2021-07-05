@@ -70,9 +70,9 @@ describe("filterFindOperation", () => {
       $and: [
         { _id: { $eq: null } },
         { _id: { $eq: "bar" } },
-        { _id: { $eq: new ObjectId("222222222222222222222222") } },
+        { _id: new ObjectId("222222222222222222222222") },
         { _id: { $eq: "000123456789abcdefABCDEF" } },
-        { _id: { $eq: new ObjectId("000123456789abcdefabcdef") } },
+        { _id: new ObjectId("000123456789abcdefabcdef") },
         { _id: { $eq: new ObjectId("000000000011111111112222") } },
         { _id: { $not: { $eq: new ObjectId("000000000011111111112222") } } },
         {

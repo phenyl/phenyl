@@ -43,8 +43,11 @@ export class PhenylExpressMiddlewareCreator {
         method,
         headers: headers as EncodedHttpRequest["headers"],
         path,
-        qsParams: query,
       };
+      if (query != null) {
+        // @ts-ignore Type 'ParsedQs' is not assignable to type 'QueryStringParams'
+        encodedHttpRequest.qsParams = query;
+      }
       if (!body) {
         encodedHttpRequest.body = await getRawBody(req, {
           encoding: true,
@@ -93,8 +96,11 @@ export class PhenylExpressMiddlewareCreator {
         method,
         headers: headers as EncodedHttpRequest["headers"],
         path,
-        qsParams: query,
       };
+      if (query != null) {
+        // @ts-ignore Type 'ParsedQs' is not assignable to type 'QueryStringParams'
+        encodedHttpRequest.qsParams = query;
+      }
       if (!body) {
         encodedHttpRequest.body = await getRawBody(req, true);
       } else if (typeof body === "object") {

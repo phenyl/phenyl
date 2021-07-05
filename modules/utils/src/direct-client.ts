@@ -9,7 +9,7 @@ import {
   ErrorResponseData,
   GeneralRestApiHandler,
   RestApiClient,
-  GeneralRestApiClient
+  GeneralRestApiClient,
 } from "@phenyl/interfaces";
 
 import { PhenylRestApiClient } from "./phenyl-rest-api-client";
@@ -17,10 +17,12 @@ import { PhenylRestApiClient } from "./phenyl-rest-api-client";
 export function createDirectClient<TM extends GeneralTypeMap>(
   restApiHandler: RestApiHandler<TM>
 ): RestApiClient<TM>;
+// eslint-disable-next-line no-redeclare
 export function createDirectClient(
   restApiHandler: GeneralRestApiHandler
 ): GeneralRestApiClient;
 // This deliberate duplication was added due to TypeScript's miscompilation to .d.ts. The last overload definition will be deleted there.
+// eslint-disable-next-line no-redeclare
 export function createDirectClient(
   restApiHandler: GeneralRestApiHandler
 ): GeneralRestApiClient {

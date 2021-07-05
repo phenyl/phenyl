@@ -1,12 +1,16 @@
 // Thanks to https://qiita.com/kgtkr/items/2a8290d1b1314063a524
 
 type And<A extends boolean, B extends boolean> = A extends true
-  ? (B extends true ? true : false)
+  ? B extends true
+    ? true
+    : false
   : false;
 
 type Or<A extends boolean, B extends boolean> = A extends true
   ? true
-  : (B extends true ? true : false);
+  : B extends true
+  ? true
+  : false;
 
 type Not<X extends boolean> = X extends true ? false : true;
 
@@ -22,5 +26,7 @@ export type TypeEq<A, B> = Or<
   And<And<IsNotAny<A>, IsNotAny<B>>, TypeEqNotAny<A, B>>
 >;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function assertType<_T extends true>() {}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function assertNotType<_T extends false>() {}

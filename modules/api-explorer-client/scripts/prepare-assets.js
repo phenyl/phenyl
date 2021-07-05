@@ -8,7 +8,7 @@ const $ = cheerio.load(fs.readFileSync(indexPath, "utf8"));
 
 // Embed extracted CSS
 $('link[rel="stylesheet"]').each((i, el) => {
-  const href = cheerio(el).attr("href");
+  const href = $(el).attr("href");
   // Preserve external css
   if (/^https?/.test(href)) {
     debug(`Preserve ${href}`);
@@ -22,13 +22,13 @@ $('link[rel="stylesheet"]').each((i, el) => {
     .appendTo("head");
 
   debug(`Remove ${assetPath}`);
-  cheerio(el).remove(); // Remove from HTML
+  $(el).remove(); // Remove from HTML
   fs.unlinkSync(assetPath); // Remove file
 });
 
 // Embed extracted JavaScript
 $("script[src]").each((i, el) => {
-  const src = cheerio(el).attr("src");
+  const src = $(el).attr("src");
   // Preserve external css
   if (/^https?/.test(src)) {
     debug(`Preserve ${src}`);
@@ -42,12 +42,12 @@ $("script[src]").each((i, el) => {
     .appendTo("body");
 
   debug(`Remove ${assetPath}`);
-  cheerio(el).remove(); // Remove from HTML
+  $(el).remove(); // Remove from HTML
   fs.unlinkSync(assetPath); // Remove file
 });
 
 // Inject entities
-const phenylApiExplorerClientGlobals = cheerio("<script></script>").text(`
+const phenylApiExplorerClientGlobals = $("<script></script>").text(`
   window.phenylApiExplorerClientGlobals = {
     phenylApiUrlBase: "<%- phenylApiUrlBase %>",
     PhenylFunctionalGroupSkeleton: <%- JSON.stringify(functionalGroup) %>,

@@ -1,5 +1,3 @@
-// @ts-ignore TODO Upgrade react to v17 and remove imports of react
-import React from "react";
 import { Menu } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 

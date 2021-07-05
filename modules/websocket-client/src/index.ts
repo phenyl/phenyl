@@ -1,3 +1,4 @@
+/* global NodeJS */
 import WebSocket from "./websocket";
 import { randomStringWithTimeStamp } from "@phenyl/utils";
 import {
@@ -10,7 +11,7 @@ import {
   VersionDiffSubscriber,
   WebSocketServerSubscriptionResultMessage,
   WebSocketServerVersionDiffMessage,
-  WebSocketServerResponseDataMessage
+  WebSocketServerResponseDataMessage,
 } from "@phenyl/interfaces";
 
 type Id = string;
@@ -70,16 +71,16 @@ export default class PhenylWebSocketClient implements VersionDiffSubscriber {
         method: "subscribe",
         payload: {
           entityName,
-          id
+          id,
         },
-        sessionId
+        sessionId,
       };
       const tag = randomStringWithTimeStamp();
       let timer: NodeJS.Timer;
       this.client.send(
         JSON.stringify({
           subscription,
-          tag
+          tag,
         })
       );
 
@@ -127,7 +128,7 @@ export default class PhenylWebSocketClient implements VersionDiffSubscriber {
       this.client.send(
         JSON.stringify({
           reqData,
-          tag
+          tag,
         })
       );
 
