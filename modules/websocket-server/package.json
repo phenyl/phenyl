@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@phenyl/utils": "^4.0.3",
-    "ws": "^7.5.0"
+    "ws": "^8.0.0"
   },
   "devDependencies": {
     "@phenyl/interfaces": "^4.0.3",
