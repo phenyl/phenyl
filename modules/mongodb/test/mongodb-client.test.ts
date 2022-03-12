@@ -168,4 +168,23 @@ describe("MongodbClient", () => {
       assert.deepStrictEqual(result.hobbies, ["play soccer"]);
     });
   });
+
+  describe("mongoClientOptions", () => {
+    it("should pass mongoClientOptions to mongo client at connect", async () => {
+      const _conn = await connect(url, dbName, {
+        connectTimeoutMS: 8000,
+        reconnectTries: 10,
+      });
+
+      // @ts-expect-error
+      expect(_conn.dbClient.s.options).toMatchObject({
+        // NOTE: useNewUrlParser to useUnifiedTopology check for backward compatibility
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        connectTimeoutMS: 8000,
+        reconnectTries: 10,
+      });
+      _conn.close();
+    });
+  });
 });
