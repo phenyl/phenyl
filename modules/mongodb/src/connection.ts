@@ -1,4 +1,4 @@
-import { Collection, MongoClient } from "mongodb";
+import { Collection, MongoClient, MongoClientOptions } from "mongodb";
 
 export interface MongoDbConnection {
   close(): void;
@@ -7,11 +7,13 @@ export interface MongoDbConnection {
 
 export async function connect(
   url: string,
-  dbName: string
+  dbName: string,
+  mongoClientOptions?: MongoClientOptions
 ): Promise<MongoDbConnection> {
   const dbClient = new MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    ...mongoClientOptions,
   });
   await dbClient.connect();
   return new PhenylMongoDbConnection({ dbClient, dbName });
