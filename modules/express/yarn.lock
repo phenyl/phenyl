@@ -2,73 +2,73 @@
 # yarn lockfile v1
 
 
-"@phenyl/central-state@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.0.3.tgz#ebf90de0cb2f4cb90d1973855f8c2f6bd47d0f41"
-  integrity sha512-l8MYnQChgpistYvu/TXqs1QUCv3XGO3Iyc7VdtDCo+J8jT4z0PHlfdC1Meg97qGFvKuHrwvZyUOsZaKBbPL73w==
+"@phenyl/central-state@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/central-state/-/central-state-4.1.0.tgz#b58090624d5f9b910fc81e226125d5773485e6fe"
+  integrity sha512-YRkSCNBWadMjZR9W8WHaw3Ys3MN0ZVHLD7GG4OQc4HjPrvOzWTNprmjWNVtsFtHeyNKoP7O9xXfK+85Y6TIYUA==
   dependencies:
-    "@phenyl/interfaces" "^4.0.3"
-    "@phenyl/utils" "^4.0.3"
+    "@phenyl/interfaces" "^4.1.0"
+    "@phenyl/utils" "^4.1.0"
     sp2 "^1.6.3"
 
-"@phenyl/http-client@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.0.3.tgz#f420c6d185ab85adf352316a5eb3461c531b3b6b"
-  integrity sha512-C0ICCViNZMt9xvRjZGjQcfodTkBEffoGc1NiNX3FXo3cwnIy4b7dcqGpmXIgw/j7hwNMPJ5tW7YEG5X3l0GI2Q==
+"@phenyl/http-client@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-client/-/http-client-4.1.0.tgz#9774c344bad525d08a9f284f96e4559b8a6d7150"
+  integrity sha512-KMG4edTMNsCtkiPdP4UuSmTbKJ0kaxfH1NO3qyn4uXeuxTYu9GAenJJta2VL+W4R7+nxDHy4M+zijbjahGAyqA==
   dependencies:
-    "@phenyl/http-rules" "^4.0.3"
-    "@phenyl/interfaces" "^4.0.3"
-    "@phenyl/utils" "^4.0.3"
-    cross-fetch "^3.0.2"
+    "@phenyl/http-rules" "^4.1.0"
+    "@phenyl/interfaces" "^4.1.0"
+    "@phenyl/utils" "^4.1.0"
+    cross-fetch "^3.1.4"
 
-"@phenyl/http-rules@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.0.3.tgz#406b2132847cc0d1b66c08cf562a778110b2f9dd"
-  integrity sha512-IFCXzjozqqeQxnBZF/1yUO0vuCoH9CwVMaythpzfSDSh9SVuVvNtEW1y8gi89+OIeTY12gr6vWbFwyy97wPUnw==
+"@phenyl/http-rules@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/http-rules/-/http-rules-4.1.0.tgz#d91f19569d2a313f9ff8d6e479f297e36df892e1"
+  integrity sha512-cxAnc7hY+D0fpbZeaY1jWQIK9S695NDavjbeCsuilLqchrSfIczaYLPDo6d+jFr14DUMwANdMKPUiPSSedNDjA==
   dependencies:
-    "@phenyl/interfaces" "^4.0.3"
-    "@phenyl/utils" "^4.0.3"
+    "@phenyl/interfaces" "^4.1.0"
+    "@phenyl/utils" "^4.1.0"
 
-"@phenyl/interfaces@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.0.3.tgz#de1bbc6203764a906f461c6b880e81d48612a58b"
-  integrity sha512-u/p5jfBbMqhBjPkbA8XgELd2EGWjEZ9tcw15W41i9c90wigyPoqCSYMthxmzHl5Fu0PPYQV7I40pecj1kdiYJg==
+"@phenyl/interfaces@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/interfaces/-/interfaces-4.1.0.tgz#f07b0099120f52ba4a28358f1374b997850791e4"
+  integrity sha512-EUwKPAy1pw/c+xI3WlpG5qWQJaKnV975Ngh/g9oUF+pSsCSpUNSun7XKJlRUuXdLDHAvBcUnb9lug6xtEyRdRA==
   dependencies:
     sp2 "^1.6.3"
 
-"@phenyl/memory-db@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-4.0.3.tgz#fa932ef288de1b46157a62fdf83ce19dd4c662dd"
-  integrity sha512-y2ggmXj6wnml97uf/w6gwfmrnwYlwOYYiLw+S5Cecnrka3aOvF03Q/+n60FAHO0qTstRKesvew23w5ct80lGgg==
+"@phenyl/memory-db@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/memory-db/-/memory-db-4.1.0.tgz#d31fdca2bda11f069399ea3f409082dc82703469"
+  integrity sha512-3Y3ekJ+HZ7g3JnA3fsWtcGeLlS+m0GfkHlB+XM7JwcTyQmgYQQ4Ss0oYa9+W4yccbo2Q6f2w9gEDghcOIddQ1A==
   dependencies:
-    "@phenyl/central-state" "^4.0.3"
-    "@phenyl/interfaces" "^4.0.3"
-    "@phenyl/state" "^4.0.3"
-    "@phenyl/utils" "^4.0.3"
+    "@phenyl/central-state" "^4.1.0"
+    "@phenyl/interfaces" "^4.1.0"
+    "@phenyl/state" "^4.1.0"
+    "@phenyl/utils" "^4.1.0"
     sp2 "^1.6.3"
 
-"@phenyl/rest-api@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.0.3.tgz#8766785f0d6409c1495595527152e6ecd9b7a07f"
-  integrity sha512-apWuIFI6RNr7AnB96I0TKpq1ojF/jhURnpKgme+939+Op5fxVFRImoAWqJ8+xZkMp3KXPmZqOmVS1/wp2QiaBQ==
+"@phenyl/rest-api@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/rest-api/-/rest-api-4.1.0.tgz#464a9f49d4d066603f89ec96330ec006348e67b9"
+  integrity sha512-1DBXvMu8txrmBhmMdELr8Ns4te/PKEJYlIUBs7pllDEWAA/4GhlLzA+hClt1vI0fAiT1iaSJ/w6yVtOncmIjTw==
   dependencies:
-    "@phenyl/interfaces" "^4.0.3"
-    "@phenyl/utils" "^4.0.3"
+    "@phenyl/interfaces" "^4.1.0"
+    "@phenyl/utils" "^4.1.0"
 
-"@phenyl/state@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-4.0.3.tgz#fd17af88e3f07e3165fdae6399de5f2675b95ced"
-  integrity sha512-cebWeTX+UrnR0O6/YZIy6IRyUkckMsLEaYTuWKhFJmL9i8zv6Z1GLLiyO4yKTazzjH0RmRSZVaVH806I7Yv3DQ==
+"@phenyl/state@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/state/-/state-4.1.0.tgz#8ad658106aed8c695b7c1e886da76b10ae54c096"
+  integrity sha512-I3G5WFvAkO8DsmZ+o1GAzx8D62V6z1H7MX9u9vvnZSo3V3rJuPeDl/OhxOuKd0B9/SihLEOSI7N+Q4DAZ2YFkQ==
   dependencies:
-    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/interfaces" "^4.1.0"
     sp2 "^1.6.3"
 
-"@phenyl/utils@^4.0.3":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.0.3.tgz#1bf8c8df3f5f00c27b674038c30a5ffa5e822b28"
-  integrity sha512-vrKXS2YrebnSrctFRPwNl5lWucsnK1NWSyNF8WOkMTcy4JNdba7ZVgIN1BJV/DTce1aJGqdOTdTn0MCl0A8nRg==
+"@phenyl/utils@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@phenyl/utils/-/utils-4.1.0.tgz#acf033e2ef64c0bf03c2c0d3d390dcf1cef58222"
+  integrity sha512-lpvspfBZpPpYmNA4V8h+XNzJEXlQd7ZUI3k5kUo2jCetjsOW1014lzr56Ik/u8mwv+PA1dkKB7DrhrB5qIQQhQ==
   dependencies:
-    "@phenyl/interfaces" "^4.0.3"
+    "@phenyl/interfaces" "^4.1.0"
     sp2 "^1.6.3"
 
 "@sp2/format@^1.6.3":
@@ -149,12 +149,12 @@ cookie@0.4.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha512-+Hp8fLp57wnUSt0tY0tHEXh4voZRDnoIrZPqlo3DPiI4y9lwg/jqx+1Om94/W6ZaPDOUbnjOt/99w66zk+l1Xg==
 
-cross-fetch@^3.0.2:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
-  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
+cross-fetch@^3.1.4:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
+  integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
   dependencies:
-    node-fetch "2.6.1"
+    node-fetch "2.6.7"
 
 debug@2.6.9:
   version "2.6.9"
@@ -363,10 +363,12 @@ negotiator@0.6.2:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
 
-node-fetch@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
+node-fetch@2.6.7:
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
+  integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
 
 on-finished@~2.3.0:
   version "2.3.0"
@@ -510,6 +512,11 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
+
 type-is@~1.6.17, type-is@~1.6.18:
   version "1.6.18"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.18.tgz#4e552cd05df09467dcbc4ef739de89f2cf37c131"
@@ -539,3 +546,16 @@ vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
+
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha1-lmRU6HZUYuN2RNNib2dCzotwll0=
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
