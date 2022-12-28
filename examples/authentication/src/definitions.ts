@@ -1,3 +1,4 @@
+import { GeneralAuthenticationResult, GeneralEntityClient, GeneralLoginCommand, GeneralUserEntityRequestData, Session } from "@phenyl/interfaces";
 import { StandardUserDefinition } from "@phenyl/standards";
 
 export type ThisEntityMap = {
@@ -27,7 +28,7 @@ export type ThisTypeMap = {
 };
 
 export class UserDefinition extends StandardUserDefinition {
-  constructor(entityClient) {
+  constructor(entityClient: GeneralEntityClient) {
     super({
       entityClient,
       accountPropName: "email",
@@ -35,7 +36,7 @@ export class UserDefinition extends StandardUserDefinition {
       ttl: 24 * 3600,
     });
   }
-  async authorization(reqData, session): Promise<boolean> {
+  async authorize(reqData: GeneralUserEntityRequestData & {payload: {id: string}}, session: Session): Promise<boolean> {
     if (
       ["insert", "insertAndGet", "insertAndFetch", "login", "logout"].includes(
         reqData.method
