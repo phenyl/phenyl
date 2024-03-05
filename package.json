@@ -27,12 +27,11 @@
     "Yutaka Kohada <y.kohada@gmail.com>"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "build": "lerna run build",
     "clean": "lerna run clean && lerna clean --yes",
     "clean-tmp": "lerna run clean",
     "lint": "lerna run lint",
-    "prepare": "yarn bootstrap && yarn clean-tmp && yarn build",
+    "prepare": "yarn clean-tmp && yarn build",
     "publish": "lerna publish",
     "test": "lerna run test",
     "type-check": "lerna run type-check",
@@ -58,6 +57,9 @@
     "ts-node": "8.10.2",
     "typescript": "4.3.2"
   },
+  "workspaces": [
+    "modules/*"
+  ],
   "engines": {
     "npm": ">=6.13.4",
     "yarn": ">=1.21.1"
