@@ -12,9 +12,6 @@
     "clean": {
       "cache": false
     },
-    "type-check": {},
-    "watch": {
-      "cache": false
-    }
+    "type-check": {}
   }
 }

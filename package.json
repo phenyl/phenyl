@@ -36,10 +36,10 @@
     "type-check": "turbo type-check",
     "watch": "lerna run watch --parallel"
   },
-  "dependencies": {
-    "lerna": "3.22.1"
-  },
   "devDependencies": {
+    "@lerna-lite/cli": "^1.17.0",
+    "@lerna-lite/publish": "^1.17.0",
+    "@lerna-lite/run": "^1.17.0",
     "@types/express": "^4.17.12",
     "@types/jest": "^26.0.23",
     "@types/react-router-dom": "5.1.7",
