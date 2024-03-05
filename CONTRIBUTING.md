@@ -66,6 +66,6 @@ This command generates `lib/**/*.js` and `lib/**/*.d.ts` from `src/**/*.ts`.
 ```
 npm whoami # Print your npm account that has already joined organization
 git checkout master
-yarn bootstrap && yarn build
+yarn build
 yarn run publish
 ```
