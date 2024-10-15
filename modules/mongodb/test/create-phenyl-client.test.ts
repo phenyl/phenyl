@@ -8,9 +8,7 @@ import PhenylRestApi from "@phenyl/rest-api";
 
 let dbClient: MongoClient;
 beforeAll(async () => {
-  dbClient = await MongoClient.connect("mongodb://localhost:27017", {
-    useNewUrlParser: true,
-  });
+  dbClient = await MongoClient.connect("mongodb://localhost:27017");
 });
 describe("createPhenylClients", () => {
   const conn = new PhenylMongoDbConnection({ dbClient, dbName: "hoge" });

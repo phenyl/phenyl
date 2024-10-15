@@ -36,7 +36,7 @@ type MongoEntityWithObjectId<E extends Entity> = E & { _id: ObjectId };
 
 // convert 24-byte hex lower string to ObjectId
 function createObjectId<T>(id: string | ObjectId): string | ObjectId {
-  if (id instanceof mongodb.ObjectID) return id;
+  if (isObjectId(id)) return id;
   if (typeof id !== "string") return id;
   try {
     return /^[0-9a-f]{24}$/.test(id) ? new ObjectId(id) : id;
@@ -120,7 +120,7 @@ export function filterInputEntity<E extends PreEntity<Entity>>(
 }
 
 function isObjectId(id: any): id is ObjectId {
-  return id instanceof mongodb.ObjectID;
+  return ObjectId.isValid(id);
 }
 
 function convertObjectIdToStringInMongoEntity<E extends Entity>(
@@ -164,7 +164,9 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     if (limit) options.limit = limit;
     if (sort) options.sort = sort;
 
-    const result = await coll
+    // FIXME: resolve type error
+    // @ts-ignore
+    const result: MongoEntityWithObjectId[] = await coll
       .find(filterFindOperation(where), options)
       .toArray();
     return result.map(restoreIdInEntity);
@@ -228,7 +230,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const { entityName, value } = command;
     const coll = this.conn.collection(entityName);
     const result = await coll.insertOne(filterInputEntity(value));
-    return result.insertedCount;
+    return result.acknowledged ? 1 : 0;
   }
 
   async insertMulti<N extends Key<M>>(
@@ -341,9 +343,12 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       where,
     });
 
+    const updateOperation = toMongoUpdateOperation(operation);
+
     await coll.updateMany(
       filterFindOperation(where),
-      toMongoUpdateOperation(operation)
+      // TODO: resolve type error
+      updateOperation as mongodb.UpdateFilter<mongodb.Document>
     );
 
     const result = await this.getByIds({

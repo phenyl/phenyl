@@ -129,7 +129,7 @@ describe("MongodbClient", () => {
   beforeAll(async () => {
     conn = await connect(url, dbName);
     phenylMongodbClient = new PhenylMongoDbClient(conn);
-    mongoClient = new MongoClient(url, { useUnifiedTopology: true });
+    mongoClient = new MongoClient(url);
     await mongoClient.connect();
   });
 
@@ -162,10 +162,13 @@ describe("MongodbClient", () => {
         .db(dbName)
         .collection(entityName)
         .findOne({ _id: "foo" });
-      assert.deepStrictEqual(result._id, "foo");
-      assert.deepStrictEqual(result.id, undefined);
-      assert.deepStrictEqual(result.name, "Abraham");
-      assert.deepStrictEqual(result.hobbies, ["play soccer"]);
+      expect(result).not.toBeNull();
+      if (result) {
+        assert.deepStrictEqual(result._id, "foo");
+        assert.deepStrictEqual(result.id, undefined);
+        assert.deepStrictEqual(result.name, "Abraham");
+        assert.deepStrictEqual(result.hobbies, ["play soccer"]);
+      }
     });
   });
 
@@ -173,7 +176,8 @@ describe("MongodbClient", () => {
     it("should pass mongoClientOptions to mongo client at connect", async () => {
       const _conn = await connect(url, dbName, {
         connectTimeoutMS: 8000,
-        reconnectTries: 10,
+        retryWrites: true,
+        maxPoolSize: 10,
       });
 
       // @ts-expect-error
