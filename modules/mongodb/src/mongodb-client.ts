@@ -137,7 +137,7 @@ function replace_idIntoIdInEntity<E extends Entity>(entity: MongoEntity<E>): E {
   return update(entity, { $rename: { _id: "id" } });
 }
 
-export function restoreIdInEntity<E extends Entity>(
+function restoreIdInEntity<E extends Entity>(
   mongoEntityWithObjectId: MongoEntityWithObjectId<E>
 ): E {
   const intermediate = convertObjectIdToStringInMongoEntity(
@@ -164,12 +164,11 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     if (limit) options.limit = limit;
     if (sort) options.sort = sort;
 
-    // FIXME: resolve type error
-    // @ts-ignore
-    const result: MongoEntityWithObjectId[] = await coll
+    const result = await coll
       .find(filterFindOperation(where), options)
       .toArray();
-    return result.map(restoreIdInEntity);
+    // @TODO: use better type to take place of any
+    return result.map((entity) => restoreIdInEntity<any>(entity));
   }
 
   async findOne<N extends Key<M>>(
