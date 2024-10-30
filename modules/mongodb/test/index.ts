@@ -57,7 +57,7 @@ describe("MongoDBEntityClient", () => {
       generatedId = result.entity.id;
     });
 
-    describe("with id after coverts from id", () => {
+    describe("with _id after coverts from id", () => {
       it("to _id", async () => {
         await entityClient.insertOne({
           entityName: "user",
@@ -68,7 +68,7 @@ describe("MongoDBEntityClient", () => {
           .collection("user")
           .find({ _id: "jane" })
           .toArray();
-        assert(users[0]._id === "jane");
+        assert(users[0]._id.toString() === "jane");
       });
 
       it("to { _id: ObjectId(xxx) } if id is 24-byte hex lower string", async () => {
