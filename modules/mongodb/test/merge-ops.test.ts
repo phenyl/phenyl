@@ -143,7 +143,7 @@ describe("Merge Operations", () => {
       } catch (e) {
         assert.strictEqual(
           e.message,
-          `Operation timed out. Can not acquire lock.\nentityName: user\nid: ${generatedId}`
+          `Operation timed out. Cannot acquire lock.\nentityName: user\nid: ${generatedId}`
         );
       }
     });

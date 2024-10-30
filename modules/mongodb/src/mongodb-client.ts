@@ -346,7 +346,8 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
 
     await coll.updateMany(
       filterFindOperation(where),
-      // TODO: resolve type error
+      // TODO: to resolve below 'as' casting, we need to extend return type of
+      // toMongoUPdateOperation method belonging to sp2
       updateOperation as mongodb.UpdateFilter<mongodb.Document>
     );
 
