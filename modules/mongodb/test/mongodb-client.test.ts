@@ -122,7 +122,7 @@ describe("MongodbClient", () => {
   const dbName = "phenyl-mongodb-test";
   const entityName = "user";
   let phenylMongodbClient: PhenylMongoDbClient<{
-    user: { id: string; name: string; hobbies: string[] };
+    user: { id: string; name: string; hobbies: string[]; age: number };
   }>;
   let mongoClient: MongoClient;
   let conn: MongoDbConnection;
@@ -147,6 +147,7 @@ describe("MongodbClient", () => {
           id: "foo",
           name: "Jone",
           hobbies: ["play baseball"],
+          age: 30,
         },
       });
       await phenylMongodbClient.replaceOne({
@@ -156,6 +157,7 @@ describe("MongodbClient", () => {
           id: "foo",
           name: "Abraham",
           hobbies: ["play soccer"],
+          age: 20,
         },
       });
       const result = await mongoClient
@@ -168,6 +170,33 @@ describe("MongodbClient", () => {
         assert.deepStrictEqual(result.id, undefined);
         assert.deepStrictEqual(result.name, "Abraham");
         assert.deepStrictEqual(result.hobbies, ["play soccer"]);
+        assert.deepStrictEqual(result.age, 20);
+      }
+    });
+  });
+
+  describe("updateAndFetch", () => {
+    it("should update and fetch", async () => {
+      await phenylMongodbClient.updateAndFetch({
+        entityName,
+        where: {},
+        operation: {
+          $set: { name: "Bobby" },
+          $inc: { age: 1 },
+          $push: { hobbies: "create music" },
+        },
+      });
+      const result = await mongoClient
+        .db(dbName)
+        .collection(entityName)
+        .findOne({ _id: "foo" });
+      expect(result).not.toBeNull();
+      if (result) {
+        assert.deepStrictEqual(result._id, "foo");
+        assert.deepStrictEqual(result.id, undefined);
+        assert.deepStrictEqual(result.name, "Bobby");
+        assert.deepStrictEqual(result.hobbies, ["play soccer", "create music"]);
+        assert.deepStrictEqual(result.age, 21);
       }
     });
   });
@@ -182,11 +211,9 @@ describe("MongodbClient", () => {
 
       // @ts-expect-error
       expect(_conn.dbClient.s.options).toMatchObject({
-        // NOTE: useNewUrlParser to useUnifiedTopology check for backward compatibility
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         connectTimeoutMS: 8000,
-        reconnectTries: 10,
+        retryWrites: true,
+        maxPoolSize: 10,
       });
       _conn.close();
     });
