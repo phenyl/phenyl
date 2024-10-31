@@ -120,7 +120,7 @@ export function filterInputEntity<E extends PreEntity<Entity>>(
 }
 
 function isObjectId(id: any): id is ObjectId {
-  return ObjectId.isValid(id);
+  return id instanceof ObjectId;
 }
 
 function convertObjectIdToStringInMongoEntity<E extends Entity>(
