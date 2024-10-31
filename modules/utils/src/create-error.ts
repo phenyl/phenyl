@@ -69,11 +69,12 @@ export function createError<D extends Object = Object>(
   _type?: PhenylErrorType | null,
   defaultLocation: ErrorLocation = "local"
 ): PhenylError<D> & Error {
-  if (typeof error === "string") {
-    return createError(new Error(error), _type, defaultLocation);
-  }
-
-  const e = error instanceof Error ? error : new Error(error.message);
+  const e =
+    typeof error === "string"
+      ? new Error(error)
+      : error instanceof Error
+      ? error
+      : new Error(error.message);
 
   // @ts-ignore
   if (error.stack) e.stack = error.stack;
@@ -82,7 +83,7 @@ export function createError<D extends Object = Object>(
   e.ok = 0;
 
   // @ts-ignore
-  e.at = error.at || defaultLocation;
+  e.at = isErrorLocation(error.at) ? error.at : defaultLocation;
 
   // @ts-ignore
   e.type = error.type || _type || guessErrorTypes[e.at](e);
@@ -122,4 +123,11 @@ export function createLocalError<D extends Object = Object>(
 ): LocalError<D> & Error {
   // @ts-ignore
   return createError(error, _type, "local");
+}
+
+/**
+ * Check if the value is an ErrorLocation.
+ */
+export function isErrorLocation(value: any): value is ErrorLocation {
+  return value === "server" || value === "local";
 }
