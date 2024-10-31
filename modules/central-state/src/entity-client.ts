@@ -274,7 +274,7 @@ export class PhenylEntityClient<M extends GeneralEntityMap>
     const { isSucceeded, result: entity } = await this.acquireLock(command);
     if (!isSucceeded || entity == null) {
       throw new Error(
-        `Operation timed out. Can not acquire lock.\nentityName: ${entityName}\nid: ${id}`
+        `Operation timed out. Cannot acquire lock.\nentityName: ${entityName}\nid: ${id}`
       );
     }
     const masterOperations = Versioning.getOperationDiffsByVersion(

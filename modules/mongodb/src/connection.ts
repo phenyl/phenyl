@@ -10,11 +10,7 @@ export async function connect(
   dbName: string,
   mongoClientOptions?: MongoClientOptions
 ): Promise<MongoDbConnection> {
-  const dbClient = new MongoClient(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    ...mongoClientOptions,
-  });
+  const dbClient = new MongoClient(url, mongoClientOptions);
   await dbClient.connect();
   return new PhenylMongoDbConnection({ dbClient, dbName });
 }
