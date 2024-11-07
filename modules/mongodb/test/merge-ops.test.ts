@@ -69,7 +69,7 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: { name: "Jone", hobbies: ["play baseball"] },
       });
-      generatedId = result.entity.id;
+      generatedId = result.entity.id.toString();
       versionId = result.versionId;
 
       await entityClient.push({
@@ -89,7 +89,7 @@ describe("Merge Operations", () => {
         },
       });
 
-      assert.strictEqual(updatedEntity.entity.id, generatedId);
+      assert.strictEqual(updatedEntity.entity.id.toString(), generatedId);
       assert.strictEqual(updatedEntity.entity.name, "Alpha");
       assert.deepStrictEqual(updatedEntity.entity.hobbies, [
         "TypeScript",
