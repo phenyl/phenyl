@@ -36,7 +36,7 @@ type MongoEntityWithObjectId<E extends Entity> = E & { _id: ObjectId };
 
 // convert 24-byte hex lower string to ObjectId
 function createObjectId<T>(id: string | ObjectId): string | ObjectId {
-  if (id instanceof mongodb.ObjectID) return id;
+  if (isObjectId(id)) return id;
   if (typeof id !== "string") return id;
   try {
     return /^[0-9a-f]{24}$/.test(id) ? new ObjectId(id) : id;
@@ -120,7 +120,7 @@ export function filterInputEntity<E extends PreEntity<Entity>>(
 }
 
 function isObjectId(id: any): id is ObjectId {
-  return id instanceof mongodb.ObjectID;
+  return id instanceof ObjectId;
 }
 
 function convertObjectIdToStringInMongoEntity<E extends Entity>(
@@ -137,7 +137,7 @@ function replace_idIntoIdInEntity<E extends Entity>(entity: MongoEntity<E>): E {
   return update(entity, { $rename: { _id: "id" } });
 }
 
-export function restoreIdInEntity<E extends Entity>(
+function restoreIdInEntity<E extends Entity>(
   mongoEntityWithObjectId: MongoEntityWithObjectId<E>
 ): E {
   const intermediate = convertObjectIdToStringInMongoEntity(
@@ -167,7 +167,8 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const result = await coll
       .find(filterFindOperation(where), options)
       .toArray();
-    return result.map(restoreIdInEntity);
+    // @TODO: use better type to take place of any
+    return result.map((entity) => restoreIdInEntity<any>(entity));
   }
 
   async findOne<N extends Key<M>>(
@@ -228,7 +229,7 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
     const { entityName, value } = command;
     const coll = this.conn.collection(entityName);
     const result = await coll.insertOne(filterInputEntity(value));
-    return result.insertedCount;
+    return result.acknowledged ? 1 : 0;
   }
 
   async insertMulti<N extends Key<M>>(
@@ -341,9 +342,13 @@ export class PhenylMongoDbClient<M extends GeneralEntityMap>
       where,
     });
 
+    const updateOperation = toMongoUpdateOperation(operation);
+
     await coll.updateMany(
       filterFindOperation(where),
-      toMongoUpdateOperation(operation)
+      // TODO: to resolve below 'as' casting, we need to extend return type of
+      // toMongoUPdateOperation method belonging to sp2
+      updateOperation as mongodb.UpdateFilter<mongodb.Document>
     );
 
     const result = await this.getByIds({

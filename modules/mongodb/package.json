@@ -29,12 +29,12 @@
     "@phenyl/interfaces": "^4.1.0",
     "@phenyl/utils": "^4.1.0",
     "bson": "^4.4.0",
-    "mongodb": "^3.6.9",
+    "mongodb": "^4.0.0",
     "sp2": "^1.6.3"
   },
   "devDependencies": {
     "@phenyl/rest-api": "^4.1.0",
-    "@types/mongodb": "^3.6.18",
+    "@types/mongodb": "^4.0.0",
     "upbin": "^0.9.2"
   },
   "publishConfig": {

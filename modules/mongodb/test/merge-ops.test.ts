@@ -69,7 +69,7 @@ describe("Merge Operations", () => {
         entityName: "user",
         value: { name: "Jone", hobbies: ["play baseball"] },
       });
-      generatedId = result.entity.id;
+      generatedId = result.entity.id.toString();
       versionId = result.versionId;
 
       await entityClient.push({
@@ -89,7 +89,7 @@ describe("Merge Operations", () => {
         },
       });
 
-      assert.strictEqual(updatedEntity.entity.id, generatedId);
+      assert.strictEqual(updatedEntity.entity.id.toString(), generatedId);
       assert.strictEqual(updatedEntity.entity.name, "Alpha");
       assert.deepStrictEqual(updatedEntity.entity.hobbies, [
         "TypeScript",
@@ -143,7 +143,7 @@ describe("Merge Operations", () => {
       } catch (e) {
         assert.strictEqual(
           e.message,
-          `Operation timed out. Can not acquire lock.\nentityName: user\nid: ${generatedId}`
+          `Operation timed out. Cannot acquire lock.\nentityName: user\nid: ${generatedId}`
         );
       }
     });
@@ -175,7 +175,7 @@ describe("Merge Operations", () => {
         .catch((e) => e);
 
       // throw error
-      assert.strictEqual(error.name, "MongoError");
+      assert.strictEqual(error.name, "MongoServerError");
       assert.strictEqual(
         error.errmsg,
         "Updating the path 'hobbies' would create a conflict at 'hobbies'"
@@ -236,7 +236,7 @@ describe("Merge Operations", () => {
       let db: Db;
       const collectionName = "user";
       beforeAll(async () => {
-        client = new MongoClient(url, { useUnifiedTopology: true });
+        client = new MongoClient(url);
         await client.connect();
         db = client.db(dbName);
         const collections = await db.collections();
@@ -293,15 +293,21 @@ describe("Merge Operations", () => {
             versionId,
           })
           .catch((e) => e);
-        assert.deepStrictEqual(error.name, "MongoError");
+        assert.deepStrictEqual(error.name, "MongoServerError");
         assert.deepStrictEqual(error.errmsg, "Document failed validation");
 
         const rollbackedResult = await client
           .db(dbName)
           .collection("user")
           .findOne({ _id: generatedId });
-        assert.deepStrictEqual(rollbackedResult.name, "John");
-        assert.deepStrictEqual(rollbackedResult._PhenylMeta.locked, undefined);
+        expect(rollbackedResult).not.toBeNull();
+        if (rollbackedResult) {
+          assert.deepStrictEqual(rollbackedResult.name, "John");
+          assert.deepStrictEqual(
+            rollbackedResult._PhenylMeta.locked,
+            undefined
+          );
+        }
       });
     });
   });
