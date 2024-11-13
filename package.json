@@ -54,7 +54,7 @@
     "rimraf": "3.0.2",
     "ts-jest": "^27.0.3",
     "ts-node": "8.10.2",
-    "turbo": "1.12.4",
+    "turbo": "^2.2.3",
     "typescript": "4.3.2"
   },
   "workspaces": [
@@ -63,5 +63,6 @@
   "engines": {
     "npm": ">=6.13.4",
     "yarn": ">=1.21.1"
-  }
+  },
+  "packageManager": "yarn@1.22.19"
 }

@@ -1,12 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
       "outputs": ["./build/**", "./lib/**"],
       "dependsOn": ["^build"]
     },
-    "test": {},
+    "test": {
+      "dependsOn": ["build"]
+    },
     "lint": {
+      "dependsOn": ["build"],
       "outputs": [".eslintcache"]
     },
     "clean": {
