@@ -1124,6 +1124,46 @@ describe("middlewareHandler", () => {
         );
         stub.restore();
       });
+      it("doesn't clear all commits when 'until' is less than commit count", async () => {
+        await middlewareHandler.commit({
+          type: "phenyl/commit",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            operation: { $set: { name: "First Change" } },
+          },
+          tag: "",
+        });
+
+        await middlewareHandler.commit({
+          type: "phenyl/commit",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            operation: { $set: { name: "Second Change" } },
+          },
+          tag: "",
+        });
+
+        const operations = await middlewareHandler.push({
+          type: "phenyl/push",
+          payload: {
+            entityName: "patient",
+            id: insertedPatient.entity.id,
+            until: 1,
+          },
+          tag: "",
+        });
+
+        store.dispatch(operations);
+        const { entities } = store.getState().phenyl;
+        const entityInfo = entities.patient[insertedPatient.entity.id];
+
+        assert.strictEqual(entityInfo.commits.length, 1);
+        assert.deepStrictEqual(entityInfo.commits[0], {
+          $set: { name: "Second Change" },
+        });
+      });
     });
   });
 });

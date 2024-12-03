@@ -346,7 +346,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
               operations: result.operations,
               versionId: result.versionId,
             },
-            commits
+            commitsToPush
           )
         );
       }
