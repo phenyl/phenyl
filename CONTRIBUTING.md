@@ -1,5 +1,5 @@
 # Contributing
-Why don't your make Phenyl better with your issue reports and pull requests? We're open to any contributions.
+Why don't you make Phenyl better with your issue reports and pull requests? We're open to any contributions.
 
 ## Reporting Issues
 - bugs
@@ -19,6 +19,20 @@ Please check [Issue tracker](https://github.com/phenyl-js/phenyl/issues) first t
 ```bash
 git clone https://github.com/your-username/phenyl.git
 ```
+
+### Setting up Node.js version management with asdf
+We highly recommend you to use [asdf](https://asdf-vm.com/) to manage node versions.
+To install asdf, please refer to the [asdf installation guide](https://asdf-vm.com/guide/getting-started.html).
+
+After installing asdf, please install the following plugins.
+```bash
+asdf plugin-add nodejs
+asdf plugin-add yarn
+asdf install
+```
+
+> [!NOTE]
+> If you cannot install asdf to your environment, please ensure you use the same versions specified in `.tool-versions`.
 
 ### Install the dependencies
 ```bash
@@ -40,8 +54,8 @@ Install it like the following way and retry the test.
 
 ```bash
 # This example is for Mac users
-brew update
-brew install mongodb
+brew tap mongodb/brew
+brew install mongodb-community
 ```
 
 ## Lint
