@@ -1,4 +1,3 @@
-/* global Headers */
 import { GeneralResponseData } from "./response-data";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
@@ -17,7 +16,7 @@ export type EncodedHttpRequest = {
 };
 
 export type EncodedHttpResponse = {
-  headers: { [name: string]: string } | Headers;
+  headers: { [name: string]: string };
   body: string | GeneralResponseData; // stringified JSON or parsed JSON
   statusCode: number;
 };
