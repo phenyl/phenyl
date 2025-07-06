@@ -15,7 +15,9 @@ $('link[rel="stylesheet"]').each((i, el) => {
     return;
   }
 
-  const assetPath = path.join(__dirname, "..", "build", href);
+  // Remove base path if present
+  const cleanHref = href.replace(/^\/explorer\//, '');
+  const assetPath = path.join(__dirname, "..", "build", cleanHref);
   const content = fs.readFileSync(assetPath, "utf8");
   $("<style></style>")
     .text(content)
@@ -35,7 +37,9 @@ $("script[src]").each((i, el) => {
     return;
   }
 
-  const assetPath = path.join(__dirname, "..", "build", src);
+  // Remove base path if present
+  const cleanSrc = src.replace(/^\/explorer\//, '');
+  const assetPath = path.join(__dirname, "..", "build", cleanSrc);
   const content = fs.readFileSync(assetPath, "utf8");
   $("<script></script>")
     .text(content)
