@@ -1,5 +1,8 @@
 import { Segment, Tab, Message } from "semantic-ui-react";
-import JSONTree from "react-json-tree";
+import * as JSONTreeModule from "react-json-tree";
+
+// Handle default export for react-json-tree
+const JSONTreeComponent = (JSONTreeModule as any).default || JSONTreeModule;
 
 type Props = {
   loading: boolean;
@@ -27,10 +30,9 @@ const Response = ({ loading, expanded, response, error }: Props) => {
         panes={[
           {
             menuItem: "Tree view",
-            // eslint-disable-next-line react/display-name
             render: () => (
               <Tab.Pane>
-                <JSONTree
+                <JSONTreeComponent
                   hideRoot
                   shouldExpandNode={() => expanded}
                   data={response}
@@ -40,7 +42,6 @@ const Response = ({ loading, expanded, response, error }: Props) => {
           },
           {
             menuItem: "Raw JSON",
-            // eslint-disable-next-line react/display-name
             render: () => (
               <Tab.Pane>
                 <pre>{JSON.stringify(response, null, 2)}</pre>
