@@ -108,7 +108,7 @@ export class PhenylRestApi<TM extends GeneralTypeMap = GeneralTypeMap>
         await executor.validate(normalizedReqData, session);
       } catch (validationError) {
         validationError.message = `Validation Failed. ${
-          validationError.mesage
+          validationError.message
         }`;
         return {
           type: "error",
