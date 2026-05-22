@@ -103,6 +103,6 @@ jobs:
       - run: yarn test
     services:
       mongodb:
-        image: mongo:latest
+        image: mongo:7.0
         ports:
           - 27017:27017
