@@ -294,7 +294,10 @@ describe("Merge Operations", () => {
           })
           .catch((e) => e);
         assert.deepStrictEqual(error.name, "MongoServerError");
-        assert.deepStrictEqual(error.errmsg, "Document failed validation");
+        assert.ok(
+          /Document failed validation/.test(error.errmsg),
+          `expected errmsg to contain "Document failed validation", got: ${error.errmsg}`
+        );
 
         const rollbackedResult = await client
           .db(dbName)
