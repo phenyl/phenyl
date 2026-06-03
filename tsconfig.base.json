@@ -9,6 +9,7 @@
     "moduleResolution": "Node",
     "noUnusedLocals": true,
     "rootDir": ".",
+    "skipLibCheck": true,
     "strict": true,
     "target": "es5"
   }

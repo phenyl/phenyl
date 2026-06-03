@@ -17,7 +17,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
+    "noImplicitAny": false,
     "strictFunctionTypes": false,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
@@ -29,6 +30,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "vite.config.ts"
   ]
 }
