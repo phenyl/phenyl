@@ -32,6 +32,7 @@
     "lint": "turbo lint",
     "prepare": "yarn clean && yarn build",
     "publish": "lerna publish",
+    "publish:dry": "lerna publish --dry-run --no-push",
     "test": "turbo test",
     "type-check": "turbo type-check",
     "watch": "lerna run watch --parallel"

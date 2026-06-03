@@ -6,6 +6,9 @@
   "command": {
     "version": {
       "message": "[skip ci] chore(release): publish %s"
+    },
+    "publish": {
+      "forcePublish": true
     }
   },
   "npmClient": "yarn",
