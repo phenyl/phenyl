@@ -9,9 +9,9 @@ jobs:
         node-version: ['16']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -21,11 +21,11 @@ jobs:
           npm -v
           yarn --version
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v4
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -43,9 +43,9 @@ jobs:
         node-version: ['16']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -58,7 +58,7 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v4
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -76,9 +76,9 @@ jobs:
         node-version: ['16']
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -91,7 +91,7 @@ jobs:
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v4
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -106,3 +106,33 @@ jobs:
         image: mongo:7.0
         ports:
           - 27017:27017
+
+  # --- SHA pinning verification job (shell grep version) ---
+  # No external tools required. Detects tag-based references with grep.
+  verify-actions-pinned:
+    name: Verify GitHub Actions are SHA-pinned
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Check for unpinned actions
+        run: |
+          # Only target YAML `uses:` key lines (leading indent + optional '-' + uses: + space).
+          # Match from the start of the line to avoid false positives on quoted strings
+          # inside shell scripts ('uses:...').
+          # Local actions (./) and Docker actions (docker://) are excluded.
+          unpinned=$(
+            grep -rnE '^[[:space:]]*-?[[:space:]]*uses:[[:space:]]+' .github/ \
+            | grep -v 'uses:[[:space:]]*\./' \
+            | grep -v 'uses:[[:space:]]*docker://' \
+            | grep -E 'uses:.*@' \
+            | grep -vE 'uses:[[:space:]]*[^[:space:]]+@[0-9a-f]{40}([[:space:]]|$)' \
+            || true
+          )
+          if [ -n "$unpinned" ]; then
+            echo "::error::Found unpinned GitHub Actions:"
+            echo "$unpinned"
+            echo ""
+            echo "Please change them to commit-hash format (e.g. action@<sha> # v4)."
+            exit 1
+          fi
+          echo "All actions are SHA-pinned."
