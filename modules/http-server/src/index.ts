@@ -62,7 +62,9 @@ export default class PhenylHttpServer {
       const read = () => {
         try {
           // https://nodejs.org/api/stream.html#stream_readable_read_size
-          const chunks: Array<Buffer> = [];
+          // Typed as Uint8Array[] (Buffer's base) so Buffer.concat accepts it
+          // across @types/node versions that generic-ize Buffer's backing store.
+          const chunks: Uint8Array[] = [];
           let chunk;
           let totalLength = 0;
 

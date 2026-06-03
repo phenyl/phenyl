@@ -205,10 +205,7 @@ export class LocalStateUpdater {
   /**
    * clear unreached commits by entityName and entityId
    */
-  static clearUnreachedCommitsByEntityInfo<
-    TM extends GeneralTypeMap,
-    EN extends EntityNameOf<TM>
-  >(
+  static clearUnreachedCommitsByEntityInfo<TM extends GeneralTypeMap>(
     state: LocalStateOf<TM>,
     entityName: string,
     id: string

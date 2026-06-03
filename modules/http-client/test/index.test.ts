@@ -46,9 +46,15 @@ describe("constructor", () => {
 });
 
 describe("PhenylHttpClient as http client", () => {
-  beforeAll(() => {
-    server.listen(8080);
-  });
+  beforeAll(
+    () =>
+      // Wait until the server is actually listening before issuing requests;
+      // otherwise the first request can race the async bind and get
+      // ECONNREFUSED (flaky, and reliably so on newer Node).
+      new Promise<void>((resolve) => {
+        server.listen(8080, undefined, undefined, () => resolve());
+      })
+  );
 
   it("can handle request data", async () => {
     const { entity } = await client.insertAndGet({

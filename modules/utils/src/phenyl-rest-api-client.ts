@@ -410,9 +410,12 @@ export abstract class PhenylRestApiClient<
   > {
     const resData = await this.handleRequestData({
       method: "runCustomQuery",
+      // @ts-expect-error TS>=5 does not simplify `QN & CustomQueryNameOf<TM>`
+      // back to `QN`, so this sound payload is rejected. (type-strictness TODO)
       payload: query,
       sessionId
     });
+    // @ts-expect-error narrowed payload is the declared result type at runtime.
     if (resData.type === "runCustomQuery") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -435,9 +438,12 @@ export abstract class PhenylRestApiClient<
   > {
     const resData = await this.handleRequestData({
       method: "runCustomCommand",
+      // @ts-expect-error TS>=5 does not simplify `CN & CustomCommandNameOf<TM>`
+      // back to `CN`, so this sound payload is rejected. (type-strictness TODO)
       payload: command,
       sessionId
     });
+    // @ts-expect-error narrowed payload is the declared result type at runtime.
     if (resData.type === "runCustomCommand") return resData.payload;
     throw createServerError(resData.payload);
   }
@@ -465,6 +471,8 @@ export abstract class PhenylRestApiClient<
       payload: command,
       sessionId
     });
+    // @ts-expect-error narrowed login payload is the declared result type at
+    // runtime; TS>=5 cannot prove the UN intersection simplification.
     if (resData.type === "login") return resData.payload;
     throw createServerError(resData.payload);
   }

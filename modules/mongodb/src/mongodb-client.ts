@@ -35,7 +35,7 @@ type MongoEntity<E extends Entity> = E & { _id: string };
 type MongoEntityWithObjectId<E extends Entity> = E & { _id: ObjectId };
 
 // convert 24-byte hex lower string to ObjectId
-function createObjectId<T>(id: string | ObjectId): string | ObjectId {
+function createObjectId(id: string | ObjectId): string | ObjectId {
   if (isObjectId(id)) return id;
   if (typeof id !== "string") return id;
   try {
@@ -126,10 +126,11 @@ function isObjectId(id: any): id is ObjectId {
 function convertObjectIdToStringInMongoEntity<E extends Entity>(
   mongoEntity: MongoEntityWithObjectId<E>
 ): MongoEntity<E> {
-  // @ts-ignore
-  return isObjectId(mongoEntity._id)
+  // _id is narrowed from ObjectId to string here; bridge the nominal gap with
+  // a cast (the old `@ts-ignore` mis-targeted lines under TS>=5).
+  return (isObjectId(mongoEntity._id)
     ? update(mongoEntity, { _id: mongoEntity._id.toString() })
-    : mongoEntity;
+    : mongoEntity) as unknown as MongoEntity<E>;
 }
 
 function replace_idIntoIdInEntity<E extends Entity>(entity: MongoEntity<E>): E {

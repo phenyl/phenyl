@@ -216,7 +216,8 @@ export class Versioning {
     versionId: string | null
   ): GeneralUpdateOperation[] | null {
     if (versionId == null) return null;
-    if (!entity.hasOwnProperty("_PhenylMeta")) return null;
+    if (!Object.prototype.hasOwnProperty.call(entity, "_PhenylMeta"))
+      return null;
     try {
       const metaInfo: EntityMetaInfo = entity._PhenylMeta;
       let found = false;
@@ -242,7 +243,7 @@ export class Versioning {
    * Strip meta info ("_PhenylMeta" property) from the given entity.
    */
   public static stripMeta<E extends Entity>(entity: EntityWithMetaInfo<E>): E {
-    if (entity.hasOwnProperty("_PhenylMeta")) {
+    if (Object.prototype.hasOwnProperty.call(entity, "_PhenylMeta")) {
       const copied = Object.assign({}, entity);
       // @ts-ignore The operand of a 'delete' operator must be optional.
       delete copied._PhenylMeta;

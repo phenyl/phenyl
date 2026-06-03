@@ -289,5 +289,5 @@ export class PhenylMemoryDbClient<M extends GeneralEntityMap>
 function isMultiDeleteCommand<EN extends string>(
   command: DeleteCommand<EN>
 ): command is MultiDeleteCommand<EN> {
-  return command.hasOwnProperty("where");
+  return Object.prototype.hasOwnProperty.call(command, "where");
 }
