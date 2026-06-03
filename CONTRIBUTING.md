@@ -75,11 +75,27 @@ This command generates `lib/**/*.js` and `lib/**/*.d.ts` from `src/**/*.ts`.
 
 ## Release
 
-**Must be a member of the npm organization's `phenyl-release-members` team.**
+Releases are published to npm via GitHub Actions using [npm Trusted Publishers (OIDC)](https://docs.npmjs.com/trusted-publishers), so no `NPM_TOKEN` is required.
 
-```
-npm whoami # Print your npm account that has already joined organization
-git checkout master
-yarn build
-yarn run publish
-```
+### Prerequisites (one-time setup per package)
+Each `@phenyl/*` package on npmjs.com must have a Trusted Publisher entry pointing to:
+- Repository: `phenyl-js/phenyl`
+- Workflow: `.github/workflows/publish.yml`
+- Environment: _(none)_
+
+### Cutting a release
+1. From `master`, bump versions and create a git tag locally:
+   ```bash
+   git checkout master
+   yarn build
+   yarn lerna version            # bumps versions, creates tag `vX.Y.Z`, pushes commits
+   ```
+2. Push the tag to GitHub:
+   ```bash
+   git push origin vX.Y.Z
+   ```
+3. The `Publish` workflow runs automatically on the tag push and publishes every package
+   whose `version` is not yet on the registry (`lerna publish from-package`) with provenance.
+
+You can also trigger the workflow manually from the Actions tab; tick `dry-run` to validate
+the pipeline without publishing.
