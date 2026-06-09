@@ -53,7 +53,8 @@ import {
   CustomQueryExtraParamsOf,
   CustomCommandExtraParamsOf,
   EntityExtraResultOf,
-  CustomQueryExtraResultOf
+  CustomQueryExtraResultOf,
+  CustomCommandExtraResultOf
 } from "@phenyl/interfaces";
 
 import { createServerError } from "./create-error";
@@ -430,7 +431,7 @@ export abstract class PhenylRestApiClient<
   ): Promise<
     CustomCommandResult<
       CustomCommandResultValueOf<TM, CN>,
-      CustomQueryExtraResultOf<TM, CN>
+      CustomCommandExtraResultOf<TM, CN>
     >
   > {
     const resData = await this.handleRequestData({
