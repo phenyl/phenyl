@@ -618,7 +618,7 @@ export class MiddlewareHandler<TM extends GeneralTypeMap> {
   /**
    * Unset error.
    */
-  async resolveError(action: ResolveErrorAction) {
+  async resolveError(_action: ResolveErrorAction) {
     return this.assignToState(LocalStateUpdater.resolveError());
   }
 

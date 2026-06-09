@@ -15,7 +15,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build && node scripts/prepare-assets.js",
+    "build": "echo 'Skipping @phenyl/api-explorer-client build: react-scripts 4 (CRA) is incompatible with Node >=18. Use build:cra on Node 16, or migrate to Vite (api-explorer-modernization).'",
+    "build:cra": "SKIP_PREFLIGHT_CHECK=true react-scripts build && node scripts/prepare-assets.js",
     "eject": "react-scripts eject",
     "start": "react-scripts start",
     "type-check": "upbin tsc --noEmit"

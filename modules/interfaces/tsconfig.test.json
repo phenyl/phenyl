@@ -1,0 +1,21 @@
+// Config for the `test` script (type-level tests under type-test/).
+// The type-tests were historically compiled with tsc's default (loose) options,
+// because the old `test` script passed files explicitly which makes tsc ignore
+// tsconfig.json. This reproduces that loose behavior on purpose (no strict /
+// noUnusedLocals / noImplicitAny) while providing the target/lib needed for
+// Promise and skipLibCheck so TS5 does not choke on third-party .d.ts.
+// Tightening the type-tests is a separate, deliberate task.
+{
+  "compilerOptions": {
+    "target": "es2021",
+    "lib": ["esnext", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["type-test/**/*"]
+}

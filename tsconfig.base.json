@@ -4,12 +4,14 @@
     "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "lib": ["esnext", "dom", "es5"],
+    "lib": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "Node",
     "noUnusedLocals": true,
     "rootDir": ".",
+    "skipLibCheck": true,
     "strict": true,
-    "target": "es5"
+    "target": "es2021",
+    "useUnknownInCatchVariables": false
   }
 }
